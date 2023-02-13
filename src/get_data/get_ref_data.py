@@ -58,6 +58,14 @@ def format_ids(df):
         str) + df['Multiple submission letter'].fillna('').astype(str)
     return(df)
 
+def merge_ins_uoa(df1, df2):
+    """Function to merge to dataframes left on df1 based on inst_id and uoa_id"""
+
+    ## [TODO] Add some unit tests on the merge here ##
+    
+    return(df1.merge(df2, how='left', left_on=['inst_id', 'uoa_id'],
+                     right_on=['inst_id', 'uoa_id']))
+
 def merge_ref_data(raw_path):
     """ Merge all REF files with the ICS data as the spine"""
     raw_ics = pd.read_excel(os.path.join(raw_path,
@@ -94,8 +102,8 @@ def merge_ref_data(raw_path):
     check_id_overlap(results_ins_ids, ics_ins_ids)
     
     ## Merge in relevant results data into the ics dataframe
-    raw_ics = raw_ics.merge(raw_results[['inst_id', 'uoa_id', 'fte', 'fte_pc']].drop_duplicates(),
-                            how='left', left_on=['inst_id', 'uoa_id'], right_on=['inst_id', 'uoa_id'])
+    raw_ics = merge_ins_uoa(
+        raw_ics, raw_results[['inst_id', 'uoa_id', 'fte', 'fte_pc']].drop_duplicates())
     
     ## Make wide score card by institution and uoa_id
     wide_score_card = pd.pivot(
@@ -105,9 +113,7 @@ def merge_ref_data(raw_path):
     wide_score_card = wide_score_card.reset_index()
     
     ## Merge in scores
-    raw_ics = raw_ics.merge(wide_score_card,
-                            how='left', left_on=['inst_id', 'uoa_id'], right_on=['inst_id', 'uoa_id']
-                            )
+    raw_ics = merge_ins_uoa(raw_ics, wide_score_card)
 
     # 2. Now lets work on the output data.
     raw_output = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'), skiprows=4)
@@ -129,121 +135,95 @@ def merge_ref_data(raw_path):
                    'Forensic science', 'Criminology', 'Propose double weighting', 'Is reserve output',
                    'Research group','Open access status','Citations applicable','Citation count']
 
-    for code in raw_ics['inst_id'].unique():
-        for unit in raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique():
-            temp_df = raw_output[(raw_output['inst_id']==code) &
-                                 (raw_output['uoa_id']==unit)]
-            output_row = {}
-            output_counter = 0
-            for index, row in temp_df.iterrows():
-                output_row[str(output_counter)] = {}
-                output_row[str(output_counter)]['DOI'] = row['DOI']
-                output_row[str(output_counter)]['Output type'] = row['Output type']
-                output_row[str(output_counter)]['Title'] = row['Title']
-                output_row[str(output_counter)]['ISSN'] = row['ISSN']
-                output_row[str(output_counter)]['Month'] = row['Month']
-                output_row[str(output_counter)]['Year'] = row['Year']
-                output_row[str(output_counter)]['Number of additional authors'] = row['Number of additional authors']
-                output_row[str(output_counter)]['Non-English'] = row['Non-English']
-                output_row[str(output_counter)]['Interdisciplinary'] = row['Interdisciplinary']
-                output_row[str(output_counter)]['Forensic science'] = row['Forensic science']
-                output_row[str(output_counter)]['Criminology'] = row['Criminology']
-                output_row[str(output_counter)]['Propose double weighting'] = row['Propose double weighting']
-                output_row[str(output_counter)]['Is reserve output'] = row['Is reserve output']
-                output_row[str(output_counter)]['Research group'] = row['Research group']
-                output_row[str(output_counter)]['Open access status'] = row['Open access status']
-                output_row[str(output_counter)]['Citations applicable'] = row['Citations applicable']
-                output_row[str(output_counter)]['Citation count'] = row['Citation count']
-                output_counter =+ 1
-            raw_ics['Output Journals'] = np.where((raw_ics['inst_id']==code) &
-                                                  (raw_ics['uoa_id']==unit),
-                                                  output_row,
-                                                  raw_ics['Output Journals'])
+    # for code in raw_ics['inst_id'].unique():
+    #     for unit in raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique():
+    #         temp_df = raw_output[(raw_output['inst_id']==code) &
+    #                              (raw_output['uoa_id']==unit)]
+    #         output_row = {}
+    #         output_counter = 0
+    #         for index, row in temp_df.iterrows():
+    #             output_row[str(output_counter)] = {}
+    #             output_row[str(output_counter)]['DOI'] = row['DOI']
+    #             output_row[str(output_counter)]['Output type'] = row['Output type']
+    #             output_row[str(output_counter)]['Title'] = row['Title']
+    #             output_row[str(output_counter)]['ISSN'] = row['ISSN']
+    #             output_row[str(output_counter)]['Month'] = row['Month']
+    #             output_row[str(output_counter)]['Year'] = row['Year']
+    #             output_row[str(output_counter)]['Number of additional authors'] = row['Number of additional authors']
+    #             output_row[str(output_counter)]['Non-English'] = row['Non-English']
+    #             output_row[str(output_counter)]['Interdisciplinary'] = row['Interdisciplinary']
+    #             output_row[str(output_counter)]['Forensic science'] = row['Forensic science']
+    #             output_row[str(output_counter)]['Criminology'] = row['Criminology']
+    #             output_row[str(output_counter)]['Propose double weighting'] = row['Propose double weighting']
+    #             output_row[str(output_counter)]['Is reserve output'] = row['Is reserve output']
+    #             output_row[str(output_counter)]['Research group'] = row['Research group']
+    #             output_row[str(output_counter)]['Open access status'] = row['Open access status']
+    #             output_row[str(output_counter)]['Citations applicable'] = row['Citations applicable']
+    #             output_row[str(output_counter)]['Citation count'] = row['Citation count']
+    #             output_counter =+ 1
+    #         raw_ics['Output Journals'] = np.where((raw_ics['inst_id']==code) &
+    #                                               (raw_ics['uoa_id']==unit),
+    #                                               output_row,
+    #                                               raw_ics['Output Journals'])
 
-            raw_ics['Number Articles'] = np.where((raw_ics['inst_id']==code) &
-                                                  (raw_ics['uoa_id']==unit),
-                                                  len(temp_df),
-                                                  raw_ics['Number Articles'])
-            raw_ics['Total REF Citations'] = np.where((raw_ics['inst_id']==code) &
-                                                      (raw_ics['uoa_id']==unit),
-                                                      temp_df['Citation count'].sum(),
-                                                      raw_ics['Total REF Citations'])
+    #         raw_ics['Number Articles'] = np.where((raw_ics['inst_id']==code) &
+    #                                               (raw_ics['uoa_id']==unit),
+    #                                               len(temp_df),
+    #                                               raw_ics['Number Articles'])
+    #         raw_ics['Total REF Citations'] = np.where((raw_ics['inst_id']==code) &
+    #                                                   (raw_ics['uoa_id']==unit),
+    #                                                   temp_df['Citation count'].sum(),
+    #                                                   raw_ics['Total REF Citations'])
 
     # 3. Onto the environmental data, noting that this has 3 sheets:
     # 3.1. Sheet One: Research Doctoral Degrees Awarded
-    raw_file = pd.ExcelFile(os.path.join(raw_path, 'raw_environment_data.xlsx'))
-    raw_env_Doctoral = raw_file.parse("ResearchDoctoralDegreesAwarded", skiprows=4)
-    number_cols = [col for col in raw_env_Doctoral.columns if 'Number of doctoral' in col]
-    raw_env_Doctoral['Number Doctoral Degrees'] = raw_env_Doctoral[number_cols].sum(axis=1)
-    raw_env_Doctoral['inst_id'] = raw_env_Doctoral['inst_id'].astype(str)
-    raw_env_Doctoral['uoa_id'] = raw_env_Doctoral['uoa_id'].astype(str)
-    raw_ics['inst_id'] = raw_ics['inst_id'].astype(str)
-    raw_ics['uoa_id'] = raw_ics['uoa_id'].astype(float).astype('Int64').astype(str)
-    raw_ics = pd.merge(raw_ics,
-                       raw_env_Doctoral[['inst_id', 'uoa_id', 'Number Doctoral Degrees']],
-                       how='left',
-                       left_on = ['inst_id', 'uoa_id'],
-                       right_on = ['inst_id', 'uoa_id']
-                      )
+    raw_env_path = os.path.join(raw_path, 'raw_environment_data.xlsx')
+    raw_env_doctoral = pd.read_excel(
+        raw_env_path,
+        sheet_name="ResearchDoctoralDegreesAwarded", skiprows=4)
+    raw_env_doctoral = raw_env_doctoral.rename(columns={'Institution UKPRN code': 'inst_id'})
+    raw_env_doctoral = format_ids(raw_env_doctoral)
+    
+    number_cols = [col for col in raw_env_doctoral.columns if 'Number of doctoral' in col]
+    raw_env_doctoral['num_doc_degrees_total'] = raw_env_doctoral[number_cols].sum(axis=1)
+    raw_ics = merge_ins_uoa(
+        raw_ics, raw_env_doctoral[['inst_id', 'uoa_id', 'num_doc_degrees_total']])
 
     # 3.2. Sheet Two: Research income
-    raw_env_Income = raw_file.parse("ResearchIncome", skiprows=4)
-    raw_env_Income['inst_id'] = raw_env_Income['inst_id'].astype(str)
-    raw_env_Income['uoa_id'] = raw_env_Income['uoa_id'].astype(str)
-    tot_inc = raw_env_Income[raw_env_Income['Income source'] == 'Total income']
-    av_inc = tot_inc[['inst_id',
-                      'uoa_id',
-                      'Average income for academic years 2013-14 to 2019-20'
-                      ]]
-    tot_tot_inc = tot_inc[['inst_id',
-                           'uoa_id',
-                           'Total income for academic years 2013-14 to 2019-20']]
-    raw_ics = pd.merge(raw_ics,
-                       av_inc[['inst_id',
-                               'uoa_id',
-                               'Average income for academic years 2013-14 to 2019-20'
-                               ]],
-                       how='left',
-                       left_on=['inst_id',
-                                'uoa_id'],
-                       right_on=['inst_id',
-                                 'uoa_id']
-                       )
-    raw_ics = pd.merge(raw_ics,
-                       tot_tot_inc[['inst_id',
-                                    'uoa_id',
-                                    'Total income for academic years 2013-14 to 2019-20'
-                                    ]],
-                       how='left',
-                       left_on=['inst_id',
-                                'uoa_id'],
-                       right_on=['inst_id',
-                                 'uoa_id']
-                       )
+    raw_env_income = pd.read_excel(
+        raw_env_path,
+        sheet_name="ResearchIncome", skiprows=4)
+
+    raw_env_income = raw_env_income.\
+        rename(columns = {'Institution UKPRN code': 'inst_id',
+                          'Average income for academic years 2013-14 to 2019-20': 'av_income',
+                          'Total income for academic years 2013-14 to 2019-20': 'tot_income'})
+    raw_env_income = format_ids(raw_env_income)
+    
+    tot_inc = raw_env_income[raw_env_income['Income source'] == 'Total income']
+    
+    rel_inc_cols = ['inst_id', 'uoa_id', 'av_income', 'tot_income']
+    
+    raw_ics = merge_ins_uoa(raw_ics, tot_inc[rel_inc_cols])
+
     # 3.3. Research Income In-Kind
-    raw_env_IncomeInKind = raw_file.parse("ResearchIncomeInKind", skiprows=4)
-    raw_env_IncomeInKind['inst_id'] = raw_env_IncomeInKind['inst_id'].astype(str)
-    raw_env_IncomeInKind['uoa_id'] = raw_env_IncomeInKind['uoa_id'].astype(str)
-    tot_inc = raw_env_IncomeInKind[raw_env_IncomeInKind['Income source']=='Total income-in-kind']
-    tot_tot_inc = tot_inc[['inst_id',
-                           'uoa_id',
-                           'Total income for academic years 2013-14 to 2019-20']]
-    tot_tot_inc = tot_tot_inc.rename({'Total income for academic years 2013-14 to 2019-20':
-                                      'Total income InKind for academic years 2013-14 to 2019-20'},
-                                    axis=1)
-    raw_ics = pd.merge(raw_ics,
-                       tot_tot_inc[['inst_id',
-                                    'uoa_id',
-                                    'Total income InKind for academic years 2013-14 to 2019-20'
-                                   ]],
-                       how='left',
-                       left_on = ['inst_id',
-                                  'uoa_id'],
-                       right_on = ['inst_id',
-                                   'uoa_id']
-                      )
+    raw_env_income_inkind = pd.read_excel(
+        raw_env_path,
+        sheet_name="ResearchIncomeInKind", skiprows=4)
+
+    raw_env_income_inkind = raw_env_income_inkind.rename(
+        columns={'Institution UKPRN code': 'inst_id',
+                 'Total income for academic years 2013-14 to 2019-20': 'tot_inc_kind'})
+    raw_env_income_inkind = format_ids(raw_env_income_inkind)
+
+    tot_inc_kind = raw_env_income_inkind.loc[raw_env_income_inkind['Income source']=='Total income-in-kind']
+    
+    rel_inc_kind_cols = ['inst_id', 'uoa_id', 'tot_inc_kind']
+    
+    raw_ics = merge_ins_uoa(raw_ics, tot_inc_kind[rel_inc_kind_cols])
+    
     merged_path = os.path.join(os.getcwd(), '..', '..', 'data', 'merged')
-    raw_ics.to_csv(os.path.join(merged_path, 'merged_ref_data.csv'))
+    raw_ics.to_csv(os.path.join(merged_path, 'merged_ref_data_exc_output.csv'))
 
 def main():
     raw_path = os.path.join(os.getcwd(), '..', '..', 'data', 'raw')
