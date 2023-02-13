@@ -116,24 +116,23 @@ def merge_ref_data(raw_path):
     raw_ics = merge_ins_uoa(raw_ics, wide_score_card)
 
     # 2. Now lets work on the output data.
-    raw_output = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'), skiprows=4)
-    raw_output = raw_output.rename(columns = {'Institution UKPRN code': 'inst_id'})
-    raw_output = raw_output.loc[raw_output['inst_id'] != ' ']
-    
-    raw_output = format_ids(raw_output)
+    # [TODO]: All the below code to be replaced by a wrangling function and a merge to the raw_ics. For example:
+    # raw_output = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'), skiprows=4)
+    # raw_output = raw_output.rename(columns = {'Institution UKPRN code': 'inst_id'})
+    # raw_output = raw_output.loc[raw_output['inst_id'] != ' ']
+    # raw_output = format_ids(raw_output)    
+    # summ_output = raw_output.groupby(['inst_id', 'uoa_id']).first().reset_index()
+    # raw_ics = merge_ins_uoa(raw_ics, summ_output)
 
-    raw_ics['Output Journals'] = np.nan
-    raw_ics['Total REF Citations'] = np.nan
-    raw_ics['Number Articles'] = np.nan
+    # [TODO]: Remove below code
+    # raw_ics['Output Journals'] = np.nan
+    # raw_ics['Total REF Citations'] = np.nan
+    # raw_ics['Number Articles'] = np.nan
     
-    code = raw_ics['inst_id'][0]
-    unit = raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique()[0]
-    raw_output.columns
-    
-    result_cols = ['DOI', 'Output type', 'Title', 'ISSN', 'Month', 'Year',
-                   'Number of additional authors', 'Non-English', 'Interdisciplinary',
-                   'Forensic science', 'Criminology', 'Propose double weighting', 'Is reserve output',
-                   'Research group','Open access status','Citations applicable','Citation count']
+    # result_cols = ['DOI', 'Output type', 'Title', 'ISSN', 'Month', 'Year',
+    #                'Number of additional authors', 'Non-English', 'Interdisciplinary',
+    #                'Forensic science', 'Criminology', 'Propose double weighting', 'Is reserve output',
+    #                'Research group','Open access status','Citations applicable','Citation count']
 
     # for code in raw_ics['inst_id'].unique():
     #     for unit in raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique():
