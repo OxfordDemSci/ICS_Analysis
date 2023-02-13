@@ -48,6 +48,14 @@ def check_id_overlap(a, b):
     print("{} missing in B but present in A".format(
         [i for i in b if i not in a]))
 
+def format_ids(df):
+    """Format id codes for merging"""
+    
+    df = df.astype({'inst_id': 'int'})
+    df['uoa_id'] = df['Unit of assessment number'].astype(
+        str) + df['Multiple submission letter'].fillna('').astype(str)
+    return(df)
+
 def merge_ref_data(raw_path):
     """ Merge all REF files with the ICS data as the spine"""
     raw_ics = pd.read_excel(os.path.join(raw_path,
@@ -60,68 +68,55 @@ def merge_ref_data(raw_path):
                                 skiprows=6)
     [n_results, k_results] = raw_results.shape
     
-    raw_results = raw_results[raw_results['Institution code (UKPRN)'] != ' ']
-    raw_ics = raw_ics.copy()[raw_ics['Institution UKPRN code'] != ' ']
+    ## align columns names
+    raw_results = raw_results.rename(
+        columns={'Institution code (UKPRN)': 'inst_id',
+                 'FTE of submitted staff': 'fte',
+                 '% of eligible staff submitted': 'fte_pc'})
+    
+    raw_ics = raw_ics.rename(
+        columns={'Institution UKPRN code': 'inst_id'})
+    
+    raw_results = raw_results[raw_results['inst_id'] != ' ']
+    raw_ics = raw_ics.copy()[raw_ics['inst_id'] != ' ']
+    
+    raw_results = format_ids(raw_results)
+    raw_ics = format_ids(raw_ics)
     
     ## Extract some general sets and lists
-    result_types = raw_results['Profile'].unique() # types of results output
     score_types = ['4*', '3*', '2*', '1*', 'Unclassified'] # types of scores
-    results_ins_ids = [int(i) for i in raw_results['Institution code (UKPRN)'].unique()] # UKPRN in results
+    results_ins_ids = [int(i) for i in raw_results['inst_id'].unique()] # UKPRN in results
     # UKPRN in ics
-    ics_ins_ids = [int(i) for i in raw_ics['Institution UKPRN code'].unique()]
+    ics_ins_ids = [int(i) for i in raw_ics['inst_id'].unique()]
     
     check_id_overlap(results_ins_ids, ics_ins_ids)
     
-    ## Add some empty columns to the results set
-    score_cols = ["_".join([type, score, 'pc']) for type in result_types
-                  for score in score_types]
-    new_ics_cols = score_cols + ['FTE', 'FTE_pc']
+    ## Merge in relevant results data into the ics dataframe
+    raw_ics = raw_ics.merge(raw_results[['inst_id', 'uoa_id', 'fte', 'fte_pc']].drop_duplicates(),
+                            how='left', left_on=['inst_id', 'uoa_id'], right_on=['inst_id', 'uoa_id'])
     
-    raw_ics = raw_ics.reindex(columns=raw_ics.columns.to_list() + new_ics_cols)
+    ## Make wide score card by institution and uoa_id
+    wide_score_card = pd.pivot(
+        raw_results[['inst_id', 'uoa_id', 'Profile'] + score_types],
+        index=['inst_id', 'uoa_id'], columns=['Profile'], values=score_types)
+    wide_score_card.columns = wide_score_card.columns.map('_'.join)
+    wide_score_card = wide_score_card.reset_index()
     
-    
-    for code in raw_results['Institution code (UKPRN)'].unique():
-        temp_df = raw_results[raw_results['Institution code (UKPRN)'] == code]
-        for unit in temp_df['Unit of assessment number'].unique():
-            temp_df_two = temp_df[temp_df['Unit of assessment number'] == unit]
-            raw_ics['FTE'] = np.where((raw_ics['Institution UKPRN code'] == str(code)) &
-                                      (raw_ics['Unit of assessment number'] == unit),
-                                      temp_df_two['FTE of submitted staff'].iloc[0],
-                                      raw_ics['FTE'])
-            raw_ics['FTE_pc'] = np.where((raw_ics['Institution UKPRN code'] == str(code)) &
-                                         (raw_ics['Unit of assessment number'] == unit),
-                                         temp_df_two['% of eligible staff submitted'].iloc[0],
-                                         raw_ics['FTE_pc'])
-            for profile in temp_df_two['Profile'].unique():
-                temp_df_three = temp_df_two[temp_df_two['Profile'] == profile]
-                for star in ['4*', '3*', '2*', '1*', 'Unclassified']:
-                    try:
-                        raw_ics[profile + '_' + star + '_pc'] = np.where(
-                            (raw_ics['Institution UKPRN code'] == str(code)) &
-                            (raw_ics['Unit of assessment number'] == unit),
-                            float(temp_df_three[star]),
-                            raw_ics[profile + '_' + star + '_pc']
+    ## Merge in scores
+    raw_ics = raw_ics.merge(wide_score_card,
+                            how='left', left_on=['inst_id', 'uoa_id'], right_on=['inst_id', 'uoa_id']
                             )
-                    except (ValueError, TypeError):
-                        raw_ics[profile + '_' + star + '_pc'] = np.where(
-                            (raw_ics['Institution UKPRN code'] == str(code)) &
-                            (raw_ics['Unit of assessment number'] == unit),
-                            np.nan,
-                            raw_ics[profile + '_' + star + '_pc']
-                            )
-
-                        pass
 
     # 2. Now lets work on the output data.
     raw_output = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'), skiprows=4)
-    raw_output[raw_output['Institution UKPRN code']!=' ']
+    raw_output[raw_output['inst_id']!=' ']
     raw_ics['Output Journals'] = np.nan
     raw_ics['Total REF Citations'] = np.nan
     raw_ics['Number Articles'] = np.nan
-    for code in raw_ics['Institution UKPRN code'].unique():
-        for unit in raw_ics[raw_ics['Institution UKPRN code']==code]['Unit of assessment number'].unique():
-            temp_df = raw_output[(raw_output['Institution UKPRN code']==code) &
-                                 (raw_output['Unit of assessment number']==unit)]
+    for code in raw_ics['inst_id'].unique():
+        for unit in raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique():
+            temp_df = raw_output[(raw_output['inst_id']==code) &
+                                 (raw_output['uoa_id']==unit)]
             output_row = {}
             output_counter = 0
             for index, row in temp_df.iterrows():
@@ -144,17 +139,17 @@ def merge_ref_data(raw_path):
                 output_row[str(output_counter)]['Citations applicable'] = row['Citations applicable']
                 output_row[str(output_counter)]['Citation count'] = row['Citation count']
                 output_counter =+ 1
-            raw_ics['Output Journals'] = np.where((raw_ics['Institution UKPRN code']==code) &
-                                                  (raw_ics['Unit of assessment number']==unit),
+            raw_ics['Output Journals'] = np.where((raw_ics['inst_id']==code) &
+                                                  (raw_ics['uoa_id']==unit),
                                                   output_row,
                                                   raw_ics['Output Journals'])
 
-            raw_ics['Number Articles'] = np.where((raw_ics['Institution UKPRN code']==code) &
-                                                  (raw_ics['Unit of assessment number']==unit),
+            raw_ics['Number Articles'] = np.where((raw_ics['inst_id']==code) &
+                                                  (raw_ics['uoa_id']==unit),
                                                   len(temp_df),
                                                   raw_ics['Number Articles'])
-            raw_ics['Total REF Citations'] = np.where((raw_ics['Institution UKPRN code']==code) &
-                                                      (raw_ics['Unit of assessment number']==unit),
+            raw_ics['Total REF Citations'] = np.where((raw_ics['inst_id']==code) &
+                                                      (raw_ics['uoa_id']==unit),
                                                       temp_df['Citation count'].sum(),
                                                       raw_ics['Total REF Citations'])
 
@@ -164,72 +159,72 @@ def merge_ref_data(raw_path):
     raw_env_Doctoral = raw_file.parse("ResearchDoctoralDegreesAwarded", skiprows=4)
     number_cols = [col for col in raw_env_Doctoral.columns if 'Number of doctoral' in col]
     raw_env_Doctoral['Number Doctoral Degrees'] = raw_env_Doctoral[number_cols].sum(axis=1)
-    raw_env_Doctoral['Institution UKPRN code'] = raw_env_Doctoral['Institution UKPRN code'].astype(str)
-    raw_env_Doctoral['Unit of assessment number'] = raw_env_Doctoral['Unit of assessment number'].astype(str)
-    raw_ics['Institution UKPRN code'] = raw_ics['Institution UKPRN code'].astype(str)
-    raw_ics['Unit of assessment number'] = raw_ics['Unit of assessment number'].astype(float).astype('Int64').astype(str)
+    raw_env_Doctoral['inst_id'] = raw_env_Doctoral['inst_id'].astype(str)
+    raw_env_Doctoral['uoa_id'] = raw_env_Doctoral['uoa_id'].astype(str)
+    raw_ics['inst_id'] = raw_ics['inst_id'].astype(str)
+    raw_ics['uoa_id'] = raw_ics['uoa_id'].astype(float).astype('Int64').astype(str)
     raw_ics = pd.merge(raw_ics,
-                       raw_env_Doctoral[['Institution UKPRN code', 'Unit of assessment number', 'Number Doctoral Degrees']],
+                       raw_env_Doctoral[['inst_id', 'uoa_id', 'Number Doctoral Degrees']],
                        how='left',
-                       left_on = ['Institution UKPRN code', 'Unit of assessment number'],
-                       right_on = ['Institution UKPRN code', 'Unit of assessment number']
+                       left_on = ['inst_id', 'uoa_id'],
+                       right_on = ['inst_id', 'uoa_id']
                       )
 
     # 3.2. Sheet Two: Research income
     raw_env_Income = raw_file.parse("ResearchIncome", skiprows=4)
-    raw_env_Income['Institution UKPRN code'] = raw_env_Income['Institution UKPRN code'].astype(str)
-    raw_env_Income['Unit of assessment number'] = raw_env_Income['Unit of assessment number'].astype(str)
+    raw_env_Income['inst_id'] = raw_env_Income['inst_id'].astype(str)
+    raw_env_Income['uoa_id'] = raw_env_Income['uoa_id'].astype(str)
     tot_inc = raw_env_Income[raw_env_Income['Income source'] == 'Total income']
-    av_inc = tot_inc[['Institution UKPRN code',
-                      'Unit of assessment number',
+    av_inc = tot_inc[['inst_id',
+                      'uoa_id',
                       'Average income for academic years 2013-14 to 2019-20'
                       ]]
-    tot_tot_inc = tot_inc[['Institution UKPRN code',
-                           'Unit of assessment number',
+    tot_tot_inc = tot_inc[['inst_id',
+                           'uoa_id',
                            'Total income for academic years 2013-14 to 2019-20']]
     raw_ics = pd.merge(raw_ics,
-                       av_inc[['Institution UKPRN code',
-                               'Unit of assessment number',
+                       av_inc[['inst_id',
+                               'uoa_id',
                                'Average income for academic years 2013-14 to 2019-20'
                                ]],
                        how='left',
-                       left_on=['Institution UKPRN code',
-                                'Unit of assessment number'],
-                       right_on=['Institution UKPRN code',
-                                 'Unit of assessment number']
+                       left_on=['inst_id',
+                                'uoa_id'],
+                       right_on=['inst_id',
+                                 'uoa_id']
                        )
     raw_ics = pd.merge(raw_ics,
-                       tot_tot_inc[['Institution UKPRN code',
-                                    'Unit of assessment number',
+                       tot_tot_inc[['inst_id',
+                                    'uoa_id',
                                     'Total income for academic years 2013-14 to 2019-20'
                                     ]],
                        how='left',
-                       left_on=['Institution UKPRN code',
-                                'Unit of assessment number'],
-                       right_on=['Institution UKPRN code',
-                                 'Unit of assessment number']
+                       left_on=['inst_id',
+                                'uoa_id'],
+                       right_on=['inst_id',
+                                 'uoa_id']
                        )
     # 3.3. Research Income In-Kind
     raw_env_IncomeInKind = raw_file.parse("ResearchIncomeInKind", skiprows=4)
-    raw_env_IncomeInKind['Institution UKPRN code'] = raw_env_IncomeInKind['Institution UKPRN code'].astype(str)
-    raw_env_IncomeInKind['Unit of assessment number'] = raw_env_IncomeInKind['Unit of assessment number'].astype(str)
+    raw_env_IncomeInKind['inst_id'] = raw_env_IncomeInKind['inst_id'].astype(str)
+    raw_env_IncomeInKind['uoa_id'] = raw_env_IncomeInKind['uoa_id'].astype(str)
     tot_inc = raw_env_IncomeInKind[raw_env_IncomeInKind['Income source']=='Total income-in-kind']
-    tot_tot_inc = tot_inc[['Institution UKPRN code',
-                           'Unit of assessment number',
+    tot_tot_inc = tot_inc[['inst_id',
+                           'uoa_id',
                            'Total income for academic years 2013-14 to 2019-20']]
     tot_tot_inc = tot_tot_inc.rename({'Total income for academic years 2013-14 to 2019-20':
                                       'Total income InKind for academic years 2013-14 to 2019-20'},
                                     axis=1)
     raw_ics = pd.merge(raw_ics,
-                       tot_tot_inc[['Institution UKPRN code',
-                                    'Unit of assessment number',
+                       tot_tot_inc[['inst_id',
+                                    'uoa_id',
                                     'Total income InKind for academic years 2013-14 to 2019-20'
                                    ]],
                        how='left',
-                       left_on = ['Institution UKPRN code',
-                                  'Unit of assessment number'],
-                       right_on = ['Institution UKPRN code',
-                                   'Unit of assessment number']
+                       left_on = ['inst_id',
+                                  'uoa_id'],
+                       right_on = ['inst_id',
+                                   'uoa_id']
                       )
     merged_path = os.path.join(os.getcwd(), '..', '..', 'data', 'merged')
     raw_ics.to_csv(os.path.join(merged_path, 'merged_ref_data.csv'))
