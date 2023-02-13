@@ -1,3 +1,5 @@
+from os.path import isfile, join
+from os import listdir
 import requests
 import os
 import pandas as pd
@@ -109,10 +111,24 @@ def merge_ref_data(raw_path):
 
     # 2. Now lets work on the output data.
     raw_output = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'), skiprows=4)
-    raw_output[raw_output['inst_id']!=' ']
+    raw_output = raw_output.rename(columns = {'Institution UKPRN code': 'inst_id'})
+    raw_output = raw_output.loc[raw_output['inst_id'] != ' ']
+    
+    raw_output = format_ids(raw_output)
+
     raw_ics['Output Journals'] = np.nan
     raw_ics['Total REF Citations'] = np.nan
     raw_ics['Number Articles'] = np.nan
+    
+    code = raw_ics['inst_id'][0]
+    unit = raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique()[0]
+    raw_output.columns
+    
+    result_cols = ['DOI', 'Output type', 'Title', 'ISSN', 'Month', 'Year',
+                   'Number of additional authors', 'Non-English', 'Interdisciplinary',
+                   'Forensic science', 'Criminology', 'Propose double weighting', 'Is reserve output',
+                   'Research group','Open access status','Citations applicable','Citation count']
+
     for code in raw_ics['inst_id'].unique():
         for unit in raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique():
             temp_df = raw_output[(raw_output['inst_id']==code) &
@@ -231,10 +247,17 @@ def merge_ref_data(raw_path):
 
 def main():
     raw_path = os.path.join(os.getcwd(), '..', '..', 'data', 'raw')
-    get_impact_data(raw_path)
-    get_environmental_data(raw_path)
-    get_output_data(raw_path)
-    get_all_results(raw_path)
+    data_files = [f for f in listdir(raw_path)]
+    
+    if ~('raw_environment_data.xlsx' in data_files):
+        get_environmental_data(raw_path)
+    if ~('raw_ics_data.xlsx' in data_files):
+        get_impact_data(raw_path)
+    if ~('raw_results_data.xlsx' in data_files):
+        get_all_results(raw_path)
+    if ~('raw_outputs_data.xlsx' in data_files):
+        get_output_data(raw_path)
+        
     merge_ref_data(raw_path)
 
 
