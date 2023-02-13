@@ -35,22 +35,51 @@ def get_all_results(raw_path):
     r = requests.get(url, allow_redirects=True)
     open(os.path.join(raw_path,  'raw_results_data.xlsx'), 'wb').write(r.content)
 
+def check_id_overlap(a, b):
+    ###Convenience function to check overlap of two lists of ids"""
+    
+    print("{} of element in B present in A".format(
+        np.mean([i in a for i in b])))
+    print("{} of element in A present in B".format(
+        np.mean([i in b for i in a])))
+
+    print("{} missing in A but present in B".format(
+        [i for i in a if i not in b]))
+    print("{} missing in B but present in A".format(
+        [i for i in b if i not in a]))
 
 def merge_ref_data(raw_path):
     """ Merge all REF files with the ICS data as the spine"""
     raw_ics = pd.read_excel(os.path.join(raw_path,
                                          'raw_ics_data.xlsx'))
+    [n_ics, k_ics] = raw_ics.shape
+    
     # 1. First lets work on the 'results' data:
     raw_results = pd.read_excel(os.path.join(raw_path,
                                              'raw_results_data.xlsx'),
                                 skiprows=6)
+    [n_results, k_results] = raw_results.shape
+    
     raw_results = raw_results[raw_results['Institution code (UKPRN)'] != ' ']
     raw_ics = raw_ics.copy()[raw_ics['Institution UKPRN code'] != ' ']
-    raw_ics['FTE'] = np.nan
-    raw_ics['FTE_pc'] = np.nan
-    for profile in raw_results['Profile'].unique():
-        for star in ['4*', '3*', '2*', '1*', 'Unclassified']:
-            raw_ics[profile + '_' + star + '_pc'] = np.nan
+    
+    ## Extract some general sets and lists
+    result_types = raw_results['Profile'].unique() # types of results output
+    score_types = ['4*', '3*', '2*', '1*', 'Unclassified'] # types of scores
+    results_ins_ids = [int(i) for i in raw_results['Institution code (UKPRN)'].unique()] # UKPRN in results
+    # UKPRN in ics
+    ics_ins_ids = [int(i) for i in raw_ics['Institution UKPRN code'].unique()]
+    
+    check_id_overlap(results_ins_ids, ics_ins_ids)
+    
+    ## Add some empty columns to the results set
+    score_cols = ["_".join([type, score, 'pc']) for type in result_types
+                  for score in score_types]
+    new_ics_cols = score_cols + ['FTE', 'FTE_pc']
+    
+    raw_ics = raw_ics.reindex(columns=raw_ics.columns.to_list() + new_ics_cols)
+    
+    
     for code in raw_results['Institution code (UKPRN)'].unique():
         temp_df = raw_results[raw_results['Institution code (UKPRN)'] == code]
         for unit in temp_df['Unit of assessment number'].unique():
