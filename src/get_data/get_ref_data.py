@@ -52,9 +52,9 @@ def check_id_overlap(a, b):
 
 def format_ids(df):
     """Format id codes for merging"""
-    
+
     df = df.astype({'inst_id': 'int'})
-    df['uoa_id'] = df['Unit of assessment number'].astype(
+    df['uoa_id'] = df['Unit of assessment number'].astype(int).astype(
         str) + df['Multiple submission letter'].fillna('').astype(str)
     return(df)
 
@@ -62,9 +62,15 @@ def merge_ins_uoa(df1, df2):
     """Function to merge to dataframes left on df1 based on inst_id and uoa_id"""
 
     ## [TODO] Add some unit tests on the merge here ##
+    assert all(df1['inst_id'].isin(df2['inst_id']))
+    assert all(df1['uoa_id'].isin(df2['uoa_id']))
     
     return(df1.merge(df2, how='left', left_on=['inst_id', 'uoa_id'],
                      right_on=['inst_id', 'uoa_id']))
+
+def summarize_output_data(df):
+    """Placeholder summarization function"""
+    return(df.groupby(['inst_id', 'uoa_id']).first().reset_index())
 
 def merge_ref_data(raw_path):
     """ Merge all REF files with the ICS data as the spine"""
@@ -116,63 +122,13 @@ def merge_ref_data(raw_path):
     raw_ics = merge_ins_uoa(raw_ics, wide_score_card)
 
     # 2. Now lets work on the output data.
-    # [TODO]: All the below code to be replaced by a wrangling function and a merge to the raw_ics. For example:
+    # [TODO]: Build separate script to generate descriptives at the raw_output level
     # raw_output = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'), skiprows=4)
     # raw_output = raw_output.rename(columns = {'Institution UKPRN code': 'inst_id'})
     # raw_output = raw_output.loc[raw_output['inst_id'] != ' ']
-    # raw_output = format_ids(raw_output)    
-    # summ_output = raw_output.groupby(['inst_id', 'uoa_id']).first().reset_index()
+    # raw_output = format_ids(raw_output)
+    # summ_output = summarize_output_data(raw_output)
     # raw_ics = merge_ins_uoa(raw_ics, summ_output)
-
-    # [TODO]: Remove below code
-    # raw_ics['Output Journals'] = np.nan
-    # raw_ics['Total REF Citations'] = np.nan
-    # raw_ics['Number Articles'] = np.nan
-    
-    # result_cols = ['DOI', 'Output type', 'Title', 'ISSN', 'Month', 'Year',
-    #                'Number of additional authors', 'Non-English', 'Interdisciplinary',
-    #                'Forensic science', 'Criminology', 'Propose double weighting', 'Is reserve output',
-    #                'Research group','Open access status','Citations applicable','Citation count']
-
-    # for code in raw_ics['inst_id'].unique():
-    #     for unit in raw_ics[raw_ics['inst_id']==code]['uoa_id'].unique():
-    #         temp_df = raw_output[(raw_output['inst_id']==code) &
-    #                              (raw_output['uoa_id']==unit)]
-    #         output_row = {}
-    #         output_counter = 0
-    #         for index, row in temp_df.iterrows():
-    #             output_row[str(output_counter)] = {}
-    #             output_row[str(output_counter)]['DOI'] = row['DOI']
-    #             output_row[str(output_counter)]['Output type'] = row['Output type']
-    #             output_row[str(output_counter)]['Title'] = row['Title']
-    #             output_row[str(output_counter)]['ISSN'] = row['ISSN']
-    #             output_row[str(output_counter)]['Month'] = row['Month']
-    #             output_row[str(output_counter)]['Year'] = row['Year']
-    #             output_row[str(output_counter)]['Number of additional authors'] = row['Number of additional authors']
-    #             output_row[str(output_counter)]['Non-English'] = row['Non-English']
-    #             output_row[str(output_counter)]['Interdisciplinary'] = row['Interdisciplinary']
-    #             output_row[str(output_counter)]['Forensic science'] = row['Forensic science']
-    #             output_row[str(output_counter)]['Criminology'] = row['Criminology']
-    #             output_row[str(output_counter)]['Propose double weighting'] = row['Propose double weighting']
-    #             output_row[str(output_counter)]['Is reserve output'] = row['Is reserve output']
-    #             output_row[str(output_counter)]['Research group'] = row['Research group']
-    #             output_row[str(output_counter)]['Open access status'] = row['Open access status']
-    #             output_row[str(output_counter)]['Citations applicable'] = row['Citations applicable']
-    #             output_row[str(output_counter)]['Citation count'] = row['Citation count']
-    #             output_counter =+ 1
-    #         raw_ics['Output Journals'] = np.where((raw_ics['inst_id']==code) &
-    #                                               (raw_ics['uoa_id']==unit),
-    #                                               output_row,
-    #                                               raw_ics['Output Journals'])
-
-    #         raw_ics['Number Articles'] = np.where((raw_ics['inst_id']==code) &
-    #                                               (raw_ics['uoa_id']==unit),
-    #                                               len(temp_df),
-    #                                               raw_ics['Number Articles'])
-    #         raw_ics['Total REF Citations'] = np.where((raw_ics['inst_id']==code) &
-    #                                                   (raw_ics['uoa_id']==unit),
-    #                                                   temp_df['Citation count'].sum(),
-    #                                                   raw_ics['Total REF Citations'])
 
     # 3. Onto the environmental data, noting that this has 3 sheets:
     # 3.1. Sheet One: Research Doctoral Degrees Awarded
@@ -222,7 +178,8 @@ def merge_ref_data(raw_path):
     raw_ics = merge_ins_uoa(raw_ics, tot_inc_kind[rel_inc_kind_cols])
     
     merged_path = os.path.join(os.getcwd(), '..', '..', 'data', 'merged')
-    raw_ics.to_csv(os.path.join(merged_path, 'merged_ref_data_exc_output.csv'))
+    raw_ics.to_excel(os.path.join(merged_path, 'merged_ref_data_exc_output.xlsx'))
+    raw_ics.to_pickle(os.path.join(merged_path, 'merged_ref_data_exc_output.pkl'))
 
 def main():
     raw_path = os.path.join(os.getcwd(), '..', '..', 'data', 'raw')
