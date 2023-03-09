@@ -55,8 +55,8 @@ def main():
     # Submission
     sub = ics[id_vars + sub_level_vars].groupby('sub_id').first().reset_index()
 
-    sub[id_vars + sub_level_vars].to_pickle(os.path.join(edit_path, 'sub_table.pkl'))
-    sub[id_vars + sub_level_vars].to_excel(os.path.join(edit_path, 'sub_table.xlsx'))
+    sub[id_vars + sub_level_vars + outcome_vars].to_pickle(os.path.join(edit_path, 'sub_table.pkl'))
+    sub[id_vars + sub_level_vars + outcome_vars].to_excel(os.path.join(edit_path, 'sub_table.xlsx'))
     
 if __name__ == "__main__":
     main()
