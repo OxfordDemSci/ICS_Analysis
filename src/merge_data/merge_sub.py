@@ -13,7 +13,7 @@ def main():
 
     ## Set paths
     edit_path = os.path.join(os.getcwd(), '..', '..', 'data', 'edit')
-    final_path = os.path.join(os.getcwd(), '..', '..', 'data', 'edit')
+    final_path = os.path.join(os.getcwd(), '..', '..', 'data', 'final')
 
     ## Read data
     sub = pd.read_pickle(os.path.join(edit_path, 'sub_table.pkl'))
