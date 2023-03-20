@@ -30,7 +30,9 @@ General data folder structure is as follows:
 Data is fetched from various places through the following scripts contained in the `src/get_data/` folder:
 
 `get_ref_data.py`: fetches data from the REF website.
+
 `get_output_data.py`: tbd
+
 `get_3rd_party_data.py`: tbd
 
 #### Generate aggregation level-specific tables
@@ -38,6 +40,7 @@ Data is fetched from various places through the following scripts contained in t
 Data is wrangled and stored, and features are extracted such that we have complete aggregation level specific tables through the following scripts contained in the `src/clean_data/` folder:
 
 `split_ref_ics_dept.py`: splits the data fetcehd from `get_ref_data.py` into a table at the submission level and a table at the ICS level including identifiers.
+
 `models.py`: extracts features at the ICS level.
 
 
