@@ -307,22 +307,55 @@ def get_sentiment_scores(df):
 
 
 def main():
+    # Read in a pickled Pandas DataFrame from a specific file path
+    #   - df: DataFrame object, the pickled DataFrame
     df = pandas.read_pickle(
         root_dir.joinpath("data", "merged", "merged_ref_data_exc_output.pkl")
     )
+
+    # Load extra data from a toml file and create a new Pandas DataFrame
+    #   - extra_data: dict, the dictionary of extra data
+    print('Loading extra country and funder data')
     extra_data = toml.load(
         root_dir.joinpath("src", "clean_data", "extra_data", "ics_country_funder.toml")
     )
+    #   - df_extra: DataFrame object, the new DataFrame created from the dictionary
     df_extra = pandas.DataFrame(extra_data["impact case study"])
+
+    print('Merge data')
+    # Merge the original DataFrame with the new one based on a common identifier
+    #   - df: DataFrame object, the merged DataFrame
     df = pandas.merge(df, df_extra, how="left", on="REF impact case study identifier")
+
+    print('Extract urls and ids from text in the DataFrame')
+    # Extract urls and ids from text in the DataFrame
+    #   - df: DataFrame object, the DataFrame with extracted urls and ids
     df = extract_urls_ids(df)
+
+    print('Calculate readability scores')
+    # Calculate readability scores for the text in the DataFrame
+    #   - df: DataFrame object, the DataFrame with readability scores
     df = get_readability_scores(df)
+
+    # Prepare the Spacy natural language processing library
     prepare_spacy()
+
+    print('Get part-of-speech features')
+    # Get part-of-speech features for the text in the DataFrame
+    #   - df: DataFrame object, the DataFrame with part-of-speech features
     df = get_pos_features(df)
+
+    print('Get sentiment scores')
+    # Get sentiment scores for the text in the DataFrame
+    #   - df: DataFrame object, the DataFrame with sentiment scores
     df = get_sentiment_scores(df)
+    print('Writing pickle')
+    # Create a directory for text features, if it doesn't exist
     dir_text = root_dir.joinpath("data", "with_text_features")
     dir_text.mkdir(parents=True, exist_ok=True)
+    # Write the DataFrame with text features to a pickled file in the directory
     df.to_pickle(dir_text.joinpath("merged_with_text_features.pkl"))
+    # Return the DataFrame
     return df
 
 
