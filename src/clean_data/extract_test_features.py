@@ -5,12 +5,16 @@ from pathlib import Path
 
 import pandas
 import spacy.util
+import toml
 from textblob import TextBlob
 from textstat import textstat
 
 import re
 from markdown import markdown
 from bs4 import BeautifulSoup
+from tqdm.auto import tqdm
+
+tqdm.pandas()
 
 root_dir = Path(__file__).parent.parent.parent
 nlp = None
@@ -160,12 +164,12 @@ def get_readability_scores(df):
     ]
     for i, s in zip(range(1, 6), section_columns):
         # Apply the textstat.flesch_reading_ease function to each cell in the current section column of the DataFrame.
-        df[f"s{i}_flesch_score"] = df[s].apply(
+        df[f"s{i}_flesch_score"] = df[s].progress_apply(
             lambda x: textstat.flesch_reading_ease(markdown_to_text(x))
         )
     # Calculate the Flesch readability score for the entire DataFrame by concatenating the text of each section
     # and applying the textstat.flesch_reading_ease function to the concatenated text.
-    df["flesch_score"] = df.apply(
+    df["flesch_score"] = df.progress_apply(
         lambda x: textstat.flesch_reading_ease(
             "\n".join([x[s] for s in section_columns])
         ),
@@ -197,13 +201,13 @@ def extract_urls_ids(df):
         # Extract the count and values of URLs from each cell in the current section column of the DataFrame.
         df[[f"s{i}_urls_count", f"s{i}_urls", f"s{i}_dois_count", f"s{i}_dois"]] = df[
             s
-        ].apply(lambda x: pandas.Series(get_urls(x)))
+        ].progress_apply(lambda x: pandas.Series(get_urls(x)))
         # Extract the count and values of ISBNs from each cell in the current section column of the DataFrame.
-        df[[f"s{i}_isbns_count", f"s{i}_isbns"]] = df[s].apply(
+        df[[f"s{i}_isbns_count", f"s{i}_isbns"]] = df[s].progress_apply(
             lambda x: pandas.Series(get_isbns(x))
         )
         # Extract the count and values of ISSNs from each cell in the current section column of the DataFrame.
-        df[[f"s{i}_issns_count", f"s{i}_issns"]] = df[s].apply(
+        df[[f"s{i}_issns_count", f"s{i}_issns"]] = df[s].progress_apply(
             lambda x: pandas.Series(get_issns(x))
         )
     # Return the DataFrame with the new columns added.
@@ -229,7 +233,7 @@ def get_pos_features(df):
     ]
     for i, s in zip(range(1, 6), section_columns):
         # Apply the count_noun_verb_phrases function to each cell in the current section column of the DataFrame.
-        df[[f"s{i}_np_count", f"s{i}_vp_count"]] = df[s].apply(
+        df[[f"s{i}_np_count", f"s{i}_vp_count"]] = df[s].progress_apply(
             lambda x: pandas.Series(count_noun_verb_phrases(x))
         )
     # Return the DataFrame with the new columns added.
@@ -289,10 +293,12 @@ def get_sentiment_scores(df):
     ]
     # Calculate the sentiment score for each section of text in the DataFrame.
     for i, s in zip(range(1, 6), section_columns):
-        df[f"s{i}_sentiment_score"] = df[s].apply(lambda x: get_sentiment_score(x))
+        df[f"s{i}_sentiment_score"] = df[s].progress_apply(
+            lambda x: get_sentiment_score(x)
+        )
     # Calculate the overall sentiment score for the DataFrame by concatenating the text from each section and applying
     # the get_sentiment_score function.
-    df["sentiment_score"] = df.apply(
+    df["sentiment_score"] = df.progress_apply(
         lambda x: get_sentiment_score("\n".join([x[s] for s in section_columns])),
         axis=1,
     )
@@ -304,13 +310,13 @@ def main():
     df = pandas.read_pickle(
         root_dir.joinpath("data", "merged", "merged_ref_data_exc_output.pkl")
     )
-    # extra_data = toml.load(
-    #     root_dir.joinpath("src", "clean_data", "extra_data", "ics_country_funder.toml")
-    # )
-    # df_extra = pandas.DataFrame(extra_data["impact case study"])
-    # df = pandas.merge(df, df_extra, how="left", on="REF impact case study identifier")
-    # df = extract_urls_ids(df)
-    # df = get_readability_scores(df)
+    extra_data = toml.load(
+        root_dir.joinpath("src", "clean_data", "extra_data", "ics_country_funder.toml")
+    )
+    df_extra = pandas.DataFrame(extra_data["impact case study"])
+    df = pandas.merge(df, df_extra, how="left", on="REF impact case study identifier")
+    df = extract_urls_ids(df)
+    df = get_readability_scores(df)
     prepare_spacy()
     df = get_pos_features(df)
     df = get_sentiment_scores(df)
@@ -318,3 +324,7 @@ def main():
     dir_text.mkdir(parents=True, exist_ok=True)
     df.to_pickle(dir_text.joinpath("merged_with_text_features.pkl"))
     return df
+
+
+if __name__ == "__main__":
+    main()
