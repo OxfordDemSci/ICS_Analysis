@@ -194,3 +194,195 @@ def heatmap(x, y, figsize, figure_path, filename, **kwargs):
     plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches = 'tight')
     plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches = 'tight',
                 dpi=400, facecolor='white', transparent=False)
+
+
+def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
+    # This needs optimising/writing properly.
+    dfeA = dfe[dfe['Main panel'] == 'A']
+    dfeB = dfe[dfe['Main panel'] == 'B']
+    dfeC = dfe[dfe['Main panel'] == 'C']
+    dfeD = dfe[dfe['Main panel'] == 'D']
+
+    import matplotlib as mpl
+    import numpy as np
+    fig = plt.figure(figsize=(12, 7.5))
+    from matplotlib import gridspec
+    gs = gridspec.GridSpec(2, 2)
+    mpl.rcParams['font.family'] = 'Helvetica'
+    colors5_blue = ['#3a5e8cFF', '#10a53dFF', '#541352FF', '#ffcf20FF', '#2f9aa0FF']
+
+    ax1 = fig.add_subplot(gs[0:2, 0:1])
+    ax2 = fig.add_subplot(gs[0:1, 1:2])
+    ax3 = fig.add_subplot(gs[1:2, 1:2])
+
+    for dataframe, color in zip([dfeA, dfeB, dfeC, dfeD], [0, 1, 2, 3]):
+        sns.kdeplot(dataframe[variable + '_score'], ax=ax1,
+                    common_norm=True,
+                    color=colors5_blue[color],
+                    common_grid=True,
+                    cut=0)
+    for score in [0, 1, 2, 3, 4]:
+        sns.kdeplot(dfeC['s' + str(score + 1) + '_' + variable + '_score'], ax=ax2,
+                    common_norm=True, color=colors5_blue[score],
+                    common_grid=True, cut=0)
+        sns.kdeplot(dfeD['s' + str(score + 1) + '_' + variable + '_score'], ax=ax3,
+                    common_norm=True, color=colors5_blue[score],
+                    common_grid=True, cut=0)
+
+    ax1.yaxis.grid(linestyle='--', alpha=0.3)
+    ax1.xaxis.grid(linestyle='--', alpha=0.3)
+    ax2.yaxis.grid(linestyle='--', alpha=0.3)
+    ax2.xaxis.grid(linestyle='--', alpha=0.3)
+    ax3.yaxis.grid(linestyle='--', alpha=0.3)
+    ax3.xaxis.grid(linestyle='--', alpha=0.3)
+    ax1.set_title('A.', loc='left', fontsize=18)
+    ax1.tick_params(axis='both', which='major', labelsize=13)
+    ax2.set_title('B.', loc='left', fontsize=18)
+    ax2.tick_params(axis='both', which='major', labelsize=13)
+    ax3.set_title('C.', loc='left', fontsize=18)
+    ax1.tick_params(axis='both', which='major', labelsize=13)
+
+    ax1.set_ylabel('Normalised Density', fontsize=14)
+    ax2.set_ylabel('Normalised Density', fontsize=14)
+    ax3.set_ylabel('Normalised Density', fontsize=14)
+
+    ax1.set_xlabel('Combined ' + str.title(variable) + ' Score', fontsize=14)
+    ax2.set_xlabel('', fontsize=14)
+    ax3.set_xlabel(str.title(variable) + ' Scores (S1-S5)', fontsize=14)
+
+    from matplotlib.lines import Line2D
+    legend_elements1 = [Line2D([0], [0], marker=None,
+                               label=r'Panel: A', linewidth=1,
+                               color=colors5_blue[0]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Panel: B', linewidth=1,
+                               color=colors5_blue[1]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Panel: C', linewidth=1,
+                               color=colors5_blue[2]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Panel: D', linewidth=1,
+                               color=colors5_blue[3])
+                        ]
+
+    legend_elements2 = [Line2D([0], [0], marker=None,
+                               label=r'Section: 1', linewidth=1,
+                               color=colors5_blue[0]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Section: 2', linewidth=1,
+                               color=colors5_blue[1]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Section: 3', linewidth=1,
+                               color=colors5_blue[2]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Section: 4', linewidth=1,
+                               color=colors5_blue[3]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Section: 5', linewidth=1,
+                               color=colors5_blue[4])]
+
+    if variable == 'sentiment':
+        legend_loc = 'upper right'
+    elif variable == 'flesch':
+        legend_loc = 'upper left'
+
+    ax1.legend(handles=legend_elements1, loc=legend_loc, frameon=True,
+               fontsize=14, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1)
+               # title='Main Panel', title_fontsize=14
+               )
+    ax2.legend(handles=legend_elements2, loc=legend_loc, frameon=True,
+               fontsize=11, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               title='Panel: C', title_fontsize=11
+               )
+    ax3.legend(handles=legend_elements2, loc=legend_loc, frameon=True,
+               fontsize=11, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               title='Panel: D', title_fontsize=11
+               )
+
+    ax2.xaxis.set_ticklabels([])
+    ax1.tick_params(axis='both', which='major', labelsize=13)
+    ax2.tick_params(axis='both', which='major', labelsize=13)
+    ax3.tick_params(axis='both', which='major', labelsize=13)
+
+    if sum_stats is True:
+        textstr1 = '\n'.join((
+            r'Panel A: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeA[variable + '_score'].mean(),
+                                                               decimals=2),
+                                                     np.around(dfeA[variable + '_score'].std(),
+                                                               decimals=2)),
+            r'Panel B: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeB[variable + '_score'].mean(),
+                                                               decimals=2),
+                                                     np.around(dfeB[variable + '_score'].std(),
+                                                               decimals=2)),
+            r'Panel C: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeC[variable + '_score'].mean(),
+                                                               decimals=2),
+                                                     np.around(dfeC[variable + '_score'].std(),
+                                                               decimals=2)),
+            r'Panel D: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeD[variable + '_score'].mean(),
+                                                               decimals=2),
+                                                     np.around(dfeD[variable + '_score'].std(),
+                                                               decimals=2))))
+
+        textstr2 = '\n'.join((
+            r'Section 1: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeC['s1_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeC['s1_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 2: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeC['s2_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeC['s2_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 3: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeC['s3_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeC['s3_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 4: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeC['s4_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeC['s4_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 5: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeC['s5_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeC['s5_' + variable + '_score'].std(),
+                                                                 decimals=2))))
+
+        textstr3 = '\n'.join((
+            r'Section 1: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeD['s1_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeD['s1_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 2: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeD['s2_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeD['s2_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 3: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeD['s3_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeD['s3_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 4: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeD['s4_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeD['s4_' + variable + '_score'].std(),
+                                                                 decimals=2)),
+            r'Section 5: $\mu$=%.2f, $\sigma$=%.2f' % (np.around(dfeD['s5_' + variable + '_score'].mean(),
+                                                                 decimals=2),
+                                                       np.around(dfeD['s5_' + variable + '_score'].std(),
+                                                                 decimals=2))))
+        props = dict(boxstyle='round', facecolor='white', edgecolor='k', alpha=1)
+
+        # place a text box in upper left in axes coords
+        ax1.text(0.05, 0.19, textstr1, transform=ax1.transAxes, fontsize=12,
+                 verticalalignment='top', bbox=props)
+        ax2.text(0.05, 0.385, textstr2, transform=ax2.transAxes, fontsize=10,
+                 verticalalignment='top', bbox=props)
+        ax3.text(0.05, 0.385, textstr3, transform=ax3.transAxes, fontsize=10,
+                 verticalalignment='top', bbox=props)
+
+    # sns.despine()
+    plt.tight_layout()
+    plt.savefig(os.path.join(figure_path, file_name + '.pdf'),
+                bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path, file_name + '.png'),
+                bbox_inches='tight', dpi=400,
+                facecolor='white', transparent=False)
