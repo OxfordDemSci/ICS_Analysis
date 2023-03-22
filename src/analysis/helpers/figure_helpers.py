@@ -1,9 +1,190 @@
 import os
 import numpy as np
-from matplotlib.lines import Line2D
-import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
+import matplotlib.ticker as tkr
+import matplotlib.pyplot as plt
 import matplotlib as mpl
+from matplotlib.colors import LogNorm
+from matplotlib.lines import Line2D
+from nltk.stem.snowball import SnowballStemmer
+from text_helpers import freq_dist, co_occurrence, set_diag, truncate_colormap
+
+mpl.rc('font', family='Helvetica')
+csfont = {'fontname': 'Helvetica'}
+hfont = {'fontname': 'Helvetica'}
+
+def make_word_vis(df1, df2, fieldname, figure_path, support_path):
+    #stop_list = pd.read_csv(os.path.join(support_path,
+    #                                     'custom_stopwords.txt'))
+    #custom_stop = stop_list['words'].to_list() # @TODO: these don't actually get used?
+
+    df1_dist, df1_words = freq_dist(df1, 'english', 'lemmatized_' + fieldname)
+    df2_dist, df2_words = freq_dist(df2, 'english', 'lemmatized_' + fieldname)
+    en_stemmer = SnowballStemmer('english')
+
+    wordlist = []
+    for elem in df1_words:
+        wordlist.append(' '.join([en_stemmer.stem(w) for w in elem.split(' ') if w.isalnum()]))
+    df1_words_mat = co_occurrence(wordlist, 5)
+
+    wordlist = []
+    for elem in df2_words:
+        wordlist.append(' '.join([en_stemmer.stem(w) for w in elem.split(' ') if w.isalnum()]))
+    df2_words_mat = co_occurrence(wordlist, 5)
+    matsize = 25
+
+#    df1_sum = df1_words_mat.sum().sum() # @TODO check that these don't actually get used?
+#    df2_sum = df2_words_mat.sum().sum()
+
+    df1_tot_row = pd.DataFrame(df1_words_mat.sum())
+    df1_tot_row = df1_tot_row.sort_values(by=0, ascending=False)[0:matsize]
+
+    df1_words_mat = df1_words_mat[df1_tot_row.index.to_list()]
+    df1_words_mat = df1_words_mat.reindex(index=df1_tot_row.index.to_list())
+
+    df2_tot_row = pd.DataFrame(df2_words_mat.sum())
+    df2_tot_row = df2_tot_row.sort_values(by=0, ascending=False)[0:matsize]
+    df2_words_mat = df2_words_mat[df2_tot_row.index.to_list()]
+    df2_words_mat = df2_words_mat.reindex(index=df2_tot_row.index.to_list())
+
+    df1_mask = np.zeros_like(df1_words_mat.iloc[0:matsize, 0:matsize], dtype=np.int16)
+    df1_mask[np.triu_indices_from(df1_mask)] = True
+
+    df2_mask = np.zeros_like(df2_words_mat.iloc[0:matsize, 0:matsize], dtype=np.int16)
+    df2_mask[np.triu_indices_from(df2_mask)] = True
+    pd.DataFrame.set_diag = set_diag
+    df1_words_mat.astype(float).set_diag(np.nan)
+    df2_words_mat.astype(float).set_diag(np.nan)
+
+    sns.set_style('ticks')
+    fig = plt.figure(figsize=(16, 13))
+    ax1 = plt.subplot2grid((49, 48), (0, 0), rowspan=21, colspan=24)
+    ax2 = plt.subplot2grid((49, 48), (0, 26), rowspan=21, colspan=20, projection='polar')
+    ax3 = plt.subplot2grid((49, 48), (28, 0), rowspan=21, colspan=20, projection='polar')
+    ax4 = plt.subplot2grid((49, 48), (28, 22), rowspan=21, colspan=24)
+    ax1.set_title('A.', loc='left', y=1.01, **hfont, fontsize=21, x=-.05)
+    ax2.set_title('B.', loc='left', y=1.01, **hfont, fontsize=21, x=-.35)
+    ax3.set_title('C.', loc='left', y=1.01, **hfont, fontsize=22, x=-.20)
+    ax4.set_title('D.', loc='left', y=1.01, **hfont, fontsize=21, x=0)
+    formatter = tkr.ScalarFormatter(useMathText=True)
+    formatter.set_scientific(False)
+    cmap = plt.get_cmap('RdBu_r')
+    cmap = truncate_colormap(cmap, 0.0, 1)
+
+    ax_df1 = sns.heatmap(df1_words_mat.astype(float),
+                         norm=LogNorm(1 + df1_words_mat.astype(float).min().min(),
+                                      df1_words_mat.astype(float).max().max()),
+                         cbar_kws={'ticks': [200, 400, 800, 1600, 3200],
+                                   "shrink": 1, 'use_gridspec': True,
+                                   "format": formatter},
+                         mask=df1_mask,
+                         vmin=1,
+                         vmax=250,
+                         cmap=cmap,
+                         linewidths=.25,
+                         ax=ax1)
+    ax_df1.collections[0].colorbar.outline.set_edgecolor('k')
+    ax_df1.collections[0].colorbar.outline.set_linewidth(1)
+    ax_df1.collections[0].colorbar.ax.yaxis.set_ticks_position('left')
+
+    iN = len(df1_dist[0:matsize]['count'])
+    labs = df1_dist[0:matsize].index
+    arrCnts = np.array(df1_dist[0:matsize]['count']) + .5
+    theta = np.arange(0, 2 * np.pi, 2 * np.pi / (iN))
+    width = (5 * np.pi) / iN
+    bottom = 0.5
+    ax2.set_theta_zero_location('W')
+    ax2.plot(theta, len(theta) * [0.55], alpha=0.5, color='k', linewidth=1, linestyle='--')
+    bars = ax2.plot(theta, arrCnts, alpha=1, linestyle='-', marker='o',
+                    color='#377eb8', markersize=7, markerfacecolor='w',
+                    markeredgecolor='#ff5148')
+    ax2.axis('off')
+    rotations = np.rad2deg(theta)
+    y0, y1 = ax2.get_ylim()
+    for x, bar, rotation, label in zip(theta, arrCnts, rotations, labs):
+        offset = (bottom + bar) / (y1 - y0)
+        lab = ax2.text(0, 0, label, transform=None,
+                       ha='center', va='center')
+        renderer = ax2.figure.canvas.get_renderer()
+        bbox = lab.get_window_extent(renderer=renderer)
+        invb = ax2.transData.inverted().transform([[0, 0], [bbox.width, 0]])
+        lab.set_position((x, offset + (invb[1][0] - invb[0][0]) + .1))
+        lab.set_transform(ax2.get_xaxis_transform())
+        lab.set_rotation(rotation)
+    ax2.fill_between(theta, arrCnts, alpha=0.075, color='#4e94ff')
+    ax2.fill_between(theta, len(theta) * [0.55], alpha=1, color='w')
+    circle = plt.Circle((0.0, 0.0), 0.1, transform=ax2.transData._b, color="k", alpha=0.3)
+    ax2.add_artist(circle)
+    ax2.plot((0, theta[0]), (0, arrCnts[0]),
+             color='k', linewidth=1, alpha=0.5, linestyle='--')
+    ax2.plot((0, theta[-1]), (0, arrCnts[-1]),
+             color='k', linewidth=1, alpha=0.5, linestyle='--')
+
+    iN = len(df2_dist[0:matsize]['count'])
+    labs = df2_dist[0:matsize].index
+    arrCnts = np.array(df2_dist[0:matsize]['count']) + .5
+    theta = np.arange(0, 2 * np.pi, 2 * np.pi / (iN))
+    width = (5 * np.pi) / iN
+    bottom = 0.5
+    ax3.set_theta_zero_location('W')
+    ax3.plot(theta, len(theta) * [0.55], alpha=0.5, color='k', linewidth=1, linestyle='--')
+    bars = ax3.plot(theta, arrCnts, alpha=1, linestyle='-', marker='o',
+                    color='#377eb8', markersize=7, markerfacecolor='w',
+                    markeredgecolor='#ff5148')
+    ax3.axis('off')
+    rotations = np.rad2deg(theta)
+    y0, y1 = ax3.get_ylim()
+    for x, bar, rotation, label in zip(theta, arrCnts, rotations, labs):
+        offset = (bottom + bar) / (y1 - y0)
+        lab = ax3.text(0, 0, label, transform=None,
+                       ha='center', va='center')
+        renderer = ax3.figure.canvas.get_renderer()
+        bbox = lab.get_window_extent(renderer=renderer)
+        invb = ax3.transData.inverted().transform([[0, 0], [bbox.width, 0]])
+        lab.set_position((x, offset + (invb[1][0] - invb[0][0]) + .0175))
+        lab.set_transform(ax3.get_xaxis_transform())
+        lab.set_rotation(rotation)
+    ax3.fill_between(theta, arrCnts, alpha=0.075, color='#4e94ff')
+    ax3.fill_between(theta, len(theta) * [0.55], alpha=1, color='w')
+    circle = plt.Circle((0.0, 0.0), 0.1, transform=ax3.transData._b, color="k", alpha=0.3)
+    ax3.add_artist(circle)
+    ax3.plot((0, theta[0]), (0, arrCnts[0]),
+             color='k', linewidth=1, alpha=0.5, linestyle='--')
+    ax3.plot((0, theta[-1]), (0, arrCnts[-1]),
+             color='k', linewidth=1, alpha=0.5, linestyle='--')
+
+    formatter = tkr.ScalarFormatter(useMathText=True)
+    formatter.set_scientific(False)
+    cmap = plt.get_cmap('RdBu_r')
+    cmap = truncate_colormap(cmap, 0.0, 1)
+    df2_words_mat = df2_words_mat.replace(0, 0.00001)
+    ax_df2 = sns.heatmap(df2_words_mat.astype(float),
+                         norm=LogNorm(1 + df2_words_mat.astype(float).min().min(),
+                                      df2_words_mat.astype(float).max().max()),
+                         cbar_kws={'ticks': [100, 200, 400, 1000, 2500],
+                                   "shrink": 1, 'use_gridspec': True,
+                                   "format": formatter},
+                         mask=df2_mask,
+                         cmap=cmap,
+                         linewidths=.25,
+                         vmin=0.0000, vmax=2500,
+                         ax=ax4)
+    ax_df2.collections[0].colorbar.ax.yaxis.set_ticks_position('left')
+    ax_df2.collections[0].colorbar.outline.set_edgecolor('k')
+    ax_df2.collections[0].colorbar.outline.set_linewidth(1)
+    for _, spine in ax1.spines.items():
+        spine.set_visible(True)
+    for _, spine in ax4.spines.items():
+        spine.set_visible(True)
+    sns.despine(ax=ax1)
+    sns.despine(ax=ax4)
+
+    plt.savefig(os.path.join(figure_path, 'bigrams_unigrams_Panels_CD' + '.pdf'),
+                bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path, 'bigrams_unigrams_Panels_CD' + '.png'),
+                bbox_inches='tight', dpi=400,
+                facecolor='white', transparent=False)
 
 
 def groupby_plotter(grp, figure_path, filename):
