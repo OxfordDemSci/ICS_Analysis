@@ -1,0 +1,26 @@
+#!interpreter [optional-arg]
+# -*- coding: utf-8 -*-
+
+"""
+{Script to aggregate ICS level data to the submission level}
+
+"""
+
+import pandas as pd
+import os
+
+def main():
+    edit_path = os.path.join(os.getcwd(), '..', '..', 'data', 'edit')
+    ics = pd.read_pickle(os.path.join(edit_path, 'ics_table.pkl'))
+
+
+    vars_to_aggregate = [i for i in ics.columns if 'impact_type' in i]
+    group_id = ['sub_id']
+
+    sub = ics[group_id + vars_to_aggregate].groupby('sub_id').mean().reset_index()
+
+    sub.to_pickle(os.path.join(edit_path, 'ics_to_sub_table.pkl'))
+    sub.to_excel(os.path.join(edit_path, 'ics_to_sub_table.xlsx'))
+
+if __name__ == "__main__":
+    main()
