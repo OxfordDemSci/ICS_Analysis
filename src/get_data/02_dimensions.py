@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import random
 
+## PLACEHOLDER SIMULATION DATA
 
 def format_ids(df):
     """Format id codes for merging"""
@@ -11,7 +12,6 @@ def format_ids(df):
         str) + df['Multiple submission letter'].fillna('').astype(str)
     return(df)
 
-## PLACEHOLDER SIMULATION DATA
 raw_path = os.path.join(os.getcwd(), '..', '..', 'data', 'raw')
 
 output_data = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'),
