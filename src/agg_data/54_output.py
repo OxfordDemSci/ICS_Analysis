@@ -24,3 +24,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def summarize_output_data(df):
+    """Placeholder summarization function"""
+    return(df.groupby(['inst_id', 'uoa_id']).first().reset_index())

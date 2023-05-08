@@ -8,6 +8,14 @@ import pycountry
 from loguru import logger
 
 
+## One-hot encode `summary impact type`
+# ics = pd.concat(
+#     [raw_ics, pd.get_dummies(raw_ics['Summary impact type'], prefix = 'impact_type')],
+#     1)
+# ics['sub_id'] = ics.agg('{0[inst_id]}_{0[Main panel]}_{0[uoa_id]}'.format, axis=1)
+# ## Append relevant columns
+# ics_level_vars = ics_level_vars + [i for i in ics if 'impact_type_' in i]
+
 def search_add_country(country_name: str, country_set: Set):
     country_name = country_name.strip().lower()
     # country_name = re.sub('\W$', '', country_name)
