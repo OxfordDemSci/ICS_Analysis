@@ -124,7 +124,7 @@ def clean_dep_level(raw_path, edit_path):
     
     
 def clean_output_level(raw_path, edit_path):
-    raw_output = pd.read_excel(os.path.join(raw_path, 'raw_outputs_data.xlsx'), skiprows=4)
+    raw_output = pd.read_excel(os.path.join(raw_path, 'raw_ref_outputs_data.xlsx'), skiprows=4)
     raw_output = format_ids(raw_output)
     raw_output.to_excel(os.path.join(edit_path, 'clean_ref_output_data.xlsx'))
 
