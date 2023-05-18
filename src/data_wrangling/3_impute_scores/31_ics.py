@@ -6,6 +6,8 @@ from urllib.parse import urlparse
 import pandas
 import pycountry
 from loguru import logger
+from dotenv import load_dotenv
+load_dotenv()  # define "basedir" environment variable in ./.env file
 
 
 def search_add_country(country_name: str, country_set: Set):

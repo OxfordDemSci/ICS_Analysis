@@ -9,6 +9,8 @@ levels of aggregation (Output, ICS, Dep)
 import numpy as np
 import os
 import pandas as pd
+from dotenv import load_dotenv
+load_dotenv()  # define "basedir" environment variable in ./.env file
 
 
 def check_id_overlap(a, b):
@@ -66,7 +68,7 @@ def clean_dep_level(raw_path, edit_path):
     
     ## Generate wide score card at department level
     raw_results = pd.read_excel(os.path.join(raw_path,
-                                             'raw_results_data.xlsx'),
+                                             'raw_ref_results_data.xlsx'),
                                 skiprows=6)
     [n_results, k_results] = raw_results.shape
     raw_results = format_ids(raw_results)
@@ -83,7 +85,7 @@ def clean_dep_level(raw_path, edit_path):
     wide_score_card = wide_score_card.reset_index()
     
     ## Obtain relevant environment data
-    raw_env_path = os.path.join(raw_path, 'raw_environment_data.xlsx')
+    raw_env_path = os.path.join(raw_path, 'raw_ref_environment_data.xlsx')
     raw_env_doctoral = pd.read_excel(
         raw_env_path,
         sheet_name="ResearchDoctoralDegreesAwarded", skiprows=4)
@@ -131,8 +133,8 @@ def clean_output_level(raw_path, edit_path):
 
 def main():
     ## Read data
-    raw_path = os.path.join(os.getcwd(), '..', '..', 'data', 'raw')
-    edit_path = os.path.join(os.getcwd(), '..', '..', 'data', 'edit')
+    raw_path = os.path.join(os.getenv('basedir'), 'data', 'raw')
+    edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
     clean_ics_level(raw_path, edit_path)
     clean_dep_level(raw_path, edit_path)
     clean_output_level(raw_path, edit_path)

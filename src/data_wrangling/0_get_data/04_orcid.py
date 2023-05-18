@@ -2,9 +2,11 @@ import pandas as pd
 import os
 import random
 import string
+from dotenv import load_dotenv
+load_dotenv()  # define "basedir" environment variable in ./.env file
 
 ## PLACEHOLDER SIMULATION DATA
-raw_path = os.path.join(os.getcwd(), '..', '..', 'data', 'raw')
+raw_path = os.path.join(os.getenv('basedir'), 'data', 'raw')
 
 output_data = pd.read_excel(os.path.join(raw_path, 'raw_dimensions_data.xlsx'))
 

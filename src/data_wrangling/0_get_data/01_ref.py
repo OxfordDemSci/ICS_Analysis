@@ -4,6 +4,8 @@ import requests
 import os
 import pandas as pd
 import numpy as np
+from dotenv import load_dotenv
+load_dotenv()  # define "basedir" environment variable in ./.env file
 
 
 def get_impact_data(raw_path):
@@ -40,7 +42,7 @@ def get_output_data(raw_path):
 
 
 def main():
-    raw_path = os.path.join(os.getcwd(), '..', '..', 'data', 'raw')
+    raw_path = os.path.join(os.getenv('basedir'), 'data', 'raw')
     data_files = [f for f in listdir(raw_path)]
     
     if ~('raw_ref_environment_data.xlsx' in data_files):
