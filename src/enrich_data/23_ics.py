@@ -1,17 +1,16 @@
 import re
 import os
-from dataclasses import dataclass, field
-from typing import Set, List
-from urllib.parse import urlparse
 
 import pandas as pd
 import random
-import pycountry
-from loguru import logger
 
+from sklearn.preprocessing import OneHotEncoder
 
-edit_path = raw_path = os.path.join(os.getcwd(), '..', '..',
-                                    'data', 'edit')
+edit_path = os.path.join(os.getcwd(), '..', '..',
+                         'data', 'edit')
+enriched_path = os.path.join(os.getcwd(), '..', '..',
+                           'data', 'enriched')
+
 ics = pd.read_excel(os.path.join(edit_path, 'clean_ref_ics_data.xlsx'))
 
 ## Relevant columns to perform text analysis on
@@ -26,8 +25,11 @@ ics['3. References to the research'] = [random.randint(1, 10) for i in range(ics
 ics['4. Details of the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
 ics['5. Sources to corroborate the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
 
+## One-hot encode impact type
+ics = pd.concat([ics, pd.get_dummies(ics['Summary impact type'])], axis=1)
+
 ## Save enriched dataset
-ics.to_excel('enriched_ref_ics_data.xlsx')
+ics.to_excel(os.path.join(enriched_path, 'enriched_ref_ics_data.xlsx'))
 
 
 ## One-hot encode `summary impact type`
