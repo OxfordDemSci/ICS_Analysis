@@ -11,3 +11,4 @@ textblob~=0.17.1
 pycountry~=22.3.5
 loguru~=0.7.0
 python-dotenv~=1.0.0
+scikit-learn~=1.2.2

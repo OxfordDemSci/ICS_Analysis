@@ -8,6 +8,8 @@ import pandas as pd
 import random
 import pycountry
 from loguru import logger
+from sklearn.preprocessing import OneHotEncoder
+
 from dotenv import load_dotenv
 
 
@@ -194,7 +196,7 @@ if __name__ == '__main__':
     # define paths
     edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
 
-    enrich_path = os.path.join(os.getenv('basedir'), 'data', 'enrich')
+    enriched_path = os.path.join(os.getenv('basedir'), 'data', 'enriched')
     os.makedirs(enrich_path, exist_ok=True)
 
     # load data
@@ -217,5 +219,8 @@ if __name__ == '__main__':
     ics['4. Details of the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
     ics['5. Sources to corroborate the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
 
+    ## One-hot encode impact type
+    ics = pd.concat([ics, pd.get_dummies(ics['Summary impact type'])], axis=1)
+
     ## Save enriched dataset
-    ics.to_excel(os.path.join(enrich_path, 'enrich_ref_ics_data.xlsx'))
+    ics.to_excel(os.path.join(enriched_path, 'enriched_ref_ics_data.xlsx'))
