@@ -1,11 +1,36 @@
 {
-   "Innovation_Infratstructure": [
-      "digital infrastructure",
-      "digital innovation",
-      "digital platform",
-      "novel digital"
-   ],
-   "Health_and_Wellbeing": [
+  "Climate &\nNet Zero": [
+     "climate",
+     "net zero",
+     "carbon",
+     "green technology",
+     "clean energy",
+     "emissions",
+     "diesel",
+     "pollution"
+  ],
+  "Data \n& AI": [
+     " ai ",
+     "artificial intelligence",
+     "machine learn",
+     "data infrastructure",
+     "data resource",
+     "deep learn",
+     "computational",
+     "econometrics"
+  ],
+  "Economic &\nBusiness": [
+     "productivity",
+     " skills",
+     "education",
+     "labour market",
+     "labor market",
+     "economic growth",
+     "macroeconomy",
+     "financial market",
+     "business engagement"
+  ],
+   "Health &\nWellbeing": [
       "health",
       "wellbing",
       "national health service",
@@ -16,7 +41,7 @@
       "social care",
       "disease"
    ],
-   "Inequalities_and_Social_Justice": [
+   "Inequality": [
       "children",
       "education",
       "levelling up",
@@ -24,35 +49,10 @@
       "discrimination",
       "justice"
    ],
-   "Climate_Sustainability_and_Net_Zero": [
-      "climate",
-      "net zero",
-      "carbon",
-      "green technology",
-      "clean energy",
-      "emissions",
-      "diesel",
-      "pollution"
-   ],
-   "Economic_Impact_Skills_and_Business_Engagement": [
-      "productivity",
-      " skills",
-      "education",
-      "labour market",
-      "labor market",
-      "economic growth",
-      "macroeconomy",
-      "financial market",
-      "business engagement"
-   ],
-   "Data_and_AI": [
-      " ai ",
-      "artificial intelligence",
-      "machine learn",
-      "data infrastructure",
-      "data resource",
-      "deep learn",
-      "computational",
-      "econometrics"
+   "Innovation": [
+      "digital infrastructure",
+      "digital innovation",
+      "digital platform",
+      "novel digital"
    ]
 }

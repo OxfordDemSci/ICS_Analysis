@@ -1,4 +1,6 @@
 import os
+import json
+import warnings
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -7,12 +9,234 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.colors import LogNorm
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
+from matplotlib import gridspec
+from matplotlib.offsetbox import AnchoredText
 from nltk.stem.snowball import SnowballStemmer
 from text_helpers import freq_dist, co_occurrence, set_diag, truncate_colormap
-
+warnings.filterwarnings('ignore')
 mpl.rc('font', family='Helvetica')
 csfont = {'fontname': 'Helvetica'}
 hfont = {'fontname': 'Helvetica'}
+
+
+def plot_impacttype_vs_uoa(figure_path, df):
+    groupby_counter = df.groupby(['Unit of assessment number']).size().reset_index().rename({0: 'Count'}, axis=1)
+    temp = df.groupby(['Unit of assessment number',
+                       'Summary impact type']).size().reset_index().rename({0: 'Count'}, axis=1)
+    groupby_counter = groupby_counter.set_index('Unit of assessment number')
+
+
+    Environmental = temp[temp['Summary impact type'] == 'Environmental'].rename({0: 'Count'}, axis=1)
+    Environmental = Environmental.set_index('Unit of assessment number')
+    groupby_counter['Environmental'] = Environmental['Count']
+    groupby_counter['Environmental_pc'] = (groupby_counter['Environmental']/groupby_counter['Count'])*100
+
+    Health = temp[temp['Summary impact type'] == 'Health'].rename({0: 'Count'}, axis=1)
+    Health = Health.set_index('Unit of assessment number')
+    groupby_counter['Health'] = Health['Count']
+    groupby_counter['Health_pc'] = (groupby_counter['Health']/groupby_counter['Count'])*100
+
+    Political = temp[temp['Summary impact type'] == 'Political'].rename({0: 'Count'}, axis=1)
+    Political = Political.set_index('Unit of assessment number')
+    groupby_counter['Political'] = Political['Count']
+    groupby_counter['Political_pc'] = (groupby_counter['Political']/groupby_counter['Count'])*100
+
+    Societal = temp[temp['Summary impact type'] == 'Societal'].rename({0: 'Count'}, axis=1)
+    Societal = Societal.set_index('Unit of assessment number')
+    groupby_counter['Societal'] = Societal['Count']
+    groupby_counter['Societal_pc'] = (groupby_counter['Societal']/groupby_counter['Count'])*100
+
+    Technological = temp[temp['Summary impact type'] == 'Technological'].rename({0: 'Count'}, axis=1)
+    Technological = Technological.set_index('Unit of assessment number')
+    groupby_counter['Technological'] = Technological['Count']
+    groupby_counter['Technological_pc'] = (groupby_counter['Technological']/groupby_counter['Count'])*100
+
+    Legal = temp[temp['Summary impact type'] == 'Legal'].rename({0: 'Count'}, axis=1)
+    Legal = Legal.set_index('Unit of assessment number')
+    groupby_counter['Legal'] = Legal['Count']
+    groupby_counter['Legal_pc'] = (groupby_counter['Legal']/groupby_counter['Count'])*100
+
+    Economic = temp[temp['Summary impact type'] == 'Economic'].rename({0: 'Count'}, axis=1)
+    Economic = Economic.set_index('Unit of assessment number')
+    groupby_counter['Economic'] = Economic['Count']
+    groupby_counter['Economic_pc'] = (groupby_counter['Economic']/groupby_counter['Count'])*100
+
+    Cultural = temp[temp['Summary impact type'] == 'Cultural'].rename({0: 'Count'}, axis=1)
+    Cultural = Cultural.set_index('Unit of assessment number')
+    groupby_counter['Cultural'] = Cultural['Count']
+    groupby_counter['Cultural_pc'] = (groupby_counter['Cultural']/groupby_counter['Count'])*100
+    fig, (ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8) = plt.subplots(8, 1, figsize=(16, 9),
+                                                                  sharex='all')
+
+    groupby_counter['Environmental_pc'].plot(kind='bar', ax=ax1, ec='k')
+    groupby_counter['Health_pc'].plot(kind='bar', ax=ax2, ec='k')
+    groupby_counter['Political_pc'].plot(kind='bar', ax=ax3, ec='k')
+    groupby_counter['Societal_pc'].plot(kind='bar', ax=ax4, ec='k')
+    groupby_counter['Technological_pc'].plot(kind='bar', ax=ax5, ec='k')
+    groupby_counter['Legal_pc'].plot(kind='bar', ax=ax6, ec='k')
+    groupby_counter['Economic_pc'].plot(kind='bar', ax=ax7, ec='k')
+    groupby_counter['Cultural_pc'] .plot(kind='bar', ax=ax8, ec='k')
+
+    ax1.set_title('A. Environment', loc='left', fontsize=18)
+    ax2.set_title('B. Health', loc='left', fontsize=18)
+    ax3.set_title('C. Political', loc='left', fontsize=18)
+    ax4.set_title('D. Societal', loc='left', fontsize=18)
+    ax5.set_title('E. Technological', loc='left', fontsize=18)
+    ax6.set_title('F. Legal', loc='left', fontsize=18)
+    ax7.set_title('G. Economic', loc='left', fontsize=18)
+    ax8.set_title('H. Cultural', loc='left', fontsize=18)
+
+    colors2 = ['#001c54', '#E89818']
+
+    plt.tight_layout()
+    sns.despine()
+    ax8.set_xticklabels(ax8.get_xticklabels(), rotation=0, fontsize=14);
+    ax8.set_xlabel('Unit of Assessment Number', fontsize=20)
+    for ax in [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8]:
+        for uoa in range(0, 34):
+            ax.get_children()[uoa].set_color(colors2[0])
+            ax.get_children()[uoa].set_edgecolor('k')
+        ax.get_children()[2].set_color(colors2[1])
+        ax.get_children()[2].set_edgecolor('k')
+        for uoa in range(13, 34):
+            ax.get_children()[uoa].set_color(colors2[1])
+            ax.get_children()[uoa].set_edgecolor('k')
+    figure_name = 'impacttype_vs_uoa'
+
+    legend_elements = [Patch(facecolor=colors2[0], edgecolor='k',
+                             label=r'Non-SHAPE', alpha=0.7),
+                       Patch(facecolor=colors2[1], edgecolor='k',
+                             label=r'SHAPE', alpha=0.7)]
+    ax1.legend(handles=legend_elements,
+               frameon=True,
+               fontsize=15, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1), ncol=2,
+               loc = 'upper right', bbox_to_anchor=(1.005, 1.5)
+              )
+
+    for ax in [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8]:
+        ax.set_ylim(0, 100)
+        ax.tick_params(axis='both', which='major', labelsize=13)
+        ylabels = ['{:,.0f}'.format(x) + '%' for x in ax.get_yticks()]
+        ax.set_yticklabels(ylabels)
+
+    plt.savefig(os.path.join(figure_path, figure_name + '.pdf'),
+                bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path, figure_name + '.png'),
+                bbox_inches='tight', dpi=400,
+                facecolor='white', transparent=False)
+
+
+def score_read_vs_gpa(merge_path, figure_path):
+    df_wtext = pd.read_pickle(os.path.join(merge_path, 'merged_with_text_features.pkl'))
+    subset = ['Institution name', 'Unit of assessment number']
+    scored = df_wtext.drop_duplicates(subset = subset)
+    scored['ICS GPA'] = (pd.to_numeric(scored['4*_Impact'], errors='coerce')*4 +
+                         pd.to_numeric(scored['3*_Impact'], errors='coerce')*3 +
+                         pd.to_numeric(scored['2*_Impact'], errors='coerce')*2 +
+                         pd.to_numeric(scored['1*_Impact'], errors='coerce')*1)/100
+    shape_mask = ((scored['Main panel'] == 'C') |
+                  (scored['Main panel'] == 'D') |
+                  (scored['Unit of assessment number'] == '4'))
+    scored = scored[shape_mask]
+    fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(12, 9),
+                                                           sharey='row', sharex='col')
+    colors2 = ['#001c54', '#E89818']
+
+    def make_merge_score_nlp(df, variable):
+        sentiment = df_wtext[subset].groupby(subset).mean([variable])
+        sentiment = sentiment.reset_index()
+        merge = pd.merge(scored, sentiment, left_on=subset, right_on=subset)
+        merge = merge[['ICS GPA', variable]]
+        merge = merge.dropna()
+        return merge
+
+    lw = 0.5
+    variable = 's1_flesch_score'
+    merge = make_merge_score_nlp(scored, variable)
+    ax1 = sns.regplot(x='ICS GPA', y=variable, data=merge, ax=ax1, ci=99.9,
+                     scatter_kws={'fc': 'w', 'ec': colors2[1]},
+                      line_kws={'color': colors2[0], 'lw': lw})
+    corr = np.round(np.corrcoef(merge['ICS GPA'], merge[variable])[0, 1], 2)
+    ax1.add_artist(AnchoredText(f"Pearson's $r$ : {corr}", loc='lower left', prop=dict(fontsize=12)))
+
+    variable = 's2_flesch_score'
+    merge = make_merge_score_nlp(scored, variable)
+    ax2 = sns.regplot(x='ICS GPA', y=variable, data=merge, ax=ax2, ci=99.9,
+                     scatter_kws={'fc': 'w', 'ec': colors2[1]},
+                    line_kws={'color': colors2[0], 'lw': lw})
+    corr = np.round(np.corrcoef(merge['ICS GPA'], merge[variable])[0, 1], 2)
+    ax2.add_artist(AnchoredText(f"Pearson's $r$ : {corr}", loc='lower left', prop=dict(fontsize=12)))
+
+    variable = 's3_flesch_score'
+    merge = make_merge_score_nlp(scored, variable)
+    ax3 = sns.regplot(x='ICS GPA', y=variable, data=merge, ax=ax3, ci=99.9,
+                      scatter_kws={'fc': 'w', 'ec': colors2[1]},
+                      line_kws={'color': colors2[0], 'lw': lw})
+    corr = np.round(np.corrcoef(merge['ICS GPA'], merge[variable])[0, 1], 2)
+    ax3.add_artist(AnchoredText(f"Pearson's $r$ : {corr}", loc='lower left', prop=dict(fontsize=12)))
+
+    variable = 's1_sentiment_score'
+    merge = make_merge_score_nlp(scored, variable)
+    ax4 = sns.regplot(x='ICS GPA', y=variable, data=merge, ax=ax4, ci=99.9,
+                      scatter_kws={'fc': 'w', 'ec': colors2[0]},
+                      line_kws={'color': colors2[1], 'lw': lw})
+    corr = np.round(np.corrcoef(merge['ICS GPA'], merge[variable])[0, 1], 2)
+    ax4.add_artist(AnchoredText(f"Pearson's $r$ : {corr}", loc='lower left', prop=dict(fontsize=12)))
+
+    variable = 's2_sentiment_score'
+    merge = make_merge_score_nlp(scored, variable)
+    ax5 = sns.regplot(x='ICS GPA', y=variable, data=merge, ax=ax5, ci=99.9,
+                      scatter_kws={'fc': 'w', 'ec': colors2[0]},
+                      line_kws={'color': colors2[1], 'lw': lw})
+    corr = np.round(np.corrcoef(merge['ICS GPA'], merge[variable])[0, 1], 2)
+    ax5.add_artist(AnchoredText(f"Pearson's $r$ : {corr}", loc='lower left', prop=dict(fontsize=12)))
+
+    variable = 's3_sentiment_score'
+    merge = make_merge_score_nlp(scored, variable)
+    ax6 = sns.regplot(x='ICS GPA', y=variable, data=merge, ax=ax6, ci=99.9,
+                      scatter_kws={'fc': 'w', 'ec': colors2[0]},
+                      line_kws={'color': colors2[1], 'lw': lw})
+    corr = np.round(np.corrcoef(merge['ICS GPA'], merge[variable])[0, 1], 2)
+    ax6.add_artist(AnchoredText(f"Pearson's $r$ : {corr}", loc='lower left', prop=dict(fontsize=12)))
+
+    for ax in [ax1, ax2, ax3]:
+        ax.set_xlabel('')
+    ax1.set_ylabel('Flesch Score', fontsize=14)
+    ax2.set_ylabel('')
+    ax3.set_ylabel('')
+    ax4.set_ylabel('Sentiment Score', fontsize=14)
+    ax5.set_ylabel('')
+    ax6.set_ylabel('')
+    ax4.set_xlabel('ICS GPA', fontsize=14)
+    ax5.set_xlabel('ICS GPA', fontsize=14)
+    ax6.set_xlabel('ICS GPA', fontsize=14)
+
+    ax1.set_title('A.', loc='left', fontsize=18)
+    ax2.set_title('B.', loc='left', fontsize=18)
+    ax3.set_title('C.', loc='left', fontsize=18)
+    ax4.set_title('D.', loc='left', fontsize=18)
+    ax5.set_title('E.', loc='left', fontsize=18)
+    ax6.set_title('F.', loc='left', fontsize=18)
+
+    for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+        ax.grid(which="both", linestyle='--', alpha=0.2)
+        ax.yaxis.set_major_locator(plt.MaxNLocator(5))
+
+    ax4.set_xticklabels(ax4.get_xticklabels(), rotation=0, fontsize=13)
+    ax5.set_xticklabels(ax5.get_xticklabels(), rotation=0, fontsize=13)
+    ax6.set_xticklabels(ax6.get_xticklabels(), rotation=0, fontsize=13)
+    ax1.set_yticklabels(ax1.get_yticklabels(), rotation=0, fontsize=13)
+    ax4.set_yticklabels(ax4.get_yticklabels(), rotation=0, fontsize=13)
+    sns.despine()
+    figure_name = 'score_read_vs_gpa'
+    plt.savefig(os.path.join(figure_path, figure_name + '.pdf'),
+                bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path, figure_name + '.png'),
+                bbox_inches='tight', dpi=400,
+                facecolor='white', transparent=False)
+
 
 def make_word_vis(df1, df2, fieldname, figure_path, support_path):
     #stop_list = pd.read_csv(os.path.join(support_path,
@@ -235,10 +459,13 @@ def groupby_plotter(grp, figure_path, filename):
     ax1.set_ylabel('Number of ICS Submitted', fontsize=14)
     ax1.set_xlabel('Full Time Employed', fontsize=14)
     ax2.set_xlabel('Total Income (£bn)', fontsize=14)
+    xlabels = ['£{:,.1f}'.format(x) + 'bn' for x in ax2.get_xticks()]
+    ax2.set_xticklabels(xlabels)
+
     ax3.set_xlabel('Doctoral Degrees Conferred', fontsize=14)
     ax1.set_xlim(0, )
     ax3.set_xlim(0, )
-
+    ax2.xaxis.set_major_locator(plt.MaxNLocator(4))
     bbox = dict(boxstyle="round", fc="1.")
     arrowprops = dict(
         linewidth=1.1,
@@ -265,10 +492,11 @@ def groupby_plotter(grp, figure_path, filename):
         textcoords='offset points',
         bbox=bbox, arrowprops=arrowprops)
 
-    # sns.despine()
+    sns.despine()
     plt.tight_layout()
     plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches = 'tight')
     plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches = 'tight', dpi=800)
+
 
 def heatmap(x, y, figsize, figure_path, filename, **kwargs):
     # credit: kaggle.com/code/drazen/heatmap-with-sized-markers/notebook
@@ -383,14 +611,11 @@ def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
     dfeB = dfe[dfe['Main panel'] == 'B']
     dfeC = dfe[dfe['Main panel'] == 'C']
     dfeD = dfe[dfe['Main panel'] == 'D']
-
-    import matplotlib as mpl
-    import numpy as np
     fig = plt.figure(figsize=(12, 7.5))
-    from matplotlib import gridspec
     gs = gridspec.GridSpec(2, 2)
     mpl.rcParams['font.family'] = 'Helvetica'
-    colors5_blue = ['#3a5e8cFF', '#10a53dFF', '#541352FF', '#ffcf20FF', '#2f9aa0FF']
+    colors5 = ['#001c54', '#81216a', '#d63f53', '#f68f1d', '#d2e818']
+    colors4 = ['#001c54', '#a22367', '#f27233', '#d2e818']
 
     ax1 = fig.add_subplot(gs[0:2, 0:1])
     ax2 = fig.add_subplot(gs[0:1, 1:2])
@@ -399,15 +624,15 @@ def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
     for dataframe, color in zip([dfeA, dfeB, dfeC, dfeD], [0, 1, 2, 3]):
         sns.kdeplot(dataframe[variable + '_score'], ax=ax1,
                     common_norm=True,
-                    color=colors5_blue[color],
+                    color=colors5[color],
                     common_grid=True,
                     cut=0)
     for score in [0, 1, 2, 3, 4]:
         sns.kdeplot(dfeC['s' + str(score + 1) + '_' + variable + '_score'], ax=ax2,
-                    common_norm=True, color=colors5_blue[score],
+                    common_norm=True, color=colors5[score],
                     common_grid=True, cut=0)
         sns.kdeplot(dfeD['s' + str(score + 1) + '_' + variable + '_score'], ax=ax3,
-                    common_norm=True, color=colors5_blue[score],
+                    common_norm=True, color=colors5[score],
                     common_grid=True, cut=0)
 
     ax1.yaxis.grid(linestyle='--', alpha=0.3)
@@ -422,48 +647,50 @@ def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
     ax2.tick_params(axis='both', which='major', labelsize=13)
     ax3.set_title('C.', loc='left', fontsize=18)
     ax1.tick_params(axis='both', which='major', labelsize=13)
-
     ax1.set_ylabel('Normalised Density', fontsize=14)
     ax2.set_ylabel('Normalised Density', fontsize=14)
     ax3.set_ylabel('Normalised Density', fontsize=14)
-
     ax1.set_xlabel('Combined ' + str.title(variable) + ' Score', fontsize=14)
     ax2.set_xlabel('', fontsize=14)
     ax3.set_xlabel(str.title(variable) + ' Scores (S1-S5)', fontsize=14)
+    ax2.yaxis.set_label_position("right")
+    ax3.yaxis.set_label_position("right")
+    ax2.set_xticklabels([])
+    ax2.yaxis.tick_right()
+    ax3.yaxis.tick_right()
 
-    from matplotlib.lines import Line2D
     legend_elements1 = [Line2D([0], [0], marker=None,
                                label=r'Panel: A', linewidth=1,
-                               color=colors5_blue[0]),
+                               color=colors4[0]),
                         Line2D([0], [0], marker=None,
                                label=r'Panel: B', linewidth=1,
-                               color=colors5_blue[1]),
+                               color=colors4[1]),
                         Line2D([0], [0], marker=None,
                                label=r'Panel: C', linewidth=1,
-                               color=colors5_blue[2]),
+                               color=colors4[2]),
                         Line2D([0], [0], marker=None,
                                label=r'Panel: D', linewidth=1,
-                               color=colors5_blue[3])
+                               color=colors4[3])
                         ]
 
     legend_elements2 = [Line2D([0], [0], marker=None,
                                label=r'Section: 1', linewidth=1,
-                               color=colors5_blue[0]),
+                               color=colors5[0]),
                         Line2D([0], [0], marker=None,
                                label=r'Section: 2', linewidth=1,
-                               color=colors5_blue[1]),
+                               color=colors5[1]),
                         Line2D([0], [0], marker=None,
                                label=r'Section: 3', linewidth=1,
-                               color=colors5_blue[2]),
+                               color=colors5[2]),
                         Line2D([0], [0], marker=None,
                                label=r'Section: 4', linewidth=1,
-                               color=colors5_blue[3]),
+                               color=colors5[3]),
                         Line2D([0], [0], marker=None,
                                label=r'Section: 5', linewidth=1,
-                               color=colors5_blue[4])]
+                               color=colors5[4])]
 
     if variable == 'sentiment':
-        legend_loc = 'upper right'
+        legend_loc = 'upper left'
     elif variable == 'flesch':
         legend_loc = 'upper left'
 
@@ -482,7 +709,6 @@ def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
                edgecolor=(0, 0, 0, 1),
                title='Panel: D', title_fontsize=11
                )
-
     ax2.xaxis.set_ticklabels([])
     ax1.tick_params(axis='both', which='major', labelsize=13)
     ax2.tick_params(axis='both', which='major', labelsize=13)
@@ -560,10 +786,349 @@ def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
         ax3.text(0.05, 0.385, textstr3, transform=ax3.transAxes, fontsize=10,
                  verticalalignment='top', bbox=props)
 
-    # sns.despine()
+    sns.despine(ax=ax1)
+    sns.despine(ax=ax2, left=True, right=False)
+    sns.despine(ax=ax3, left=True, right=False)
+
     plt.tight_layout()
     plt.savefig(os.path.join(figure_path, file_name + '.pdf'),
                 bbox_inches='tight')
     plt.savefig(os.path.join(figure_path, file_name + '.png'),
                 bbox_inches='tight', dpi=400,
                 facecolor='white', transparent=False)
+
+
+
+def find_keywords(df, keyword_dict):
+    keyword_count = {}
+    for key, value in keyword_dict.items():
+        keyword_count[key] = len(df[df.apply(lambda r: any([kw in r[0] for kw in value]),
+                                             axis=1)])
+    return keyword_count
+
+
+def make_keyword_figure():
+    merged_path = os.path.join(os.getcwd(), '..', '..', 'data', 'merged')
+    keyword_out = os.path.join(os.getcwd(), '..', '..', 'data', 'keywords')
+    asset_path = os.path.join(os.getcwd(), '..', '..', 'assets')
+    figure_path = os.path.join(os.path.join(os.getcwd(), '..', '..', 'figures'))
+    df = pd.read_csv(os.path.join(merged_path, 'merged_ref_data_exc_output.csv'), index_col=0)
+    with open(os.path.join(asset_path, 'keyword_dictionary.json')) as json_file:
+        keyword_dict = json.load(json_file)
+    fourstar_mask =  ((df['3*_Impact'] == '0.0') &
+                      (df['2*_Impact']=='0.0') &
+                      (df['1*_Impact'] == '0.0') &
+                      (df['Unclassified_Impact']=='0.0'))
+    freetext = ['1. Summary of the impact',
+                '2. Underpinning research',
+                '3. References to the research',
+                '4. Details of the impact',
+                '5. Sources to corroborate the impact']
+    df_text = df[freetext].apply(lambda x: x.astype(str).str.lower())
+    keyword_counter = {}
+    keyword_counter['all_studies'] = find_keywords(df_text, keyword_dict)
+    keyword_counter['by_panels'] = {}
+    for panel in df['Main panel'].unique():
+        temp_df = df[df['Main panel'] == panel]
+        temp_df = temp_df[freetext].apply(lambda x: x.astype(str).str.lower())
+        keyword_counter['by_panels'][panel] = find_keywords(temp_df, keyword_dict)
+    shape_mask = ((df['Main panel'] == 'D') |
+                 (df['Main panel'] == 'C') |
+                 (df['Unit of assessment number'] == '4.0'))
+    shape = df[shape_mask][freetext].apply(lambda x: x.astype(str).str.lower())
+    non_shape = df[~shape_mask][freetext].apply(lambda x: x.astype(str).str.lower())
+    keyword_counter['all_grades'] = {}
+    keyword_counter['all_grades']['SHAPE'] = find_keywords(shape, keyword_dict)
+    keyword_counter['all_grades']['Non-SHAPE'] = find_keywords(non_shape, keyword_dict)
+    keyword_counter['four_star'] = {}
+    fourstar = df[fourstar_mask]
+    shape_fourstar = fourstar[shape_mask][freetext].apply(lambda x: x.astype(str).str.lower())
+    non_shape_fourstar = fourstar[~shape_mask][freetext].apply(lambda x: x.astype(str).str.lower())
+    keyword_counter['four_star']['SHAPE'] = find_keywords(shape_fourstar, keyword_dict)
+    keyword_counter['four_star']['Non-SHAPE'] = find_keywords(non_shape_fourstar, keyword_dict)
+
+    fig = plt.figure(figsize=(15, 8))
+    gs = gridspec.GridSpec(2, 2)
+    mpl.rcParams['font.family'] = 'Arial'
+    colors5 = ['#001c54', '#732268', '#c2365b', '#ed7239', '#e8be18']
+    colors4 = ['#001c54', '#902467', '#e35b46', '#e8be18']
+    colors2 = [colors4[0], colors4[3]]
+    ax1 = fig.add_subplot(gs[0:2, 0:1])
+    ax2 = fig.add_subplot(gs[0:1, 1:2])
+    ax3 = fig.add_subplot(gs[1:2, 1:2])
+    sorted_dict = {key: value for key, value in sorted(keyword_counter['by_panels'].items())}
+    df1 = pd.DataFrame.from_dict(sorted_dict)
+    ax1 = df1.plot(ax=ax1, kind='barh', edgecolor='k', color=colors4, alpha=0.8)
+    df2 = pd.DataFrame.from_dict(keyword_counter['four_star'])
+    ax2 = df2.plot(ax=ax2, kind='bar', edgecolor='k', color = colors2, alpha=0.8)
+    df3 = pd.DataFrame.from_dict(keyword_counter['all_grades'])
+    ax3 = df3.plot(ax=ax3, kind='bar', edgecolor='k', color = colors2, legend=False, alpha=0.8)
+    ax3.set_xticks(ax3.get_xticks())
+    ax3.set_xticklabels(ax3.get_xticklabels(), rotation=0)
+
+
+    ax1.set_title('A.', loc='left', fontsize=18)
+    ax1.tick_params(axis='both', which='major', labelsize=14)
+    ax2.set_title('B.', loc='left', fontsize=18)
+    ax2.tick_params(axis='both', which='major', labelsize=11)
+    ax3.set_title('C.', loc='left', fontsize=18)
+    ax3.tick_params(axis='both', which='major', labelsize=11)
+    ax2.set_xticklabels([])
+
+    ax1.set_xlabel('Number of ICS (All Grades)', fontsize=14)
+    ax2.set_ylabel('Number of ICS (Certified 4*)', fontsize=14)
+    ax3.set_ylabel('Number of ICS (All Grades)', fontsize=14)
+
+#    ax2.yaxis.tick_right()
+#    ax3.yaxis.tick_right()
+    ax2.yaxis.set_label_position("right")
+    ax3.yaxis.set_label_position("right")
+#    ax2.yaxis.set_ticks_position('right')
+#    ax3.yaxis.set_ticks_position('right')
+
+    ax1.legend(frameon=True,
+               fontsize=12, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               title='Panels', title_fontsize=14)
+    ax2.legend(frameon=True,
+               fontsize=12, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               #title='Panels', title_fontsize=14
+              )
+    ax1.set_axisbelow(True)
+    ax2.set_axisbelow(True)
+    ax3.set_axisbelow(True)
+    ax1.xaxis.grid(linestyle='--', alpha=0.4)
+    ax1.yaxis.grid(linestyle='--', alpha=0.4)
+    ax2.xaxis.grid(linestyle='--', alpha=0.4)
+    ax2.yaxis.grid(linestyle='--', alpha=0.4)
+    ax3.xaxis.grid(linestyle='--', alpha=0.4)
+    ax3.yaxis.grid(linestyle='--', alpha=0.4)
+    sns.despine(ax=ax1, top=False)
+    sns.despine(ax=ax2, left = True, right=False, top=False)
+    sns.despine(ax=ax3, left = True, right=False)
+    plt.tight_layout()
+    plt.savefig(os.path.join(figure_path, 'keyword_analysis.pdf'), bbox_inches = 'tight')
+    plt.savefig(os.path.join(figure_path, 'keyword_analysis.png'), bbox_inches = 'tight', dpi=800)
+
+
+def make_gpa_vs_environment(figure_path, df):
+    subset = ['Institution name', 'Unit of assessment number']
+    scored = df.drop_duplicates(subset = subset)
+    counter = pd.Series(df.groupby(subset).size(),
+                        name='size').reset_index()
+    scored['ICS_GPA'] = (pd.to_numeric(scored['4*_Impact'], errors='coerce')*4 +
+                         pd.to_numeric(scored['3*_Impact'], errors='coerce')*3 +
+                         pd.to_numeric(scored['2*_Impact'], errors='coerce')*2 +
+                         pd.to_numeric(scored['1*_Impact'], errors='coerce')*1)/100
+    scored = pd.merge(scored, counter, left_on = subset, right_on = subset)
+    shape_mask = ((scored['Main panel'] == 'C') |
+                  (scored['Main panel'] == 'D') |
+                  (scored['Unit of assessment number'] == '4'))
+    print("Corr(GPA,  FTE) for all ICS is: ",
+          round(scored['ICS_GPA'].corr(df['fte']), 3))
+    print("Corr(GPA,  FTE) for Non-SHAPE is: ",
+          round(scored[~shape_mask]['ICS_GPA'].corr(df['fte']), 3))
+    print("Corr(GPA,  FTE) for SHAPE is: ",
+          round(scored[shape_mask]['ICS_GPA'].corr(df['fte']), 3))
+    print("Corr(GPA, Total Income) for all ICS is: ",
+          round(scored['ICS_GPA'].corr(df['tot_income']), 3))
+    print("Corr(GPA, Total Income) for Non-SHAPE is: ",
+          round(scored[~shape_mask]['ICS_GPA'].corr(df['tot_income']), 3))
+    print("Corr(GPA, Total Income) for SHAPE is: ",
+          round(scored[shape_mask]['ICS_GPA'].corr(df['tot_income']), 3))
+    print("Corr(GPA, Number Degrees) for all ICS is: ",
+          round(scored['ICS_GPA'].corr(df['num_doc_degrees_total']), 3))
+    print('Mean GPA is ',
+          round(scored['ICS_GPA'].mean(), 2))
+    print('Mean GPA for Non-SHAPE is ',
+          round(scored[~shape_mask]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for SHAPE is ',
+          round(scored[shape_mask]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for Non-SHAPE (FTE>=100) is ',
+          round(scored[~shape_mask & (scored['fte']>=100)]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for SHAPE (FTE>=100) is ',
+          round(scored[shape_mask & (scored['fte']>=100)]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for Non-SHAPE (50<=FTE) is ',
+          round(scored[~shape_mask & (scored['fte']<=50)]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for SHAPE (50<FTE) is ',
+          round(scored[shape_mask & (scored['fte']<=50)]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for Non-SHAPE (1 ICS submitted) is ',
+          round(scored[~shape_mask & (scored['size']==1)]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for SHAPE (1 ICS submitted) is ',
+          round(scored[shape_mask & (scored['size']==1)]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for Non-SHAPE (>1 ICS submitted) is ',
+          round(scored[~shape_mask & (scored['size']>1)]['ICS_GPA'].mean(), 3))
+    print('Mean GPA for SHAPE (>1 ICS submitted) is ',
+          round(scored[shape_mask & (scored['size']>1)]['ICS_GPA'].mean(), 3))
+    scored = df.drop_duplicates(subset = subset)
+    scored['ICS_GPA'] = (pd.to_numeric(df['4*_Impact'], errors='coerce')*4 +
+                         pd.to_numeric(df['3*_Impact'], errors='coerce')*3 +
+                         pd.to_numeric(df['2*_Impact'], errors='coerce')*2 +
+                         pd.to_numeric(df['1*_Impact'], errors='coerce')*1)/100
+    scored = pd.merge(scored, counter, how='inner', left_on = subset, right_on = subset)
+    size = 60
+    colors = [(0 / 255, 28 / 255, 84 / 255, 1), (232 / 255, 152 / 255, 24 / 255, 1)]
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 5.5), sharey=True)
+    ax1.scatter(y=scored[~shape_mask]['ICS_GPA'],
+                x=scored[~shape_mask]['fte'],
+                color=colors[0], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax1.scatter(y=scored[shape_mask]['ICS_GPA'],
+                x=scored[shape_mask]['fte'],
+                color=colors[1], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax2.scatter(y=scored[~shape_mask]['ICS_GPA'],
+                x=scored[~shape_mask]['tot_income']/1000000000,
+                color=colors[0], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax2.scatter(y=scored[shape_mask]['ICS_GPA'],
+                x=scored[shape_mask]['tot_income']/1000000000,
+                color=colors[1], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax3.scatter(y=scored[~shape_mask]['ICS_GPA'],
+                x=scored[~shape_mask]['num_doc_degrees_total'],
+                color=colors[0], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax3.scatter(y=scored[shape_mask]['ICS_GPA'],
+                x=scored[shape_mask]['num_doc_degrees_total'],
+                color=colors[1], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    legend_elements1 = [Line2D([], [], marker='o',
+                               markerfacecolor=colors[0], markeredgecolor='k',
+                               label=r'Non-SHAPE', linewidth=0, markersize=10),
+                        Line2D([], [], marker='o',
+                               markerfacecolor=colors[1], markeredgecolor='k',
+                               label=r'SHAPE', linewidth=0, markersize=10)]
+    for ax, title in zip([ax1, ax2, ax3], ['A.', 'B.', 'C.']):
+        ax.yaxis.grid(linestyle='--', alpha=0.3)
+        ax.xaxis.grid(linestyle='--', alpha=0.3)
+        ax.set_title(title, loc='left', fontsize=20)
+        ax.tick_params(axis='both', which='major', labelsize=14)
+    ax3.legend(handles=legend_elements1, loc='lower right', frameon=True,
+               fontsize=14, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               title='Subject Area', title_fontsize=14)
+    ax1.set_ylabel('Departmental GPA', fontsize=14)
+    ax1.set_xlabel('Full Time Employed', fontsize=14)
+    ax2.set_xlabel('Total Income (£bn)', fontsize=14)
+    ax3.set_xlabel('Doctoral Degrees Conferred', fontsize=14)
+    ax1.yaxis.set_major_locator(plt.MaxNLocator(5))
+    xlabels = ['£{:,.1f}'.format(x) + 'bn' for x in ax2.get_xticks()]
+    ax2.set_xticklabels(xlabels)
+    plt.tight_layout()
+    sns.despine()
+    filename = 'gpa_vs_environment'
+    plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches = 'tight')
+    plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches = 'tight', dpi=800)
+
+
+def make_simple_scores_figure(df, figure_path, out_path):
+    fig = plt.figure(figsize=(12, 8))
+    gs = gridspec.GridSpec(2, 2)
+    mpl.rcParams['font.family'] = 'Helvetica'
+    colors5_blue = ['#3a5e8cFF', '#10a53dFF',
+                    '#541352FF', '#ffcf20FF', '#2f9aa0FF']
+    df['4*_Impact'] = pd.to_numeric(df['4*_Impact'],
+                                    errors='coerce')
+    df['3*_Impact'] = pd.to_numeric(df['3*_Impact'],
+                                    errors='coerce')
+    df['2*_Impact'] = pd.to_numeric(df['2*_Impact'],
+                                    errors='coerce')
+    df['1*_Impact'] = pd.to_numeric(df['1*_Impact'],
+                                    errors='coerce')
+    df['ICS_GPA'] = (df['4*_Impact']*4 +
+                     df['3*_Impact']*3 +
+                     df['2*_Impact']*2 +
+                     df['1*_Impact']*1)/100
+    df = df[['Institution name',
+             'Main panel', 'Unit of assessment number', 'ICS_GPA']]
+    df = df.drop_duplicates(subset = ['Institution name',
+                                      'Unit of assessment number'])
+    shape_mask = ((df['Main panel'] == 'C') |
+                  (df['Main panel'] == 'D') |
+                  (df['Unit of assessment number'] == '4'))
+    df_shape = df[shape_mask]
+    df_nonshape = df[~shape_mask]
+    df_panelc = df[df['Main panel'] == 'C']
+    df_paneld = df[df['Main panel'] == 'D']
+    print(f'Panel C ICS GPA mean: ',
+          round(df_panelc['ICS_GPA'].mean(), 2))
+    print(f'Panel D ICS GPA mean: ',
+          round(df_paneld['ICS_GPA'].mean(),2 ))
+    ax1 = fig.add_subplot(gs[0:2, 0:1])
+    ax2 = fig.add_subplot(gs[0:1, 1:2])
+    ax3 = fig.add_subplot(gs[1:2, 1:2])
+    colors = ['#001c54', '#E89818']
+    nbins = 18
+    letter_fontsize = 24
+    label_fontsize = 18
+    mpl.rcParams['font.family'] = 'Arial'
+    csfont = {'fontname': 'Arial'}
+    sns.kdeplot(df_shape['ICS_GPA'],
+                ax=ax1, color= colors[1]
+               )
+    sns.kdeplot(df_nonshape['ICS_GPA'],
+                ax=ax1, color= colors[0]
+               )
+    sns.distplot(df_panelc['ICS_GPA'],
+                 hist_kws={'facecolor': colors[1],
+                           'edgecolor': 'k',
+                           'alpha': 0.7},
+                 kde_kws={'color': colors[0]}, ax=ax2, bins=nbins)
+    sns.distplot(df_paneld['ICS_GPA'],
+                 hist_kws={'facecolor': colors[0],
+                           'edgecolor': 'k',
+                           'alpha': 0.7},
+                 kde_kws={'color': colors[1]}, ax=ax3, bins=nbins)
+    ax1.grid(which="both", linestyle='--', alpha=0.3)
+    ax2.grid(which="both", linestyle='--', alpha=0.3)
+    ax3.grid(which="both", linestyle='--', alpha=0.3)
+    ax2.yaxis.set_label_position("right")
+    ax3.yaxis.set_label_position("right")
+    ax2.set_xticklabels([])
+    ax2.yaxis.tick_right()
+    ax3.yaxis.tick_right()
+    sns.despine(ax=ax2, left=True, right=False, top=True, bottom=True)
+    sns.despine(ax=ax3, left=True, right=False)
+    sns.despine(ax=ax1, top =True)
+    ax2.set_xlabel('')
+    legend_elements1 = [Line2D([0], [0], marker=None,
+                               label=r'SHAPE', linewidth=2,
+                               color=colors[1]),
+                        Line2D([0], [0], marker=None,
+                               label=r'Non-SHAPE', linewidth=2,
+                               color=colors[0])]
+    legend_elements2 = [Patch(facecolor=colors[1], edgecolor='k',
+                              label=r'Bins', alpha=0.7),
+                        Line2D([0], [0], color=colors[0], lw=1, linestyle='-',
+                               label=r'KDE', alpha=0.7)]
+    legend_elements3 = [Patch(facecolor=colors[0], edgecolor='k',
+                              label=r'Bins', alpha=0.7),
+                        Line2D([0], [0], color=colors[1], lw=1, linestyle='-',
+                               label=r'KDE', alpha=0.7)]
+    ax1.legend(handles=legend_elements1,
+               frameon=True,
+               fontsize=15, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1)
+              )
+    ax2.legend(handles=legend_elements2,
+               frameon=True,
+               fontsize=15, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               title='Panel C', title_fontsize=14)
+    ax3.legend(handles=legend_elements3,
+               frameon=True,
+               fontsize=15, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               title='Panel D', title_fontsize=14)
+    ax1.set_xlabel('ICS GPA', fontsize=label_fontsize)
+    ax3.set_xlabel('ICS GPA', fontsize=label_fontsize)
+    ax1.set_ylabel('Density', fontsize=label_fontsize)
+    ax2.set_ylabel('Density', fontsize=label_fontsize)
+    ax3.set_ylabel('Density', fontsize=label_fontsize)
+    ax1.tick_params(axis='both', which='major', labelsize=14)
+    ax2.tick_params(axis='both', which='major', labelsize=14)
+    ax3.tick_params(axis='both', which='major', labelsize=14)
+    ax1.set_title('A.', loc='left', fontsize=letter_fontsize, y=1.035)
+    ax2.set_title('B.', loc='left', fontsize=letter_fontsize, y=1.035)
+    ax3.set_title('C.', loc='left', fontsize=letter_fontsize, y=1.035)
+    plt.tight_layout()
+    plt.savefig(os.path.join(figure_path, 'ics_gpa.pdf'),
+                bbox_inches='tight')
+    df.to_csv(os.path.join(out_path, 'department_gpa.csv'), index=False)
+
