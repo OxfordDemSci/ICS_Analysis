@@ -8,12 +8,14 @@
 
 import pandas as pd
 import os
+from dotenv import load_dotenv
+load_dotenv()  # define "basedir" environment variable in ./.env file
 
 def main():
 
     ## Set paths
-    edit_path = os.path.join(os.getcwd(), '..', '..', 'data', 'edit')
-    final_path = os.path.join(os.getcwd(), '..', '..', 'data', 'final')
+    edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
+    final_path = os.path.join(os.getenv('basedir'), 'data', 'final')
 
     ## Read data
     sub = pd.read_pickle(os.path.join(edit_path, 'sub_table.pkl'))

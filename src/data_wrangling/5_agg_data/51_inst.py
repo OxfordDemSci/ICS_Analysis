@@ -8,9 +8,11 @@
 
 import pandas as pd
 import os
+from dotenv import load_dotenv
+load_dotenv()  # define "basedir" environment variable in ./.env file
 
 def main():
-    edit_path = os.path.join(os.getcwd(), '..', '..', 'data', 'edit')
+    edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
     ics = pd.read_pickle(os.path.join(edit_path, 'ics_table.pkl'))
 
 
@@ -24,8 +26,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-def summarize_output_data(df):
-    """Placeholder summarization function"""
-    return(df.groupby(['inst_id', 'uoa_id']).first().reset_index())
