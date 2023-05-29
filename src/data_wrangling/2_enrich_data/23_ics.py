@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     # define paths
     edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
-    clean_path = os.path.join(os.getenv('basedir'), 'src', 'data_wrangling', '1_clean_data')
+    extra_data_path = os.path.join(os.getenv('basedir'), 'src', 'data_wrangling', '2_enrich_data')
 
     enriched_path = os.path.join(os.getenv('basedir'), 'data', 'enriched')
     os.makedirs(enriched_path, exist_ok=True)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     ics = pd.read_excel(os.path.join(edit_path, 'clean_ref_ics_data.xlsx'))
 
     # load ics countries as iso-3 codes
-    iso = pd.read_csv(os.path.join(clean_path, 'extra_data', 'iso_3_code.csv'))
+    iso = pd.read_csv(os.path.join(extra_data_path, 'extra_data', 'iso_3_code.csv'))
 
     ## Relevant columns to perform text analysis on
     text_cols = ['1. Summary of the impact', '2. Underpinning research',
