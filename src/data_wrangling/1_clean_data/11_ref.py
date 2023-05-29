@@ -135,6 +135,7 @@ def main():
     ## Read data
     raw_path = os.path.join(os.getenv('basedir'), 'data', 'raw')
     edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
+    os.makedirs(edit_path, exist_ok=True)
     clean_ics_level(raw_path, edit_path)
     clean_dep_level(raw_path, edit_path)
     clean_output_level(raw_path, edit_path)

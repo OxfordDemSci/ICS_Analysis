@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import random
+import pickle
 from dotenv import load_dotenv
 
 
@@ -42,9 +43,11 @@ def join_ics(ics, iso):
 
 if __name__ == '__main__':
 
+    #---- load data ----#
+
     # define paths
     edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
-    extra_data_path = os.path.join(os.getenv('basedir'), 'src', 'data_wrangling', '2_enrich_data')
+    extra_data_path = os.path.join(os.getenv('basedir'), 'src', 'data_wrangling', '2_enrich_data', 'extra_data')
 
     enriched_path = os.path.join(os.getenv('basedir'), 'data', 'enriched')
     os.makedirs(enriched_path, exist_ok=True)
@@ -53,7 +56,15 @@ if __name__ == '__main__':
     ics = pd.read_excel(os.path.join(edit_path, 'clean_ref_ics_data.xlsx'))
 
     # load ics countries as iso-3 codes
-    iso = pd.read_csv(os.path.join(extra_data_path, 'extra_data', 'iso_3_code.csv'))
+    iso = pd.read_csv(os.path.join(extra_data_path, 'iso_3_code.csv'))
+
+    # load institution post codes
+    pkl_postcodes = os.path.join(extra_data_path, 'ukprn_postcode_dict.pkl')
+    with open(pkl_postcodes, 'rb') as file:
+        institution_postcode = pickle.load(file)
+
+
+    #---- text analysis ----#
 
     ## Relevant columns to perform text analysis on
     text_cols = ['1. Summary of the impact', '2. Underpinning research',
@@ -70,8 +81,17 @@ if __name__ == '__main__':
     ## One-hot encode impact type
     ics = pd.concat([ics, pd.get_dummies(ics['Summary impact type'])], axis=1)
 
+
+    #---- iso-3 impacted country names ----#
+
     # add iso3 country codes and clean column names
     ics = join_ics(ics, iso)
 
-    ## Save enriched dataset
+
+    #---- institution postcodes ----#
+
+    ics['inst_postcode'] = ics['inst_id'].apply(lambda x: institution_postcode[x])
+
+
+    #---- Save enriched dataset ----#
     ics.to_csv(os.path.join(enriched_path, 'enriched_ref_ics_data.csv'))
