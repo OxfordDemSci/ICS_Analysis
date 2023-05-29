@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import random
 import pickle
+import re
 from dotenv import load_dotenv
 
 
@@ -90,7 +91,14 @@ if __name__ == '__main__':
 
     #---- institution postcodes ----#
 
+    # postcodes to ref table
     ics['inst_postcode'] = ics['inst_id'].apply(lambda x: institution_postcode[x])
+
+    # postcode district
+    ics['inst_postcode_district'] = ics['inst_postcode'].apply(lambda x: x.split(' ')[0])
+
+    # postcode area
+    ics['inst_postcode_area'] = ics['inst_postcode_district'].apply(lambda x: x[0:re.search(r"\d", x).start()])
 
 
     #---- Save enriched dataset ----#
