@@ -148,23 +148,26 @@ def clean_free_text(s):
 ## Text helper functions from Linda: formulating the pipeline for topic modelling and to wrap it outside pandas
 
 def clean_text(text): # Return cleaned raw text for BERT & DATM
-    text_cleaned = clean_free_text(text_cleaned)
+    text_cleaned = clean_free_text(text)
     return text_cleaned
 
-def clean_and_lemmatize(text_cleaned): # Lemmatized text for LDA
+def clean_and_lemmatize(text): # Lemmatized text for LDA
     text_cleaned = clean_free_text(text)
     text_cleaned = reflection_tokenizer(text_cleaned)
     return text_cleaned
 
-def generate_cleaned_text_and_count(df, fields, text_helper_func, table_path = None, suffix = "lemmatized_"):
+def generate_cleaned_text_and_count(df, fields, text_helper_func, table_path = None, suffix = "lemmatized_",
+                                   return_joined_text = True):
     for field in fields:
         df[suffix + field] = df[field].apply(text_helper_func)
-        df[suffix + field] = df[suffix + field].agg(lambda x: ', '.join(map(str, x)))
-        df[suffix + field] = df[suffix + field].str.replace(',', '')
-        count = df[suffix + field].apply(lambda x: pd.value_counts(x.split(" ")))
-        count = count.sum(axis=0)
+        if return_joined_text:
+            df[suffix + field] = df[suffix + field].agg(lambda x: ', '.join(map(str, x)))
+            df[suffix + field] = df[suffix + field].str.replace(',', '')
+        
         if table_path is not None:
-                count.sort_values(ascending=False).to_csv(os.path.join(table_path,
+            count = df[suffix + field].apply(lambda x: pd.value_counts(x.split(" ")))
+            count = count.sum(axis=0)
+            count.sort_values(ascending=False).to_csv(os.path.join(table_path,
                                                                        'wordcounts',
                                                                        suffix + field + '.csv'),
                                                                           header=True)
