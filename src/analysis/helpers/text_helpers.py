@@ -46,7 +46,8 @@ def word_lemmatizer(text):
 
 def reflection_tokenizer(text):
     # @TODO pass in support_path
-    stop_list = pd.read_csv(os.path.join(os.getcwd(), '..', '..', 'data', 'support',
+    stop_list = pd.read_csv(os.path.join(os.getcwd(),# '..', '..', 
+                                         'data', 'support',
                                          'custom_stopwords.txt'))
     custom_stop = stop_list['words'].to_list()
     stop = nltk.corpus.stopwords.words('english')
@@ -74,14 +75,15 @@ def make_stopwords(support_path):
     return stop
 
 
-def make_lemmas(df, field, table_path):
+def make_lemmas(df, field, table_path = None):
     # @TODO should be wrapped outside of pandas to apply
     df['lemmatized_' + field] = df[field].apply(reflection_tokenizer)
     df['lemmatized_' + field] = df['lemmatized_' + field].agg(lambda x: ', '.join(map(str, x)))
     df['lemmatized_' + field] = df['lemmatized_' + field].str.replace(',', '')
     count = df['lemmatized_' + field].apply(lambda x: pd.value_counts(x.split(" ")))
     count = count.sum(axis=0)
-    count.sort_values(ascending=False).to_csv(os.path.join(table_path,
+    if table_path is not None:
+        count.sort_values(ascending=False).to_csv(os.path.join(table_path,
                                                            'wordcounts',
                                                            'lemmatized_' + field + '.csv'),
                                               header=True)
@@ -129,15 +131,43 @@ def co_occurrence(sentences, window_size):
 
 def clean_free_text(s):
     s = re.sub(r'http\S+', '', s)
-    s = re.sub('[^a-zA-Z]+', ' ', s)
-    s = s.replace("Summary of the impact indicative maximum 100 words ", "")
-    s = s.replace("Summary of the impact ", "")
-    s = s.replace("Underpinning research indicative maximum 500 words ", "")
-    s = s.replace("Underpinning research ", "")
-    s = s.replace("References to the research indicative maximum of six references ", "")
-    s = s.replace("References to the research ", "")
-    s = s.replace("Details of the impact indicative maximum 750 words ", "")
-    s = s.replace("Details of the impact  ", "")
-    s = s.replace("Sources to corroborate the impact indicative maximum of 10 references ", "")
+    s = s.replace("Summary of the impact", "")
+    s = s.replace("indicative maximum 100 words", "")
+    s = s.replace("Underpinning research", "")
+    s = s.replace("indicative maximum 500 words", "")
+    s = s.replace("References to the research", "")
+    s = s.replace("indicative maximum of six references", "")
+    s = s.replace("Details of the impact", "")
+    s = s.replace("indicative maximum 750 words", "")
     s = s.replace("Sources to corroborate the impact ", "")
+    s = s.replace("indicative maximum of 10 references", "")
+    s = re.sub('[^a-zA-Z]+', ' ', s) # Moving this to the end otherwise it will interfere with replacing the phrase above w/ number.
     return s.strip()
+
+
+## Text helper functions from Linda: formulating the pipeline for topic modelling and to wrap it outside pandas
+
+def clean_text(text): # Return cleaned raw text for BERT & DATM
+    text_cleaned = clean_free_text(text_cleaned)
+    return text_cleaned
+
+def clean_and_lemmatize(text_cleaned): # Lemmatized text for LDA
+    text_cleaned = clean_free_text(text)
+    text_cleaned = reflection_tokenizer(text_cleaned)
+    return text_cleaned
+
+def generate_cleaned_text_and_count(df, fields, text_helper_func, table_path = None, suffix = "lemmatized_"):
+    for field in fields:
+        df[suffix + field] = df[field].apply(text_helper_func)
+        df[suffix + field] = df[suffix + field].agg(lambda x: ', '.join(map(str, x)))
+        df[suffix + field] = df[suffix + field].str.replace(',', '')
+        count = df[suffix + field].apply(lambda x: pd.value_counts(x.split(" ")))
+        count = count.sum(axis=0)
+        if table_path is not None:
+                count.sort_values(ascending=False).to_csv(os.path.join(table_path,
+                                                                       'wordcounts',
+                                                                       suffix + field + '.csv'),
+                                                                          header=True)
+    return df
+    
+    
