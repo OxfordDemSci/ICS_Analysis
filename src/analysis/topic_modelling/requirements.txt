@@ -1,0 +1,11 @@
+bertopic==0.14.1
+gensim==4.1.2
+matplotlib==3.5.2
+nltk==3.7
+numpy==1.24.3
+pandas==2.0.2
+pyLDAvis==3.4.1
+pyLDAvis==3.4.1
+scikit_learn==1.2.2
+seaborn==0.11.2
+torch==2.0.0
