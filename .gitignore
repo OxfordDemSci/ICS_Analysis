@@ -1,5 +1,10 @@
 .idea
 private*
+data/edit
+data/enriched
+data/merged
+data/raw
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
