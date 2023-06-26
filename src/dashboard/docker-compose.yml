@@ -18,20 +18,20 @@ services:
     networks:
       - ics_net
     depends_on:
-      - cars_flask
+      - ics_flask
     restart: unless-stopped
 
 
   ics_flask:
     container_name: ics_api
-    env_file: .env
+    # env_file: .env
     build: ./api/
-    command: gunicorn --config gunicorn.config.py wsgi:app
-    # command: python3 -m flask run --host=0.0.0.0
-    volumes:
-      - type: bind
-        source: ./api/app/static/docs.html
-        target: /app/static/docs.html
+    # command: gunicorn --config gunicorn.config.py wsgi:app
+    # command: python3 wsgi.py
+    # volumes:
+    #   - type: bind
+    #     source: ./api/app/static/docs.html
+    #     target: /app/static/docs.html
     depends_on:
       - ics_postgres
     networks:
@@ -54,11 +54,16 @@ services:
 
   ics_postgres:
     container_name: ics_db
-    image: postgres:latest
-    env_file: .env
+    image: kartoza/postgis:13.0
+    # env_file: .env
     volumes:
-      - ./sql/initial_data:/var/lib/postgresql/initial_data
-      - ./sql/ics_initial.sh:/docker-entrypoint-initdb.d/ics_initial.sh
+      #- ./sql/initial_data:/var/lib/postgresql/initial_data
+      #- ./sql/ics_initial.sh:/docker-entrypoint-initdb.d/ics_initial.sh
+      - ./sql/ics_db_dump.sql:/docker-entrypoint-initdb.d/ics_db_dump.sql
+    environment:
+    - POSTGRES_DB=ics, ics_test
+    - POSTGRES_USER=david  # Set the desired username
+    - POSTGRES_PASSWORD=Fp2mQC4&#7JZ
     networks:
       - ics_net
     ports:

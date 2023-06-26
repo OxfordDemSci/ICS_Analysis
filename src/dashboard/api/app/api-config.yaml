@@ -1,0 +1,48 @@
+# swagger.yml
+
+openapi: 3.0.0
+info:
+  title: "RP Flask REST API"
+  description: "An API about people and notes"
+  version: "1.0.0"
+servers:
+  - url: "/api"
+paths:
+  /init:
+    get:
+      operationId: "app.endpoints.read_init"
+      tags:
+        - "Initialisation"
+      summary: "Read the list of topics and geometries"
+      responses:
+        "200":
+          description: "Successfully read initialisation"  
+  /postcode_data:
+    get:
+      operationId: "app.endpoints.get_postcode_data"
+      parameters:
+        - name: postcode_area
+          in: query
+          description: Postcode area to query
+          required: true
+          schema:
+            type: string
+        - name: topic
+          in: query
+          description: Topic to query
+          required: true
+          schema:
+            type: string
+        - name: threshold
+          in: query
+          description: Threshold above which to subset the data using topic weights
+          required: true
+          schema:
+            type: number
+            format: float
+      tags:
+        - "Data by postcode"
+      summary: "Postcode area data by topic"
+      responses:
+        "200":
+          description: "Successfully read postcode data by topic"

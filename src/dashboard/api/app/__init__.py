@@ -1,15 +1,20 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+import connexion
 
-app = Flask(__name__)
+from app.config import app_config
 
-from app import routes
 
-# Cross Origin Resource Sharing (for AJAX)
-CORS(app)
+db = SQLAlchemy()
 
-# specify the Google Analytics key here
-app.config["GA_KEY"] = ''
+def create_app(config_name: str) -> Flask:
+    connexion_app = connexion.FlaskApp(__name__, specification_dir='./')
+    app = connexion_app.app
+    app.config.from_object(app_config[config_name])
+    connexion_app.add_api('api-config.yaml')
+    db.init_app(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
+    return app
 
-# don't sort JSON elements alphabetically
-app.config['JSON_SORT_KEYS'] = False
+
