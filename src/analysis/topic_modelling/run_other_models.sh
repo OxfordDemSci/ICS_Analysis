@@ -1,0 +1,5 @@
+python3 BERT_other_model_variants.py "./data/subset/non_shape.csv" "BERT_non_SHAPE" 
+python3 BERT_other_model_variants.py "./data/subset/panel_d.csv" "BERT_panel_D" 
+python3 BERT_other_model_variants.py "./data/subset/panel_c.csv" "BERT_panel_C" 
+#python3 BERT_other_model_variants.py "./data/clean_ref_ics_data_cleaned_lemmatized_sample.csv" "BERT_SHAPE" 
+python3 BERT_other_model_variants.py "./data/clean_ref_ics_data_lemmatized_full.csv" "BERT_full" 
