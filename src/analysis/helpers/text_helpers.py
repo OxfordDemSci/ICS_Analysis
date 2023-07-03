@@ -74,17 +74,23 @@ def make_stopwords(support_path):
     return stop
 
 
-def make_lemmas(df, field, table_path):
+def make_lemmas(df, field, table_path, intermed_path):
     # @TODO should be wrapped outside of pandas to apply
-    df['lemmatized_' + field] = df[field].apply(reflection_tokenizer)
-    df['lemmatized_' + field] = df['lemmatized_' + field].agg(lambda x: ', '.join(map(str, x)))
-    df['lemmatized_' + field] = df['lemmatized_' + field].str.replace(',', '')
-    count = df['lemmatized_' + field].apply(lambda x: pd.value_counts(x.split(" ")))
-    count = count.sum(axis=0)
-    count.sort_values(ascending=False).to_csv(os.path.join(table_path,
-                                                           'wordcounts',
-                                                           'lemmatized_' + field + '.csv'),
-                                              header=True)
+    if os.path.exists(os.path.join(intermed_path, 'data_with_lemmas.csv')) is False:
+        print('Lemmas dont exist, lets make them!')
+        df['lemmatized_' + field] = df[field].apply(reflection_tokenizer)
+        df['lemmatized_' + field] = df['lemmatized_' + field].agg(lambda x: ', '.join(map(str, x)))
+        df['lemmatized_' + field] = df['lemmatized_' + field].str.replace(',', '')
+        count = df['lemmatized_' + field].apply(lambda x: pd.value_counts(x.split(" ")))
+        count = count.sum(axis=0)
+        count.sort_values(ascending=False).to_csv(os.path.join(table_path,
+                                                               'wordcounts',
+                                                               'lemmatized_' + field + '.csv'),
+                                                  header=True)
+        df.to_csv(os.path.join(intermed_path, 'data_with_lemmas.csv'))
+    else:
+        print('Computed lemmas already! Unless nothing substantively changed, lets load them in!')
+        df = pd.read_csv(os.path.join(intermed_path, 'data_with_lemmas.csv'))
     return df
 
 
@@ -141,3 +147,13 @@ def clean_free_text(s):
     s = s.replace("Sources to corroborate the impact indicative maximum of 10 references ", "")
     s = s.replace("Sources to corroborate the impact ", "")
     return s.strip()
+
+
+def text_combiner(df):
+    df['Text_Combined'] = df['1. Summary of the impact'].astype(str) + \
+                          df['2. Underpinning research'].astype(str) + \
+                          df['3. References to the research'].astype(str) +\
+                          df['4. Details of the impact'].astype(str) +\
+                          df['5. Sources to corroborate the impact'].astype(str)
+    df['Text_Combined'] = df['Text_Combined'].apply(clean_free_text)
+    return df

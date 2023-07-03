@@ -73,7 +73,7 @@ def get_data_from_lists(query_list, client, query_type):
                     research_orgs, researcher_ids,
                     altmetrics, reference_ids,
                     citations, metrics,
-                    FROM `dimensions-ai.data_analytics.publications` p
+                    FROM `dimensions-ai.data_analytics.publications` pgit o
                     WHERE p.doi IN UNNEST(@doi)""" % (query_list)
             query_job = client.query(QUERY, job_config=job_config)
 
