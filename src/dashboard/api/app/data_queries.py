@@ -117,26 +117,6 @@ def get_institution_counts(ics_ids=None):
         institutions[postcode][institution] = inst_count
     return institutions
 
-def get_postcode_areas():
-    sql = text('''
-        SELECT json_build_object( 'type', 'FeatureCollection', 'features', 
-        json_agg(ST_AsGeoJSON(geometry)::jsonb || jsonb_build_object('properties', to_jsonb(t) 
-        - 'geometry'))) AS geometry from "PostCodeGeom" t
-    ''')
-    query = db.session.execute(sql)
-    postcodes = [{'geometry': row.geometry} for row in query]
-    return postcodes
-
-def get_countries_geometry():
-    sql = text('''
-        SELECT json_build_object( 'type', 'FeatureCollection', 'features', 
-        json_agg(ST_AsGeoJSON(geometry)::jsonb || jsonb_build_object('properties', to_jsonb(t) 
-        - 'geometry'))) AS geometry from "WorldGeom" t
-    ''')
-    query = db.session.execute(sql)
-    countries = [{'geometry': row.geometry} for row in query]
-    return countries
-
 def get_topic_and_ics_above_threshold(topic, threshold, postcode):
     postcode_level_data = {}
     sql = text('''

@@ -88,31 +88,6 @@ class Countries(Base):
         Index('idx_countries_id', 'id', unique=True),
     )
 
-class WorldGeom(Base):
-    __tablename__ = "WorldGeometry"
-
-    id = Column(Integer, primary_key=True)
-    iso_a3 = Column(String(3))
-    iso = Column(Integer, nullable=True)
-    country = Column(String(100))
-    geometry = Column(Geometry('MULTIPOLYGON', srid=4326))
-
-    __table_args__ = (
-        Index('idx_worldgeom_id', 'id', 'iso_a3'),
-    )
-
-
-class PostCodeGeom(Base):
-    __tablename__ = "PostCodeGeom"
-
-    id = Column(Integer, primary_key=True)
-    cat = Column(Integer)
-    pc_area = Column(String(5))
-    geometry = Column(Geometry('MULTIPOLYGON', srid=4326))
-
-    __table_args__ = (
-        Index('idx_postcodegeom_id', 'id', 'pc_area'),
-    )
 
 
 
