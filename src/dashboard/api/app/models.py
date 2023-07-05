@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class ICS(Base):
-    __tablename__ = "ICS"
+    __tablename__ = "ics"
 
     id: int = Column(Integer, primary_key=True)
     ukprn: int = Column(Integer)
@@ -19,7 +19,7 @@ class ICS(Base):
 
 
 class Topics(Base):
-    __tablename__ = "Topics"
+    __tablename__ = "topics"
 
     topic_id = Column(Integer, primary_key=True)
     topic_name = Column(String(20))
@@ -33,7 +33,7 @@ class Topics(Base):
 
 
 class TopicWeights(Base):
-    __tablename__ = "Topic_weights"
+    __tablename__ = "topic_weights"
 
     id = Column(Integer, primary_key=True)
     ics_id = Column(String)
@@ -46,7 +46,7 @@ class TopicWeights(Base):
 
 
 class Funder(Base):
-    __tablename__ = "Funder"
+    __tablename__ = "funder"
 
     id = Column(Integer, primary_key=True)
     ics_table_id = Column(Integer, primary_key=True)
@@ -58,7 +58,7 @@ class Funder(Base):
 
 
 class UOA(Base):
-    __tablename__ = "UOA"
+    __tablename__ = "uoa"
 
     id = Column(Integer, primary_key=True)
     uoa_id = Column(String)
@@ -70,7 +70,7 @@ class UOA(Base):
 
 
 class Institution(Base):
-    __tablename__ = "Institution"
+    __tablename__ = "institution"
 
     id = Column(Integer, primary_key=True)
     ukprn = Column(Integer)
@@ -78,7 +78,7 @@ class Institution(Base):
     postcode = Column(String(8))
 
 class Countries(Base):
-    __tablename__ = "Countries"
+    __tablename__ = "countries"
 
     id = Column(Integer, primary_key=True)
     ics_table_id = Column(Integer)
