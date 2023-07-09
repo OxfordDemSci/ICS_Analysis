@@ -63,6 +63,7 @@ class UOA(Base):
     id = Column(Integer, primary_key=True)
     uoa_id = Column(String)
     name = Column(String)
+    assessment_panel = Column(String(20))
 
     __table_args__ = (
         Index('idx_uoa_id', 'id', unique=True),
@@ -87,6 +88,22 @@ class Countries(Base):
     __table_args__ = (
         Index('idx_countries_id', 'id', unique=True),
     )
+
+class WebsiteText(Base):
+    """One row table with place holders for text to be shown on the page."""
+    __tablename__ = "websitetext"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    all_topics_description = Column(String)
+    about = Column(String)
+    instructions = Column(String)
+    team = Column(String)
+    contact = Column(String)
+    label_info_box = Column(String)
+    label_top_left_box = Column(String)
+    label_bottom_left_box = Column(String)
+    label_top_right_box = Column(String)
+    label_botton_right_box = Column(String)
 
 
 

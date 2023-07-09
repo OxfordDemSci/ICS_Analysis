@@ -1,0 +1,5 @@
+all_topics_description,about,instructions,team,contact,label_info_box,label_top_left_box,label_bottom_left_box,label_top_right_box,label_botton_right_box
+This is the all topics description holder text,This is the text describing project,"1. This is instruction ONE;
+ 2. This is instruction TWO;
+ 3. This is instruction N. 
+","Any text about the team. If this becomes more complex, it might be easier to hardcode",Please contact the admin at ics@dashboard.com,Topic Description,Funders,UOA,Institutions,Beneficiaries
