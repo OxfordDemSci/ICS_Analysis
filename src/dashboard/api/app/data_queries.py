@@ -4,6 +4,10 @@ from geoalchemy2 import shape
 
 from app import db
 
+from app.models import (
+    WebsiteText,
+    ICS,
+)
 def get_topics():
     sql = text('''
         SELECT topic_name, topic_group, description, narrative from topics
@@ -23,12 +27,38 @@ def get_topics():
     })
     return topics
 
+def get_website_text():
+    row = db.session.query(WebsiteText).first()
+
+    website_text = {
+        "all_topics_description": row.all_topics_description,
+        "about": row.about,
+        "instructions": row.instructions,
+        "team": row.team,
+        "contact": row.contact,
+        "label_info_box": row.label_info_box,
+        "label_top_left_box": row.label_top_left_box,
+        "label_bottom_left_box": row.label_bottom_left_box,
+        "label_top_right_box": row.label_top_right_box,
+        "label_botton_right_box": row.label_botton_right_box,
+    }
+    return website_text
+
+def get_ics_table(ics_ids=None):
+    if ics_ids is None:
+        rows = db.session.query(ICS).all()
+    else:
+        rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
+    ics_table = []
+    for row in rows:
+        ics_table.append({column.name: getattr(row, column.name) for column in ICS.__table__.columns})
+    return ics_table
 
 def get_funders_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''
             SELECT funder.funder as funder, COUNT(*) AS funder_count FROM funder funder where funder is not NULL
-            GROUP BY funder.funder order by funder_count desc LIMIT 20;
+            GROUP BY funder.funder order by funder_count desc;
         ''')
         query = db.session.execute(sql)
     else:
@@ -38,7 +68,7 @@ def get_funders_counts(ics_ids=None):
             JOIN ics i ON f.ics_table_id = i.id
             WHERE i.ics_id = ANY(:ics_ids)
             GROUP BY f.funder
-            ORDER BY funder_count DESC LIMIT 20
+            ORDER BY funder_count DESC
         ''')
         query = db.session.execute(sql, {"ics_ids": ics_ids})
     funders = [{
@@ -49,7 +79,6 @@ def get_funders_counts(ics_ids=None):
 
 
 def get_countries_counts(ics_ids=None):
-    print(ics_ids)
     if ics_ids is None:
         sql = text('''
             SELECT countries.country as country, count(*) as country_count from countries countries where not country is NULL
@@ -85,16 +114,17 @@ def get_uoa_counts(ics_ids=None):
         } for row in query]
     elif len(ics_ids) > 0:
         sql = text('''
-            SELECT ics.uoa AS uoa, uoa.name AS name, COUNT(*) AS uoa_count
+            SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment, COUNT(*) AS uoa_count
             FROM ics ics
             JOIN uoa uoa ON ics.uoa = uoa.uoa_id
             WHERE ics.ics_id IN (SELECT unnest(:ics_ids))
-            GROUP BY ics.uoa, uoa.name
+            GROUP BY ics.uoa, uoa.name, uoa.assessment_panel
             ORDER BY uoa_count DESC;
         ''')
         query = db.session.execute(sql, {"ics_ids": ics_ids})
         uoa = [{
             "name": row.name,
+            "assessment": row.assessment,
             "uoa_count": row.uoa_count
         } for row in query]
     else:
@@ -121,6 +151,11 @@ def get_institution_counts(ics_ids=None):
         institution = row.institution
         inst_count = row.inst_count
         institutions[postcode][institution] = inst_count
+    for key in institutions.keys():
+        inst_total = 0
+        for _, value in institutions[key].items():
+            inst_total += value
+        institutions[key]['Total'] = inst_total
     return institutions
 
 def get_topic_and_ics_above_threshold(topic, threshold, postcode):
@@ -140,4 +175,50 @@ def get_topic_and_ics_above_threshold(topic, threshold, postcode):
     postcode_level_data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
     return postcode_level_data
 
+def query_dashboard_data(topic, threshold, postcode=None):
+    data = {}
+    sql = get_ics_sql(topic, postcode)
+    query = db.session.execute(sql, {"topic": topic, "threshold": threshold, "postcode": postcode})
+    ics_ids = [row.ics_id for row in query]
+    data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
+    data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
+    data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
+    data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
+    data["ics_table"] = get_ics_table(ics_ids=ics_ids)
+    return data
+
+    
+
+def get_ics_sql(topic, postcode=None):
+    if (topic == "All Topics") and (postcode is not None):
+        sql = text('''
+        SELECT tw.ics_id FROM topic_weights tw 
+        JOIN topics t ON tw.topic_id = t.topic_id
+        JOIN ics i ON tw.ics_id = i.ics_id
+        WHERE tw.probability >= :threshold
+        AND i.postcode = :postcode;
+    ''')
+    elif (topic == "All Topics") and postcode is None:
+        sql = text('''
+        SELECT tw.ics_id FROM topic_weights tw 
+        JOIN topics t ON tw.topic_id = t.topic_id
+        JOIN ics i ON tw.ics_id = i.ics_id
+        WHERE tw.probability >= :threshold;
+    ''')
+    elif (topic != "All Topics") and postcode is not None:
+        sql = text('''
+        SELECT tw.ics_id FROM topic_weights tw 
+        JOIN topics t ON tw.topic_id = t.topic_id
+        JOIN ics i ON tw.ics_id = i.ics_id
+        WHERE t.topic_name = :topic AND tw.probability >= :threshold
+        AND i.postcode = :postcode;
+    ''')
+    else:
+        sql = text('''
+        SELECT tw.ics_id FROM topic_weights tw 
+        JOIN topics t ON tw.topic_id = t.topic_id
+        JOIN ics i ON tw.ics_id = i.ics_id
+        WHERE t.topic_name = :topic AND tw.probability >= :threshold
+    ''')
+    return sql
     

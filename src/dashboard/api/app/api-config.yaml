@@ -16,7 +16,36 @@ paths:
       summary: "Read the list of topics and geometries"
       responses:
         "200":
-          description: "Successfully read initialisation"  
+          description: "Successfully read initialisation"
+  /get_ics_data:
+    get:
+      operationId: "app.endpoints.get_ics_data"
+      parameters:
+        - name: topic
+          in: query
+          description: Topic to query
+          required: true
+          schema:
+            type: string
+        - name: threshold
+          in: query
+          description: Threshold above which to subset the data using topic weights
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: postcode_area
+          in: query
+          description: Postcode area to query
+          required: false
+          schema:
+            type: string
+      tags:
+        - "Data by postcode"
+      summary: "Postcode area data by topic"
+      responses:
+        "200":
+          description: "Successfully read postcode data by topic" 
   /postcode_data:
     get:
       operationId: "app.endpoints.get_postcode_data"
