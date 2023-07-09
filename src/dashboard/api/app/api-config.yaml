@@ -41,11 +41,46 @@ paths:
           schema:
             type: string
       tags:
-        - "Data by postcode"
-      summary: "Postcode area data by topic"
+        - "Data by postcode and topic"
+      summary: "Data by topic and postcode area"
       responses:
         "200":
-          description: "Successfully read postcode data by topic" 
+          description: "Successfully read postcode data by topic"     
+  /get_ics_data_for_country:
+    get:
+      operationId: "app.endpoints.get_ics_data_country"
+      parameters:
+        - name: country
+          in: query
+          description: Country to query
+          required: true
+          schema:
+            type: string
+        - name: topic
+          in: query
+          description: Topic to query
+          required: true
+          schema:
+            type: string
+        - name: threshold
+          in: query
+          description: Threshold above which to subset the data using topic weights
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: postcode_area
+          in: query
+          description: Postcode area to query
+          required: false
+          schema:
+            type: string
+      tags:
+        - "ICS table for Country"
+      summary: "ICS table for Country"
+      responses:
+        "200":
+          description: "Successfully read country ICS table" 
   /postcode_data:
     get:
       operationId: "app.endpoints.get_postcode_data"

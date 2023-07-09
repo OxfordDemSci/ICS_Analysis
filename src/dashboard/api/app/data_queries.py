@@ -54,6 +54,25 @@ def get_ics_table(ics_ids=None):
         ics_table.append({column.name: getattr(row, column.name) for column in ICS.__table__.columns})
     return ics_table
 
+def get_ics_table_for_country(country, topic, threshold, postcode=None):
+    ics_ids = get_ics_ids(topic, threshold, postcode)
+    sql = text('''
+               SELECT * FROM ics i
+               JOIN countries c
+               ON i.id = c.ics_table_id
+               WHERE c.country = :country
+               AND i.ics_id = ANY(:ics_ids)     
+    ''')
+    query = db.session.execute(sql, {"country": country, "ics_ids": ics_ids})
+    ics_table = [{
+        "id": row.id,
+        "ukprn": row.ukprn,
+        "postcode": row.postcode,
+        "ics_id": row.ics_id,
+        "uos": row.uoa
+    } for row in query]
+    return ics_table
+
 def get_funders_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''
@@ -177,9 +196,7 @@ def get_topic_and_ics_above_threshold(topic, threshold, postcode):
 
 def query_dashboard_data(topic, threshold, postcode=None):
     data = {}
-    sql = get_ics_sql(topic, postcode)
-    query = db.session.execute(sql, {"topic": topic, "threshold": threshold, "postcode": postcode})
-    ics_ids = [row.ics_id for row in query]
+    ics_ids = get_ics_ids(topic, threshold, postcode)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
@@ -187,7 +204,11 @@ def query_dashboard_data(topic, threshold, postcode=None):
     data["ics_table"] = get_ics_table(ics_ids=ics_ids)
     return data
 
-    
+def get_ics_ids(topic, threshold, postcode=None):
+    sql = get_ics_sql(topic, postcode)
+    query = db.session.execute(sql, {"topic": topic, "threshold": threshold, "postcode": postcode})
+    ics_ids = [row.ics_id for row in query]
+    return ics_ids
 
 def get_ics_sql(topic, postcode=None):
     if (topic == "All Topics") and (postcode is not None):

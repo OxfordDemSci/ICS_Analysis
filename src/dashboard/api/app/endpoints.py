@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from .data_access import get_init, get_postcode_level_data, get_data
+from .data_access import get_init, get_postcode_level_data, get_data, get_country_ics_data
 
 BASE = Path(__file__).resolve().parent
 
@@ -11,6 +11,10 @@ def read_init():
 
 def get_ics_data(topic, threshold, postcode_area=None):
     data = get_data(topic, threshold, postcode_area)
+    return data
+
+def get_ics_data_country(country, topic, threshold, postcode_area=None):
+    data = get_country_ics_data(country, topic, threshold, postcode_area)
     return data
 
 def get_postcode_data(postcode_area, topic, threshold): 
