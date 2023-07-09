@@ -6,30 +6,36 @@ from app import db
 
 def get_topics():
     sql = text('''
-        SELECT topic_name, topic_group, description, narrative from "Topics"
+        SELECT topic_name, topic_group, description, narrative from topics
     ''')
 
     query = db.session.execute(sql)
     topics = [{
         "topic_name": row.topic_name, 
         "topic_group": row.topic_group, 
-        "desciption": row.description,
+        "description": row.description,
         "narrative": row.narrative} for row in query]
+    topics.insert(0, {
+        "topic_name": "All Topics", 
+        "topic_group": None, 
+        "description": None,
+        "narrative": None,
+    })
     return topics
 
 
 def get_funders_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''
-            SELECT funder.funder as funder, COUNT(*) AS funder_count FROM "Funder" funder where funder is not NULL
+            SELECT funder.funder as funder, COUNT(*) AS funder_count FROM funder funder where funder is not NULL
             GROUP BY funder.funder order by funder_count desc LIMIT 20;
         ''')
         query = db.session.execute(sql)
     else:
         sql = text('''
             SELECT f.funder AS funder, COUNT(*) AS funder_count
-            FROM "Funder" f
-            JOIN "ICS" i ON f.ics_table_id = i.id
+            FROM funder f
+            JOIN ics i ON f.ics_table_id = i.id
             WHERE i.ics_id = ANY(:ics_ids)
             GROUP BY f.funder
             ORDER BY funder_count DESC LIMIT 20
@@ -46,15 +52,15 @@ def get_countries_counts(ics_ids=None):
     print(ics_ids)
     if ics_ids is None:
         sql = text('''
-            SELECT countries.country as country, count(*) as country_count from "Countries" countries where not country is NULL
+            SELECT countries.country as country, count(*) as country_count from countries countries where not country is NULL
             GROUP BY countries.country order by country_count desc
         ''')
         query = db.session.execute(sql)
     else:
         sql = text('''
            SELECT c.country AS country, COUNT(*) AS country_count
-            FROM "Countries" c
-            JOIN "ICS" i ON c.ics_table_id = i.id
+            FROM countries c
+            JOIN ics i ON c.ics_table_id = i.id
             WHERE i.ics_id = ANY(:ics_ids)
             GROUP BY c.country
             ORDER BY country_count DESC 
@@ -69,7 +75,7 @@ def get_countries_counts(ics_ids=None):
 def get_uoa_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''
-            SELECT ics.uoa as uoa, uoa.name as name, COUNT(*) AS uoa_count FROM "ICS" ics JOIN "UOA" uoa ON ics.uoa = uoa.uoa_id GROUP BY ics.uoa, 
+            SELECT ics.uoa as uoa, uoa.name as name, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON ics.uoa = uoa.uoa_id GROUP BY ics.uoa, 
             uoa.name ORDER BY uoa_count desc;
         ''')
         query = db.session.execute(sql)
@@ -80,8 +86,8 @@ def get_uoa_counts(ics_ids=None):
     elif len(ics_ids) > 0:
         sql = text('''
             SELECT ics.uoa AS uoa, uoa.name AS name, COUNT(*) AS uoa_count
-            FROM "ICS" ics
-            JOIN "UOA" uoa ON ics.uoa = uoa.uoa_id
+            FROM ics ics
+            JOIN uoa uoa ON ics.uoa = uoa.uoa_id
             WHERE ics.ics_id IN (SELECT unnest(:ics_ids))
             GROUP BY ics.uoa, uoa.name
             ORDER BY uoa_count DESC;
@@ -99,14 +105,14 @@ def get_uoa_counts(ics_ids=None):
 def get_institution_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''
-            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM "ICS" 
-            ics JOIN "Institution" ins ON ics.ukprn = ins.ukprn GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY inst_count desc;
+            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM ics 
+            ics JOIN institution ins ON ics.ukprn = ins.ukprn GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY inst_count desc;
         ''')
         query = db.session.execute(sql)
     else:
         sql = text('''
-            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM "ICS" 
-            ics JOIN "Institution" ins ON ics.ukprn = ins.ukprn AND ics.ics_id = ANY(:ics_ids) GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY inst_count desc;
+            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM ics 
+            ics JOIN institution ins ON ics.ukprn = ins.ukprn AND ics.ics_id = ANY(:ics_ids) GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY inst_count desc;
         ''')
         query = db.session.execute(sql, {"ics_ids": ics_ids})
     institutions = defaultdict(dict)
@@ -120,9 +126,9 @@ def get_institution_counts(ics_ids=None):
 def get_topic_and_ics_above_threshold(topic, threshold, postcode):
     postcode_level_data = {}
     sql = text('''
-        SELECT tw.ics_id FROM "Topic_weights" tw 
-        JOIN "Topics" t ON tw.topic_id = t.topic_id
-        JOIN "ICS" i ON tw.ics_id = i.ics_id
+        SELECT tw.ics_id FROM topic_weights tw 
+        JOIN topics t ON tw.topic_id = t.topic_id
+        JOIN ics i ON tw.ics_id = i.ics_id
         WHERE t.topic_name = :topic AND tw.probability >= :threshold
         AND i.postcode = :postcode;
     ''')
