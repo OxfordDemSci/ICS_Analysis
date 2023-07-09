@@ -62,7 +62,7 @@ services:
       - ./sql/ics_db_dump.sql:/docker-entrypoint-initdb.d/ics_db_dump.sql
     environment:
     - POSTGRES_DB=ics, ics_test
-    - POSTGRES_USER=oxford_ics_admin  # Set the desired username
+    - POSTGRES_USER=oxford_ics_admin
     - POSTGRES_PASSWORD=Fp2mQC4&#7JZ
     networks:
       - ics_net

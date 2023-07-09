@@ -2,8 +2,8 @@ class Configuration:
     DEBUG = False
     DB_PASSWORD="Fp2mQC4&#7JZ"
     DB_USERNAME="oxford_ics_admin"
-    SQLALCHEMY_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@ics_postgres:5432/ics"
-    TEST_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@ics_postgres:5432/ics_test"
+    SQLALCHEMY_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@localhost:5432/ics"
+    TEST_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@localhost:5432/ics_test"
     DEBUG=True
     ENABLE_CORS=True
     FLASK_APP="app.wsgi"

@@ -1,5 +1,5 @@
 
-from .models import ICS, UOA, Institution, Countries, Topics, Funder, WorldGeom, PostCodeGeom
+from .models import ICS, UOA, Institution, Countries, Topics, Funder
 from .data_queries import (
     get_topics, 
     get_funders_counts, 
