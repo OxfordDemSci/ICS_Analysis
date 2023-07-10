@@ -25,6 +25,13 @@ csfont = {'fontname': 'Arial'}
 hfont = {'fontname': 'Arial'}
 
 
+def savefigures(plt, filepath, filename):
+    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
+    plt.savefig(os.path.join(filepath, filename + '.svg'), bbox_inches='tight')
+    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
+                    dpi=1200, transparent=True, facecolor='white')
+
+
 def plot_impact_type_combined(df, figure_path):
 
     fig = plt.figure(figsize=(18, 12))
@@ -41,10 +48,6 @@ def plot_impact_type_combined(df, figure_path):
 
     ax9 = fig.add_subplot(gs[0:16, 12:16])
     ax10 = fig.add_subplot(gs[0:16, 16:17])
-
-
-
-
 
 
     # uoa thing here
@@ -125,7 +128,6 @@ def plot_impact_type_combined(df, figure_path):
             for uoa in range(13, 34):
                 ax.get_children()[uoa].set_color(colors2[1])
                 ax.get_children()[uoa].set_edgecolor('k')
-    figure_name = 'impacttype_vs_uoa'
     legend_elements = [Patch(facecolor=colors2[0], edgecolor='k',
                              label=r'STEM', alpha=0.7),
                        Patch(facecolor=colors2[1], edgecolor='k',
@@ -142,12 +144,9 @@ def plot_impact_type_combined(df, figure_path):
         ylabels = ['{:,.0f}'.format(x) + '%' for x in ax.get_yticks()]
         ax.set_yticklabels(ylabels)
         sns.despine(ax=ax)
+    figure_name = 'impacttype_vs_uoa'
+    savefigures(plt, figure_path, figure_name)
 
-    #    plt.savefig(os.path.join(figure_path, figure_name + '.pdf'),
-    #                bbox_inches='tight')
-    #    plt.savefig(os.path.join(figure_path, figure_name + '.png'),
-    #                bbox_inches='tight', dpi=400,
-    #                facecolor='white', transparent=False)
 
 
 
@@ -290,9 +289,7 @@ def plot_impact_type_combined(df, figure_path):
     )
     plt.tight_layout()
     filename = 'panel_by_type'
-    plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches = 'tight')
-    plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches = 'tight',
-                dpi=400, facecolor='white', transparent=False)
+    savefigures(plt, figure_path, filename)
 
 
 def plot_funders():
@@ -423,11 +420,7 @@ def plot_funders():
     plt.tight_layout()
     fig_path = os.path.join(os.getcwd(), '..', '..', 'figures')
     filename = 'funding'
-    plt.savefig(os.path.join(fig_path, filename + '.pdf'),
-                bbox_inches = 'tight')
-    plt.savefig(os.path.join(fig_path, filename + '.png'),
-                bbox_inches = 'tight',
-                dpi=400, facecolor='white', transparent=False)
+    savefigures(plt, fig_path, filename)
 
 
 def make_interdisciplinarity():
@@ -458,68 +451,46 @@ def make_interdisciplinarity():
 
     df = df.rename({'Information And Computing Sciences': 'IT'}, axis=0)
     df = df.rename({'Information And Computing Sciences': 'IT'}, axis=1)
-
     df = df.rename({'Built Environment And Design': 'Urban'}, axis=0)
     df = df.rename({'Built Environment And Design': 'Urban'}, axis=1)
-
     df = df.rename({'Biological Sciences': 'Biology'}, axis=0)
     df = df.rename({'Biological Sciences': 'Biology'}, axis=1)
-
     df = df.rename({'Health Sciences': 'Health'}, axis=0)
     df = df.rename({'Health Sciences': 'Health'}, axis=1)
-
     df = df.rename({'Language, Communication And Culture': 'Language'}, axis=0)
     df = df.rename({'Language, Communication And Culture': 'Language'}, axis=1)
-
     df = df.rename({'Earth Sciences': 'Earth'}, axis=0)
     df = df.rename({'Earth Sciences': 'Earth'}, axis=1)
-
     df = df.rename({'Physical Sciences': 'Physics'}, axis=0)
     df = df.rename({'Physical Sciences': 'Physics'}, axis=1)
-
     df = df.rename({'Chemical Sciences': 'Chem'}, axis=0)
     df = df.rename({'Chemical Sciences': 'Chem'}, axis=1)
-
     df = df.rename({'Economics': 'Econ'}, axis=1)
     df = df.rename({'Economics': 'Econ'}, axis=1)
-
     df = df.rename({'Biomedical And Clinical Sciences': 'Biomedical'}, axis=0)
     df = df.rename({'Biomedical And Clinical Sciences': 'Biomedical'}, axis=1)
-
     df = df.rename({'Agricultural, Veterinary And Food Sciences': 'Agriculture'}, axis=0)
     df = df.rename({'Agricultural, Veterinary And Food Sciences': 'Agriculture'}, axis=1)
-
     df = df.rename({'History, Heritage And Archaeology': 'History'}, axis=0)
     df = df.rename({'History, Heritage And Archaeology': 'History'}, axis=1)
-
     df = df.rename({'Law And Legal Studies': 'Law'}, axis=0)
     df = df.rename({'Law And Legal Studies': 'Law'}, axis=1)
-
-
     df = df.rename({'Environmental Sciences': 'Environmental'}, axis=0)
     df = df.rename({'Environmental Sciences': 'Environmental'}, axis=1)
-
     df = df.rename({'Law And Legal Studies': 'Law'}, axis=0)
     df = df.rename({'Law And Legal Studies': 'Law'}, axis=1)
-
     df = df.rename({'Creative Arts And Writing': 'Creative'}, axis=0)
     df = df.rename({'Creative Arts And Writing': 'Creative'}, axis=1)
-
     df = df.rename({'Commerce, Management, Tourism And Services': 'Tourism'}, axis=0)
     df = df.rename({'Commerce, Management, Tourism And Services': 'Tourism'}, axis=1)
-
-
     df = df.rename({'Mathematical Sciences': 'Mathematics'}, axis=0)
     df = df.rename({'Mathematical Sciences': 'Mathematics'}, axis=1)
-
-
     df = df.rename({'Philosophy And Religious Studies': 'Religion'}, axis=0)
     df = df.rename({'Philosophy And Religious Studies': 'Religion'}, axis=1)
-
-
     df = df.rename({'Human Society': 'Society'}, axis=0)
     df = df.rename({'Human Society': 'Society'}, axis=1)
-    df.to_csv(os.path.join(os.getcwd(), '..', '..', 'data', 'intermediate', 'all_interdisciplinarity.csv'))
+    df.to_csv(os.path.join(os.getcwd(), '..', '..', 'data',
+                           'intermediate', 'all_interdisciplinarity.csv'))
 
 
 def plot_gender(figure_path):
@@ -585,15 +556,10 @@ def plot_gender(figure_path):
     draw_brace(ax1, (7, 12), 0.6, 'Panel B: ' + str(round(B_cited, 2)))
     draw_brace(ax1, (13, 24), 0.6, 'Panel C: ' + str(round(C_cited, 2)))
     draw_brace(ax1, (25, 33), 0.6, 'Panel D: ' + str(round(D_cited, 2)))
-
     plt.tight_layout()
     sns.despine()
     filename = 'percent_female'
-    plt.savefig(os.path.join(figure_path, filename + '.pdf'),
-                bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, filename + '.png'),
-                bbox_inches='tight',
-                dpi=400, facecolor='white', transparent=False)
+    savefigures(plt, figure_path, filename)
 
 
 def plot_heat_topics(heat_topics, count, figure_path):
@@ -634,9 +600,9 @@ def plot_heat_topics(heat_topics, count, figure_path):
     cbar_solids = cbar_ax.collections[0]
     cbar_solids.set_edgecolor("k")
     cbar_solids.set_lw(1.0)
-    plt.savefig(os.path.join(figure_path, 'topics_weighted_uoas.pdf'), bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, 'topics_weighted_uoas.png'),
-                dpi=600, bbox_inches='tight')
+    filename = 'topics_weighted_uoas'
+    savefigures(plt, figure_path, filename)
+
 
 def plot_impacttype_vs_uoa(figure_path, df):
     groupby_counter = df.groupby(['Unit of assessment number']).size().reset_index().rename({0: 'Count'}, axis=1)
@@ -737,12 +703,8 @@ def plot_impacttype_vs_uoa(figure_path, df):
         ax.tick_params(axis='both', which='major', labelsize=13)
         ylabels = ['{:,.0f}'.format(x) + '%' for x in ax.get_yticks()]
         ax.set_yticklabels(ylabels)
+    savefigures(plt, figure_path, figure_name)
 
-    plt.savefig(os.path.join(figure_path, figure_name + '.pdf'),
-                bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, figure_name + '.png'),
-                bbox_inches='tight', dpi=400,
-                facecolor='white', transparent=False)
 
 
 def score_read_vs_gpa(merge_path, figure_path):
@@ -848,11 +810,7 @@ def score_read_vs_gpa(merge_path, figure_path):
     ax4.set_yticklabels(ax4.get_yticklabels(), rotation=0, fontsize=13)
     sns.despine()
     figure_name = 'score_read_vs_gpa'
-    plt.savefig(os.path.join(figure_path, figure_name + '.pdf'),
-                bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, figure_name + '.png'),
-                bbox_inches='tight', dpi=400,
-                facecolor='white', transparent=False)
+    savefigures(plt, figure_path, figure_name)
 
 
 def make_word_vis(df1, df2, fieldname, figure_path, support_path):
@@ -875,23 +833,16 @@ def make_word_vis(df1, df2, fieldname, figure_path, support_path):
     df2_words_mat = co_occurrence(wordlist, 5)
     matsize = 25
 
-#    df1_sum = df1_words_mat.sum().sum() # @TODO check that these don't actually get used?
-#    df2_sum = df2_words_mat.sum().sum()
-
     df1_tot_row = pd.DataFrame(df1_words_mat.sum())
     df1_tot_row = df1_tot_row.sort_values(by=0, ascending=False)[0:matsize]
-
     df1_words_mat = df1_words_mat[df1_tot_row.index.to_list()]
     df1_words_mat = df1_words_mat.reindex(index=df1_tot_row.index.to_list())
-
     df2_tot_row = pd.DataFrame(df2_words_mat.sum())
     df2_tot_row = df2_tot_row.sort_values(by=0, ascending=False)[0:matsize]
     df2_words_mat = df2_words_mat[df2_tot_row.index.to_list()]
     df2_words_mat = df2_words_mat.reindex(index=df2_tot_row.index.to_list())
-
     df1_mask = np.zeros_like(df1_words_mat.iloc[0:matsize, 0:matsize], dtype=np.int16)
     df1_mask[np.triu_indices_from(df1_mask)] = True
-
     df2_mask = np.zeros_like(df2_words_mat.iloc[0:matsize, 0:matsize], dtype=np.int16)
     df2_mask[np.triu_indices_from(df2_mask)] = True
     pd.DataFrame.set_diag = set_diag
@@ -1020,12 +971,8 @@ def make_word_vis(df1, df2, fieldname, figure_path, support_path):
         spine.set_visible(True)
     sns.despine(ax=ax1)
     sns.despine(ax=ax4)
-
-    plt.savefig(os.path.join(figure_path, 'bigrams_unigrams_Panels_CD' + '.pdf'),
-                bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, 'bigrams_unigrams_Panels_CD' + '.png'),
-                bbox_inches='tight', dpi=400,
-                facecolor='white', transparent=False)
+    figure_name = 'bigrams_unigrams_Panels_CD'
+    savefigures(plt, figure_path, figure_name)
 
 
 def groupby_plotter(grp, figure_path, filename):
@@ -1108,11 +1055,9 @@ def groupby_plotter(grp, figure_path, filename):
         (23725.02, 396), xytext=(-120, 40),
         textcoords='offset points',
         bbox=bbox, arrowprops=arrowprops)
-
     sns.despine()
     plt.tight_layout()
-    plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches = 'tight')
-    plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches = 'tight', dpi=800)
+    savefigures(plt, figure_path, filename)
 
 
 def heatmap(x, y, figsize, figure_path, filename, **kwargs):
@@ -1217,9 +1162,7 @@ def heatmap(x, y, figsize, figure_path, filename, **kwargs):
         ax.set_yticks(np.linspace(min(bar_y), max(bar_y), 5))
         ax.yaxis.tick_right()
         ax.tick_params(axis='y', which='major', labelsize=13)
-    plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches = 'tight')
-    plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches = 'tight',
-                dpi=400, facecolor='white', transparent=False)
+    savefigures(plt, figure_path, filename)
 
 
 def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
@@ -1402,17 +1345,11 @@ def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
                  verticalalignment='top', bbox=props)
         ax3.text(0.05, 0.385, textstr3, transform=ax3.transAxes, fontsize=10,
                  verticalalignment='top', bbox=props)
-
     sns.despine(ax=ax1)
     sns.despine(ax=ax2, left=True, right=False)
     sns.despine(ax=ax3, left=True, right=False)
-
     plt.tight_layout()
-    plt.savefig(os.path.join(figure_path, file_name + '.pdf'),
-                bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, file_name + '.png'),
-                bbox_inches='tight', dpi=400,
-                facecolor='white', transparent=False)
+    savefigures(plt, figure_path, file_name)
 
 
 def find_keywords(df, keyword_dict):
@@ -1480,8 +1417,6 @@ def make_keyword_figure():
     ax3 = df3.plot(ax=ax3, kind='bar', edgecolor='k', color = colors2, legend=False, alpha=0.8)
     ax3.set_xticks(ax3.get_xticks())
     ax3.set_xticklabels(ax3.get_xticklabels(), rotation=0)
-
-
     ax1.set_title('A.', loc='left', fontsize=18)
     ax1.tick_params(axis='both', which='major', labelsize=14)
     ax2.set_title('B.', loc='left', fontsize=18)
@@ -1489,18 +1424,11 @@ def make_keyword_figure():
     ax3.set_title('C.', loc='left', fontsize=18)
     ax3.tick_params(axis='both', which='major', labelsize=11)
     ax2.set_xticklabels([])
-
     ax1.set_xlabel('Number of ICS (All Grades)', fontsize=14)
     ax2.set_ylabel('Number of ICS (Certified 4*)', fontsize=14)
     ax3.set_ylabel('Number of ICS (All Grades)', fontsize=14)
-
-#    ax2.yaxis.tick_right()
-#    ax3.yaxis.tick_right()
     ax2.yaxis.set_label_position("right")
     ax3.yaxis.set_label_position("right")
-#    ax2.yaxis.set_ticks_position('right')
-#    ax3.yaxis.set_ticks_position('right')
-
     ax1.legend(frameon=True,
                fontsize=12, framealpha=1, facecolor='w',
                edgecolor=(0, 0, 0, 1),
@@ -1508,7 +1436,6 @@ def make_keyword_figure():
     ax2.legend(frameon=True,
                fontsize=12, framealpha=1, facecolor='w',
                edgecolor=(0, 0, 0, 1),
-               #title='Panels', title_fontsize=14
               )
     ax1.set_axisbelow(True)
     ax2.set_axisbelow(True)
@@ -1523,8 +1450,8 @@ def make_keyword_figure():
     sns.despine(ax=ax2, left = True, right=False, top=False)
     sns.despine(ax=ax3, left = True, right=False)
     plt.tight_layout()
-    plt.savefig(os.path.join(figure_path, 'keyword_analysis.pdf'), bbox_inches = 'tight')
-    plt.savefig(os.path.join(figure_path, 'keyword_analysis.png'), bbox_inches = 'tight', dpi=800)
+    file_name = 'keyword_analysis'
+    savefigures(plt, figure_path, file_name)
 
 
 def make_gpa_vs_environment(figure_path, df):
@@ -1627,9 +1554,8 @@ def make_gpa_vs_environment(figure_path, df):
     ax2.set_xticklabels(xlabels)
     plt.tight_layout()
     sns.despine()
-    filename = 'gpa_vs_environment'
-    plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches = 'tight')
-    plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches = 'tight', dpi=800)
+    file_name = 'gpa_vs_environment'
+    savefigures(plt, figure_path, file_name)
 
 
 def make_simple_scores_figure(df, figure_path, out_path):
@@ -1661,12 +1587,10 @@ def make_simple_scores_figure(df, figure_path, out_path):
     df_nonshape = df[~shape_mask]
     df_panelc = df[df['Main panel'] == 'C']
     df_paneld = df[df['Main panel'] == 'D']
-
     print(f'STEM ICS GPA mean: ',
           round(df_nonshape['ICS_GPA'].mean(), 2))
     print(f'SHAPE ICS GPA mean: ',
           round(df_shape['ICS_GPA'].mean(),2 ))
-
     print(f'Panel C ICS GPA mean: ',
           round(df_panelc['ICS_GPA'].mean(), 2))
     print(f'Panel D ICS GPA mean: ',
@@ -1749,9 +1673,11 @@ def make_simple_scores_figure(df, figure_path, out_path):
     ax2.set_title('B.', loc='left', fontsize=letter_fontsize, y=1.035)
     ax3.set_title('C.', loc='left', fontsize=letter_fontsize, y=1.035)
     plt.tight_layout()
-    plt.savefig(os.path.join(figure_path, 'ics_gpa.pdf'),
+    file_name = 'ics_gpa.pdf'
+    savefigures(plt, figure_path, file_name)
+    plt.savefig(os.path.join(figure_path, file_name),
                 bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, 'ics_gpa.png'),
+    plt.savefig(os.path.join(figure_path, file_name),
                 bbox_inches='tight', dpi=800)
     df.to_csv(os.path.join(out_path, 'department_gpa.csv'), index=False)
 
@@ -1784,11 +1710,9 @@ def plot_metrics_shape(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fi
     cited_by_uoa = pd.DataFrame(cited_by_uoa)
     altm_by_uoa = pd.DataFrame(altm_by_uoa)
     ratio_by_uoa = pd.DataFrame(ratio_by_uoa)
-
     cited_by_uoa = cited_by_uoa[(cited_by_uoa.index==4) | (cited_by_uoa.index>13)]
     altm_by_uoa = altm_by_uoa[(altm_by_uoa.index==4) | (altm_by_uoa.index>13)]
     ratio_by_uoa = ratio_by_uoa[(ratio_by_uoa.index==4) | (ratio_by_uoa.index>13)]
-
     cited_by_uoa.plot(kind='bar', ax=ax1, ec='k', legend=False)
     altm_by_uoa.plot(kind='bar', ax=ax2, ec='k', legend=False)
     ratio_by_uoa.plot(kind='bar', ax=ax3, ec='k', legend=False)
@@ -1824,36 +1748,28 @@ def plot_metrics_shape(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fi
     ax1.set_title('A.', loc='left', fontsize=18)
     ax2.set_title('B.', loc='left', fontsize=18)
     ax3.set_title('C.', loc='left', fontsize=18)
-
     ax1.set_ylabel('Av. Times Cited', fontsize=17)
     ax2.set_ylabel('Av. Altmetric Score', fontsize=17)
     ax3.set_ylabel('Av. Relative Ratio', fontsize=17)
     ax1.set_ylim(0, 120)
     ax2.set_ylim(0, 120)
     ax3.set_ylim(0, 3.25)
-
     C_cited = paper_panels.at['C', 'Average Times Cited']
     D_cited = paper_panels.at['D', 'Average Times Cited']
     C_altm = paper_panels.at['C', 'Average Altmetric']
     D_altm = paper_panels.at['D', 'Average Altmetric']
     C_ratio = paper_panels.at['C', 'Relative Ratio']
     D_ratio = paper_panels.at['D', 'Relative Ratio']
-
     draw_brace(ax1, (1, 14), 100, 'Panel C: ' + str(round(C_cited, 2)))
     draw_brace(ax1, (14, 21), 100, 'Panel D: ' + str(round(D_cited, 2)))
     draw_brace(ax2, (1, 14), 100, 'Panel C: ' + str(round(C_altm, 2)))
     draw_brace(ax2, (14, 21), 100, 'Panel D: ' + str(round(D_altm, 2)))
     draw_brace(ax3, (1, 14), 2.5, 'Panel C: ' + str(round(C_ratio, 2)))
     draw_brace(ax3, (14, 21), 2.5, 'Panel D: ' + str(round(D_ratio, 2)))
-
     plt.tight_layout()
     sns.despine()
-    filename = 'altmetrics_and_citations_shape'
-    plt.savefig(os.path.join(figure_path, filename + '.pdf'),
-                bbox_inches = 'tight')
-    plt.savefig(os.path.join(figure_path, filename + '.png'),
-                bbox_inches = 'tight',
-                dpi=400, facecolor='white', transparent=False)
+    file_name = 'altmetrics_and_citations_shape'
+    savefigures(plt, figure_path, file_name)
 
 
 def plot_metrics_all(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fig_path):
@@ -1922,13 +1838,8 @@ def plot_metrics_all(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fig_
 
     plt.tight_layout()
     sns.despine()
-    filename = 'altmetrics_and_citations'
-    plt.savefig(os.path.join(fig_path, filename + '.pdf'),
-                bbox_inches='tight')
-    plt.savefig(os.path.join(fig_path, filename + '.png'),
-                bbox_inches='tight',
-                dpi=400, facecolor='white', transparent=False)
-
+    file_name = 'altmetrics_and_citations'
+    savefigures(plt, fig_path, file_name)
 
 
 def plot_topic_keywords(figure_path):
@@ -1990,7 +1901,5 @@ def plot_topic_keywords(figure_path):
     for ax in ax10_ax12:
         ax.set_xlabel('Weight', fontsize=15)
         sns.despine(ax=ax, bottom=False, left=True)
-
-    plt.savefig(os.path.join(figure_path, 'top_twelve_topics.pdf'), bbox_inches='tight')
-    plt.savefig(os.path.join(figure_path, 'top_twelve_topics.png'),
-                dpi = 600, bbox_inches='tight')
+    file_name = 'top_twelve_topics'
+    savefigures(plt, figure_path, file_name)
