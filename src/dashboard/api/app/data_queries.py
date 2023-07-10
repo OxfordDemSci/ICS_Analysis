@@ -151,6 +151,10 @@ def get_uoa_counts(ics_ids=None):
     return uoa
 
 
+def nested_defaultdict():
+    return defaultdict(nested_defaultdict)
+
+
 def get_institution_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''
@@ -164,35 +168,20 @@ def get_institution_counts(ics_ids=None):
             ics JOIN institution ins ON ics.ukprn = ins.ukprn AND ics.ics_id = ANY(:ics_ids) GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY inst_count desc;
         ''')
         query = db.session.execute(sql, {"ics_ids": ics_ids})
-    institutions = defaultdict(dict)
+    #institutions = defaultdict(dict)
+    institutions = defaultdict(nested_defaultdict)
     for row in query:
         postcode = row.postcode
         institution = row.institution
         inst_count = row.inst_count
-        institutions[postcode][institution] = inst_count
+        institutions[postcode]['institution_counts'][institution] = inst_count
     for key in institutions.keys():
         inst_total = 0
-        for _, value in institutions[key].items():
+        for _, value in institutions[key]['institution_counts'].items():
             inst_total += value
-        institutions[key]['Total'] = inst_total
+        institutions[key]['postcode_total'] = inst_total
     return institutions
 
-def get_topic_and_ics_above_threshold(topic, threshold, postcode):
-    postcode_level_data = {}
-    sql = text('''
-        SELECT tw.ics_id FROM topic_weights tw 
-        JOIN topics t ON tw.topic_id = t.topic_id
-        JOIN ics i ON tw.ics_id = i.ics_id
-        WHERE t.topic_name = :topic AND tw.probability >= :threshold
-        AND i.postcode = :postcode;
-    ''')
-    query = db.session.execute(sql, {"topic": topic, "threshold": threshold, "postcode": postcode})
-    ics_ids = [row.ics_id for row in query]
-    postcode_level_data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
-    postcode_level_data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
-    postcode_level_data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
-    postcode_level_data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
-    return postcode_level_data
 
 def query_dashboard_data(topic, threshold, postcode=None):
     data = {}

@@ -13,10 +13,19 @@ paths:
       operationId: "app.endpoints.read_init"
       tags:
         - "Initialisation"
-      summary: "Read the list of topics and geometries"
+      summary: "Read the list of topics and initialisation settings"
       responses:
         "200":
           description: "Successfully read initialisation"
+  /get_topics:
+    get:
+      operationId: "app.endpoints.get_ics_topics"
+      tags:
+        - "Topics"
+      summary: "Get the list of topics in ICS database"
+      responses:
+        "200":
+          description: "Succesfully read topics"
   /get_ics_data:
     get:
       operationId: "app.endpoints.get_ics_data"
@@ -80,33 +89,4 @@ paths:
       summary: "ICS table for Country"
       responses:
         "200":
-          description: "Successfully read country ICS table" 
-  /postcode_data:
-    get:
-      operationId: "app.endpoints.get_postcode_data"
-      parameters:
-        - name: postcode_area
-          in: query
-          description: Postcode area to query
-          required: true
-          schema:
-            type: string
-        - name: topic
-          in: query
-          description: Topic to query
-          required: true
-          schema:
-            type: string
-        - name: threshold
-          in: query
-          description: Threshold above which to subset the data using topic weights
-          required: true
-          schema:
-            type: number
-            format: float
-      tags:
-        - "Data by postcode"
-      summary: "Postcode area data by topic"
-      responses:
-        "200":
-          description: "Successfully read postcode data by topic"
+          description: "Successfully read country ICS table"

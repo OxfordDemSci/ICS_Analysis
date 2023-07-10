@@ -13,6 +13,10 @@ class DevelopmentConfig(Configuration):
     DEBUG = True
     # Override or add development-specific configuration variables here
 
+class LocalDevelopmentConfig(Configuration):
+    SQLALCHEMY_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@localhost:5432/ics"
+    TEST_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@localhost:5432/ics_test"
+
 class ProductionConfig(Configuration):
     # Override or add production-specific configuration variables here
     pass
@@ -20,5 +24,6 @@ class ProductionConfig(Configuration):
 # Set the active configuration class based on an environment variable
 app_config = {
     'development': DevelopmentConfig,
+    'local_development': LocalDevelopmentConfig,
     'production': ProductionConfig
 }
