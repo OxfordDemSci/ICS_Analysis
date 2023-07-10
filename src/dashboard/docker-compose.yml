@@ -26,7 +26,7 @@ services:
     container_name: ics_api
     # env_file: .env
     build: ./api/
-    # command: gunicorn --config gunicorn.config.py wsgi:app
+    command: gunicorn --config gunicorn.config.py wsgi:app
     # command: python3 wsgi.py
     # volumes:
     #   - type: bind
@@ -60,6 +60,7 @@ services:
       #- ./sql/initial_data:/var/lib/postgresql/initial_data
       #- ./sql/ics_initial.sh:/docker-entrypoint-initdb.d/ics_initial.sh
       - ./sql/ics_db_dump.sql:/docker-entrypoint-initdb.d/ics_db_dump.sql
+      - ./sql/ics_test_db_dump.sql:/docker-entrypoint-initdb.d/ics_test_db_dump.sql
     environment:
     - POSTGRES_DB=ics, ics_test
     - POSTGRES_USER=oxford_ics_admin
