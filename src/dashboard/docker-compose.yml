@@ -54,7 +54,7 @@ services:
 
   ics_postgres:
     container_name: ics_db
-    image: kartoza/postgis:13.0
+    image: postgres:13.11-bullseye
     # env_file: .env
     volumes:
       #- ./sql/initial_data:/var/lib/postgresql/initial_data
