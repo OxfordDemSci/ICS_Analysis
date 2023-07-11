@@ -58,11 +58,11 @@ services:
     # env_file: .env
     volumes:
       #- ./sql/initial_data:/var/lib/postgresql/initial_data
-      #- ./sql/ics_initial.sh:/docker-entrypoint-initdb.d/ics_initial.sh
+      # - ./sql/ics_initial.sh:/docker-entrypoint-initdb.d/ics_initial.sh
       - ./sql/ics_db_dump.sql:/docker-entrypoint-initdb.d/ics_db_dump.sql
-      - ./sql/ics_test_db_dump.sql:/docker-entrypoint-initdb.d/ics_test_db_dump.sql
+      # - ./sql/ics_test_db_dump.sql:/docker-entrypoint-initdb.d/ics_test_db_dump.sql
     environment:
-    - POSTGRES_DB=ics, ics_test
+    - POSTGRES_DB=ics
     - POSTGRES_USER=oxford_ics_admin
     - POSTGRES_PASSWORD=Fp2mQC4&#7JZ
     networks:
