@@ -67,20 +67,20 @@ if __name__ == '__main__':
 
     #---- text analysis ----#
 
-    ## Relevant columns to perform text analysis on
-    text_cols = ['1. Summary of the impact', '2. Underpinning research',
-                 '3. References to the research', '4. Details of the impact',
-                 '5. Sources to corroborate the impact']
-
-    ## To be replaced by topic models
-    ics['1. Summary of the impact_topic'] = [random.randint(1, 10) for i in range(ics.shape[0])]
-    ics['2. Underpinning research'] = [random.randint(1, 10) for i in range(ics.shape[0])]
-    ics['3. References to the research'] = [random.randint(1, 10) for i in range(ics.shape[0])]
-    ics['4. Details of the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
-    ics['5. Sources to corroborate the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
-
-    ## One-hot encode impact type
-    ics = pd.concat([ics, pd.get_dummies(ics['Summary impact type'])], axis=1)
+    # ## Relevant columns to perform text analysis on
+    # text_cols = ['1. Summary of the impact', '2. Underpinning research',
+    #              '3. References to the research', '4. Details of the impact',
+    #              '5. Sources to corroborate the impact']
+    #
+    # ## To be replaced by topic models
+    # ics['1. Summary of the impact_topic'] = [random.randint(1, 10) for i in range(ics.shape[0])]
+    # ics['2. Underpinning research'] = [random.randint(1, 10) for i in range(ics.shape[0])]
+    # ics['3. References to the research'] = [random.randint(1, 10) for i in range(ics.shape[0])]
+    # ics['4. Details of the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
+    # ics['5. Sources to corroborate the impact'] = [random.randint(1, 10) for i in range(ics.shape[0])]
+    #
+    # ## One-hot encode impact type
+    # ics = pd.concat([ics, pd.get_dummies(ics['Summary impact type'])], axis=1)
 
 
     #---- iso-3 impacted country names ----#
@@ -100,6 +100,9 @@ if __name__ == '__main__':
     # postcode area
     ics['inst_postcode_area'] = ics['inst_postcode_district'].apply(lambda x: x[0:re.search(r"\d", x).start()])
 
+
+    #---- url to impact case study summary ----#
+    ics['ics_url'] = ics['ics_id'].apply(lambda x: 'https://results2021.ref.ac.uk/impact/' + x + '?page=1')
 
     #---- Save enriched dataset ----#
     ics.to_csv(os.path.join(enriched_path, 'enriched_ref_ics_data.csv'))

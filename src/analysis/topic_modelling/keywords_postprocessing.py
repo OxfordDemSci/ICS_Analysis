@@ -3,10 +3,6 @@ import pandas as pd
 from ast import literal_eval
 
 
-def fun(x):
-    return literal_eval(x)[0]
-
-
 if __name__ == '__main__':
 
     # load topic keywords data
@@ -15,7 +11,7 @@ if __name__ == '__main__':
 
     # subset only keyword columns
     cols = list(map(str, range(0, 10)))
-    df = dat[cols].applymap(fun)
+    df = dat[cols].applymap(lambda x: literal_eval(x)[0])
 
     # concatenate keywords into comma separated string
     dat['keywords'] = df.apply(lambda x: ', '.join(x.astype(str)), 1)
