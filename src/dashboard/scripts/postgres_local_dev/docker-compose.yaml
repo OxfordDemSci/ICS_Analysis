@@ -5,14 +5,16 @@ services:
     container_name: oxford_ics_dashboard_db
     image: postgres:13.11-bullseye
     volumes:
-      # - ./init-scripts:/docker-entrypoint-initdb.d
+      - ./init-scripts:/docker-entrypoint-initdb.d
+      - ./init-scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - ./init-scripts/ics_db_dump.sql:/docker-entrypoint-initdb.d/ics_db_dump.sql
+      - ./init-scripts/ics_test_db_dump.sql:/docker-entrypoint-initdb.d/ics_test_db_dump.sql
     ports:
       - "5432:5432"
     restart: unless-stopped
     environment:
-      POSTGRES_USER: oxford_ics_admin
-      POSTGRES_PASSWORD: Fp2mQC4&#7JZ
-      POSTGRES_DB: ics
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      #POSTGRES_DB: ics
     env_file: 
       .env
