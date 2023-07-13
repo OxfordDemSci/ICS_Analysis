@@ -75,6 +75,7 @@ def make_stopwords(support_path):
     return stop
 
 
+<<<<<<< HEAD
 def make_lemmas(df, field, table_path = None):
     # @TODO should be wrapped outside of pandas to apply
     df['lemmatized_' + field] = df[field].apply(reflection_tokenizer)
@@ -87,6 +88,25 @@ def make_lemmas(df, field, table_path = None):
                                                            'wordcounts',
                                                            'lemmatized_' + field + '.csv'),
                                               header=True)
+=======
+def make_lemmas(df, field, table_path, intermed_path):
+    # @TODO should be wrapped outside of pandas to apply
+    if os.path.exists(os.path.join(intermed_path, 'data_with_lemmas.csv')) is False:
+        print('Lemmas dont exist, lets make them!')
+        df['lemmatized_' + field] = df[field].apply(reflection_tokenizer)
+        df['lemmatized_' + field] = df['lemmatized_' + field].agg(lambda x: ', '.join(map(str, x)))
+        df['lemmatized_' + field] = df['lemmatized_' + field].str.replace(',', '')
+        count = df['lemmatized_' + field].apply(lambda x: pd.value_counts(x.split(" ")))
+        count = count.sum(axis=0)
+        count.sort_values(ascending=False).to_csv(os.path.join(table_path,
+                                                               'wordcounts',
+                                                               'lemmatized_' + field + '.csv'),
+                                                  header=True)
+        df.to_csv(os.path.join(intermed_path, 'data_with_lemmas.csv'))
+    else:
+        print('Computed lemmas already! Unless nothing substantively changed, lets load them in!')
+        df = pd.read_csv(os.path.join(intermed_path, 'data_with_lemmas.csv'))
+>>>>>>> main
     return df
 
 
@@ -140,6 +160,7 @@ def clean_free_text(s):
     s = s.replace("Details of the impact", "")
     s = s.replace("indicative maximum 750 words", "")
     s = s.replace("Sources to corroborate the impact ", "")
+<<<<<<< HEAD
     s = s.replace("indicative maximum of 10 references", "")
     s = re.sub('[^a-zA-Z]+', ' ', s) # Moving this to the end otherwise it will interfere with replacing the phrase above w/ number.
     return s.strip()
@@ -174,3 +195,16 @@ def generate_cleaned_text_and_count(df, fields, text_helper_func, table_path = N
     return df
     
     
+=======
+    return s.strip()
+
+
+def text_combiner(df):
+    df['Text_Combined'] = df['1. Summary of the impact'].astype(str) + \
+                          df['2. Underpinning research'].astype(str) + \
+                          df['3. References to the research'].astype(str) +\
+                          df['4. Details of the impact'].astype(str) +\
+                          df['5. Sources to corroborate the impact'].astype(str)
+    df['Text_Combined'] = df['Text_Combined'].apply(clean_free_text)
+    return df
+>>>>>>> main
