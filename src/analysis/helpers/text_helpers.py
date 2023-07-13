@@ -75,20 +75,6 @@ def make_stopwords(support_path):
     return stop
 
 
-<<<<<<< HEAD
-def make_lemmas(df, field, table_path = None):
-    # @TODO should be wrapped outside of pandas to apply
-    df['lemmatized_' + field] = df[field].apply(reflection_tokenizer)
-    df['lemmatized_' + field] = df['lemmatized_' + field].agg(lambda x: ', '.join(map(str, x)))
-    df['lemmatized_' + field] = df['lemmatized_' + field].str.replace(',', '')
-    count = df['lemmatized_' + field].apply(lambda x: pd.value_counts(x.split(" ")))
-    count = count.sum(axis=0)
-    if table_path is not None:
-        count.sort_values(ascending=False).to_csv(os.path.join(table_path,
-                                                           'wordcounts',
-                                                           'lemmatized_' + field + '.csv'),
-                                              header=True)
-=======
 def make_lemmas(df, field, table_path, intermed_path):
     # @TODO should be wrapped outside of pandas to apply
     if os.path.exists(os.path.join(intermed_path, 'data_with_lemmas.csv')) is False:
@@ -106,7 +92,6 @@ def make_lemmas(df, field, table_path, intermed_path):
     else:
         print('Computed lemmas already! Unless nothing substantively changed, lets load them in!')
         df = pd.read_csv(os.path.join(intermed_path, 'data_with_lemmas.csv'))
->>>>>>> main
     return df
 
 
@@ -160,42 +145,6 @@ def clean_free_text(s):
     s = s.replace("Details of the impact", "")
     s = s.replace("indicative maximum 750 words", "")
     s = s.replace("Sources to corroborate the impact ", "")
-<<<<<<< HEAD
-    s = s.replace("indicative maximum of 10 references", "")
-    s = re.sub('[^a-zA-Z]+', ' ', s) # Moving this to the end otherwise it will interfere with replacing the phrase above w/ number.
-    return s.strip()
-
-
-## Text helper functions from Linda: formulating the pipeline for topic modelling and to wrap it outside pandas
-
-def clean_text(text): # Return cleaned raw text for BERT & DATM
-    text_cleaned = clean_free_text(text)
-    return text_cleaned
-
-def clean_and_lemmatize(text): # Lemmatized text for LDA
-    text_cleaned = clean_free_text(text)
-    text_cleaned = reflection_tokenizer(text_cleaned)
-    return text_cleaned
-
-def generate_cleaned_text_and_count(df, fields, text_helper_func, table_path = None, suffix = "lemmatized_",
-                                   return_joined_text = True):
-    for field in fields:
-        df[suffix + field] = df[field].apply(text_helper_func)
-        if return_joined_text:
-            df[suffix + field] = df[suffix + field].agg(lambda x: ', '.join(map(str, x)))
-            df[suffix + field] = df[suffix + field].str.replace(',', '')
-        
-        if table_path is not None:
-            count = df[suffix + field].apply(lambda x: pd.value_counts(x.split(" ")))
-            count = count.sum(axis=0)
-            count.sort_values(ascending=False).to_csv(os.path.join(table_path,
-                                                                       'wordcounts',
-                                                                       suffix + field + '.csv'),
-                                                                          header=True)
-    return df
-    
-    
-=======
     return s.strip()
 
 
@@ -207,4 +156,3 @@ def text_combiner(df):
                           df['5. Sources to corroborate the impact'].astype(str)
     df['Text_Combined'] = df['Text_Combined'].apply(clean_free_text)
     return df
->>>>>>> main
