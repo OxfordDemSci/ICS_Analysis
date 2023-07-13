@@ -194,8 +194,7 @@ def join_ics(ics, iso):
 
 
 
-def main():
-    basedir = Path(r'C:\Users\dkerr\Documents\GISRede\ICS_Analysis').resolve()
+def main(basedir, outdir):
     raw_path = basedir.joinpath('data', 'raw')
     data_files = [f for f in raw_path.iterdir()]
     
@@ -221,26 +220,20 @@ def main():
     #---- load data ----#
 
     # define paths
-    basedir = Path(r'C:\Users\dkerr\Documents\GISRede\ICS_Analysis').resolve()
     edit_path = basedir.joinpath('data', 'edit')
     extra_data_path = basedir.joinpath('src', 'data_wrangling', '2_enrich_data', 'extra_data')
-    #edit_path = os.path.join(os.getenv('basedir'), 'data', 'edit')
-    #extra_data_path = os.path.join(os.getenv('basedir'), 'src', 'data_wrangling', '2_enrich_data', 'extra_data')
 
-    enriched_path = Path(__file__).resolve().parent.joinpath('data', 'enriched')
-    #enriched_path = os.path.join(os.getenv('basedir'), 'data', 'enriched')
+
+    enriched_path = outdir.joinpath('enriched')
     os.makedirs(enriched_path, exist_ok=True)
 
     # load ics data
-    #ics = pd.read_excel(os.path.join(edit_path, 'clean_ref_ics_data.xlsx'))
     ics = pd.read_excel(edit_path.joinpath('clean_ref_ics_data.xlsx'))
 
     # load ics countries as iso-3 codes
-    #iso = pd.read_csv(os.path.join(extra_data_path, 'iso_3_code.csv'))
     iso = pd.read_csv(extra_data_path.joinpath('iso_3_code.csv'))
 
     # load institution post codes
-    #pkl_postcodes = os.path.join(extra_data_path, 'ukprn_postcode_dict.pkl')
     pkl_postcodes = extra_data_path.joinpath('ukprn_postcode_dict.pkl')
     with open(pkl_postcodes, 'rb') as file:
         institution_postcode = pickle.load(file)
@@ -283,12 +276,11 @@ def main():
 
 
     #---- Save enriched dataset ----#
-    #ics.to_csv(os.path.join(enriched_path, 'enriched_ref_ics_data.csv'))
     ics.to_csv(enriched_path.joinpath('enriched_ref_ics_data.csv'), index=False)
     print("Part 3 Done... Enriched data made. Now making ICS_DATABASE_Table")
     
     ics['id'] = ics.index
-    ics = ics[['id', 'inst_id',  'institution_name','inst_postcode_area', 'ics_id', 'countries_iso3', 'name_of_funders', 'uoa_id']]
+    #ics = ics[['id', 'inst_id',  'institution_name','inst_postcode_area', 'ics_id', 'countries_iso3', 'name_of_funders', 'uoa_id']]
     ics.rename(columns={
                     'inst_id': 'ukprn',
                     'inst_postcode_area': 'postcode',
