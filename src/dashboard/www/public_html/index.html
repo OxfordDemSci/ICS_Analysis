@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Dashboard</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+              integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+              crossorigin=""/>    
+
+
+        <style>
+
+            .infoBoxUKmap {
+                padding: 6px 4px;
+                font: 12px/14px Arial, Helvetica, sans-serif;
+                background: white;
+                background: rgba(255,255,255,0.8);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+            }
+            .infoBoxUKmap_info ul{
+                list-style-type: none;
+                margin-top: 2px;
+                margin-bottom: 2px;
+                padding-left: 2px
+            }
+
+            #legend_UKmap_info {
+                line-height: 14px;
+                color: #333333;
+                font-family: 'Open Sans', Helvetica, sans-serif;
+                padding: 2px 4px;
+                background: white;
+                background: rgba(255,255,255,0.91);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+                float: left;
+                /*    z-index: 8000 !important;*/
+            }  
+
+            #legend_mapGlobal_info {
+                line-height: 14px;
+                color: #333333;
+                font-family: 'Open Sans', Helvetica, sans-serif;
+                padding: 2px 4px;
+                background: white;
+                background: rgba(255,255,255,0.91);
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                border-radius: 5px;
+                float: left;
+                /*    z-index: 8000 !important;*/
+            }   
+
+            #map_uk {
+                width: 100%;
+                height: 100%;
+            }            
+
+            #map_global {
+                width: 100%;
+                height: 100%;
+            } 
+            .leaflet-control-zoom a{
+                box-shadow: 0 1px 2px rgba(0,0,0,0.65); 
+                margin-top: 0px;
+            }
+
+            .leaflet-touch .leaflet-bar a{
+                width: 20px;
+                height: 20px;
+                line-height: 20px
+            }
+
+            .scrollarea {
+                overflow-y: auto;
+                overflow-x: auto;
+                height: calc(100vh - 8rem);
+            }
+
+            #idTopics li:hover {
+                cursor: pointer;
+                background-color: rgb(84, 112, 198);
+            }        
+
+            .list-group-item li:hover {
+                text-decoration: none;
+                background-color: #0b2543;
+                border: 1px solid #2c3e50;
+            }
+
+            .list-group-item.active {
+                z-index: 2;
+                color: #fff;
+                background-color: #0b2543;
+                border-color: #2c3e50;
+            }
+
+            .list-group-item {
+                position: relative;
+                display: block;
+                padding: 0.5rem 1rem;
+                color: #fff;
+                text-decoration: none;
+                background-color: #002147;
+                border: 1px solid #0b2543;
+            }
+
+
+            .bg-dark-navy {
+                --bs-bg-opacity: 1;
+                background-color: #002147 !important;
+            }
+
+            .sb-sidenav-dark-navy {
+                background-color: #002147 !important;
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+            .sb-sidenav-dark-navy-footer {
+                background-color: #002147b8 !important;
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+
+
+            .logo-section img {
+                margin-top: 0.0rem !important;
+                height: 40px;
+                margin: auto;    
+                display: block;    
+                /*   width: 220px;
+                   margin: auto;    
+                   display: block;*/
+
+            }
+
+
+            /* width */
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            /* Track 
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1; 
+            }
+            */
+
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: #888; 
+            }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555; 
+            }  
+
+            .card, .card-header, .card-body, .card-footer{
+                border-radius:0px !important;
+            }      
+
+
+            .goal-chart-wrapper {
+                width: 100%;
+                min-height: 50px;
+                position: relative;
+
+                .goal-chart {
+                    height: 100%;
+                    width: 100%;
+                    position: absolute;
+                }
+            }            
+
+            .TopicsWrapper::-webkit-scrollbar {
+                display: block;
+                width: 10px;
+            }
+            .TopicsWrapper::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .TopicsWrapper::-webkit-scrollbar-thumb {
+                background-color: #010f21;
+                border-right: none;
+                border-left: none;
+            }
+
+            .TopicsWrapper::-webkit-scrollbar-thumb:hover {
+                background: #555;
+                border-right: none;
+                border-left: none;
+            }
+
+            .TopicsWrapper::-webkit-scrollbar-track-piece:end {
+                background: transparent;
+                margin-bottom: 0px;
+
+            }
+
+            .TopicsWrapper::-webkit-scrollbar-track-piece:start {
+                background: transparent;
+                margin-top: 0px;
+            }
+
+            #firstloader { 
+                position: fixed; 
+                left: 0px; 
+                top: 50px; 
+                width: 100%; 
+                height: 100%; 
+                z-index: 9999!important; 
+                background: url('./img/firstloader.gif') 50% 30% no-repeat rgba(245,245,245,0.89); 
+                background-size: 85px 85px; 
+            } 
+
+
+        </style>        
+
+    </head>
+    <body class="sb-nav-fixed">
+        <div id="firstloader"></div>
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark-navy ">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="index.html">
+
+                <img class="opacity-75" src="./img/logo/pngegg_w.png" width="160px">
+
+            </a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+
+                </div>
+            </form>
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-grip"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">Generate Report</a></li>
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion " id="sidenavAccordion">
+                    <div class="sb-sidenav-menu sb-sidenav-dark-navy" style="overflow-y: hidden;">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Topics</div>
+                            <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper" style="height: calc(100vh - 350px);">
+                                <div class="">     
+                                    <ul class="list-group list-group-flush  " id="idTopics" style="font-size: 0.8rem;">
+                                        <li class="list-group-item ">An item</li>
+                                        <li class="list-group-item ">A second item</li>
+                                        <li class="list-group-item">A third item</li>
+                                        <li class="list-group-item active">A fourth item</li>
+                                        <li class="list-group-item">And a fifth one</li>
+                                    </ul>
+                                </div>                            
+                            </div> 
+                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            <a class="nav-link" href="#" style="color: white">
+                                <div class="sb-nav-link-icon" style="color: white"><i class="fas fa-table" ></i></div>
+                                ICS Table
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer sb-sidenav-dark-navy-footer">
+                        <div class="small"> &copy; 2023 University of Oxford <br/> ics@oxford.com</div>
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+
+                        <div class="row mt-4">
+                            <div class="col-xl-2 col-md-2">
+
+                                <div class="card bg-white  mb-0 h-100" style="padding-right: 0px; margin-right: 0px">
+                                    <div class="card-body" style="padding-right: 0px; margin-right: 0px; padding-bottom: 0px">
+                                        <h5 class="card-title" id="info_box_topic_title">Card title</h5>  
+
+                                        <div id="info_box" style="overflow-y: auto;width: 100%;">
+                                            <h6 class="mb-2 mt-2" id="info_box_topic_title"></h6>
+                                            <div class="text-bg-light p-1">Description </div>
+                                            <p id="info_box_topic_description" class="text-700 fw-semi-bold " style="font-size: 0.9rem" >
+                                                Some quick example text to build on the card title and make up the bulk of the card's content.
+                                                Some quick example text to build on the card title and make up the bulk of the card's content.
+                                                Some quick example text to build on the card title and make up the bulk of the card's content.
+                                                Some quick example text to build on the card title and make up the bulk of the card's content.
+                                                Some quick example text to build on the card title and make up the bulk of the card's content.                                                      
+                                            </p>
+                                            <div class="text-bg-light p-1">Narrative</div>
+                                            <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2" style="font-size: 0.9rem" >
+                                                Some quick example text to build on the card title and make up the bulk of the card's content.
+                                                Some quick example text to build on the card title and make up the bulk of the card's content.
+
+
+                                            </p>                                                  
+
+                                        </div>                                      
+
+                                    </div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a class="small  " href="#">View Details</a>
+                                        <div class="small"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-10 col-md-10" >
+
+                                <div class="container-fluid">
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="card mb-2" id="chart_cardbox_top_left" style="min-width: 300px">
+                                                <div class="card-header">
+                                                    Funders
+                                                </div>
+                                                <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
+                                                    <div class="goal-chart-wrapper" id="chartContainer_top_left">
+                                                        <div class="" id="Chart_top_left"></div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="card mb-2" id="map_cardbox_top_right" style="min-width: 300px">
+                                                <div class="card-header">
+                                                    Institutions
+                                                </div>
+                                                <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
+
+                                                    <div class="bg-white" id="map_uk" style="min-height: 50px;"></div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="card mb-2" id="chart_cardbox_bottom_left" style="min-width: 300px">
+                                                <div class="card-header" style="">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            UOA
+                                                        </div>
+                                                        <div class="col-md-6 d-flex justify-content-end">
+
+                                                            <div class="d-inline-flex  col-form-label text-right" style="padding-top: 0rem;padding-bottom: 0rem;">
+                                                                <label for="exampleInputPassword1" class="form-label d-flex justify-content-end align-items-end pe-3" style="min-width: 140px !important; margin-bottom: 0rem; font-size: 0.9rem">
+                                                                    Assessment 
+                                                                </label>
+                                                                <select class="form-select form-select-sm" style="padding-top: 0rem;padding-bottom: 0rem;">
+                                                                    <option>A</option>
+                                                                    <option>B</option>
+                                                                    <option>C</option>
+                                                                    <option>SHAPE</option>
+                                                                    <option>STEM</option>
+                                                                </select>
+                                                            </div>          
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
+                                                    <div class="goal-chart-wrapper" id="chartContainer_bottom_left">
+                                                        <div class="" id="Chart_bottom_left"></div>
+                                                    </div>
+
+                                                </div>
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="card mb-2" id="map_cardbox_bottom_right" >
+                                                <div class="card-header">
+                                                    Beneficiaries
+                                                </div>
+                                                <div class="card-body d-flex justify-content-center" style="padding: 0px;margin: 0px" >
+
+                                                    <div class="bg-white" id="map_global" style="min-height: 50px;"></div>
+
+                                                </div>                                                
+
+                                            </div>
+                                        </div>
+
+                                    </div>    
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer class="py-3 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="row">
+                            <div class="col-xl-3 col-md-3 logo-section">
+                                <img class="center-block d-block mx-auto"  src="./img/logo/OxLCDSlogo_90.png">
+                            </div>
+                            <div class="col-xl-3 col-md-3 logo-section">
+                                <img class="center-block d-block mx-auto"  src="./img/logo/BA_Primary_90.png">
+                            </div>
+                            <div class="col-xl-3 col-md-3 logo-section">
+                                <img class="center-block d-block mx-auto"  src="./img/logo/AofSS_90.png">
+                            </div>
+                            <div class="col-xl-3 col-md-3 logo-section">
+                                <img class="center-block d-block mx-auto" src="./img/logo/Oxford_Population_Health_90.png">
+                            </div>                           
+                        </div>
+                    </div>
+                </footer>
+
+
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script src="js/datatables-simple-demo.js"></script>
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>        
+
+    </body>
+</html>
+
+<script src="./js/main.js?version=3.9" type="module"></script>
+
