@@ -14,4 +14,5 @@ services:
       POSTGRES_USER: oxford_ics_admin
       POSTGRES_PASSWORD: Fp2mQC4&#7JZ
       POSTGRES_DB: ics
-
+    env_file: 
+      .env

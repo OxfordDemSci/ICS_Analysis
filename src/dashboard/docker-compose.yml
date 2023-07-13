@@ -55,7 +55,8 @@ services:
   ics_postgres:
     container_name: ics_db
     image: postgres:13.11-bullseye
-    # env_file: .env
+    env_file: 
+      .env
     volumes:
       #- ./sql/initial_data:/var/lib/postgresql/initial_data
       # - ./sql/ics_initial.sh:/docker-entrypoint-initdb.d/ics_initial.sh
