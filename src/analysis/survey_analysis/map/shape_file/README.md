@@ -1,1 +1,1 @@
-Shape files of NUTS Level 3 of the UK
+NUTS Level 3 in the UK
