@@ -183,9 +183,9 @@ def get_institution_counts(ics_ids=None):
     return institutions
 
 
-def query_dashboard_data(topic, threshold, postcode=None):
+def query_dashboard_data(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
     data = {}
-    ics_ids = get_ics_ids(topic, threshold, postcode)
+    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uoa, funder)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
@@ -193,13 +193,15 @@ def query_dashboard_data(topic, threshold, postcode=None):
     data["ics_table"] = get_ics_table(ics_ids=ics_ids)
     return data
 
-def get_ics_ids(topic, threshold, postcode=None):
-    sql = get_ics_sql(topic, postcode)
+def get_ics_ids(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
+    sql = get_ics_sql(topic, postcode, beneficiary, uoa, funder)
     query = db.session.execute(sql, {"topic": topic, "threshold": threshold, "postcode": postcode})
     ics_ids = [row.ics_id for row in query]
     return ics_ids
 
-def get_ics_sql(topic, postcode=None):
+def get_ics_sql(topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
+    if topic is None:
+        topic = "All Topics"
     if (topic == "All Topics") and (postcode is not None):
         sql = text('''
         SELECT tw.ics_id FROM topic_weights tw 

@@ -21,8 +21,8 @@ def get_init():
 def get_ics_database_topics():
     return get_topics()
 
-def get_data(topic, threshold, postcode=None):
-    data = query_dashboard_data(topic, threshold, postcode)
+def get_data(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
+    data = query_dashboard_data(threshold, topic, postcode, beneficiary, uoa, funder)
     return data
 
 def get_country_ics_data(country, topic, threshold, postcode=None):

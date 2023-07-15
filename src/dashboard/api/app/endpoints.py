@@ -13,8 +13,8 @@ def get_ics_topics():
     data = get_ics_database_topics()
     return data
 
-def get_ics_data(topic, threshold, postcode_area=None):
-    data = get_data(topic, threshold, postcode_area)
+def get_ics_data(threshold, topic=None, postcode_area=None, beneficiary=None, uoa=None, funder=None):
+    data = get_data(threshold, topic, postcode_area, beneficiary, uoa, funder)
     return data
 
 def get_ics_data_country(country, topic, threshold, postcode_area=None):
