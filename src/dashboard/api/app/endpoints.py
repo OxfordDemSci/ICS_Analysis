@@ -14,6 +14,16 @@ def get_ics_topics():
     return data
 
 def get_ics_data(threshold, topic=None, postcode_area=None, beneficiary=None, uoa=None, funder=None):
+    if topic == "null":
+        topic = None
+    if postcode_area == "null":
+        postcode_area = None
+    if beneficiary == "null":
+        beneficiary = None
+    if uoa == "null":
+        uoa = None
+    if funder == "null":
+        funder = None
     data = get_data(threshold, topic, postcode_area, beneficiary, uoa, funder)
     return data
 
