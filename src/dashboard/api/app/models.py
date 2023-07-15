@@ -63,7 +63,8 @@ class UOA(Base):
     id = Column(Integer, primary_key=True)
     uoa_id = Column(String)
     name = Column(String)
-    assessment_panel = Column(String(20))
+    assessment_panel = Column(String(1))
+    assessment_group = Column(String(5))
 
     __table_args__ = (
         Index('idx_uoa_id', 'id', unique=True),

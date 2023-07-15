@@ -1,50 +1,35 @@
-id,uoa_id,name,assessment_panel
-0,1,Ok,Shape
-1,10,Least,A
-2,11,There,STEM
-3,12,Least,C
-4,13,Painting,B
-5,14,Enter,A
-6,15,Mean,D
-7,16,World,STEM
-8,17,Long,STEM
-9,18,Administration,D
-10,19,Become,C
-11,2,Senior,A
-12,20,Performance,B
-13,21,It,C
-14,22,Fly,Shape
-15,22A,Vote,B
-16,22B,Range,Shape
-17,23,News,STEM
-18,24,Dinner,C
-19,25,Charge,STEM
-20,25A,As,D
-21,25B,Simply,A
-22,26,Campaign,A
-23,26A,Tough,C
-24,26B,Few,C
-25,27,Believe,Shape
-26,28,The,C
-27,28A,Believe,B
-28,28B,Understand,C
-29,29,Suffer,STEM
-30,3,Five,STEM
-31,30,Knowledge,Shape
-32,31,Manage,D
-33,32,Road,C
-34,32A,Stand,C
-35,32B,Professor,C
-36,33,Wonder,D
-37,33A,Situation,D
-38,33B,Deep,D
-39,34,Treatment,Shape
-40,34A,Lose,A
-41,34B,Thing,B
-42,3B,Ability,STEM
-43,4,Might,B
-44,5,Gun,C
-45,6,Certainly,STEM
-46,7,Live,A
-47,8,Majority,A
-48,9,Family,STEM
+id,uoa_id,name,assessment_panel,assessment_group
+1,1,Clinical Medicine,A,STEM
+2,2,"Public Health, Health Services and Primary Care",A,STEM
+3,3,"Allied Health Professions, Dentistry, Nursing and Pharmacy",A,STEM
+4,4,"Psychology, Psychiatry and Neuroscience",A,SHAPE
+5,5,Biological Sciences,A,STEM
+6,6,"Agriculture, Food and Veterinary Sciences",A,STEM
+7,7,Earth Systems and Environmental Sciences,B,STEM
+8,8,Chemistry,B,STEM
+9,9,Physics,B,STEM
+10,10,Mathematical Sciences,B,STEM
+11,11,Computer Science and Informatics,B,STEM
+12,12,Engineering,B,STEM
+13,13,"Architecture, Built Environment and Planning",C,SHAPE
+14,14,Geography and Environmental Studies,C,SHAPE
+15,15,Archaeology,C,SHAPE
+16,16,Economics and Econometrics,C,SHAPE
+17,17,Business and Management Studies,C,SHAPE
+18,18,Law,C,SHAPE
+19,19,Politics and International Studies,C,SHAPE
+20,20,Social Work and Social Policy,C,SHAPE
+21,21,Sociology,C,SHAPE
+22,22,Anthropology and Development Studies,C,SHAPE
+23,23,Education,C,SHAPE
+24,24,"Sport and Exercise Sciences, Leisure and Tourism",C,SHAPE
+25,25,Area Studies,D,SHAPE
+26,26,Modern Languages and Linguistics,D,SHAPE
+27,27,English Language and Literature,D,SHAPE
+28,28,History,D,SHAPE
+29,29,Classics,D,SHAPE
+30,30,Philosophy,D,SHAPE
+31,31,Theology and Religious Studies,D,SHAPE
+32,32,"Art and Design: History, Practice and Theory",D,SHAPE
+33,33,"Music, Drama, Dance, Performing Arts, Film and Screen Studies",D,SHAPE
+34,34,"Communication, Cultural and Media Studies, Library and Information Management",D,SHAPE
