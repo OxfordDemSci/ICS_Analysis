@@ -195,42 +195,73 @@ def query_dashboard_data(threshold, topic=None, postcode=None, beneficiary=None,
 
 def get_ics_ids(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
     sql = get_ics_sql(topic, postcode, beneficiary, uoa, funder)
-    query = db.session.execute(sql, {"topic": topic, "threshold": threshold, "postcode": postcode})
+    argument_names = ["threshold", "topic", "postcode", "beneficiary", "uoa", "funder"]
+    arguments = [threshold, topic, postcode, beneficiary, uoa, funder]
+    params = {arg_name: arg_val for arg_name, arg_val in zip(argument_names, arguments) if arg_val is not None}
+    print(params)
+    query = db.session.execute(sql, params)
     ics_ids = [row.ics_id for row in query]
+    print('ICS_IDS ', len(ics_ids))
     return ics_ids
 
 def get_ics_sql(topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
-    if topic is None:
-        topic = "All Topics"
-    if (topic == "All Topics") and (postcode is not None):
-        sql = text('''
-        SELECT tw.ics_id FROM topic_weights tw 
+    sql_str = ('''
+        SELECT DISTINCT(tw.ics_id) FROM topic_weights tw 
         JOIN topics t ON tw.topic_id = t.topic_id
         JOIN ics i ON tw.ics_id = i.ics_id
+        JOIN uoa u ON u.uoa_id = i.uoa
+        JOIN funder f ON f.ics_table_id = i.id
+        JOIN countries c ON c.ics_table_id = i.id
         WHERE tw.probability >= :threshold
-        AND i.postcode = :postcode;
     ''')
-    elif (topic == "All Topics") and postcode is None:
-        sql = text('''
-        SELECT tw.ics_id FROM topic_weights tw 
-        JOIN topics t ON tw.topic_id = t.topic_id
-        JOIN ics i ON tw.ics_id = i.ics_id
-        WHERE tw.probability >= :threshold;
-    ''')
-    elif (topic != "All Topics") and postcode is not None:
-        sql = text('''
-        SELECT tw.ics_id FROM topic_weights tw 
-        JOIN topics t ON tw.topic_id = t.topic_id
-        JOIN ics i ON tw.ics_id = i.ics_id
-        WHERE t.topic_name = :topic AND tw.probability >= :threshold
-        AND i.postcode = :postcode;
-    ''')
-    else:
-        sql = text('''
-        SELECT tw.ics_id FROM topic_weights tw 
-        JOIN topics t ON tw.topic_id = t.topic_id
-        JOIN ics i ON tw.ics_id = i.ics_id
-        WHERE t.topic_name = :topic AND tw.probability >= :threshold
-    ''')
+    if topic is not None:
+        sql_str += " AND t.topic_name = :topic"
+    if postcode is not None:
+        sql_str += " AND i.postcode = :postcode"
+    if beneficiary is not None:
+        sql_str += " AND c.country = :beneficiary"
+    if uoa is not None:
+        if uoa in ["A", "B", "C", "D"]:
+            sql_str += " AND u.assessment_panel = :uoa"
+        elif uoa in ["STEM", "SHAPE"]:
+            sql_str += " AND u.assessment_group = :uoa"
+    if funder is not None:
+        sql_str += " AND f.funder = :funder"
+
+        
+
+
+    print(sql_str)
+    # if (topic == "All Topics") and (postcode is not None):
+    #     sql = text('''
+    #     SELECT tw.ics_id FROM topic_weights tw 
+    #     JOIN topics t ON tw.topic_id = t.topic_id
+    #     JOIN ics i ON tw.ics_id = i.ics_id
+    #     WHERE tw.probability >= :threshold
+    #     AND i.postcode = :postcode;
+    # ''')
+    # elif (topic == "All Topics") and postcode is None:
+    #     sql = text('''
+    #     SELECT tw.ics_id FROM topic_weights tw 
+    #     JOIN topics t ON tw.topic_id = t.topic_id
+    #     JOIN ics i ON tw.ics_id = i.ics_id
+    #     WHERE tw.probability >= :threshold;
+    # ''')
+    # elif (topic != "All Topics") and postcode is not None:
+    #     sql = text('''
+    #     SELECT tw.ics_id FROM topic_weights tw 
+    #     JOIN topics t ON tw.topic_id = t.topic_id
+    #     JOIN ics i ON tw.ics_id = i.ics_id
+    #     WHERE t.topic_name = :topic AND tw.probability >= :threshold
+    #     AND i.postcode = :postcode;
+    # ''')
+    # else:
+    #     sql = text('''
+    #     SELECT tw.ics_id FROM topic_weights tw 
+    #     JOIN topics t ON tw.topic_id = t.topic_id
+    #     JOIN ics i ON tw.ics_id = i.ics_id
+    #     WHERE t.topic_name = :topic AND tw.probability >= :threshold
+    # ''')
+    sql = text(sql_str)
     return sql
     

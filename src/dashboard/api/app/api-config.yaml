@@ -68,8 +68,8 @@ paths:
           schema:
             type: string
       tags:
-        - "Data filtered by topic, threshold (both required), and postcode_area (institutions), beneficiary (country) and uao (all optional). If optional parameters are null, they will default to all"
-      summary: "Data by topic and postcode area"
+        - "ICS data filtered by parameters"
+      summary: "Data filtered by topic, threshold (both required), and postcode_area (institutions), beneficiary (country) and uao (all optional). If optional parameters are null, they will default to all"
       responses:
         "200":
           description: "Successfully read and filtered topics by parameters"     
