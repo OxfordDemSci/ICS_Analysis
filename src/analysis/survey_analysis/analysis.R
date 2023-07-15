@@ -9,6 +9,7 @@ library(ggrepel)
 library(stargazer)
 library(scales)
 library(dotwhisker)
+library(pheatmap)
 
 # Set up paths
 current_path <- getSourceEditorContext()$path %>% dirname()
@@ -400,6 +401,23 @@ ggplot(data = uoa_pc_q12, aes(x = PC1, y = PC2, colour = subject_2, label = name
         axis.text = element_text(size = 20),
         legend.text = element_text(size = 20),
         legend.title = element_text(size = 20))
+
+# Heat map
+for (j in seq_along(key_q12$V1)) {
+  for (i in seq_along(shape_panels)) {
+    uoa_pc_q12[i, key_q12$V1[j]] <- df_q12 %>%
+      filter(.[,shape_panels[i]] == 1) %>%
+      select(key_q12$V1[j]) %>%
+      unlist(recursive = FALSE) %>%
+      mean(na.rm = TRUE)
+  }
+}
+
+pheatmap(uoa_pc_q12 %>%
+           select(starts_with('Q12_')) %>%
+           rename_with(~key_q12$short, .cols = everything()),
+         labels_row = uoa_pc_q12$name,
+         scale = "column")
 
 ##### Q20 trends - PCA
 key_q20 <- key %>%
