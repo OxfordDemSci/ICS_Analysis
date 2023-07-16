@@ -1,6 +1,5 @@
 from pathlib import Path
 import pandas as pd
-import geopandas as gpd
 from typing import Union
 import ast
 import numpy as np
@@ -33,6 +32,7 @@ def funders_to_list(row):
 def make_funders_and_ics_to_funders_lookup_table(ics_csv: Union[Path, str], lookup_csv: Union[Path, str], funders_csv: Union[Path, str]):
     df_ics = pd.read_csv(ics_csv)
     transform_funders = lambda x: [funder.strip('[]') for funder in str(x).split(';') if not str(x) == 'nan']
+    print(df_ics.head())
     df_ics['funders_list'] = df_ics['funders'].apply(transform_funders)
     df_funders_lookup = df_ics[['id', 'funders_list']]
     df_funders_lookup = df_funders_lookup.explode('funders_list')
@@ -59,18 +59,26 @@ def make_topic_weights_table(weights_csv: Union[Path, str], topic_weights_csv: U
 
 
 if __name__ == "__main__":
-    BASE = Path(__file__).resolve().parent.joinpath('data')
+    BASE = Path(__file__).resolve().parent.joinpath('data/for_db')
     ics_csv = BASE.joinpath('ICS_DATABASE_TABLE.csv')
+    #ics_csv = BASE.parent.joinpath("enriched_ref_ics_data.csv")
+    INPUT_BASE = Path(__file__).resolve().parent.parent.parent.parent.joinpath('data')
+    OUTPUT_BASE = BASE.parent
+    if not ics_csv.exists():
+        main_ics(INPUT_BASE, OUTPUT_BASE)
+
+    
     ics_to_country_lookup = BASE.joinpath('ICS_TO_COUNTRY_LOOKUP_TABLE.csv')
-    make_countries_per_ics_lookup(ics_csv, ics_to_country_lookup)
+    if not ics_to_country_lookup.exists():
+        make_countries_per_ics_lookup(ics_csv, ics_to_country_lookup)
 
     funders_lookup_csv = BASE.joinpath('ICS_TO_FUNDERS_LOOKUP_TABLE.csv')
     funders_csv = BASE.joinpath('FUNDERS_TABLE.csv')
-    make_funders_and_ics_to_funders_lookup_table(ics_csv, funders_lookup_csv, funders_csv)
+    if not funders_lookup_csv.exists() or not funders_csv.exists():
+        make_funders_and_ics_to_funders_lookup_table(ics_csv, funders_lookup_csv, funders_csv)
 
     weights_csv = BASE.joinpath('ics_data_modelling_all_full_text.csv')
     topic_weights_csv = BASE.joinpath('TOPIC_WEIGHTS_TABLE.csv')
-    make_topic_weights_table(weights_csv, topic_weights_csv)
-
-    main_ics()
+    if not topic_weights_csv.exists():
+        make_topic_weights_table(weights_csv, topic_weights_csv)
 

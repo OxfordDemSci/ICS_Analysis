@@ -280,13 +280,13 @@ def main(basedir, outdir):
     print("Part 3 Done... Enriched data made. Now making ICS_DATABASE_Table")
     
     ics['id'] = ics.index
-    #ics = ics[['id', 'inst_id',  'institution_name','inst_postcode_area', 'ics_id', 'countries_iso3', 'name_of_funders', 'uoa_id']]
+    ics = ics[['id', 'inst_id',  'institution_name','inst_postcode_area', 'ics_id', 'countries_iso3', 'name_of_funders', 'uoa_id']]
     ics.rename(columns={
                     'inst_id': 'ukprn',
                     'inst_postcode_area': 'postcode',
                     'countries_iso3': 'countries',
                     'name_of_funders': 'funders',
-                    'uoa_id': 'uoa'
+                    'uoa_id': 'uoa',
                     }, inplace=True)
     ics.to_csv(enriched_path.parent.joinpath('ICS_DATABASE_TABLE.csv'), index=False)
 
@@ -295,4 +295,6 @@ def main(basedir, outdir):
 
 
 if __name__ == "__main__":
-    main()
+    basedir = Path(__file__).resolve().parent.parent.parent.parent
+    outdir = Path(__file__).resolve().parent.joinpath('data')
+    main(basedir, outdir)
