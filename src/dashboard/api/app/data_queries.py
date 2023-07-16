@@ -1,6 +1,9 @@
 from sqlalchemy import text
 from collections import defaultdict
 from geoalchemy2 import shape
+from flask import make_response
+from io import StringIO
+import csv
 
 from app import db
 
@@ -61,23 +64,39 @@ def get_ics_table(ics_ids=None, limit=None):
         ics_table.append({column.name: getattr(row, column.name) for column in ICSTableForDownload.__table__.columns})
     return ics_table
 
-def get_ics_table_for_country(country, topic, threshold, postcode=None):
-    ics_ids = get_ics_ids(topic, threshold, postcode)
+def download_ics_table(threshold, topic=None, postcode=None, country=None, uoa=None, funder=None, limit=None):
+    ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
+    rows = db.session.query(ICSTableForDownload).filter(ICSTableForDownload.ics_id.in_(ics_ids)).all()
+    csv_data = StringIO()
+    writer = csv.writer(csv_data)
+    header = [column.name for column in ICSTableForDownload.__table__.columns]
+    writer.writerow(header)
+    for row in rows:
+        data = [str(getattr(row, column.name)) for column in ICSTableForDownload.__table__.columns]
+        writer.writerow(data)
+    response = make_response(csv_data.getvalue())
+    response.headers['Content-Disposition'] = 'attachment; filename=ICSTable.csv'
+    response.headers['Content-Type'] = 'text/csv'
+    return response
+
+
+
+def get_ics_table_for_country(threshold, topic=None, postcode=None, country=None, uoa=None, funder=None, limit=None):
+    ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
     sql = text('''
-               SELECT * FROM ics i
+               SELECT * FROM ics_table_for_download i
                JOIN countries c
                ON i.id = c.ics_table_id
                WHERE c.country = :country
                AND i.ics_id = ANY(:ics_ids)     
     ''')
-    query = db.session.execute(sql, {"country": country, "ics_ids": ics_ids})
-    ics_table = [{
-        "id": row.id,
-        "ukprn": row.ukprn,
-        "postcode": row.postcode,
-        "ics_id": row.ics_id,
-        "uos": row.uoa
-    } for row in query]
+    if limit is None:
+        query = db.session.execute(sql, {"country": country, "ics_ids": ics_ids})
+    else:
+        query = db.session.execute(sql, {"country": country, "ics_ids": ics_ids}).fetchmany(limit)
+    ics_table = []
+    for row in query:
+        ics_table.append({column.name: getattr(row, column.name) for column in ICSTableForDownload.__table__.columns})
     return ics_table
 
 def get_funders_counts(ics_ids=None):

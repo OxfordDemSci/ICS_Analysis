@@ -77,18 +77,6 @@ paths:
     get:
       operationId: "app.endpoints.get_ics_data_country"
       parameters:
-        - name: country
-          in: query
-          description: Country to query
-          required: true
-          schema:
-            type: string
-        - name: topic
-          in: query
-          description: Topic to query
-          required: true
-          schema:
-            type: string
         - name: threshold
           in: query
           description: Threshold above which to subset the data using topic weights
@@ -96,9 +84,33 @@ paths:
           schema:
             type: number
             format: float
+        - name: topic
+          in: query
+          description: Topic to query
+          required: false
+          schema:
+            type: string
         - name: postcode_area
           in: query
-          description: Postcode area to query
+          description: Postcode area to query (Defaults to All if null)
+          required: false
+          schema:
+            type: string
+        - name: beneficiary
+          in: query
+          description: Country/beneficiary to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null)
+          required: false
+          schema:
+            type: string
+        - name: uoa
+          in: query
+          description: UOA/assessment panel to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null; Choice of [A, B, C, D, STEM, SHAPE] - see https://www.ref.ac.uk/about/uoa/)
+          required: false
+          schema:
+            type: string
+        - name: funder
+          in: query
+          description: Funder to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null)
           required: false
           schema:
             type: string
@@ -108,3 +120,56 @@ paths:
       responses:
         "200":
           description: "Successfully read country ICS table"
+
+  /download_csv:
+    get:
+      operationId: "app.endpoints.download_ics_as_csv"
+      parameters:
+        - name: threshold
+          in: query
+          description: Threshold above which to subset the data using topic weights
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: topic
+          in: query
+          description: Topic to query
+          required: false
+          schema:
+            type: string
+        - name: postcode_area
+          in: query
+          description: Postcode area to query (Defaults to All if null)
+          required: false
+          schema:
+            type: string
+        - name: beneficiary
+          in: query
+          description: Country/beneficiary to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null)
+          required: false
+          schema:
+            type: string
+        - name: uoa
+          in: query
+          description: UOA/assessment panel to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null; Choice of [A, B, C, D, STEM, SHAPE] - see https://www.ref.ac.uk/about/uoa/)
+          required: false
+          schema:
+            type: string
+        - name: funder
+          in: query
+          description: Funder to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null)
+          required: false
+          schema:
+            type: string
+      tags:
+        - "ICS table for download"
+      summary: "ICS table for download"
+      responses:
+        "200":
+          description: "Successfully downloaded ICS table"
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary

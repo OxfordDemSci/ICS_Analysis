@@ -25,8 +25,8 @@ def get_data(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, f
     data = query_dashboard_data(threshold, topic, postcode, beneficiary, uoa, funder)
     return data
 
-def get_country_ics_data(country, topic, threshold, postcode=None):
-    data = get_ics_table_for_country(country, topic, threshold, postcode)
+def get_country_ics_data(threshold, topic=None, postcode_area=None, beneficiary=None, uoa=None, funder=None):
+    data = get_ics_table_for_country(threshold, topic, postcode_area, beneficiary, uoa, funder, limit=100)
     return data
 
 
