@@ -7,6 +7,7 @@ from app import db
 from app.models import (
     WebsiteText,
     ICS,
+    ICSTableForDownload,
 )
 def get_topics():
     sql = text('''
@@ -44,14 +45,20 @@ def get_website_text():
     }
     return website_text
 
-def get_ics_table(ics_ids=None):
+def get_ics_table(ics_ids=None, limit=None):
     if ics_ids is None:
-        rows = db.session.query(ICS).all()
+        if limit is None:   
+            rows = db.session.query(ICSTableForDownload).all()
+        else:
+            rows = db.session.query(ICSTableForDownload).limit(limit).all()
     else:
-        rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
+        if limit is None:
+            rows = db.session.query(ICSTableForDownload).filter(ICSTableForDownload.ics_id.in_(ics_ids)).all()
+        else:
+            rows =  db.session.query(ICSTableForDownload).filter(ICSTableForDownload.ics_id.in_(ics_ids)).limit(limit).all()
     ics_table = []
     for row in rows:
-        ics_table.append({column.name: getattr(row, column.name) for column in ICS.__table__.columns})
+        ics_table.append({column.name: getattr(row, column.name) for column in ICSTableForDownload.__table__.columns})
     return ics_table
 
 def get_ics_table_for_country(country, topic, threshold, postcode=None):
@@ -123,27 +130,31 @@ def get_countries_counts(ics_ids=None):
 def get_uoa_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''
-            SELECT ics.uoa as uoa, uoa.name as name, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON ics.uoa = uoa.uoa_id GROUP BY ics.uoa, 
-            uoa.name ORDER BY uoa_count desc;
+            SELECT ics.uoa as uoa, uoa.name as name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as
+                assessment_group, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON ics.uoa = uoa.uoa_id GROUP BY ics.uoa,
+                uoa.name, uoa.assessment_panel, uoa.assessment_group ORDER BY uoa_count desc;
         ''')
         query = db.session.execute(sql)
         uoa = [{
             "name": row.name,
+            "assessment_panel": row.assessment_panel,
+            "assessment_group": row.assessment_group,
             "uoa_count": row.uoa_count
         } for row in query]
     elif len(ics_ids) > 0:
         sql = text('''
-            SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment, COUNT(*) AS uoa_count
+            SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as assessment_group, COUNT(*) AS uoa_count
             FROM ics ics
             JOIN uoa uoa ON ics.uoa = uoa.uoa_id
             WHERE ics.ics_id IN (SELECT unnest(:ics_ids))
-            GROUP BY ics.uoa, uoa.name, uoa.assessment_panel
+            GROUP BY ics.uoa, uoa.name, uoa.assessment_panel, uoa.assessment_group
             ORDER BY uoa_count DESC;
         ''')
         query = db.session.execute(sql, {"ics_ids": ics_ids})
         uoa = [{
             "name": row.name,
-            "assessment": row.assessment,
+            "assessment_panel": row.assessment_panel,
+            "assessment_group": row.assessment_group,
             "uoa_count": row.uoa_count
         } for row in query]
     else:
@@ -190,7 +201,7 @@ def query_dashboard_data(threshold, topic=None, postcode=None, beneficiary=None,
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
-    data["ics_table"] = get_ics_table(ics_ids=ics_ids)
+    data["ics_table"] = get_ics_table(ics_ids=ics_ids, limit=100)
     return data
 
 def get_ics_ids(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):

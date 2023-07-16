@@ -20,7 +20,7 @@ class ICS(Base):
 class ICSTableForDownload(Base):
     __tablename__ = "ics_table_for_download"
 
-    id = Column(Integer)
+    id = Column(Integer, primary_key=True)
     ukprn = Column(Integer)
     institution_name = Column(String)
     main_panel = Column(String)
