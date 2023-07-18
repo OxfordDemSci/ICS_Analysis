@@ -11,7 +11,7 @@ class ICS(Base):
     ukprn: int = Column(Integer)
     postcode: str = Column(String(8))
     ics_id: str = Column(String)
-    uoa: str = Column(String)
+    uoa: str = Column(Integer)
 
     __table_args__ = (
         Index('idx_ics_id_ics_id', 'id', 'ics_id'),
