@@ -14,7 +14,19 @@ function sort_unique(arr) {
   return ret;
 }
 
-export function getPaletteUKMap(data, palette_colors) {
+function onlyUnique(value, index, array) {
+  return array.indexOf(value) === index;
+}
+
+function uniqueArray2(arr) {
+    var a = [];
+    for (var i=0, l=arr.length; i<l; i++)
+        if (a.indexOf(arr[i]) === -1 && arr[i] !== '')
+            a.push(arr[i]);
+    return a;
+}
+
+export function getPaletteUKMap_deprecated(data, palette_colors) {
     
 let vls = [];
 let cnt = 0;
@@ -30,12 +42,12 @@ for (var key in data) {
            cnt = 0;
        
 }
-  //console.log(sort_unique(breaks));  
+    
     vls.sort(function(a, b) {
         return a - b;
     });
     let all_count = (vls);
-     console.log(all_count);         
+            
     let breaks = [];
     let cont = 1;
     let Quartile;
@@ -55,6 +67,51 @@ for (var key in data) {
     }  
     
     let palette = {"breaks":breaks, "colors":palette_colors};
+
+    return palette;
+ 
+}
+
+export function getPaletteUKMap(data, palette_colors) {
+    
+let vls = [];
+let cnt = 0;
+for (var key in data) {
+
+           vls.push(
+                data[key].postcode_total   
+            );
+           cnt = 0;
+       
+}
+  
+    vls.sort(function(a, b) {
+        return a - b;
+    });
+    let all_count = (vls);
+       
+    let breaks = [];
+    let cont = 1;
+    let Quartile;
+    
+    for (var i = 0; i < 10; i++) {
+       Quartile = Math.round(_quartile.Quartile(all_count, cont*0.1));
+       breaks.push(Quartile);
+        cont++;  
+    }  
+    
+    let breaks_unique = uniqueArray2(breaks);
+    
+
+    let palette_final = [];
+    let diference = palette_colors.length-breaks_unique.length;
+    for (var i = 0; i < breaks_unique.length; i++) {
+             palette_final.push(
+                    palette_colors[i+diference]
+            );
+    }  
+    
+    let palette = {"breaks":breaks_unique, "colors":palette_final};
 
     return palette;
  
@@ -118,8 +175,7 @@ export function loadLagentUKMap(title, colors, breaks, subtitles) {
 
 export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
     
-    _layer.clearLayers();
-
+   _layer.clearLayers();
    _map.removeLayer(_layer);
 
     for (var i = 0; i < geoJson.features.length; i++) {
@@ -132,9 +188,6 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
             let cnt = 0;
             
             if (res){
-//                    for (var key in res) {
-//                        cnt=cnt+res[key];
-//                    }
                 geoJson.features[i].properties.institutions_count = res.postcode_total;
                 geoJson.features[i].properties.institutions = res.institution_counts;
             }else{
@@ -144,11 +197,6 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
 
     }
 
-//   result = geoJson.filter(val => val.institutions_count !== null);
-  
-//    $(geoJson.features).each(function (key, data_g) {
-//                _layer.addData(data_g);
-//    });
 
    _layer.addTo(_map);
    _layer.addData(geoJson);     
@@ -166,58 +214,153 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
     resizeObserver.observe(document.getElementById("map_uk"));
 }
 
+export function reseAllFeatureUKMap(_map) {
 
-
-export function resethighlightFeatureUKMap(e, _infoBox, _map) {
-
-
-    var layer = e.target;
-    
     if (_map) {
-       
-       let institutions = layer.feature.properties.institutions;
-       
-       if (institutions != undefined || institutions != null) {
-           
-        layer.setStyle({
-            weight: 0.5,
-            fillOpacity: 0.8
+
+        _map.eachLayer(function (layer) {
+            if (layer.feature) {
+
+                let institutions = layer.feature.properties.institutions;
+
+                if (institutions != undefined || institutions != null) {
+
+                    layer.setStyle({
+                        weight: 0.5,
+                        fillOpacity: 0.8,
+                        color: "black"
+                    });
+
+                }
+            }
         });
-    
-        _infoBox.remove(_map);
-       }
-
-    }      
-
+    }
 }
 
-export function highlightFeatureUKMap(e, _infoBox, _map) {
+export function resethighlightFeatureUKMap(e, _infoBox, _map, slc_postcode_area) {
 
 
     var layer = e.target;
     
     if (_map) {
        
+        let institutions = layer.feature.properties.institutions;
+            
+            if (institutions != undefined || institutions != null) {
+           
+                let pc_area=layer.feature.properties.pc_area; 
+                
+                if (pc_area !== slc_postcode_area) {
+                    
+                    layer.setStyle({
+                        weight: 0.5,
+                        fillOpacity: 0.8,
+                        color: "black"
+                    });
+    
+                    _infoBox.remove(_map);
+
+                }
+            }
+    }      
+}
+
+export function highlightFeatureUKMap(e, _infoBox, _map, slc_postcode_area) {
+
+
+    var layer = e.target;
+
+    if (_map) {
+
+        let institutions = layer.feature.properties.institutions;
+
+        if (institutions != undefined || institutions != null) {
+
+            let pc_area = layer.feature.properties.pc_area;
+
+            if (pc_area !== slc_postcode_area) {
+
+                layer.setStyle({
+                    weight: 1,
+                    fillOpacity: 1,
+                    color: "black"
+                });
+
+                _infoBox.addTo(_map);
+                let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px;">Post-Code [ <b>' + pc_area + '</b> ]</p>';
+                html += '<ul style="list-style-type: none;margin-top: 2px;margin-bottom: 2px;padding: 4px;">';
+                for (var key in institutions) {
+                    html += '<li>&check; ' + key + ': ' + institutions[key] + '</li>';
+                }
+                html += '</ul>';
+                document.getElementById('infoBoxUKmap_info').innerHTML = html;
+            }
+        }
+    }
+}
+
+
+export function selectFeatureUKMap(e, _infoBox, _map) {
+
+
+    var layer = e.target;
+    
+    if (_map) {
+        
+       let popover_text=''; 
+       
        let institutions = layer.feature.properties.institutions;
        
        if (institutions != undefined || institutions != null) {
-           
+        
+        let pc_area=layer.feature.properties.pc_area;    
+            
         layer.setStyle({
-            weight: 1,
-            fillOpacity: 1
+            weight: 3,
+            fillOpacity: 1,
+            color: "green"
         });
     
         _infoBox.addTo(_map);
-        let  html = '<ul style="list-style-type: none;margin-top: 2px;margin-bottom: 2px;padding: 4px;">';
+        
+        let popover_text=''; 
+        
+        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px; color:#0c4128">Selected [ <b>'+pc_area +'</b> ]</p>';
+        html += '<ul style="list-style: none;margin-top: 2px;margin-bottom: 2px;padding: 4px;color:#0c4128">';
         for (var key in institutions) {
             html += '<li>&check; ' + key+ ': '+institutions[key]+'</li>';
+            popover_text += '&check; ' + key+ '<br/>';
         }
         html += '</ul>';
-        document.getElementById('infoBoxUKmap_info').innerHTML = html;   
+        
+        popover_text += '';
+        
+        document.getElementById('infoboxSelectedUKmap_info_text').innerHTML = html;   
+        $('[data-bs-toggle="tooltip"]').tooltip(); 
+        
+        
+        $('#popover_Institutions').popover('dispose'); 
+        // add institutest to label popover in selected option box
+        const popover_InstitutionsEl = document.getElementById('popover_Institutions')
+        const popover_Institutions = new bootstrap.Popover(popover_InstitutionsEl,{html: true});
+    
+        popover_Institutions._config.content = popover_text;
+        popover_Institutions.setContent();   
+        popover_Institutions.enable();        
+        
        }
-
     }      
-    
-    
 }
 
+export function getListInstitutionsByCode(e) {
+
+       var layer = e.target;
+  
+       let institutions = layer.feature.properties.institutions;
+       
+       if( typeof institutions === 'undefined' || institutions === null ){
+           return(institutions);
+       }else{
+           return(null);
+       }      
+}

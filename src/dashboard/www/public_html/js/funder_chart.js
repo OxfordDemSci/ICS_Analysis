@@ -23,12 +23,21 @@ export function updateFunderChart(data, n=20) {
                 );
     }
 
+//        title: {
+//                text: 'Score '+title_text,
+//                textStyle: {
+//                    align: 'center',
+//                    fontSize :'14'
+//                },                
+//                textAlign: 'left'
+//            },  
+                    
     var optionFunderChart = {
         grid: {
-            left: "10%",
+            left: "2%",
             top: "10%",
-            right: "5%",
-            bottom: "10%",
+            right: "10%",
+            bottom: "5%",
             containLabel: true
         },
         toolbox: {
@@ -64,7 +73,7 @@ export function updateFunderChart(data, n=20) {
                 data: values,
                 itemStyle: {
                     normal: {
-                        color: '#2171b5',
+                        color: '#9ecae1',
                         opacity: 0.9,
                         label: {
                             show: true,
@@ -87,7 +96,7 @@ export function updateFunderChart(data, n=20) {
 
     let chartDom_top_left = document.getElementById("chartContainer_top_left");
     let echart_top_left = echarts.init(chartDom_top_left);
-    echart_top_left.setOption(optionFunderChart);
+    echart_top_left.setOption(optionFunderChart, true);
     new ResizeObserver(() => echart_top_left.resize()).observe(chartDom_top_left);
 
 }

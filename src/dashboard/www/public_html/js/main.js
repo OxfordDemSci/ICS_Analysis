@@ -1,16 +1,29 @@
 var API_URL = "http://127.0.0.1:8000/api/";
 
-import * as _api from './api.js?version=2.4'
+import * as _api from './api.js?version=2.6'
 import * as _init from './init.js?version=4.2'
-import * as _utils from './utils.js?version=1.6'
-import * as _UOAChart from './uoa_chart.js?version=5'
-import * as _funderChart from './funder_chart.js?version=3'
-import * as _GlobalImactMap from './global_impact_map.js?version=3'
-import * as _UKMap from './UK_map.js?version=4'
+import * as _utils from './utils.js?version=2.6'
+import * as _UOAChart from './uoa_chart.js?version=5.4'
+import * as _funderChart from './funder_chart.js?version=3.3'
+import * as _GlobalImactMap from './global_impact_map.js?version=3.5'
+import * as _UKMap from './UK_map.js?version=5.5'
 
+//window.slc_postcode_area=null;
+//window.slc_beneficiary=null;
+//window.slc_uoa=null;
+//window.slc_topic=null;
+//window.slc_threshold=null;
 
-let palette_colors = ["#f7fbff", "#e9f2f9", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"];
+var slc_postcode_area=null;
+var slc_beneficiary=null;
+var slc_uoa=null;
+var slc_topic=null;
+var slc_threshold=0.5;
+var slc_funder=null;
+
+let palette_colors_GlobalMap = ["#f7fbff", "#e9f2f9", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"];
 let palette_colors_UKMap = ["#fff5f0", "#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
+
 
 let initialData = _api.getInitData(API_URL);
 let GlobalBoundary = _api.getGlobalBoundary();
@@ -69,7 +82,29 @@ var layerGlobal = L.geoJson(null, {
                     }                    
                 },
                 click: function (e) {
-                    _GlobalImactMap.clickGlobalImactMap(e, mapGlobal, mapGlobalPopup);
+                    
+                        _GlobalImactMap.clickGlobalImactMap(e, mapGlobal, mapGlobalPopup);
+
+                        slc_beneficiary = e.target.feature.properties.iso_a3;
+                        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary);
+                        _utils.progressMenuOn();
+                         slc_topic = _utils.getActiveTopic();
+                        _api.get_ics_data(API_URL, 
+                                        slc_threshold,
+                                        slc_topic,
+                                        slc_postcode_area,
+                                        slc_beneficiary,
+                                        slc_uoa,
+                                        slc_funder).then(result => {
+                            _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);                    
+                            _UOAChart.updateUOAChart(result.uoa_counts);
+                            _funderChart.updateFunderChart(result.funders_counts, 20);    
+                            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+                        }).then(() => {
+                            _utils.progressMenuOff();
+                        }).catch(error => {
+                            console.log('In the catch', error);
+                        });                     
                 }
             });
 
@@ -132,21 +167,35 @@ var layerUK = L.geoJson(null, {
 
             layer.on({
                 mouseover:  function (e) {
-                    _UKMap.highlightFeatureUKMap(e, infoboxUKmap, mapUK );
+                    //if (slc_postcode_area === undefined || slc_postcode_area === null) {
+                       
+                        _UKMap.highlightFeatureUKMap(e, infoboxUKmap, mapUK , slc_postcode_area);
+                    //}
                 },
                 mouseout: function (e) {
-                    _UKMap.resethighlightFeatureUKMap(e, infoboxUKmap, mapUK );
+                    //if (slc_postcode_area === undefined || slc_postcode_area === null) {
+                        _UKMap.resethighlightFeatureUKMap(e, infoboxUKmap, mapUK , slc_postcode_area);
+                    //}
                 },
                 click: function (e) {
+                         _UKMap.reseAllFeatureUKMap(layerUK);
+                         slc_postcode_area = e.target.feature.properties.pc_area;
+                         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary);
+                         infoboxUKmap.remove(mapUK);
+                         _UKMap.selectFeatureUKMap(e, infoboxSelectedUKmap, mapUK );
                         _utils.progressMenuOn();
-
+                         slc_topic = _utils.getActiveTopic();
                         _api.get_ics_data(API_URL, 
-                                          document.querySelector("#idTopics li.active").getAttribute("data-alias"),
-                                          0.5,
-                                          e.target.feature.properties.pc_area).then(result => {
+                                        slc_threshold,
+                                        slc_topic,
+                                        slc_postcode_area,
+                                        slc_beneficiary,
+                                        slc_uoa,
+                                        slc_funder).then(result => {
+                            //_UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);                    
                             _UOAChart.updateUOAChart(result.uoa_counts);
-                            _funderChart.updateFunderChart(result.funders_counts);    
-                            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors);
+                            _funderChart.updateFunderChart(result.funders_counts, 20);    
+                            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
                         }).then(() => {
                             _utils.progressMenuOff();
                         }).catch(error => {
@@ -176,6 +225,37 @@ infoboxUKmap.update = function (props) {
 infoboxUKmap.addTo(mapUK);
 infoboxUKmap.remove(mapUK);
 
+
+
+ 
+ 
+///
+var infoboxSelectedUKmap = L.control({ position: 'bottomleft' });
+
+infoboxSelectedUKmap.onAdd = function (mapUK) {
+    this._div = L.DomUtil.create('div', 'infoboxSelectedUKmap'); 
+    this._div.innerHTML += '<div id="infoboxSelectedUKmap_info">';
+    this._div.innerHTML += '<button type="button" id="Reset_selection_UKmap" class="btn btn-sm btn-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reset selection"><i class="fa-solid fa-xmark" style="color:#6c757d"></i></button>';
+    this._div.innerHTML += '<div id="infoboxSelectedUKmap_info_text"></div>';
+    this._div.innerHTML += '</div>';
+    
+    this._div.addEventListener('click', () => { 
+        resetSelectionUKmap(); 
+    });    
+    L.DomEvent.disableClickPropagation(this._div);
+    L.DomEvent.disableScrollPropagation(this._div);   
+    
+    //this.update();
+    return this._div;
+};
+infoboxSelectedUKmap.update = function (props) {
+    this._div.innerHTML = '';
+};
+infoboxSelectedUKmap.addTo(mapUK);
+infoboxSelectedUKmap.remove(mapUK);
+
+
+
 var legendUKmap = L.control({position: 'bottomright'});
 
 legendUKmap.onAdd = function (map) {
@@ -190,24 +270,28 @@ legendUKmap.addTo(mapUK);
 
 // end  setting a UK map 
 //******************************************************************************
-
+ //_utils.updateInfoBox(initialData);
 
 _init.setTopicsMenu(initialData.topics).then(() => {
-    _utils.updateInfoBox(initialData);
+    _utils.initialSetInfoBox(initialData);
 }).then(() => 
-    _api.get_ics_data(API_URL)
+    _api.get_ics_data(API_URL, 
+                      slc_threshold,
+                      slc_topic,
+                      slc_postcode_area,
+                      slc_beneficiary,
+                      slc_uoa,
+                      slc_funder)         
 ).then(result => {
     console.log(result);
-    console.log("result");
-    console.log(result.uoa_counts);
-    console.log("result2");
+
     _UOAChart.updateUOAChart(result.uoa_counts);
     _funderChart.updateFunderChart(result.funders_counts);
-    _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors);
+    _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
     //console.log(result.institution_counts);
     _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
 }).then(() => {
-    document.getElementById('firstloader').style.display = 'none';;
+    document.getElementById('firstloader').style.display = 'none';
 }).catch(error => {
     console.log('In the catch', error);
 });
@@ -215,10 +299,7 @@ _init.setTopicsMenu(initialData.topics).then(() => {
 
 
 $(window).on("resize", function () {
-
     _utils.setHightBoxs();
-
-
 }).trigger("resize");
 
 
@@ -228,17 +309,22 @@ $("#idTopics .list-group-item").click(function (e) {
     $("#idTopics .list-group-item").removeClass("active");
     $(e.target).addClass("active");
 
-    _utils.updateInfoBox(initialData);
+    slc_topic = _utils.getActiveTopic();
 
-    var active_topic = document.querySelector("#idTopics li.active").getAttribute("data-alias");
-    
     _utils.progressMenuOn();
     
-     _api.get_ics_data(API_URL, active_topic).then(result => {
+    _api.get_ics_data(API_URL, 
+                      slc_threshold,
+                      slc_topic,
+                      slc_postcode_area,
+                      slc_beneficiary,
+                      slc_uoa,
+                      slc_funder).then(result => {
+        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary);                   
         _utils.updateInfoBox(initialData);
         _UOAChart.updateUOAChart(result.uoa_counts);
         _funderChart.updateFunderChart(result.funders_counts);    
-        _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors);
+        _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
      }).then(() => {
           _utils.progressMenuOff();
@@ -247,3 +333,107 @@ $("#idTopics .list-group-item").click(function (e) {
      });
      
 });
+
+$("#Options_of_Assessment").change(function(){
+        var selectedAssessment = $('#Options_of_Assessment').children("option:selected").val();
+        slc_uoa=selectedAssessment;
+        
+    _utils.progressMenuOn();
+    
+    _api.get_ics_data(API_URL, 
+                      slc_threshold,
+                      slc_topic,
+                      slc_postcode_area,
+                      slc_beneficiary,
+                      slc_uoa,
+                      slc_funder).then(result => {
+        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary);    
+        _UOAChart.updateUOAChart(result.uoa_counts);
+        _funderChart.updateFunderChart(result.funders_counts);    
+        _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+     }).then(() => {
+          _utils.progressMenuOff();
+     }).catch(error => {
+        console.log('In the catch', error);
+     });        
+});
+ 
+function resetSelectionUKmap(){
+    
+     $('[data-bs-toggle="tooltip"]').tooltip('hide'); 
+     slc_postcode_area=null;
+     infoboxSelectedUKmap.remove(mapUK);
+    _utils.progressMenuOn();
+    
+    _api.get_ics_data(API_URL, 
+                      slc_threshold,
+                      slc_topic,
+                      slc_postcode_area,
+                      slc_beneficiary,
+                      slc_uoa,
+                      slc_funder).then(result => {
+        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary);    
+        _UOAChart.updateUOAChart(result.uoa_counts);
+        _funderChart.updateFunderChart(result.funders_counts);    
+        _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+     }).then(() => {
+          _utils.progressMenuOff();
+     }).catch(error => {
+        console.log('In the catch', error);
+     });   
+}  
+
+    
+$( "#reload_selected_options" ).on( "click", function() {
+    
+     $('#Options_of_Assessment').prop("selectedIndex", 0);
+     
+     $('[data-bs-toggle="tooltip"]').tooltip('hide'); 
+
+     slc_topic=null;
+     slc_postcode_area=null;
+     slc_beneficiary=null;
+     slc_uoa=null;
+     slc_funder=null;
+     infoboxSelectedUKmap.remove(mapUK);
+    _utils.progressMenuOn();
+    
+    _api.get_ics_data(API_URL, 
+                      slc_threshold,
+                      slc_topic,
+                      slc_postcode_area,
+                      slc_beneficiary,
+                      slc_uoa,
+                      slc_funder).then(result => {
+        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary);    
+        _UOAChart.updateUOAChart(result.uoa_counts);
+        _funderChart.updateFunderChart(result.funders_counts);    
+        _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+     }).then(() => {
+          _utils.progressMenuOff();
+     }).catch(error => {
+        console.log('In the catch', error);
+     });
+} );
+
+ 
+ 
+//$( "#ics_table_all_btn" ).on( "click", function() {
+//    
+//    var ics_table_all_Modal = new bootstrap.Modal(document.getElementById('ics_table_all_modal'), {
+//    keyboard: false
+//    });
+//
+//    ics_table_all_Modal.show();
+//
+//});
+ 
+ 
+//  initialize all tooltips
+//var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+//var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+//  return new bootstrap.Tooltip(tooltipTriggerEl)
+//})

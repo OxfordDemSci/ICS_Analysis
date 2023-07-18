@@ -21,32 +21,43 @@ export function getInitData(api_url) {
     return result;
 }
 
-export function get_ics_data(api_url, topic = "All Topics", threshold = 0.5, postcode_area = null) {
+export function get_ics_data(api_url,
+                             threshold,
+                             topic,
+                             postcode_area,
+                             beneficiary,
+                             uoa,
+                             funder) {
 
     if (api_url.substr(-1) !== '/')
         api_url += '/';
     const fullUrl = api_url + 'init';
 
     let data = {};
-    if (postcode_area === undefined || postcode_area === null) {
-        data = {
-            topic: topic,
-            threshold: threshold
-        };
-    } else {
-        data = {
-            topic: topic,
-            threshold: threshold,
-            postcode_area: postcode_area
-        };
-    }
-
+    data = {
+        threshold: threshold,
+        topic: topic,
+        postcode_area: postcode_area,
+        beneficiary: beneficiary,
+        uoa: uoa,
+        funder: funder
+    };
+    $.each(data, function(key, value){
+        if (value === "" || value === null){
+            delete data[key];
+        }
+    });    
+    
 
     return new Promise((resolve, reject) => {
         $.ajax({
             url: api_url + "get_ics_data",
             type: 'get',
             data: data,
+            beforeSend: function (jqXHR, settings) {
+                let url = settings.url + "?" + settings.data;
+                console.log(url);
+            },
             success: function (data) {
                 resolve(data);
             },
