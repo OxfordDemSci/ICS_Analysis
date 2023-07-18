@@ -11,7 +11,7 @@ class ICS(Base):
     ukprn: int = Column(Integer)
     postcode: str = Column(String(8))
     ics_id: str = Column(String)
-    uoa: str = Column(Integer)
+    uoa: int = Column(Integer)
 
     __table_args__ = (
         Index('idx_ics_id_ics_id', 'id', 'ics_id'),
@@ -46,7 +46,7 @@ class ICSTableForDownload(Base):
     details_of_the_impact = Column(String)
     sources_to_corroborate_the_impact = Column(String)
     covid_statement = Column(String)
-    uoa = Column(String)
+    uoa = Column(Integer)
     summary_of_the_impact_topic = Column(String)
     cultural = Column(String)
     economic = Column(String)
@@ -104,10 +104,10 @@ class UOA(Base):
     __tablename__ = "uoa"
 
     id = Column(Integer, primary_key=True)
-    uoa_id = Column(String)
-    name = Column(String)
-    assessment_panel = Column(String(1))
-    assessment_group = Column(String(5))
+    uoa_id = Column(Integer, nullable=False)
+    name = Column(String, nullable=False)
+    assessment_panel = Column(String(1), nullable=False)
+    assessment_group = Column(String(5), nullable=False)
 
     __table_args__ = (
         Index('idx_uoa_id', 'id', unique=True),
