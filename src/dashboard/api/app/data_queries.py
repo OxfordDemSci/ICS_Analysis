@@ -165,7 +165,7 @@ def get_uoa_counts(ics_ids=None):
             SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as assessment_group, COUNT(*) AS uoa_count
             FROM ics ics
             JOIN uoa uoa ON ics.uoa = uoa.uoa_id
-            WHERE ics.ics_id IN (SELECT unnest(:ics_ids))
+            WHERE ics.ics_id = ANY(:ics_ids)
             GROUP BY ics.uoa, uoa.name, uoa.assessment_panel, uoa.assessment_group
             ORDER BY uoa_count DESC;
         ''')
