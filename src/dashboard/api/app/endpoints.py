@@ -4,7 +4,7 @@ from pathlib import Path
 from .data_access import get_init, get_data, get_country_ics_data, get_ics_database_topics
 from .data_queries import download_ics_table
 from .generate_report import report_pdf
-
+from .generate_pdf_report import pdf_report
 BASE = Path(__file__).resolve().parent
 
 def read_init():
@@ -68,7 +68,7 @@ def download_ics_report_as_pdf(threshold, topic=None, postcode_area=None, benefi
         uoa = None
     if funder == "null":
         funder = None
-    data = report_pdf()
+    data = pdf_report()
     return data
 
 
