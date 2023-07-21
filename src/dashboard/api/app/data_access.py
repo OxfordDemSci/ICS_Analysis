@@ -18,8 +18,8 @@ def get_init():
     init_data['topics'] = get_topics()
     return init_data
 
-def get_ics_database_topics():
-    return get_topics()
+def get_ics_database_topics(topic=None):
+    return get_topics(topic=topic)
 
 def get_data(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
     data = query_dashboard_data(threshold, topic, postcode, beneficiary, uoa, funder)

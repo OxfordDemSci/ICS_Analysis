@@ -12,23 +12,30 @@ from app.models import (
     ICS,
     ICSTableForDownload,
 )
-def get_topics():
-    sql = text('''
-        SELECT topic_name, topic_group, description, narrative from topics
-    ''')
-
-    query = db.session.execute(sql)
+def get_topics(topic=None):
+    if topic is None:
+        sql = text('''
+            SELECT topic_name, topic_group, description, narrative from topics
+        ''')
+    else:
+        sql = text('''
+            SELECT topic_name, topic_group, description, narrative from topics 
+                   WHERE topic_name = :topic
+        ''')
+    params = {"topic": topic}
+    query = db.session.execute(sql, params)
     topics = [{
         "topic_name": row.topic_name, 
         "topic_group": row.topic_group, 
         "description": row.description,
         "narrative": row.narrative} for row in query]
-    topics.insert(0, {
-        "topic_name": "All Topics", 
-        "topic_group": None, 
-        "description": None,
-        "narrative": None,
-    })
+    if (topic is None):
+        topics.insert(0, {
+            "topic_name": "All Topics", 
+            "topic_group": None, 
+            "description": None,
+            "narrative": None,
+        })
     return topics
 
 def get_website_text():
@@ -47,6 +54,12 @@ def get_website_text():
         "label_botton_right_box": row.label_botton_right_box,
     }
     return website_text
+
+def get_pdf_data(threshold, topic=None, postcode_area=None, beneficiary=None, uoa=None, funder=None):
+    pdf_data = {}
+    pdf_data["topic"] = get_topics(topic)
+    pdf_data["background_text"] = get_website_text()
+    return pdf_data
 
 def get_ics_table(ics_ids=None, limit=None):
     if ics_ids is None:

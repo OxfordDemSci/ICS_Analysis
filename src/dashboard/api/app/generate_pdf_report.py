@@ -13,7 +13,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 # https://www.blog.pythonlibrary.org/2010/03/08/a-simple-step-by-step-reportlab-tutorial/
 
-def pdf_report():
+def pdf_report(pdf_data):
+    print(pdf_data)
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer,
                             pagesize=letter,
@@ -40,8 +41,8 @@ def pdf_report():
     story.append(Spacer(1, 12))
 
     sub_title_style = ParagraphStyle(
-        'Title',
-        parent=getSampleStyleSheet()['Title'],
+        'Heading3',
+        parent=getSampleStyleSheet()['Heading3'],
         alignment=TA_LEFT,
         fontName='Helvetica-Bold',  # Replace with your desired font name
         fontSize=18,
