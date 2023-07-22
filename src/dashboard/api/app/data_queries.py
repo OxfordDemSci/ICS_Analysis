@@ -59,6 +59,12 @@ def get_pdf_data(threshold, topic=None, postcode_area=None, beneficiary=None, uo
     pdf_data = {}
     pdf_data["topic"] = get_topics(topic)
     pdf_data["background_text"] = get_website_text()
+    pdf_data["ics_data"] = query_dashboard_data(threshold,
+                                                topic,
+                                                postcode_area,
+                                                beneficiary,
+                                                uoa,
+                                                funder)
     return pdf_data
 
 def get_ics_table(ics_ids=None, limit=None):
