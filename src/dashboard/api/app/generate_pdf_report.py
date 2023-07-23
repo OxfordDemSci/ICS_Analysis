@@ -14,12 +14,14 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib
 
+from .data_types import styles_map
+from app import postcode_gdf, world_gdf
+
 matplotlib.use('agg')  # Set the backend to 'agg' for non-GUI use
 
 # https://www.blog.pythonlibrary.org/2010/03/08/a-simple-step-by-step-reportlab-tutorial/
 
 def pdf_report(pdf_data, topic):
-    print(pdf_data["background_text"])
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer,
                             pagesize=letter,
@@ -29,93 +31,49 @@ def pdf_report(pdf_data, topic):
                             bottomMargin=18)
     doc.title = 'ICS Report'
     story = []
-    logo = Path(__file__).resolve().parent.joinpath('img/logo_ics.jpg')
-    logo_img = Image(logo, 15*cm, 1*cm)
-    story.append(logo_img)
+
+    # Logo
+    story.append(add_logo())
     story.append(Spacer(1, 20))
 
-    title_style = ParagraphStyle(
-        'Title',
-        parent=getSampleStyleSheet()['Title'],
-        alignment=TA_CENTER,
-        fontName='Helvetica-Bold',  # Replace with your desired font name
-        fontSize=24,
-    )
-    title_text = "Shape of Impact"
-    title = Paragraph(title_text, title_style)
-    story.append(title)
+    # Title
+    story.append(add_title("Shape of Impact"))
     story.append(Spacer(1, 12))
 
-    subtitle_style = ParagraphStyle(
-        'Heading3',
-        parent=getSampleStyleSheet()['Heading3'],
-        alignment=TA_LEFT,
-        fontName='Helvetica',  # Replace with your desired font name
-        fontSize=18,
-        underlineColor='black',
-        underlineWidth=1)
-    sub_title_text = "Project Background"
+    story.append(add_subtitle("<b>Project Background</b>"))
 
-    subtitle_style_center = ParagraphStyle(
-        'Heading3',
-        parent=getSampleStyleSheet()['Heading3'],
-        alignment=TA_CENTER,
-        fontName='Helvetica',  # Replace with your desired font name
-        fontSize=18,
-        underlineColor='black',
-        underlineGap=2,
-        underlineWidth=1,
-        )
-    sub_title_text = "<b>Project Background</b>"
-    subtitle = Paragraph(sub_title_text, subtitle_style)
-    story.append(subtitle)
-
-    body_text_style = ParagraphStyle(
-        'BodyStyle',
-        parent=getSampleStyleSheet()["Normal"],
-        alignment=TA_LEFT,
-        fontName='Helvetica',
-        fontSize=12,
-    )
-    background_text = pdf_data["background_text"]["about"]
-    background_info = Paragraph(background_text, body_text_style)
-    story.append(background_info)
+    story.append(add_text(pdf_data["background_text"]["about"]))
     story.append(Spacer(1, 12))
 
     if topic is None:
         topic_subtitle_text = "<u><b>Topic</b> - All Topics</u>"
         description_text = pdf_data["background_text"]["all_topics_description"]
         narrative_text = "All topics selected"
-
     else:
         topic_subtitle_text = f"<u><b>Topic:</b> {pdf_data['topic'][0].get('topic_name')} - <b>Topic Group:</b> {pdf_data['topic'][0].get('topic_group')}</u>"
         description_text = pdf_data["topic"][0].get("description")
         narrative_text = pdf_data["topic"][0].get("narrative")
-    topic_subtitle = Paragraph(topic_subtitle_text, subtitle_style_center)
-    story.append(topic_subtitle)
+    story.append(add_subtitle(topic_subtitle_text, center=True))
     story.append(Spacer(1, 12))
 
-    description_subtitle = Paragraph("Description", subtitle_style)
-    story.append(description_subtitle)
-    description = Paragraph(description_text, body_text_style)
-    story.append(description)
+    story.append(add_subtitle("Description"))
+    story.append(add_text(description_text))
 
-    narrative_subtitile = Paragraph("Narrative", subtitle_style)
-    story.append(narrative_subtitile)
-    narrative = Paragraph(narrative_text, body_text_style)
-    story.append(narrative)
+    story.append(add_subtitle("Narrative"))
+    story.append(add_text(narrative_text))
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph(f"<u>{pdf_data['background_text']['label_top_left_box']}</u>", subtitle_style_center))
-    story.append(Spacer(1, 12))
-    table_and_graph = create_bar_graph(pdf_data["ics_data"]["funders_counts"], "funder_count", "funder", "Funders")
-    story.append(table_and_graph)
+    story.append(add_funder_info(pdf_data))
     story.append(Spacer(1, 24))
 
-    story.append(Paragraph(f"<u>{pdf_data['background_text']['label_bottom_left_box']}</u>", subtitle_style_center))
-    story.append(Spacer(1, 12))
-    uoa_table_and_graph = create_stacked_bar_chart(pdf_data["ics_data"]["uoa_counts"])
-    story.append(uoa_table_and_graph)
+    story.append(add_uoa_info(pdf_data))
+    story.append(Spacer(1, 24))
+
+    story.append(add_institutions_info(pdf_data))
+    story.append(Spacer(1, 24))
+
+    story.append(add_beneficiaries_info(pdf_data))
+    story.append(Spacer(1, 24))
 
     doc.build(story)
     buffer.seek(0)
@@ -124,6 +82,67 @@ def pdf_report(pdf_data, topic):
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename=report.pdf'
     return response
+
+def add_logo():
+    logo = Path(__file__).resolve().parent.joinpath('img/logo_ics.jpg')
+    logo_img = Image(logo, 15*cm, 1*cm)
+    return logo_img
+
+def add_title(title_text):
+    title = Paragraph(title_text, styles_map["title"])
+    return title
+
+def add_subtitle(subtitle_text, center=False):
+    if not center:
+        return Paragraph(subtitle_text, styles_map["subtitle"])
+    return Paragraph(subtitle_text, styles_map["subtitle_center"])
+
+def add_text(text, footnote=False):
+    if footnote is False:
+        return Paragraph(text, styles_map["body"])
+    else:
+        return Paragraph(text, styles_map["footnote"])
+
+
+def add_funder_info(pdf_data):
+    title = add_subtitle(f"<u>{pdf_data['background_text']['label_top_left_box']}</u>", center=True)
+    # funder_story.append(Spacer(1, 12))
+    if pdf_data["topic"] is None:
+        footnote_text = "<b>Figure 1. Top 20 funders for all topics<b>"
+    else:
+        footnote_text = f"<b>Figure 1. Top 20 funders of topic {pdf_data['topic'][0]['topic_name']}</b>"
+    footnote = add_text(footnote_text, footnote=True)
+    table_and_graph = create_bar_graph(pdf_data["ics_data"]["funders_counts"], "funder_count", "funder", "Funders")
+    funder_table = Table([[title], [table_and_graph], [footnote]], colWidths=[15*cm])
+    funder_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ]))
+    return funder_table
+
+def add_uoa_info(pdf_data):
+    title = add_subtitle(f"<u>{pdf_data['background_text']['label_bottom_left_box']}</u>", center=True)
+    if pdf_data["topic"] is None:
+        footnote_text = "<b>Figure 2. Top units of assessment to which impact case studies in all topics were submitted.<b>"
+    else:
+        footnote_text = f"<b>Figure 2. Top units of assessment to which impact case studies in topic {pdf_data['topic'][0]['topic_name']} were submitted.</b>"
+    footnote = add_text(footnote_text, footnote=True)
+    uoa_table_and_graph = create_uoa_bar_chart(pdf_data["ics_data"]["uoa_counts"])
+    uoa_table = Table([[title], [uoa_table_and_graph], [footnote]], colWidths=[15*cm])
+    uoa_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ]))
+    return uoa_table
+
+def add_institutions_info(pdf_data):
+    pass
+
+def add_beneficiaries_info(pdf_data):
+    pass
+
+def add_final_footnote():
+    pass
 
 
 def create_bar_graph(data, value, label, chart_title):
@@ -135,6 +154,7 @@ def create_bar_graph(data, value, label, chart_title):
     top_values = [item[value] for item in sorted_data[:20]]
 
     # # If there are more than 20 elements, calculate the sum of the remaining values
+    # This is moved to lower down (others in graph is masking shown values because it's too high.)
     # if len(data) > 20:
     #     others_sum = sum(item[value] for item in sorted_data[20:])
     #     top_labels.append('Others')
@@ -145,7 +165,7 @@ def create_bar_graph(data, value, label, chart_title):
     bars = ax.bar(top_labels, top_values, color='lightblue', edgecolor='black')
 
     ax.set_xlabel('')
-    ax.set_ylabel('Counts')
+    ax.set_ylabel('ICS Count')
     ax.set_title(f'Top 20 {chart_title}' if len(data) > 20 else f'All {chart_title}')
     ax.set_xticks([])
     ax.set_xticklabels([])
@@ -155,7 +175,7 @@ def create_bar_graph(data, value, label, chart_title):
         x_pos = bar.get_x() + bar.get_width() / 2
         max_label_length = 52
         truncated_label = label[:max_label_length] + '...' if len(label) > max_label_length else label
-        y_pos = 1
+        y_pos = 0.5
         rotation = 90
 
         ax.text(x_pos, y_pos, truncated_label, ha='center', va='bottom', rotation=rotation, fontsize=8)
@@ -206,10 +226,9 @@ def create_bar_graph(data, value, label, chart_title):
     return table_and_graph
 
 
-def create_stacked_bar_chart(data_list):
+def create_uoa_bar_chart(data_list):
     # Extract unique assessment_panel values
     assessment_panels = sorted(set(item['assessment_panel'] for item in data_list))
-    print(assessment_panels)
     # Group data by assessment_panel and create subgroups for each name with uoa_count
     data_dict = {}
     for item in data_list:
@@ -230,12 +249,6 @@ def create_stacked_bar_chart(data_list):
     fig, ax = plt.subplots()
     bars = ax.bar(names, data, color=leg_colors, edgecolor='black')
 
-    ax.set_xlabel('')
-    ax.set_ylabel('Counts')
-    ax.set_title('UOA Counts')
-    ax.set_xticks([])
-    ax.set_xticklabels([])
-
     # Add labels inside/outside the bars based on label length
     for bar, label in zip(bars, names):
         x_pos = bar.get_x() + bar.get_width() / 2
@@ -247,9 +260,11 @@ def create_stacked_bar_chart(data_list):
         ax.text(x_pos, y_pos, truncated_label, ha='center', va='bottom', rotation=rotation, fontsize=8)
 
     # Customize the plot
-    ax.set_xlabel('Name')
-    ax.set_ylabel('UOA Count')
+    ax.set_xlabel('Assessment Panel Name')
+    ax.set_ylabel('ICS Count')
     ax.set_title('UOA Count by Assessment Panel')
+    ax.set_xticks([])
+    ax.set_xticklabels([])
     legend_handles = [plt.Rectangle((0, 0), 1, 1, color=color, label=class_) for class_, color in colors_map.items()]
     legend = ax.legend(handles=legend_handles, title="Assessment Panel", fontsize='small')
     legend.set_title(legend.get_title().get_text(), prop={'size': 'x-small'})
@@ -269,7 +284,7 @@ def create_stacked_bar_chart(data_list):
     # Create the table
     table_data = [["UOA", "Panel", "Group", 'Count']]
     for i in data_list:
-        table_data.append([i["name"] if len(i["name"]) < 26 else i["name"][:26] + "...", i["assessment_panel"], i["assessment_group"], i["uoa_count"]])
+        table_data.append([i["name"] if len(i["name"]) < 28 else i["name"][:28] + "...", i["assessment_panel"], i["assessment_group"], i["uoa_count"]])
 
     # Set table style
     table_style = TableStyle([
@@ -286,7 +301,7 @@ def create_stacked_bar_chart(data_list):
         table_style.add('BACKGROUND', (0, row), (-1, row), (0.9, 0.9, 0.9))
 
     # Create the table and apply the style
-    table = Table(table_data, colWidths=[5*cm, 1*cm, 1*cm, 1*cm], rowHeights=[0.5*cm for x in range(num_rows)])
+    table = Table(table_data, colWidths=[4.5*cm, 1*cm, 1.5*cm, 1*cm], rowHeights=[0.5*cm for x in range(num_rows)])
     table.setStyle(table_style)
     table_and_graph = Table([[img, table]])
     table_and_graph.setStyle(TableStyle([
