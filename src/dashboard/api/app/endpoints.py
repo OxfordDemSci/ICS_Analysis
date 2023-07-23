@@ -69,7 +69,7 @@ def download_ics_report_as_pdf(threshold, topic=None, postcode_area=None, benefi
     if funder == "null":
         funder = None
     pdf_data = get_pdf_data(threshold, topic, postcode_area, beneficiary, uoa, funder)
-    data = pdf_report(pdf_data, topic)
+    data = pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder)
     return data
 
 

@@ -6,14 +6,15 @@ from reportlab.lib.units import inch, cm
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Image, Table, TableStyle
 from reportlab.lib.utils import ImageReader
-from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer, Table, TableStyle, PageBreak
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib
-
+from flask import request
+from collections import defaultdict
 from .data_types import styles_map
 from app import postcode_gdf, world_gdf
 
@@ -21,7 +22,7 @@ matplotlib.use('agg')  # Set the backend to 'agg' for non-GUI use
 
 # https://www.blog.pythonlibrary.org/2010/03/08/a-simple-step-by-step-reportlab-tutorial/
 
-def pdf_report(pdf_data, topic):
+def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer,
                             pagesize=letter,
@@ -68,12 +69,16 @@ def pdf_report(pdf_data, topic):
 
     story.append(add_uoa_info(pdf_data))
     story.append(Spacer(1, 24))
+    story.append(PageBreak())
 
     story.append(add_institutions_info(pdf_data))
     story.append(Spacer(1, 24))
+    story.append(PageBreak())
 
     story.append(add_beneficiaries_info(pdf_data))
     story.append(Spacer(1, 24))
+
+    story.append(add_final_footnote(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder))
 
     doc.build(story)
     buffer.seek(0)
@@ -135,14 +140,149 @@ def add_uoa_info(pdf_data):
     ]))
     return uoa_table
 
+def convert_defaultdict_to_dict(d):
+    if isinstance(d, defaultdict):
+        return {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
+    return d
+
+def insert_count(row, col, counts):
+        return counts.get(row[col], 0)
+
 def add_institutions_info(pdf_data):
-    pass
+
+    title = add_subtitle(f"<u>{pdf_data['background_text']['label_top_right_box']}</u>", center=True)
+    if pdf_data["topic"] is None:
+        footnote_text = "<b>Figure 3. UK locations and counts of institutes submitting case studies in all topics.<b>"
+    else:
+        footnote_text = f"<b>Figure 3. UK locations and counts of institutes submitting case studies in topic {pdf_data['topic'][0]['topic_name']} were submitted.</b>"
+    footnote = add_text(footnote_text, footnote=True)
+    pc_gdf = postcode_gdf.copy()
+    institutions_dict = convert_defaultdict_to_dict(pdf_data["ics_data"]['institution_counts'])
+    pc_counts = {key: institutions_dict[key]["postcode_total"] for key in institutions_dict.keys()}
+    pc_gdf["counts"] = 0
+    pc_gdf["counts"] = pc_gdf.apply(insert_count, col='pc_area', counts=pc_counts, axis=1)
+    ax = pc_gdf.plot(column="counts", cmap='OrRd', legend=True, edgecolor='grey', linewidth=0.5)
+    plt.title("Total institution counts per postcode area")
+
+    buffer = io.BytesIO()
+    canvas = FigureCanvas(ax.figure)
+    canvas.print_png(buffer)
+    plt.close(ax.figure)
+    img = Image(buffer, width=12*cm, height=10*cm)
+    table_data = [["PC", "Institution", 'Count']]
+    counter = 0
+    others_count = 0
+    for pc in institutions_dict.keys():
+        for inst_name, count in institutions_dict[pc]['institution_counts'].items():
+            if counter <= 30:
+                table_data.append([pc, inst_name if len(inst_name) < 26 else inst_name[:26] + '...', count])
+            else:
+                others_count += count
+            counter += 1
+    if others_count > 0:
+        table_data.append(["*", "Others", others_count])
+    # Set table style
+    table_style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),       # Header text color
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),            # Center alignment for all cells
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),      # Gridlines
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
+    ])
+
+    num_rows = len(table_data)  # Include the header row
+    for row in range(1, num_rows, 2):
+        table_style.add('BACKGROUND', (0, row), (-1, row), (0.9, 0.9, 0.9))
+
+    # Create the table and apply the style
+    table = Table(table_data, colWidths=[1*cm, 5*cm, 1*cm], rowHeights=[0.5*cm for x in range(num_rows)])
+    table.setStyle(table_style)
+    table_and_graph = Table([[img, table]])
+    table_and_graph.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ]))
+    del pc_gdf
+    institutions_table = Table([[title], [table_and_graph], [footnote]], colWidths=[10*cm])
+    institutions_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ]))
+    return institutions_table
+
 
 def add_beneficiaries_info(pdf_data):
-    pass
+    title = add_subtitle(f"<u>{pdf_data['background_text']['label_botton_right_box']}</u>", center=True)
+    if pdf_data["topic"] is None:
+        footnote_text = "<b>Figure 4. Global locations where impact case studies in all topics claimed impacts.<b>"
+    else:
+        footnote_text = f"<b>Figure 4. Global locations where impact case studies in all in topic {pdf_data['topic'][0]['topic_name']} claimed impacts.</b>"
+    footnote = add_text(footnote_text, footnote=True)
+    countries_gdf = world_gdf.copy()
 
-def add_final_footnote():
-    pass
+    countries_dict = convert_defaultdict_to_dict(pdf_data["ics_data"]['countries_counts'])
+    country_counts = {x["country"]: x["country_count"] for x in countries_dict}
+    countries_gdf["counts"] = 0
+    countries_gdf["counts"] = countries_gdf.apply(insert_count, col='iso_a3', counts=country_counts, axis=1)
+    ax = countries_gdf.plot(column="counts", cmap='RdYlGn_r', legend=True, edgecolor='grey', linewidth=0.5)
+    plt.title("Total counts per country")
+    plt.figure(figsize=(20, 8))
+
+    buffer = io.BytesIO()
+    canvas = FigureCanvas(ax.figure)
+    canvas.print_png(buffer)
+    plt.close(ax.figure)
+    img = Image(buffer, width=15*cm, height=12*cm)
+    table_data = [["ISO", 'Count']]
+    counter = 0
+    others_sum = 0
+    for iso, count in country_counts.items():
+        if counter <= 30:
+            table_data.append([iso, count])
+        else:
+            others_sum += count
+        counter += 1
+    if others_sum > 0:
+        table_data.append(["Others", others_sum])
+
+    # Set table style
+    table_style = TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.lightblue),  # Header background
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),       # Header text color
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),            # Center alignment for all cells
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),      # Gridlines
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
+    ])
+
+    num_rows = len(table_data)  # Include the header row
+    for row in range(1, num_rows, 2):
+        table_style.add('BACKGROUND', (0, row), (-1, row), (0.9, 0.9, 0.9))
+
+    # Create the table and apply the style
+    table = Table(table_data, colWidths=[1*cm, 1*cm], rowHeights=[0.5*cm for x in range(num_rows)])
+    table.setStyle(table_style)
+    table_and_graph = Table([[img, table]])
+    table_and_graph.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ]))
+    del countries_gdf
+    beneficiaries_table = Table([[title], [table_and_graph], [footnote]], colWidths=[10*cm])
+    beneficiaries_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ]))
+    return beneficiaries_table
+
+def add_final_footnote(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder):
+    base_url = request.base_url.rstrip('download_pdf')
+    request_url = request.url
+    params = request_url.split('?')[1]
+    print('PARAMS', params)
+    download_csv_url = f'<b>Full table can be download from <u><a href="{base_url}download_csv?{params}">{base_url}download_csv?{params}</a></u></b>'
+    return add_text (download_csv_url)
 
 
 def create_bar_graph(data, value, label, chart_title):

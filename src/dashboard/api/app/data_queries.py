@@ -247,10 +247,8 @@ def get_ics_ids(threshold, topic=None, postcode=None, beneficiary=None, uoa=None
     argument_names = ["threshold", "topic", "postcode", "beneficiary", "uoa", "funder"]
     arguments = [threshold, topic, postcode, beneficiary, uoa, funder]
     params = {arg_name: arg_val for arg_name, arg_val in zip(argument_names, arguments) if arg_val is not None}
-    print(params)
     query = db.session.execute(sql, params)
     ics_ids = [row.ics_id for row in query]
-    print('ICS_IDS ', len(ics_ids))
     return ics_ids
 
 def get_ics_sql(topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
