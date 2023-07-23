@@ -2,8 +2,14 @@ from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import connexion
+from pathlib import Path
+import geopandas as gpd
 
 from app.config import app_config
+
+BASE_GEODATA = Path(__file__).resolve().parent.joinpath('data')
+postcode_gdf = gpd.read_file(BASE_GEODATA.joinpath("geodata.gpkg"), layer="postcode_areas")
+world_gdf = gpd.read_file(BASE_GEODATA.joinpath("geodata.gpkg"), layer="world")
 
 
 db = SQLAlchemy()
