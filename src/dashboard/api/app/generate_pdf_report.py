@@ -198,7 +198,7 @@ def add_institutions_info(pdf_data):
     # Create the table and apply the style
     table = Table(table_data, colWidths=[1*cm, 5*cm, 1*cm], rowHeights=[0.5*cm for x in range(num_rows)])
     table.setStyle(table_style)
-    table_and_graph = Table([[img, table]])
+    table_and_graph = Table([[table, img]])
     table_and_graph.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
@@ -263,7 +263,7 @@ def add_beneficiaries_info(pdf_data):
     # Create the table and apply the style
     table = Table(table_data, colWidths=[1*cm, 1*cm], rowHeights=[0.5*cm for x in range(num_rows)])
     table.setStyle(table_style)
-    table_and_graph = Table([[img, table]])
+    table_and_graph = Table([[table, img]])
     table_and_graph.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
