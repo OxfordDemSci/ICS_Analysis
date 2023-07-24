@@ -239,7 +239,7 @@ def query_dashboard_data(threshold, topic=None, postcode=None, beneficiary=None,
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
-    data["ics_table"] = get_ics_table(ics_ids=ics_ids, limit=100)
+    data["ics_table"] = get_ics_table(ics_ids=ics_ids, limit=500)
     return data
 
 def get_ics_ids(threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
