@@ -24,6 +24,7 @@ General data folder structure is as follows:
 `data/raw/`: contains data fetched from various sources.
 `data/edit/`: contains wrangled versions of the data contained in `data/raw/`.
 `data/final/`: contains final analysis versions of the data.
+`data/intermediate/`: contains helper files that are called throughout the data pipeline (usually with corresponding scripts that generated the files).
 
 #### Collect data
 
