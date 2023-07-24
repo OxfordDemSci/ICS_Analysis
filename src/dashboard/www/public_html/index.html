@@ -14,267 +14,310 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
               integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
               crossorigin=""/>    
+        
+        <link href="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
+
+   <style>
+
+       #btnViewDetailsInfoBox{
+           cursor: pointer;
+           color: black;
+       }
+       #btnViewDetailsInfoBox:hover {
+           color: #333333;
+           background-color: white;
+       }
+
+       .text-overflow{
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+       .table_ICS{
+           padding: 0px;
+           margin: 0px;
+           border-collapse: collapse;
+           font-size: 0.9em; 
+           clear: both;
+       }
+       .table_ICS td th {
+           min-width:200px;       
+       }
+       
+       .infoBoxMapGlobal {
+           padding: 6px 4px;
+           font: 12px/14px Arial, Helvetica, sans-serif;
+           background: white;
+           background: rgba(255,255,255,0.8);
+           box-shadow: 0 0 15px rgba(0,0,0,0.2);
+           border-radius: 5px;
+       }       
+
+       .infoBoxUKmap {
+           padding: 6px 4px;
+           font: 12px/14px Arial, Helvetica, sans-serif;
+           background: white;
+           background: rgba(255,255,255,0.8);
+           box-shadow: 0 0 15px rgba(0,0,0,0.2);
+           border-radius: 5px;
+       }
+       .infoBoxUKmap_info ul{
+           list-style-type: none;
+           margin-top: 2px;
+           margin-bottom: 2px;
+           padding-left: 2px
+       }
+
+       .btn-circle {
+           position: absolute;
+           top: 0.15rem;
+           right: 0.15rem;    
+           width: 18px;
+           height: 18px;
+           padding: 0px 0px;
+           border-radius: 15px;
+           text-align: center;
+           font-size: 12px;
+       }
+
+       .btn-clipboard {
+           position: absolute;
+           top: 0.15rem;
+           right: 0.15rem;
+           z-index: 10;
+           display: block;
+           padding: 0.16rem 0.5rem;
+           font-size: .8em;
+           color: #888;
+           background-color: #fff;
+           border: 1px solid;
+           border-radius: 15px;
+       }         
+
+       .infoboxSelectedUKmap {
+           padding: 6px 4px;
+           font: 12px/14px Arial, Helvetica, sans-serif;
+           background: rgba(255,255,255,0.8);
+           box-shadow: 0 0 15px rgba(0,0,0,0.2);
+           border-radius: 5px;
+       }
+
+       .infoboxSelectedUKmap_info_text ul{
+           list-style-type: none;
+           margin-top: 2px;
+           margin-bottom: 2px;
+           padding-left: 2px
+       }        
 
 
-        <style>
+       #legend_UKmap_info {
+           line-height: 14px;
+           color: #333333;
+           font-family: 'Open Sans', Helvetica, sans-serif;
+           padding: 2px 4px;
+           background: white;
+           background: rgba(255,255,255,0.91);
+           box-shadow: 0 0 15px rgba(0,0,0,0.2);
+           border-radius: 5px;
+           float: left;
+           /*    z-index: 8000 !important;*/
+       }  
 
-            .infoBoxUKmap {
-                padding: 6px 4px;
-                font: 12px/14px Arial, Helvetica, sans-serif;
-                background: white;
-                background: rgba(255,255,255,0.8);
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-            }
-            .infoBoxUKmap_info ul{
-                list-style-type: none;
-                margin-top: 2px;
-                margin-bottom: 2px;
-                padding-left: 2px
-            }
-      
-.btn-circle {
-    position: absolute;
-    top: 0.15rem;
-    right: 0.15rem;    
-    width: 18px;
-    height: 18px;
-    padding: 0px 0px;
-    border-radius: 15px;
-    text-align: center;
-    font-size: 12px;
-}
+       #legend_mapGlobal_info {
+           line-height: 14px;
+           color: #333333;
+           font-family: 'Open Sans', Helvetica, sans-serif;
+           padding: 2px 4px;
+           background: white;
+           background: rgba(255,255,255,0.91);
+           box-shadow: 0 0 15px rgba(0,0,0,0.2);
+           border-radius: 5px;
+           float: left;
+           /*    z-index: 8000 !important;*/
+       }   
 
-.btn-clipboard {
-    position: absolute;
-    top: 0.15rem;
-    right: 0.15rem;
-    z-index: 10;
-    display: block;
-    padding: 0.16rem 0.5rem;
-    font-size: .8em;
-    color: #888;
-    background-color: #fff;
-    border: 1px solid;
-    border-radius: 15px;
-}         
-            
-            .infoboxSelectedUKmap {
-                padding: 6px 4px;
-                font: 12px/14px Arial, Helvetica, sans-serif;
-                background: rgba(255,255,255,0.8);
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-            }
-            
-            .infoboxSelectedUKmap_info_text ul{
-                list-style-type: none;
-                margin-top: 2px;
-                margin-bottom: 2px;
-                padding-left: 2px
-            }        
-            
+       #map_uk {
+           width: 100%;
+           height: 100%;
+       }            
 
-            #legend_UKmap_info {
-                line-height: 14px;
-                color: #333333;
-                font-family: 'Open Sans', Helvetica, sans-serif;
-                padding: 2px 4px;
-                background: white;
-                background: rgba(255,255,255,0.91);
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-                float: left;
-                /*    z-index: 8000 !important;*/
-            }  
+       #map_global {
+           width: 100%;
+           height: 100%;
+       } 
+       .leaflet-control-zoom a{
+           box-shadow: 0 1px 2px rgba(0,0,0,0.65); 
+           margin-top: 0px;
+       }
 
-            #legend_mapGlobal_info {
-                line-height: 14px;
-                color: #333333;
-                font-family: 'Open Sans', Helvetica, sans-serif;
-                padding: 2px 4px;
-                background: white;
-                background: rgba(255,255,255,0.91);
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border-radius: 5px;
-                float: left;
-                /*    z-index: 8000 !important;*/
-            }   
+       .leaflet-touch .leaflet-bar a{
+           width: 20px;
+           height: 20px;
+           line-height: 20px
+       }
 
-            #map_uk {
-                width: 100%;
-                height: 100%;
-            }            
+       .scrollarea {
+           overflow-y: auto;
+           overflow-x: auto;
+           height: calc(100vh - 8rem);
+       }
 
-            #map_global {
-                width: 100%;
-                height: 100%;
-            } 
-            .leaflet-control-zoom a{
-                box-shadow: 0 1px 2px rgba(0,0,0,0.65); 
-                margin-top: 0px;
-            }
+       #idTopics li:hover {
+           cursor: pointer;
+           background-color: rgb(84, 112, 198);
+       }        
 
-            .leaflet-touch .leaflet-bar a{
-                width: 20px;
-                height: 20px;
-                line-height: 20px
-            }
+       .list-group-item li:hover {
+           text-decoration: none;
+           background-color: #0b2543;
+           border: 1px solid #2c3e50;
+       }
 
-            .scrollarea {
-                overflow-y: auto;
-                overflow-x: auto;
-                height: calc(100vh - 8rem);
-            }
+       .list-group-item.active {
+           z-index: 2;
+           color: #fff;
+           background-color: #0b2543;
+           border-color: #2c3e50;
+       }
 
-            #idTopics li:hover {
-                cursor: pointer;
-                background-color: rgb(84, 112, 198);
-            }        
-
-            .list-group-item li:hover {
-                text-decoration: none;
-                background-color: #0b2543;
-                border: 1px solid #2c3e50;
-            }
-
-            .list-group-item.active {
-                z-index: 2;
-                color: #fff;
-                background-color: #0b2543;
-                border-color: #2c3e50;
-            }
-
-            .list-group-item {
-                position: relative;
-                display: block;
-                padding: 0.5rem 1rem;
-                color: #fff;
-                text-decoration: none;
-                background-color: #002147;
-                border: 1px solid #0b2543;
-            }
+       .list-group-item {
+           position: relative;
+           display: block;
+           padding: 0.5rem 1rem;
+           color: #fff;
+           text-decoration: none;
+           background-color: #002147;
+           border: 1px solid #0b2543;
+       }
 
 
-            .bg-dark-navy {
-                --bs-bg-opacity: 1;
-                background-color: #002147 !important;
-            }
+       .bg-dark-navy {
+           --bs-bg-opacity: 1;
+           background-color: #002147 !important;
+       }
 
-            .sb-sidenav-dark-navy {
-                background-color: #002147 !important;
-                color: rgba(255, 255, 255, 0.5);
-            }
+       .sb-sidenav-dark-navy {
+           background-color: #002147 !important;
+           color: rgba(255, 255, 255, 0.5);
+       }
 
-            .sb-sidenav-dark-navy-footer {
-                background-color: #002147b8 !important;
-                color: rgba(255, 255, 255, 0.8);
-            }
+       .sb-sidenav-dark-navy-footer {
+           background-color: #002147b8 !important;
+           color: rgba(255, 255, 255, 0.8);
+       }
 
-            .sb-sidenav-dark-navy-footer a{
-                color: rgba(255, 255, 255, 0.8);
-                text-decoration: underline;
-            }
+       .sb-sidenav-dark-navy-footer a{
+           color: rgba(255, 255, 255, 0.8);
+           text-decoration: underline;
+       }
 
-            .logo-section img {
-                margin-top: 0.0rem !important;
-                height: 40px;
-                margin: auto;    
-                display: block;    
-                /*   width: 220px;
-                   margin: auto;    
-                   display: block;*/
+       .logo-section img {
+           margin-top: 0.0rem !important;
+           height: 40px;
+           margin: auto;    
+           display: block;    
+           /*   width: 220px;
+              margin: auto;    
+              display: block;*/
 
-            }
-
-
-            /* width */
-            ::-webkit-scrollbar {
-                width: 10px;
-            }
-
-            /* Track 
-            ::-webkit-scrollbar-track {
-                background: #f1f1f1; 
-            }
-            */
-
-            /* Handle */
-            ::-webkit-scrollbar-thumb {
-                background: #888; 
-            }
-
-            /* Handle on hover */
-            ::-webkit-scrollbar-thumb:hover {
-                background: #555; 
-            }  
-
-            .card, .card-header, .card-body, .card-footer{
-                border-radius:0px !important;
-            }      
+       }
 
 
-            .goal-chart-wrapper {
-                width: 100%;
-                min-height: 50px;
-                position: relative;
+       /* width */
+       ::-webkit-scrollbar {
+           width: 10px;
+       }
 
-                .goal-chart {
-                    height: 100%;
-                    width: 100%;
-                    position: absolute;
-                }
-            }            
+       /* Track 
+       ::-webkit-scrollbar-track {
+           background: #f1f1f1; 
+       }
+       */
 
-            .TopicsWrapper::-webkit-scrollbar {
-                display: block;
-                width: 10px;
-            }
-            .TopicsWrapper::-webkit-scrollbar-track {
-                background: transparent;
-            }
+       /* Handle */
+       ::-webkit-scrollbar-thumb {
+           background: #888; 
+       }
 
-            .TopicsWrapper::-webkit-scrollbar-thumb {
-                background-color: #010f21;
-                border-right: none;
-                border-left: none;
-            }
+       /* Handle on hover */
+       ::-webkit-scrollbar-thumb:hover {
+           background: #555; 
+       }  
 
-            .TopicsWrapper::-webkit-scrollbar-thumb:hover {
-                background: #555;
-                border-right: none;
-                border-left: none;
-            }
+       .card, .card-header, .card-body, .card-footer{
+           border-radius:0px !important;
+       }      
 
-            .TopicsWrapper::-webkit-scrollbar-track-piece:end {
-                background: transparent;
-                margin-bottom: 0px;
 
-            }
+       .goal-chart-wrapper {
+           width: 100%;
+           min-height: 50px;
+           position: relative;
 
-            .TopicsWrapper::-webkit-scrollbar-track-piece:start {
-                background: transparent;
-                margin-top: 0px;
-            }
+           .goal-chart {
+               height: 100%;
+               width: 100%;
+               position: absolute;
+           }
+       }            
 
-            #firstloader { 
-                position: fixed; 
-                left: 0px; 
-                top: 50px; 
-                width: 100%; 
-                height: 100%; 
-                z-index: 9999!important; 
-                background: url('./img/firstloader.gif') 50% 30% no-repeat rgba(245,245,245,0.89); 
-                background-size: 85px 85px; 
-            } 
+       .TopicsWrapper::-webkit-scrollbar {
+           display: block;
+           width: 10px;
+       }
+       .TopicsWrapper::-webkit-scrollbar-track {
+           background: transparent;
+       }
 
-            #dv_startup {
-                font-size: 12px;
-            }
-            
-            #dv_startup h1{
-                font-size: 16px;
-            }
+       .TopicsWrapper::-webkit-scrollbar-thumb {
+           background-color: #010f21;
+           border-right: none;
+           border-left: none;
+       }
+
+       .TopicsWrapper::-webkit-scrollbar-thumb:hover {
+           background: #555;
+           border-right: none;
+           border-left: none;
+       }
+
+       .TopicsWrapper::-webkit-scrollbar-track-piece:end {
+           background: transparent;
+           margin-bottom: 0px;
+
+       }
+
+       .TopicsWrapper::-webkit-scrollbar-track-piece:start {
+           background: transparent;
+           margin-top: 0px;
+       }
+
+       #firstloader { 
+           position: fixed; 
+           left: 0px; 
+           top: 50px; 
+           width: 100%; 
+           height: 100%; 
+           z-index: 9999!important; 
+           background: url('./img/firstloader.gif') 50% 30% no-repeat rgba(245,245,245,0.89); 
+           background-size: 85px 85px; 
+       } 
+
+       #dv_startup {
+           font-size: 12px;
+       }
+
+       #dv_startup h1{
+           font-size: 16px;
+       }
+
+       #contectforViewDetailsInfoBox {
+           font-size: 12px;
+       }        
+       
+       #contectforViewDetailsInfoBox h1,h2,h3{
+           font-size: 16px;
+       }       
         </style>        
 
     </head>
@@ -302,10 +345,11 @@
                         <i class="fa-solid fa-grip"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Generate Report</a></li>
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
+                        <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>
+                        <li><a class="dropdown-item" id="btnSettings" href="#">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Contact</a></li>
+                        <li><a class="dropdown-item"  id="btnContact" href="#">Contact</a></li>
                     </ul>
                 </li>
             </ul>
@@ -382,6 +426,9 @@
                                             </li>
                                             <li class="list-group-item ">
                                                 <label class="text-muted pr-4">Assessment :</label> <label id="label_selected_Assessment"> All</label>
+                                            </li>
+                                            <li class="list-group-item ">
+                                                <label class="text-muted pr-4">Funder :</label> <label id="label_selected_Funder" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="All"> All</label>
                                             </li>                                            
                                         </ul>                                        
                                     </div>
@@ -412,8 +459,8 @@
                                         </div>                                      
 
                                     </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small  " href="#">View Details</a>
+                                    <div id="btnViewDetailsInfoBox" class="card-footer d-flex align-items-center justify-content-between" style="">
+                                        <p class="small p-0 m-0" >View Details</p>
                                         <div class="small"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -441,7 +488,7 @@
                                         <div class="col-md-6">
                                             <div class="card mb-2" id="map_cardbox_top_right" style="min-width: 300px">
                                                 <div class="card-header">
-                                                    <div id="label_Institutions">Institutions</div>
+                                                    <div id="label_Institutions">Institutions <span class="badge bg-secondary" id="Institutions_count">0</span></div>
                                                 </div>
                                                 <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
 
@@ -465,7 +512,7 @@
                                                         <div class="col-md-6 d-flex justify-content-end">
 
                                                             <div class="d-inline-flex  col-form-label text-right" style="padding-top: 0rem;padding-bottom: 0rem;">
-                                                                <label for="exampleInputPassword1" class="form-label d-flex justify-content-end align-items-end pe-3" style="min-width: 130px !important; margin-bottom: 0rem; font-size: 0.9rem">
+                                                                <label class="form-label d-flex justify-content-end align-items-end pe-3" style="min-width: 130px !important; margin-bottom: 0rem; font-size: 0.9rem">
                                                                     Assessment 
                                                                 </label>
                                                                 <select id="Options_of_Assessment" class="form-select form-select-sm" style="padding-top: 0rem;padding-bottom: 0rem;">
@@ -494,7 +541,7 @@
                                         <div class="col-md-6">
                                             <div class="card mb-2" id="map_cardbox_bottom_right" >
                                                 <div class="card-header">
-                                                    <div id="label_UOA">Beneficiaries</div>
+                                                    <div id="label_UOA">Beneficiaries <span class="badge bg-secondary" id="Beneficiaries_count">0</span></div>
                                                 </div>
                                                 <div class="card-body d-flex justify-content-center" style="padding: 0px;margin: 0px" >
 
@@ -536,7 +583,232 @@
             </div>
         </div>
         
-<!--        modals -->
+<!--        modals ICS table -->
+
+    <div class="modal fade" id="ics_table_all_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ics_table_all_modal_title">ICS Table</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table id="tblReportResultsICSTabl" class="table table-striped nowrap table_ICS " cellspacing="0" width="100%"></table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnDownlaodICSTable">Download</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--  end modals ICS table -->
+
+<!--  modals View Details -->
+        <div class="modal fade "  data-backdrop="false"  id="idMdViewDetailsInfoBox" tabindex="-1"  aria-labelledby="ModalViewDetailsInfoBox" style="opacity: 0.95;z-index: 2200">
+            <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important"  role="document" id="idModalViewDetailsInfoBox-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                        <h5 class="modal-title" id="ModalViewDetailsInfoBoxLabel"></h5>                 
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                        <div class="container">
+
+                            <div id="contectforViewDetailsInfoBox">
+                            </div> 
+
+                            <div class="mw-100"> 
+                                <div class="form-group col-12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer p-1" >
+                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
+                    </div>                    
+                </div>
+            </div>
+        </div>                             
+<!-- end  modals View Details -->
+
+
+<!--  modals Settings -->
+<div class="modal fade "  data-backdrop="false"  id="idMdSettings" tabindex="-1"  aria-labelledby="ModalSettings" style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog"  role="document" id="idModalSettings-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalSettingsLabel"></h5>                 
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="chCountryLabels">Show country name labels:</label>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="">
+                                <input class="form-check-input" type="checkbox" id="chCountryLabels">                                   
+                            </div>                                    
+                        </div>
+
+                    </div> 
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
+                        </div>                        
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="chCountryLabels">Number of funders to show on chart plot:</label>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <select id="numberFundersLimit" class="form-select form-select-sm" style="padding-top: 0rem;padding-bottom: 0rem;">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30" selected>30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                                <option value="60">60</option>
+                            </select>                               
+                        </div>
+
+                    </div>  
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
+                        </div>                        
+                    </div>                    
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="chKeepPOSTarea">Keep other post areas after selecting one:</label>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="">
+                                <input class="form-check-input" type="checkbox" id="chKeepPOSTarea" checked>                                   
+                            </div>                                    
+                        </div>
+
+                    </div> 
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
+                        </div>                        
+                    </div>
+                    
+                    <div class="row mt-2">
+
+                        <div class="col-sm-6">
+                            <label id="idMdSettingsLabel" >ICS threshold [<strong> <label id="idMdSettingsThresholdValue" >0.5</label> ]</strong></label>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="mt-1">
+                                <input type="range" class="form-range" min="0" max="1" value="0.5" step="0.1" id="customRangeThreshold">
+                                <div class="container" style="margin-top: -10px; padding-right:0px; padding-left:0px">                                    
+                                    <div class="row" >
+                                        <div class="col" style="font-family: 'Poppins', sans-serif;color: black;font-size: 0.85em;color: #888">Less</div>
+                                        <div class="col col-sm-auto">
+                                            <div class="float-right" style="font-family: 'Poppins', sans-serif;color: black;font-size: 0.85em;color: #888">More</div>
+                                        </div>
+                                    </div>
+                                </div>                                    
+                            </div>                                    
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="modal-footer p-1" >
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
+            </div>                    
+        </div>
+    </div>
+</div>                             
+<!-- end  modals Settings -->
+
+
+
+<!--  modals Settings -->
+<div class="modal fade "  data-backdrop="false"  id="idMdContact" tabindex="-1"  aria-labelledby="ModalContact" style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog"  role="document" id="idModalContact-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalContactLabel">Contact</h5>                 
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                   <div class="row">
+                        <div class="col-sm-12">
+                            <label id="lblContact"></label>
+                        </div>                        
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer p-1" >
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
+            </div>                    
+        </div>
+    </div>
+</div>                             
+<!-- end  modals Settings -->
+
+
+<!--  modals About -->
+        <div class="modal fade "  data-backdrop="false"  id="idMdAbout" tabindex="-1"  aria-labelledby="ModalAbout" style="opacity: 0.95;z-index: 2200">
+            <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important"  role="document" id="idModalAbout-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                        <h5 class="modal-title" id="ModalAboutLabel">About</h5>                 
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                        <div class="container">
+
+                            <div id="contentAbout">
+                                
+                            </div> 
+
+                            <div class="mw-100"> 
+                                <div class="form-group col-12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer p-1" >
+                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
+                    </div>                    
+                </div>
+            </div>
+        </div>                             
+<!-- end  modals About -->
+
 
 <!--<div id="ics_table_all_modal" class="modal-dialog modal-fullscreen-sm-down fade" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1" style="z-index: 99999">
   <div class="modal-dialog modal-dialog-centered">
@@ -566,12 +838,15 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
 
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>        
-
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>     
+        
+        
+        <script src="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.js"></script>
+        <script src="js/DataTables/dataRender/ellipsis.min.js"></script>
     </body>
 </html>
 
-<script src="./js/main.js?version=4.5" type="module"></script>
+<script src="./js/main.js?version=6.1" type="module"></script>
 
 
 
@@ -595,7 +870,19 @@ popover_Institutions.disable();
 //  return new bootstrap.Popover(popoverTriggerEl,{html: true})
 //})
 
+$('[data-bs-toggle="tooltip"]').tooltip();
+
 });
+
+
+
+//   $(window).on('load', function() {
+//       $('#idMdSettings').modal('show');
+//    });
+//    
+
+
+//console.log(aDemoItems);
 
 //$(window).on('load', function(){
 //  $('.modal-fullscreen-sm-down.fade').appendTo('body');

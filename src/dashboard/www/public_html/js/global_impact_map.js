@@ -10,19 +10,26 @@ function uniqueArray2(arr) {
     return a;
 }
 
-export function highlightFeatureGlobalImactMap(e, _map) {
+export function highlightFeatureGlobalImactMap(e, _infoBox, _map) {
 
     var layer = e.target;
-
-    let country_count = e.target.feature.properties.countriy_count;
-       
-    if( typeof country_count !== 'undefined' && country_count !== null ){
-        layer.setStyle({
-            weight: 1,
-            fillOpacity: 1
-        });
-     }      
-
+    
+    if (_map) {
+        let country_count = e.target.feature.properties.countriy_count;
+        let country = e.target.feature.properties.country;
+        if (typeof country_count !== 'undefined' && country_count !== null) {
+            layer.setStyle({
+                weight: 1,
+                fillOpacity: 1
+            });
+        }
+        
+        _infoBox.addTo(_map);
+        //let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px;">'+country+' [ <b>' + country_count + '</b> ]</p>';
+        
+        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 4px;"><b>'+e.target.feature.properties.country + '</b><br/>Impact factor: '+e.target.feature.properties.countriy_count+'</p>';
+        document.getElementById('infoBoxMapGlobal_info').innerHTML = html;
+    }
 
 }
 
@@ -54,7 +61,7 @@ export function RestyleLayerGlobalImactMap(_layer, palette) {
                 weight: 0.5
             });
         }       
-     
+        
     });
 }
 
@@ -74,7 +81,7 @@ export function clickGlobalImactMap(e, _mapGlobal, _mapGlobalPopup) {
 }
 
 
-export function resetHighlightGlobalImactMap(e) {
+export function resetHighlightGlobalImactMap(e, _infoBox, _map) {
     
     var layer = e.target;
 
@@ -82,7 +89,7 @@ export function resetHighlightGlobalImactMap(e) {
         weight: 0.5,
         fillOpacity: 0.8
     });
-    
+    _infoBox.remove(_map);
 }
 
 export function getPaletteGlobalImactMap(dataCountries_counts, palette_colors) {
@@ -110,7 +117,7 @@ export function getPaletteGlobalImactMap(dataCountries_counts, palette_colors) {
             );
     }  
     let palette = {"breaks":breaks_unique, "colors":palette_final};
-    
+   
     return palette;
  
 }
@@ -170,22 +177,24 @@ export function loadLagentGlobalImactMap(title, colors, breaks, subtitles) {
 
 export function updateGlobalImactMap(_map, _layer, geoJson, dataCountries_counts, palette_colors) {
 
+    let cnt=0;
     _layer.clearLayers();
 
    _map.removeLayer(_layer);
-   
+
+    geoJson.countriy_count = null;
+    
     for (var i = 0; i < geoJson.features.length; i++) {
 			
             var iso_a3 = geoJson.features[i].properties.iso_a3;
 
 	    var res = dataCountries_counts.find(e => e.country === iso_a3);
-    
-            if (res !== undefined && res !== null){
+           
+            if (typeof res !== "undefined" && res !== null) {   
                 geoJson.features[i].properties.countriy_count = res.country_count;
+                cnt=cnt+res.country_count;
             }else{
                 geoJson.features[i].properties.countriy_count = null;
-                //geoJson[i] = null;
-                //delete geoJson[i];                
             }
     }
 
@@ -196,9 +205,11 @@ export function updateGlobalImactMap(_map, _layer, geoJson, dataCountries_counts
 //   let result = geoJson.filter(val => val.countriy_count !== null);
    
    _layer.addTo(_map);
-   _layer.addData(geoJson);    
+   _layer.addData(geoJson); 
+   
+   document.getElementById('Beneficiaries_count').innerHTML = cnt;
     
-    
+    _utils.removeSelectedLayer(_map, "countriy_count");
     
     let palette  = getPaletteGlobalImactMap(dataCountries_counts, palette_colors);
 

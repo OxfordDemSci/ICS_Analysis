@@ -1,4 +1,4 @@
-import * as _utils from './utils.js?version=2.5'
+import * as _utils from './utils.js?version=2.6'
 
 function find_in_object(my_object, my_criteria) {
 
@@ -45,8 +45,11 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
             .filter((value, index, self) => self.indexOf(value) === index);
 
 
- 
-
+    
+    _utils.updateAssessmentSelection(category_assessment);
+    
+    
+    
 
     var my_json = JSON.stringify(data);
 
@@ -91,7 +94,6 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
 
 
     }
-
     
     var optionUOAChart = {
         tooltip: {
@@ -111,9 +113,16 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
             type: 'value'
         },
         yAxis: {
+            realtimeSort: true,
             type: 'category',
             data: category_assessment
         },
+        transform: {
+        type: 'sort',
+        config: [
+          { dimension: 'category', order: 'desc' }
+        ]
+      },       
         series: new_series
     };
 
@@ -140,7 +149,7 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
     }
 
 
-    for (var i = 0; i < nuse - 1; i++) {
+    for (var i = 0; i < nuse; i++) {
 
         values.push(
                 {value: data[i]['uoa_count'], name: data[i]['name']}

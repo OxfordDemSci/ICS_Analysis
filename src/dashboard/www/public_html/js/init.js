@@ -17,6 +17,17 @@ export function setTopicsMenu(t) {
     });
 }
 
+export function setContactInfo(t) {
+   
+    document.getElementById('lblContact').innerHTML = t;
+
+}
+
+export function setAboutInfo(t) {
+   
+    document.getElementById('contentAbout').innerHTML = t;
+
+}
 
 export function setTopicsMenu2(t) {
 

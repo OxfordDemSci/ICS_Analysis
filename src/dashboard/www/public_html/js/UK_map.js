@@ -173,11 +173,14 @@ export function loadLagentUKMap(title, colors, breaks, subtitles) {
 
 }
 
+
+
+
 export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
     
    _layer.clearLayers();
    _map.removeLayer(_layer);
-
+    let cnt = 0;
     for (var i = 0; i < geoJson.features.length; i++) {
 	
            geoJson.features[i].properties.institutions_count = null;
@@ -185,11 +188,12 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
                 
             var pc_area = geoJson.features[i].properties.pc_area;
 	    var res = data[pc_area];
-            let cnt = 0;
+            
             
             if (res){
                 geoJson.features[i].properties.institutions_count = res.postcode_total;
                 geoJson.features[i].properties.institutions = res.institution_counts;
+                cnt=cnt+res.postcode_total;
             }else{
                 geoJson.features[i].properties.institutions_count = null;
                 geoJson.features[i].properties.institutions = null;
@@ -199,7 +203,11 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
 
 
    _layer.addTo(_map);
-   _layer.addData(geoJson);     
+   _layer.addData(geoJson); 
+   
+   document.getElementById('Institutions_count').innerHTML = cnt;
+   
+    _utils.removeSelectedLayer(_map, "institutions");
     
     let palette  = getPaletteUKMap(data, palette_colors);
 
@@ -212,6 +220,8 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
     });
 
     resizeObserver.observe(document.getElementById("map_uk"));
+    
+    
 }
 
 export function reseAllFeatureUKMap(_map) {

@@ -56,7 +56,7 @@ export function get_ics_data(api_url,
             data: data,
             beforeSend: function (jqXHR, settings) {
                 let url = settings.url + "?" + settings.data;
-                console.log(url);
+                //console.log(url);
             },
             success: function (data) {
                 resolve(data);
@@ -116,7 +116,7 @@ export function getUKPostCodeAreasBoundary() {
 
     var result = "";
     $.ajax({
-        url: "./data/UK_postcode_area_v2.geojson",
+        url: "./data/UK_postcode_area_v6.geojson",
         async: false,
         type: 'get',
         dataType: 'json',
