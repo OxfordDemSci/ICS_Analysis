@@ -1,8 +1,13 @@
 # DGG launch script to configure server
 
+# hostname
+sudo hostnamectl set-hostname shapeimpact
+
 # update
-sudo apt-get update 
-sudo apt-get upgrade
+sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get auto-remove -y && sudo reboot now
+
+sudo crontab -e
+# @daily apt-get update -y && apt-get upgrade -y && apt-get auto-remove -y
 
 #---- docker ----#
 
