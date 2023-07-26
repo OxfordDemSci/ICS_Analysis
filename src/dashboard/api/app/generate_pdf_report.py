@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib
 from flask import request
+from numpy import log10
 from collections import defaultdict
 from .data_types import styles_map
 from app import postcode_gdf, world_gdf
@@ -225,7 +226,17 @@ def add_beneficiaries_info(pdf_data):
     country_counts = {x["country"]: x["country_count"] for x in countries_dict}
     countries_gdf["counts"] = 0
     countries_gdf["counts"] = countries_gdf.apply(insert_count, col='iso_a3', counts=country_counts, axis=1)
-    ax = countries_gdf.plot(column="counts", cmap='RdYlGn_r', legend=True, edgecolor='grey', linewidth=0.5)
+    countries_gdf = countries_gdf[countries_gdf.counts > 0]
+    countries_gdf['logval'] = log10(countries_gdf['counts'])
+    fig, ax = plt.subplots(1, 1, figsize=(27, 20))
+    countries_gdf.plot(ax=ax, column="counts",
+                            scheme="quantiles",
+                            cmap='Blues',
+                            legend=True,
+                            edgecolor='grey',
+                            linewidth=0.5,
+                            legend_kwds={"loc": "lower left"},)
+    #ax.legend(borderpad=2, labelspacing=2)
     plt.title("Total counts per country")
     plt.figure(figsize=(20, 8))
 
