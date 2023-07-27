@@ -1,4 +1,4 @@
-var API_URL = "http://127.0.0.1:8000/api/";
+var API_URL = "./api/";
 
 import * as _api from './api.js?version=2.6'
 import * as _init from './init.js?version=4.4'

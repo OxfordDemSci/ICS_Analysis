@@ -1,21 +1,31 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 class Configuration:
     DEBUG = False
-    DB_PASSWORD="Fp2mQC4&#7JZ"
-    DB_USERNAME="oxford_ics_admin"
-    SQLALCHEMY_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@ics_postgres:5432/ics"
-    TEST_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@ics_postgres:5432/ics_test"
-    DEBUG=True
-    ENABLE_CORS=True
-    FLASK_APP="app.wsgi"
-    JSON_SORT_KEYS=False
+    DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+    DB_USERNAME = os.environ.get('POSTGRES_USER')
+    SQLALCHEMY_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
+                              os.environ.get('POSTGRES_PASSWORD') + "@ics_postgres:5432/ics"
+    TEST_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
+                        os.environ.get('POSTGRES_PASSWORD') + "@ics_postgres:5432/ics_test"
+    DEBUG = True
+    ENABLE_CORS = True
+    FLASK_APP = "app.wsgi"
+    JSON_SORT_KEYS = False
 
 class DevelopmentConfig(Configuration):
     DEBUG = True
     # Override or add development-specific configuration variables here
 
 class LocalDevelopmentConfig(Configuration):
-    SQLALCHEMY_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@localhost:5432/ics"
-    TEST_DATABASE_URI="postgresql://oxford_ics_admin:Fp2mQC4&#7JZ@localhost:5432/ics_test"
+    DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+    DB_USERNAME = os.environ.get('POSTGRES_USER')
+    SQLALCHEMY_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
+                              os.environ.get('POSTGRES_PASSWORD') + "@localhost:5432/ics"
+    TEST_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
+                        os.environ.get('POSTGRES_PASSWORD') + "@localhost:5432/ics_test"
 
 class ProductionConfig(Configuration):
     # Override or add production-specific configuration variables here

@@ -24,7 +24,7 @@ services:
 
   ics_flask:
     container_name: ics_api
-    # env_file: .env
+    env_file: .env
     build: ./api/
     command: gunicorn --config gunicorn.config.py wsgi:app
     # command: python3 wsgi.py
