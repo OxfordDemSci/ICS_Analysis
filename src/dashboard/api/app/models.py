@@ -5,19 +5,6 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class ICS(Base):
-    __tablename__ = "ics"
-
-    id: int = Column(Integer, primary_key=True)
-    ukprn: int = Column(Integer)
-    postcode: str = Column(String(8))
-    ics_id: str = Column(String)
-    uoa: int = Column(Integer)
-
-    __table_args__ = (
-        Index('idx_ics_id_ics_id', 'id', 'ics_id'),
-    )
-
-class ICSTableForDownload(Base):
     __tablename__ = "ics_table_for_download"
 
     id = Column(Integer, primary_key=True)
@@ -59,6 +46,10 @@ class ICSTableForDownload(Base):
     inst_postcode = Column(String)
     inst_postcode_district = Column(String)
     postcode = Column(String)
+
+    __table_args__ = (
+        Index('idx_ics_id_ics_id', 'id', 'ics_id'),
+    )
 
 
 class Topics(Base):
