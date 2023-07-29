@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Function to check if a PostgreSQL database exists
+database_exists() {
+  psql -U "$POSTGRES_SUPERUSER" -lqt | cut -d \| -f 1 | grep -qw "$1"
+}
+
+# Check if the database exists
+if ! database_exists "$POSTGRES_DB"; then
+  # Create the database
+  psql -U "$POSTGRES_SUPERUSER" -c "CREATE DATABASE $POSTGRES_DB;"
+fi
+
+# Check if the database exists
+if ! database_exists "$POSTGRES_DB"; then
+  # Create the database
+  psql -U "$POSTGRES_SUPERUSER" -c "CREATE DATABASE $POSTGRES_DB_TEST;"
+fi
+
+# Run the SQL query for Main db
+psql -U "$POSTGRES_SUPERUSER" -d "$POSTGRES_DB" -c "
+CREATE ROLE $POSTGRES_READONLY LOGIN PASSWORD '$POSTGRES_READONLY_PASSWORD';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO $POSTGRES_READONLY;
+CREATE ROLE $POSTGRES_USER LOGIN PASSWORD '$POSTGRES_PASSWORD';
+GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO $POSTGRES_USER;
+
+"
+
+# Run the SQL query for test db
+psql -U "$POSTGRES_SUPERUSER" -d "$POSTGRES_DB_TEST" -c "
+CREATE ROLE $POSTGRES_READONLY LOGIN PASSWORD '$POSTGRES_READONLY_PASSWORD';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO $POSTGRES_READONLY;
+CREATE ROLE $POSTGRES_USER LOGIN PASSWORD '$POSTGRES_PASSWORD';
+GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO $POSTGRES_USER;
+
+"
