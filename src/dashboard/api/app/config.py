@@ -4,12 +4,12 @@ load_dotenv()
 
 class Configuration:
     DEBUG = False
-    DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
-    DB_USERNAME = os.environ.get('POSTGRES_USER')
-    SQLALCHEMY_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
-                              os.environ.get('POSTGRES_PASSWORD') + "@ics_postgres:5432/ics"
-    TEST_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
-                        os.environ.get('POSTGRES_PASSWORD') + "@ics_postgres:5432/ics_test"
+    DB_PASSWORD = os.environ.get('POSTGRES_READONLY_PASSWORD')
+    DB_USERNAME = os.environ.get('POSTGRES_READONLY')
+    POSTGRES_DB = os.environ.get('POSTGRES_DB')
+    POSTGRES_DB_TEST = os.environ.get("POSTGRES_DB_TEST")
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@ics_postgres:5432/{POSTGRES_DB}"
+    TEST_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@ics_postgres:5432/{POSTGRES_DB_TEST}"
     DEBUG = True
     ENABLE_CORS = True
     FLASK_APP = "app.wsgi"
@@ -20,12 +20,12 @@ class DevelopmentConfig(Configuration):
     # Override or add development-specific configuration variables here
 
 class LocalDevelopmentConfig(Configuration):
-    DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
-    DB_USERNAME = os.environ.get('POSTGRES_USER')
-    SQLALCHEMY_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
-                              os.environ.get('POSTGRES_PASSWORD') + "@localhost:5432/ics"
-    TEST_DATABASE_URI = "postgresql://" + os.environ.get('POSTGRES_USER') + ":" + \
-                        os.environ.get('POSTGRES_PASSWORD') + "@localhost:5432/ics_test"
+    DB_PASSWORD = os.environ.get('POSTGRES_READONLY_PASSWORD')
+    DB_USERNAME = os.environ.get('POSTGRES_READONLY')
+    POSTGRES_DB = os.environ.get('POSTGRES_DB')
+    POSTGRES_DB_TEST = os.environ.get("POSTGRES_DB_TEST")
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB}"
+    TEST_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB_TEST}"
 
 class ProductionConfig(Configuration):
     # Override or add production-specific configuration variables here
