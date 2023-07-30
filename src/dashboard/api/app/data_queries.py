@@ -50,7 +50,7 @@ def get_website_text():
         "label_top_left_box": row.label_top_left_box,
         "label_bottom_left_box": row.label_bottom_left_box,
         "label_top_right_box": row.label_top_right_box,
-        "label_bottom_right_box": row.label_botton_right_box,
+        "label_bottom_right_box": row.label_bottom_right_box,
     }
     return website_text
 
