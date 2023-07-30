@@ -21,8 +21,8 @@ POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 POSTGRES_DB = os.environ.get("POSTGRES_DB")
 TABLES_DIR = os.environ.get("DATABASE_TABLES_DIR")
 
-conn = psycopg2.connect(database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_PASSWORD, host='localhost', port='5432')
-engine = create_engine(f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432/{POSTGRES_DB}')
+conn = psycopg2.connect(database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_PASSWORD, host='ics_postgres', port='5432')
+engine = create_engine(f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@ics_postgres:5432/{POSTGRES_DB}')
 
 TABLE_MAP = {
     'ICS_DATABASE_TABLE.csv': {
@@ -62,7 +62,7 @@ TABLE_MAP = {
 
 def upgrade_alembic():
     alembic_cfg = Config(BASE_DIR.joinpath("alembic.ini"))
-    alembic_cfg.set_main_option("sqlalchemy.url", f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432/{POSTGRES_DB}")
+    alembic_cfg.set_main_option("sqlalchemy.url", f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@ics_postgres:5432/{POSTGRES_DB}")
     command.upgrade(alembic_cfg, "head")
 
 def upload_to_db(df, table_name):
@@ -96,7 +96,7 @@ def insert_data(table):
 
 
 def upload_tables():
-    TABLES = [x for x in BASE_DIR.parent.joinpath(TABLES_DIR).iterdir() if x.name.endswith('.csv') if x.name in TABLE_MAP.keys()]
+    TABLES = [x for x in BASE_DIR.joinpath(TABLES_DIR).iterdir() if x.name.endswith('.csv') if x.name in TABLE_MAP.keys()]
     for table in TABLES:
         insert_data(table)
 

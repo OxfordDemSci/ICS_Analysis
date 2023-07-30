@@ -58,10 +58,7 @@ services:
     env_file: 
       .env
     volumes:
-      #- ./sql/initial_data:/var/lib/postgresql/initial_data
-      # - ./sql/ics_initial.sh:/docker-entrypoint-initdb.d/ics_initial.sh
-      - ./sql/init-scrips:/docker-entrypoint-initdb.d
-      # - ./sql/ics_test_db_dump.sql:/docker-entrypoint-initdb.d/ics_test_db_dump.sql
+      - ./sql/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - ics_net
     ports:
