@@ -42,11 +42,22 @@ columns_to_keep = [
     'ics_url',
 ]
 
+def strip_uoa(row):
+    uoa_string = row.uoa
+    if uoa_string[-1].isalpha():
+        uoa_string = uoa_string[:-1]
+    
+    # Convert the remaining string to an integer
+    uoa_int = int(uoa_string)
+    
+    return uoa_int
+
 def make_ics_table():
     ics_df = pd.read_csv(ENRICHED_ICS_TABLE)
     rename_cols = {'inst_id': 'ukprn', 'uoa_id': 'uoa', 'inst_postcode_area': 'postcode', 'covid-statement': 'covid_statement'}
     ics_df = ics_df.rename(columns=rename_cols)
     ics_df['id'] = ics_df.index.copy().astype(int)
+    ics_df['uoa'] = ics_df.apply(strip_uoa, axis=1)
     ics_df = ics_df[columns_to_keep]
     ics_df.to_csv(OUTPUT_ICS_TABLE, index=False)
 
