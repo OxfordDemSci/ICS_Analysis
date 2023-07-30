@@ -24,7 +24,7 @@ class ICS(Base):
     formal_partners = Column(String)
     funding_programmes = Column(String)
     global_research_identifiers = Column(String)
-    funders = Column(String)
+    name_of_funders = Column(String)
     researcher_orcids = Column(String)
     grant_funding = Column(String)
     summary_of_the_impact = Column(String)
@@ -34,21 +34,14 @@ class ICS(Base):
     sources_to_corroborate_the_impact = Column(String)
     covid_statement = Column(String)
     uoa = Column(Integer)
-    summary_of_the_impact_topic = Column(String)
-    cultural = Column(String)
-    economic = Column(String)
-    environmental = Column(String)
-    health = Column(String)
-    legal = Column(String)
-    political = Column(String)
-    societal = Column(String)
-    technological = Column(String)
+    countries_iso3 = Column(String)
     inst_postcode = Column(String)
     inst_postcode_district = Column(String)
     postcode = Column(String)
+    ics_url = Column(String)
 
     __table_args__ = (
-        Index('idx_ics_id_ics_id', 'id', 'ics_id'),
+        Index('idx_ics_id', 'id', 'ics_id'),
     )
 
 
@@ -138,7 +131,7 @@ class WebsiteText(Base):
     label_top_left_box = Column(String)
     label_bottom_left_box = Column(String)
     label_top_right_box = Column(String)
-    label_botton_right_box = Column(String)
+    label_bottom_right_box = Column(String)
 
 
 

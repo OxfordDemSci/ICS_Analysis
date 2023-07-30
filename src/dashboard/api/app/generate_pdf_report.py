@@ -214,7 +214,7 @@ def add_institutions_info(pdf_data):
 
 
 def add_beneficiaries_info(pdf_data):
-    title = add_subtitle(f"<u>{pdf_data['background_text']['label_botton_right_box']}</u>", center=True)
+    title = add_subtitle(f"<u>{pdf_data['background_text']['label_bottom_right_box']}</u>", center=True)
     if pdf_data["topic"] is None:
         footnote_text = "<b>Figure 4. Global locations where impact case studies in all topics claimed impacts.<b>"
     else:
