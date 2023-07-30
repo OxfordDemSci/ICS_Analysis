@@ -10,7 +10,6 @@ from app import db
 from app.models import (
     WebsiteText,
     ICS,
-    ICSTableForDownload,
 )
 def get_topics(topic=None):
     if topic is None:
@@ -70,28 +69,28 @@ def get_pdf_data(threshold, topic=None, postcode_area=None, beneficiary=None, uo
 def get_ics_table(ics_ids=None, limit=None):
     if ics_ids is None:
         if limit is None:   
-            rows = db.session.query(ICSTableForDownload).all()
+            rows = db.session.query(ICS).all()
         else:
-            rows = db.session.query(ICSTableForDownload).limit(limit).all()
+            rows = db.session.query(ICS).limit(limit).all()
     else:
         if limit is None:
-            rows = db.session.query(ICSTableForDownload).filter(ICSTableForDownload.ics_id.in_(ics_ids)).all()
+            rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
         else:
-            rows =  db.session.query(ICSTableForDownload).filter(ICSTableForDownload.ics_id.in_(ics_ids)).limit(limit).all()
+            rows =  db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).limit(limit).all()
     ics_table = []
     for row in rows:
-        ics_table.append({column.name: getattr(row, column.name) for column in ICSTableForDownload.__table__.columns})
+        ics_table.append({column.name: getattr(row, column.name) for column in ICS.__table__.columns})
     return ics_table
 
 def download_ics_table(threshold, topic=None, postcode=None, country=None, uoa=None, funder=None, limit=None):
     ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
-    rows = db.session.query(ICSTableForDownload).filter(ICSTableForDownload.ics_id.in_(ics_ids)).all()
+    rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
     csv_data = StringIO()
     writer = csv.writer(csv_data)
-    header = [column.name for column in ICSTableForDownload.__table__.columns]
+    header = [column.name for column in ICS.__table__.columns]
     writer.writerow(header)
     for row in rows:
-        data = [str(getattr(row, column.name)) for column in ICSTableForDownload.__table__.columns]
+        data = [str(getattr(row, column.name)) for column in ICS.__table__.columns]
         writer.writerow(data)
     response = make_response(csv_data.getvalue())
     response.headers['Content-Disposition'] = 'attachment; filename=ICSTable.csv'
@@ -103,7 +102,7 @@ def download_ics_table(threshold, topic=None, postcode=None, country=None, uoa=N
 def get_ics_table_for_country(threshold, topic=None, postcode=None, country=None, uoa=None, funder=None, limit=None):
     ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
     sql = text('''
-               SELECT * FROM ics_table_for_download i
+               SELECT * FROM ics i
                JOIN countries c
                ON i.id = c.ics_table_id
                WHERE c.country = :country
@@ -115,7 +114,7 @@ def get_ics_table_for_country(threshold, topic=None, postcode=None, country=None
         query = db.session.execute(sql, {"country": country, "ics_ids": ics_ids}).fetchmany(limit)
     ics_table = []
     for row in query:
-        ics_table.append({column.name: getattr(row, column.name) for column in ICSTableForDownload.__table__.columns})
+        ics_table.append({column.name: getattr(row, column.name) for column in ICS.__table__.columns})
     return ics_table
 
 def get_funders_counts(ics_ids=None):

@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class ICS(Base):
-    __tablename__ = "ics_table_for_download"
+    __tablename__ = "ics"
 
     id = Column(Integer, primary_key=True)
     ukprn = Column(Integer)
