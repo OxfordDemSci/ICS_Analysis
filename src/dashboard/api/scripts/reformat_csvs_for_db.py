@@ -85,6 +85,6 @@ def make_topics_and_weights():
 
 if __name__ == "__main__":
     print('Making ICS table')
-    #make_ics_table()
+    make_ics_table()
     print('Reformatting topics and weights')
     make_topics_and_weights()
