@@ -14,11 +14,11 @@ from app.models import (
 def get_topics(topic=None):
     if topic is None:
         sql = text('''
-            SELECT topic_name, topic_group, description, narrative from topics
+            SELECT topic_name, topic_group, description, narrative, keywords from topics
         ''')
     else:
         sql = text('''
-            SELECT topic_name, topic_group, description, narrative from topics 
+            SELECT topic_name, topic_group, description, narrative, keywords from topics 
                    WHERE topic_name = :topic
         ''')
     params = {"topic": topic}
@@ -27,13 +27,15 @@ def get_topics(topic=None):
         "topic_name": row.topic_name, 
         "topic_group": row.topic_group, 
         "description": row.description,
-        "narrative": row.narrative} for row in query]
+        "narrative": row.narrative,
+        "keywords": row.keywords} for row in query]
     if (topic is None):
         topics.insert(0, {
             "topic_name": "All Topics", 
             "topic_group": None, 
             "description": None,
             "narrative": None,
+            "keywords": None
         })
     return topics
 
