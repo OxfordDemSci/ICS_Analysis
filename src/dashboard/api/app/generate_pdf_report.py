@@ -53,8 +53,8 @@ def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, fund
         narrative_text = "All topics selected"
     else:
         topic_subtitle_text = f"<u><b>Topic:</b> {pdf_data['topic'][0].get('topic_name')} - <b>Topic Group:</b> {pdf_data['topic'][0].get('topic_group')}</u>"
-        description_text = pdf_data["topic"][0].get("description")
-        narrative_text = pdf_data["topic"][0].get("narrative")
+        description_text = pdf_data["topic"][0].get("description") if pdf_data["topic"][0].get("description") else ''
+        narrative_text = pdf_data["topic"][0].get("narrative") if pdf_data["topic"][0].get("narrative") else ''
     story.append(add_subtitle(topic_subtitle_text, center=True))
     story.append(Spacer(1, 12))
 
@@ -226,18 +226,23 @@ def add_beneficiaries_info(pdf_data):
     country_counts = {x["country"]: x["country_count"] for x in countries_dict}
     countries_gdf["counts"] = 0
     countries_gdf["counts"] = countries_gdf.apply(insert_count, col='iso_a3', counts=country_counts, axis=1)
-    countries_gdf = countries_gdf[countries_gdf.counts > 0]
-    countries_gdf['logval'] = log10(countries_gdf['counts'])
-    fig, ax = plt.subplots(1, 1, figsize=(27, 20))
+    fig, ax = plt.subplots(1, 1, figsize=(30, 20))
+    ax.set_xticks([])
+    ax.set_yticks([])
     countries_gdf.plot(ax=ax, column="counts",
-                            scheme="quantiles",
+                            scheme="naturalbreaks",
                             cmap='Blues',
                             legend=True,
                             edgecolor='grey',
                             linewidth=0.5,
                             legend_kwds={"loc": "lower left"},)
-    #ax.legend(borderpad=2, labelspacing=2)
-    plt.title("Total counts per country")
+    # Add the colorbar below the map horizontally
+    cax = fig.add_axes([0.23, 0.2, 0.6, 0.02])  # [left, bottom, width, height]
+    sm = plt.cm.ScalarMappable(cmap='Blues', norm=plt.Normalize(vmin=countries_gdf['counts'].min(), vmax=countries_gdf['counts'].max()))
+    cbar = plt.colorbar(sm, cax=cax, orientation='horizontal')
+    cbar.set_label('Counts', labelpad=10)
+    cbar.ax.tick_params(labelsize=24)
+    plt.title("Total counts per country", fontsize=28)
     plt.figure(figsize=(20, 8))
 
     buffer = io.BytesIO()
