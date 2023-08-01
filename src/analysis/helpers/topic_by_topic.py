@@ -27,6 +27,160 @@ ba_rgb1 = [(0 / 255, 160 / 255, 223 / 255, 0.45),
            (254 / 255, 59 / 255, 31 / 255, 0.45)]
 
 
+def make_descriptives(cluster):
+    df = pd.read_csv(os.path.join(os.getcwd(), '..', '..', 'data',
+                                  'topic_lookup',
+                                  'raw_with_topic_data.csv'))
+    dim_out = os.path.join(os.getcwd(), '..', '..',
+                           'data', 'dimensions_returns')
+    paper_level = return_paper_level(dim_out)
+    paper_level = pd.merge(paper_level,
+                           df[['REF impact case study identifier', 'Cluster']],
+                           how='left',
+                           right_on = 'REF impact case study identifier',
+                           left_on='Key')
+    country_count = pd.read_csv(os.path.join(os.getcwd(), '..', '..',
+                                             'data', 'intermediate',
+                                             'ICS_countries_funders_manual.csv'))
+    country_count = pd.merge(country_count,
+                             df[['REF impact case study identifier', 'Cluster']],
+                             how='left',
+                             on = 'REF impact case study identifier')
+
+    country_count = filter_cluster(country_count, cluster)
+    paper_level = filter_cluster(paper_level, cluster)
+    df = filter_cluster(df, cluster)
+    df_for = make_and_clean_for(paper_level)
+    author_level = make_author_level(paper_level)
+
+    df_counts = df['Unit of assessment number'].value_counts()
+    mystr = 'Distribution Across UoAs: '
+    print('Number of ICS: ', len(df))
+    for value, index in zip(df_counts, df_counts.index):
+        mystr = mystr + 'UoA ' + str(value) + ' (' + str(index) + '), '
+    mystr = mystr[:-2]
+    print(mystr)
+
+    funder_count = pd.read_csv(os.path.join(os.getcwd(), '..', '..',
+                                            'data', 'intermediate',
+                                            'ICS_countries_funders_manual.csv'))
+    funder_count = pd.merge(funder_count, df[['REF impact case study identifier',
+                                              'Cluster']],
+                            how='left', on='REF impact case study identifier')
+    funder_count = filter_cluster(funder_count, cluster)
+    funder_list = []
+    for index, row in funder_count.iterrows():
+        funders = row['Funders[full name]']
+        if funders is not np.nan:
+            funders = funders.split(';')
+            for funder in funders:
+                funder_list.append(funder.strip())
+    funder_count = pd.DataFrame(funder_list)[0].value_counts()
+    funder_count = funder_count.sort_values(ascending=False)
+    funder_count = funder_count[0:7].sort_values(ascending=False)
+    print('The most frequent funder is: ' + str(funder_count.index[0]) +
+          '('+str(funder_count[0]) + '). The second most is: ' +
+           str(funder_count.index[1]) + '('+str(funder_count[1]) + ').')
+
+
+    country_list = []
+    for index, row in country_count.iterrows():
+        countries = row['Countries[alpha-3]']
+        if countries is not np.nan:
+            countries = countries.split(';')
+            for country in countries:
+                country_list.append(country.strip())
+    country_count = pd.DataFrame(country_list)[0].value_counts()
+    country_count = country_count.sort_values(ascending=False)
+    country_count = country_count.reset_index()
+    country_count = pd.DataFrame(country_count).rename({0: 'Count',
+                                                        'index': 'Country'},
+                                                       axis=1)
+
+    print('The most frequent country beneficiary is : ' + str(country_count['Country'][0]) +
+          '('+str(country_count['Count'][0]) + '). The second most is: ' +
+           str(country_count['Country'][1]) + '('+str(country_count['Count'][1]) + ').')
+
+
+    country_count = pd.read_csv(os.path.join(os.getcwd(), '..', '..',
+                                             'data', 'intermediate',
+                                             'ICS_countries_funders_manual.csv'))
+    country_count = pd.merge(country_count,
+                             df[['REF impact case study identifier', 'Cluster']],
+                             how='left',
+                             on = 'REF impact case study identifier')
+
+    country_count = filter_cluster(country_count, cluster)
+
+    country_list = []
+    for index, row in country_count.iterrows():
+        countries = row['Countries[region]']
+        if countries is not np.nan:
+            countries = countries.split(';')
+            for country in countries:
+                country_list.append(country.strip())
+    country_count = pd.DataFrame(country_list)[0].value_counts()
+    country_count = country_count.sort_values(ascending=False)
+    country_count = country_count.reset_index()
+    country_count = pd.DataFrame(country_count).rename({0: 'Count',
+                                                        'index': 'Region'},
+                                                       axis=1)
+
+    print('The most frequent regional beneficiary is : ' + str(country_count['Region'][0]) +
+          ' ('+str(country_count['Count'][0]) + '). The second most is: ' +
+           str(country_count['Region'][1]) + ' ('+str(country_count['Count'][1]) + ').')
+
+    df_for, for_list = make_and_clean_for(paper_level)
+
+    print('The five most common interdisciplinarities are: ' +
+          str(for_list.index[0][0]) + ' (' + str(for_list[0]) + '), ' +
+          str(for_list.index[1][0]) + ' (' + str(for_list[1]) + '), ' +
+          str(for_list.index[2][0]) + ' (' + str(for_list[2]) + '), ' +
+          str(for_list.index[3][0]) + ' (' + str(for_list[3]) + '), ' +
+          str(for_list.index[4][0]) + ' (' + str(for_list[4]) + ').')
+
+    type_count = paper_level['type'].value_counts()/len(paper_level)*100
+    type_count = type_count.round(2)
+
+    print('The five most common types of underpinning research are: ' +
+          str(type_count.index[0]) + ' (' + str(type_count[0]) + '%), ' +
+          str(type_count.index[1]) + ' (' + str(type_count[1]) + '%), ' +
+          str(type_count.index[2]) + ' (' + str(type_count[2]) + '%), ' +
+          str(type_count.index[3]) + ' (' + str(type_count[3]) + '%), ' +
+          str(type_count.index[4]) + ' (' + str(type_count[4]) + '%).')
+
+    from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+    file = open(os.path.join(os.getcwd(), '..', '..', 'data', 'support', "custom_stopwords.txt"), "r")
+    data = file.read()
+    data_into_list = data.replace('\n', '.').split(".")
+    file.close()
+    STOPWORDS = list(STOPWORDS)
+    STOPWORDS.extend(data_into_list)
+    stopwords = set(STOPWORDS)
+    concept_holder = pd.DataFrame(columns=['score'])
+    for row in paper_level['concepts'].to_list():
+        temp_concept = re.findall(r"'concept': '(.*?)'", row)
+        temp_score = re.findall(r"'relevance': (.*?)}", row)
+        for concept, score in zip(temp_concept, temp_score):
+            if concept not in stopwords:
+                if concept in concept_holder.index:
+                    concept_holder.at[concept, 'score'] = concept_holder.loc[concept, 'score'] + float(score)
+                else:
+                    concept_holder.at[concept, 'score'] = float(score)
+    concept_holder = concept_holder.sort_values(by='score', ascending=False)
+    print('The five ten commonly seen concepts are: ' +
+          str(concept_holder.index[0]) + ', ' +
+          str(concept_holder.index[1]) + ', ' +
+          str(concept_holder.index[2]) + ', ' +
+          str(concept_holder.index[3]) + ', ' +
+          str(concept_holder.index[4]) + ', ' +
+          str(concept_holder.index[5]) + ', ' +
+          str(concept_holder.index[6]) + ', ' +
+          str(concept_holder.index[7]) + ', ' +
+          str(concept_holder.index[8]) + ', ' +
+          str(concept_holder.index[9]) + '.')
+
+
 def make_author_level(paper_level):
     author_level = pd.DataFrame(columns=['Panel', 'UoA', 'ICS_uid',
                                          'pub_uid', 'first_name', 'gender'])
@@ -80,7 +234,6 @@ def make_geo_ax(country_count, ax, letter):
     geo_df.plot(column=col, ax=ax, edgecolor='k', linewidth=0.25,
                 cmap=cmap, scheme="natural_breaks",
                 k=8, legend=True,
-                #                classification_kwds=dict(bins=[5, 10, 25, 50, 100, 200, 300]),
                 legend_kwds={"loc": "lower left",
                              "frameon": True,
                              "edgecolor": 'k',
@@ -366,6 +519,7 @@ def make_and_clean_for(paper_level):
             first_level = paper_fors.split('second_level')[0]
             for_set = for_set.union(set(re.findall(r"'name': '(.*?)'", first_level)))
     df_for = pd.DataFrame(0, columns=list(for_set), index=list(for_set))
+    for_list = []
     for index, row in paper_level.iterrows():
         paper_fors = row['category_for']
         if paper_fors is not np.nan:
@@ -377,6 +531,7 @@ def make_and_clean_for(paper_level):
                     for field2 in for_set_row:
                         if field1 != field2:
                             df_for.at[field1, field2] += 1
+                            for_list.append(str(field1) + '; ' + str(field2))
 
     df_for = df_for.rename({'Information And Computing Sciences': 'IT'}, axis=0)
     df_for = df_for.rename({'Information And Computing Sciences': 'IT'}, axis=1)
@@ -418,7 +573,7 @@ def make_and_clean_for(paper_level):
     df_for = df_for.rename({'Philosophy And Religious Studies': 'Religion'}, axis=1)
     df_for = df_for.rename({'Human Society': 'Society'}, axis=0)
     df_for = df_for.rename({'Human Society': 'Society'}, axis=1)
-    return df_for
+    return df_for, pd.DataFrame(for_list).value_counts()
 
 
 def make_uoa_ax(df, ax, letter):
@@ -511,9 +666,9 @@ def make_figure_output(cluster):
     country_count = filter_cluster(country_count, cluster)
     paper_level = filter_cluster(paper_level, cluster)
     df = filter_cluster(df, cluster)
-    df_for = make_and_clean_for(paper_level)
+    df_for, for_list = make_and_clean_for(paper_level)
     author_level = make_author_level(paper_level)
-    print('Beginning to make the cluster figure for cluster: ', cluster)
+#    print('Beginning to make the cluster figure for cluster: ', cluster)
     fig = plt.figure(figsize=(16, 13), constrained_layout=True)
     spec = gridspec.GridSpec(ncols=18, nrows=8, figure=fig)
     ax1 = fig.add_subplot(spec[0:2, 0:6])
@@ -522,19 +677,19 @@ def make_figure_output(cluster):
     ax4 = fig.add_subplot(spec[2:5, 0:12])
     ax5 = fig.add_subplot(spec[5:8, 0:10])
     ax6 = fig.add_subplot(spec[5:8, 9:17],  polar=True)
-    print('Making the UoA sub-figure for cluster: ', cluster)
+#    print('Making the UoA sub-figure for cluster: ', cluster)
     make_uoa_ax(df, ax1, 'a.')
-    print('Making the WC sub-figure for cluster: ', cluster)
+#    print('Making the WC sub-figure for cluster: ', cluster)
     make_wc_ax(paper_level, ax2, 'b.')
-    print('Making the Sankey sub-figure for cluster: ', cluster)
+#    print('Making the Sankey sub-figure for cluster: ', cluster)
     make_sankey_ax(len(df), ax3, cluster, 'c.')
-    print('Making the choropleth sub-figure for cluster: ', cluster)
+#    print('Making the choropleth sub-figure for cluster: ', cluster)
     make_geo_ax(country_count, ax4, 'd.')
-    print('Making the Funder sub-figure for cluster: ', cluster)
+#    print('Making the Funder sub-figure for cluster: ', cluster)
     make_funder_ax(df, author_level, ax5, cluster, 'e.', 'f.')
-    print('Making the Interdisciplinarity sub-figure for cluster: ', cluster)
+#    print('Making the Interdisciplinarity sub-figure for cluster: ', cluster)
     make_inter_ax(df_for, ax6, 'g.')
-    print('Saving figure for cluster: ', cluster)
+#    print('Saving figure for cluster: ', cluster)
     filepath = os.path.join(os.getcwd(), '..', '..', 'figures',
                             'SHAPE', 'cluster_infographics')
     savefigures(fig, filepath, 'infographic_cluster_'+cluster[0:-1])
