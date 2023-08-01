@@ -80,6 +80,7 @@ def make_topics_and_weights():
     df_long['id'] = df_long.index.copy().astype('int')
     df_long = df_long[['id', 'ics_id', 'topic_id', 'probability']]
     df_long.to_csv(TOPICS_WEIGHTS_OUT, index=False)
+    topics_df = topics_df.rename(columns={'Topic Name': 'topic_name_long'})
     topics_df.columns = topics_df.columns.str.lower().str.replace(' ', '_')
     topics_df.to_csv(TOPICS_OUT, index=False)
 

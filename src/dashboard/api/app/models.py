@@ -49,10 +49,18 @@ class Topics(Base):
     __tablename__ = "topics"
 
     topic_id = Column(Integer, primary_key=True)
-    topic_name = Column(String(20))
-    topic_group = Column(String(20))
+    group_id = Column(Integer)
+    topic_group = Column(String)
+    topic_name = Column(String)
     description = Column(String)
     narrative = Column(String)
+    keywords = Column(String)
+    charlie_suggested = Column(String)
+    topic_name_long = Column(String)
+    hierarchical_grouping = Column(String)
+    cluster_name = Column(String)
+    cluster = Column(String)
+    topic_notes = Column(String)
 
     __table_args__ = (
         Index('idx_topics_id', 'topic_id', unique=True),
