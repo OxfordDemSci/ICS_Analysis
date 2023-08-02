@@ -1,6 +1,7 @@
 from pathlib import Path
 import pandas as pd
 from typing import Union
+import numpy as np
 
 BASE = Path(__file__).resolve().parent.parent.joinpath('app/data')
 ENRICHED_ICS_TABLE = BASE.joinpath('intermediate-tables/enriched_ref_ics_data.csv')
@@ -11,10 +12,12 @@ OUTPUT_ICS_TABLE = BASE.joinpath('db-data/ICS_DATABASE_TABLE.csv')
 
 TOPICS_DIR = BASE.parent.parent.parent.parent.parent.joinpath('data/dashboard/nn3nn7')
 TOPICS_TABLE = TOPICS_DIR.joinpath('topics.xlsx')
+TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath('topics_groups.xlsx')
 WEIGHTS_TABLE = TOPICS_DIR.joinpath('candidate_nn3nn7.xlsx')
 TOPICS_OUT = BASE.joinpath('db-data/TOPICS_TABLE.csv')
 TOPICS_WEIGHTS_OUT = BASE.joinpath('db-data/TOPIC_WEIGHTS_TABLE.csv')
 
+FUNDERS_IN = TOPICS_DIR.parent.joinpath('funders.csv')
 FUNDERS_LOOKUP_OUT = BASE.joinpath('db-data/ICS_TO_FUNDERS_LOOKUP_TABLE.csv')
 
 columns_to_keep = [
@@ -73,15 +76,25 @@ def make_ics_table():
     return ics_df
 
 def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
-    transform_funders = lambda x: [funder.strip('[]') for funder in str(x).split(';') if not str(x) == 'nan']
-    df_ics['funders_list'] = df_ics['name_of_funders'].apply(transform_funders)
-    df_funders_lookup = df_ics[['id', 'funders_list']]
-    df_funders_lookup = df_funders_lookup.explode('funders_list')
-    df_funders_lookup = df_funders_lookup.rename(columns={'id': 'ics_table_id', 'funders_list': 'funder'})
-    df_funders_lookup = df_funders_lookup.dropna()
-    df_funders_lookup['id'] = df_funders_lookup.reset_index().index.copy().astype(int)
-    assert len(df_funders_lookup.id) == len(df_funders_lookup)
-    df_funders_lookup.to_csv(FUNDERS_LOOKUP_OUT, index=False)
+    def transform_funders(row):
+        if str(row.funder) != 'nan':
+            return row.funder.split(';')
+        return None
+    df_funders = pd.read_csv(FUNDERS_IN)
+    df_funders = df_funders[['REF impact case study identifier', 'Funders[full name]']]
+    df_funders.rename(columns={"REF impact case study identifier": 'ics_id', 'Funders[full name]': 'funder'}, inplace=True)
+    df_funders.dropna(subset='ics_id', inplace=True)
+    df_ics = df_ics[['id', 'ics_id']]
+    df_ics.set_index('ics_id', inplace=True)
+    df_funders.set_index('ics_id', inplace=True)
+    df_join = df_funders.join(df_ics)
+    df_join['funders_list'] = df_join.apply(transform_funders, axis=1)
+    df_join.reset_index(inplace=True)
+    df_join = df_join[['id', 'funders_list']]
+    df_lookup = df_join.explode('funders_list')
+    df_lookup.rename(columns={'id': 'ics_table_id', 'funders_list': 'funder'}, inplace=True)
+    df_lookup['id'] = df_lookup.index.copy().astype(int)
+    df_lookup.to_csv(FUNDERS_LOOKUP_OUT, index=False)
 
 def make_topics_and_weights():
     weights_df = pd.read_excel(WEIGHTS_TABLE, sheet_name='Sheet1')
