@@ -93,7 +93,9 @@ def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     df_join = df_join[['id', 'funders_list']]
     df_lookup = df_join.explode('funders_list')
     df_lookup.rename(columns={'id': 'ics_table_id', 'funders_list': 'funder'}, inplace=True)
+    df_lookup.reset_index(inplace=True)
     df_lookup['id'] = df_lookup.index.copy().astype(int)
+    df_lookup = df_lookup[['id', 'ics_table_id', 'funder']]
     df_lookup.to_csv(FUNDERS_LOOKUP_OUT, index=False)
 
 def make_topics_and_weights():
