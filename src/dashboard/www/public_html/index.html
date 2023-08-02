@@ -16,309 +16,9 @@
               crossorigin=""/>    
         
         <link href="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
-
-   <style>
-
-       #btnViewDetailsInfoBox{
-           cursor: pointer;
-           color: black;
-       }
-       #btnViewDetailsInfoBox:hover {
-           color: #333333;
-           background-color: white;
-       }
-
-       .text-overflow{
-           overflow: hidden;
-           text-overflow: ellipsis;
-       }
-
-       .table_ICS{
-           padding: 0px;
-           margin: 0px;
-           border-collapse: collapse;
-           font-size: 0.9em; 
-           clear: both;
-       }
-       .table_ICS td th {
-           min-width:200px;       
-       }
-       
-       .infoBoxMapGlobal {
-           padding: 6px 4px;
-           font: 12px/14px Arial, Helvetica, sans-serif;
-           background: white;
-           background: rgba(255,255,255,0.8);
-           box-shadow: 0 0 15px rgba(0,0,0,0.2);
-           border-radius: 5px;
-       }       
-
-       .infoBoxUKmap {
-           padding: 6px 4px;
-           font: 12px/14px Arial, Helvetica, sans-serif;
-           background: white;
-           background: rgba(255,255,255,0.8);
-           box-shadow: 0 0 15px rgba(0,0,0,0.2);
-           border-radius: 5px;
-       }
-       .infoBoxUKmap_info ul{
-           list-style-type: none;
-           margin-top: 2px;
-           margin-bottom: 2px;
-           padding-left: 2px
-       }
-
-       .btn-circle {
-           position: absolute;
-           top: 0.15rem;
-           right: 0.15rem;    
-           width: 18px;
-           height: 18px;
-           padding: 0px 0px;
-           border-radius: 15px;
-           text-align: center;
-           font-size: 12px;
-       }
-
-       .btn-clipboard {
-           position: absolute;
-           top: 0.15rem;
-           right: 0.15rem;
-           z-index: 10;
-           display: block;
-           padding: 0.16rem 0.5rem;
-           font-size: .8em;
-           color: #888;
-           background-color: #fff;
-           border: 1px solid;
-           border-radius: 15px;
-       }         
-
-       .infoboxSelectedUKmap {
-           padding: 6px 4px;
-           font: 12px/14px Arial, Helvetica, sans-serif;
-           background: rgba(255,255,255,0.8);
-           box-shadow: 0 0 15px rgba(0,0,0,0.2);
-           border-radius: 5px;
-       }
-
-       .infoboxSelectedUKmap_info_text ul{
-           list-style-type: none;
-           margin-top: 2px;
-           margin-bottom: 2px;
-           padding-left: 2px
-       }        
-
-
-       #legend_UKmap_info {
-           line-height: 14px;
-           color: #333333;
-           font-family: 'Open Sans', Helvetica, sans-serif;
-           padding: 2px 4px;
-           background: white;
-           background: rgba(255,255,255,0.91);
-           box-shadow: 0 0 15px rgba(0,0,0,0.2);
-           border-radius: 5px;
-           float: left;
-           /*    z-index: 8000 !important;*/
-       }  
-
-       #legend_mapGlobal_info {
-           line-height: 14px;
-           color: #333333;
-           font-family: 'Open Sans', Helvetica, sans-serif;
-           padding: 2px 4px;
-           background: white;
-           background: rgba(255,255,255,0.91);
-           box-shadow: 0 0 15px rgba(0,0,0,0.2);
-           border-radius: 5px;
-           float: left;
-           /*    z-index: 8000 !important;*/
-       }   
-
-       #map_uk {
-           width: 100%;
-           height: 100%;
-       }            
-
-       #map_global {
-           width: 100%;
-           height: 100%;
-       } 
-       .leaflet-control-zoom a{
-           box-shadow: 0 1px 2px rgba(0,0,0,0.65); 
-           margin-top: 0px;
-       }
-
-       .leaflet-touch .leaflet-bar a{
-           width: 20px;
-           height: 20px;
-           line-height: 20px
-       }
-
-       .scrollarea {
-           overflow-y: auto;
-           overflow-x: auto;
-           height: calc(100vh - 8rem);
-       }
-
-       #idTopics li:hover {
-           cursor: pointer;
-           background-color: rgb(84, 112, 198);
-       }        
-
-       .list-group-item li:hover {
-           text-decoration: none;
-           background-color: #0b2543;
-           border: 1px solid #2c3e50;
-       }
-
-       .list-group-item.active {
-           z-index: 2;
-           color: #fff;
-           background-color: #0b2543;
-           border-color: #2c3e50;
-       }
-
-       .list-group-item {
-           position: relative;
-           display: block;
-           padding: 0.5rem 1rem;
-           color: #fff;
-           text-decoration: none;
-           background-color: #002147;
-           border: 1px solid #0b2543;
-       }
-
-
-       .bg-dark-navy {
-           --bs-bg-opacity: 1;
-           background-color: #002147 !important;
-       }
-
-       .sb-sidenav-dark-navy {
-           background-color: #002147 !important;
-           color: rgba(255, 255, 255, 0.5);
-       }
-
-       .sb-sidenav-dark-navy-footer {
-           background-color: #002147b8 !important;
-           color: rgba(255, 255, 255, 0.8);
-       }
-
-       .sb-sidenav-dark-navy-footer a{
-           color: rgba(255, 255, 255, 0.8);
-           text-decoration: underline;
-       }
-
-       .logo-section img {
-           margin-top: 0.0rem !important;
-           height: 40px;
-           margin: auto;    
-           display: block;    
-           /*   width: 220px;
-              margin: auto;    
-              display: block;*/
-
-       }
-
-
-       /* width */
-       ::-webkit-scrollbar {
-           width: 10px;
-       }
-
-       /* Track 
-       ::-webkit-scrollbar-track {
-           background: #f1f1f1; 
-       }
-       */
-
-       /* Handle */
-       ::-webkit-scrollbar-thumb {
-           background: #888; 
-       }
-
-       /* Handle on hover */
-       ::-webkit-scrollbar-thumb:hover {
-           background: #555; 
-       }  
-
-       .card, .card-header, .card-body, .card-footer{
-           border-radius:0px !important;
-       }      
-
-
-       .goal-chart-wrapper {
-           width: 100%;
-           min-height: 50px;
-           position: relative;
-
-           .goal-chart {
-               height: 100%;
-               width: 100%;
-               position: absolute;
-           }
-       }            
-
-       .TopicsWrapper::-webkit-scrollbar {
-           display: block;
-           width: 10px;
-       }
-       .TopicsWrapper::-webkit-scrollbar-track {
-           background: transparent;
-       }
-
-       .TopicsWrapper::-webkit-scrollbar-thumb {
-           background-color: #010f21;
-           border-right: none;
-           border-left: none;
-       }
-
-       .TopicsWrapper::-webkit-scrollbar-thumb:hover {
-           background: #555;
-           border-right: none;
-           border-left: none;
-       }
-
-       .TopicsWrapper::-webkit-scrollbar-track-piece:end {
-           background: transparent;
-           margin-bottom: 0px;
-
-       }
-
-       .TopicsWrapper::-webkit-scrollbar-track-piece:start {
-           background: transparent;
-           margin-top: 0px;
-       }
-
-       #firstloader { 
-           position: fixed; 
-           left: 0px; 
-           top: 50px; 
-           width: 100%; 
-           height: 100%; 
-           z-index: 9999!important; 
-           background: url('./img/firstloader.gif') 50% 30% no-repeat rgba(245,245,245,0.89); 
-           background-size: 85px 85px; 
-       } 
-
-       #dv_startup {
-           font-size: 12px;
-       }
-
-       #dv_startup h1{
-           font-size: 16px;
-       }
-
-       #contectforViewDetailsInfoBox {
-           font-size: 12px;
-       }        
-       
-       #contectforViewDetailsInfoBox h1,h2,h3{
-           font-size: 16px;
-       }       
-        </style>        
+        
+        <link href="css/styles_custom.css?version=1.0" rel="stylesheet" />
+     
 
     </head>
     <body class="sb-nav-fixed">
@@ -448,12 +148,13 @@
                                             <div id="dv_Description_Narrative" style="display: none">
                                                 <div class="text-bg-light p-1">Description </div>
                                                     <p id="info_box_topic_description" class="text-700 fw-semi-bold " style="font-size: 0.9rem" >
-                                                        Some quick example text to build on the card title and make up the bulk of the card's content.
                                                     </p>
                                                 <div class="text-bg-light p-1">Narrative</div>
                                                     <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2" style="font-size: 0.9rem" >
-                                                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                                                    </p>                                                  
+                                                    </p>  
+                                                <div class="text-bg-light p-1">Keywords</div>
+                                                    <p id="info_box_topic_keywords" class="text-700 fw-semi-bold mt-2" style="font-size: 0.9rem" >
+                                                    </p>                                                     
                                             </div>
                                             
                                         </div>                                      
@@ -488,7 +189,7 @@
                                         <div class="col-md-6">
                                             <div class="card mb-2" id="map_cardbox_top_right" style="min-width: 300px">
                                                 <div class="card-header">
-                                                    <div id="label_Institutions">Institutions <span class="badge bg-secondary" id="Institutions_count">0</span></div>
+                                                    <div><label id="label_Institutions">Institutions</label> <span class="badge bg-secondary" id="Institutions_count">0</span></div>
                                                 </div>
                                                 <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
 
@@ -541,7 +242,7 @@
                                         <div class="col-md-6">
                                             <div class="card mb-2" id="map_cardbox_bottom_right" >
                                                 <div class="card-header">
-                                                    <div id="label_UOA">Beneficiaries <span class="badge bg-secondary" id="Beneficiaries_count">0</span></div>
+                                                    <div ><label id="label_Beneficiaries">Beneficiaries</label> <span class="badge bg-secondary" id="Beneficiaries_count">0</span></div>
                                                 </div>
                                                 <div class="card-body d-flex justify-content-center" style="padding: 0px;margin: 0px" >
 
@@ -846,7 +547,7 @@
     </body>
 </html>
 
-<script src="./js/main.js?version=6.1" type="module"></script>
+<script src="./js/main.js?version=6.3" type="module"></script>
 
 
 

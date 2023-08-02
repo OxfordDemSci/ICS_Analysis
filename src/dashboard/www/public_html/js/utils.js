@@ -3,16 +3,11 @@ import * as _country_code_lookup from './country_code_lookup.js?version=1.0'
 export function removeSelectedLayer(_map, fname) {
   
     if (_map) {
-
         _map.eachLayer(function (layer) {
             if (layer.feature) {
-
                 let n = layer.feature.properties[fname];
-
                 if( typeof n === 'undefined' || n === null ){
-
                     _map.removeLayer(layer);
-
                 }
             }
         });
@@ -117,6 +112,16 @@ export function ResiseICSTable() {
 export function LoadCurrentICSTable(oResults) {
 
     var oTblReport = $("#tblReportResultsICSTabl");
+    var columns_ntitles = [];
+    
+    for (var key in oResults[0]) {
+       columns_ntitles.push(
+                {
+                     title: key,
+                     data: key
+                }
+        );       
+    }
 
     // reinitialize the datatable
     if ($.fn.DataTable.isDataTable('#tblReportResultsICSTabl')) {
@@ -146,47 +151,7 @@ export function LoadCurrentICSTable(oResults) {
             {"width": "200px", targets: [0, 1, 2, 3, 26]}],
 
         "data": oResults,
-        "columns": [
-            {title: "id", "data": "id"},
-            {title: "ics_id", "data": "ics_id"},
-            {title: "ukprn", "data": "ukprn"},
-            {title: "main_panel", "data": "main_panel"},
-            {title: "unit_of_assessment_name", "data": "unit_of_assessment_name"},
-            {title: "unit_of_assessment_number", "data": "unit_of_assessment_number"},
-            {title: "countries", "data": "countries", width: "200px"},
-            {title: "COVID statement", "data": "covid_statement"},
-            {title: "cultural", "data": "cultural"},
-            {title: "details_of_the_impact", "data": "details_of_the_impact"},
-            {title: "economic", "data": "economic"},
-            {title: "environmental", "data": "environmental"},
-            {title: "formal_partners", "data": "formal_partners"},
-            {title: "funders", "data": "funders"},
-            {title: "funding_programmes", "data": "funding_programmes"},
-            {title: "global_research_identifiers", "data": "global_research_identifiers"},
-            {title: "grant_funding", "data": "grant_funding"},
-            {title: "health", "data": "health"},
-            {title: "id", "data": "id"},
-            {title: "inst_postcode", "data": "inst_postcode"},
-            {title: "inst_postcode_district", "data": "inst_postcode_district"},
-            {title: "institution_name", "data": "institution_name"},
-            {title: "is_continued_from_2014", "data": "is_continued_from_2014"},
-            {title: "joint_submission", "data": "joint_submission"},
-            {title: "legal", "data": "legal"},
-            {title: "multiple_submission_letter", "data": "multiple_submission_letter"},
-            {title: "multiple_submission_name", "data": "multiple_submission_name"},
-            {title: "political", "data": "political"},
-            {title: "postcode", "data": "postcode"},
-            {title: "references_to_the_research", "data": "references_to_the_research"},
-            {title: "researcher_orcids", "data": "researcher_orcids"},
-            {title: "societal", "data": "societal"},
-            {title: "sources_to_corroborate_the_impact", "data": "sources_to_corroborate_the_impact"},
-            {title: "summary_impact_type", "data": "summary_impact_type"},
-            {title: "summary_of_the_impact", "data": "summary_of_the_impact"},
-            {title: "summary_of_the_impact_topic", "data": "summary_of_the_impact_topic"},
-            {title: "technological", "data": "technological"},
-            {title: "title", "data": "title"},
-            {title: "uoa", "data": "uoa"}
-        ]
+        "columns": columns_ntitles
     });
 
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
@@ -326,15 +291,23 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
 
 export function initialSetInfoBox(d) {
     return new Promise(function (resolve, reject) {
-        let rnd_txt = "";
-        //rnd_txt += rnd_txt;
-        //rnd_txt += rnd_txt;
-        $("#dv_startup").html(d.website_text.instructions + rnd_txt);
+        $("#dv_startup").html(d.website_text.label_info_box);
         resolve(true);
     });
 
 }
 
+export function initialSetLabels(d) {
+    return new Promise(function (resolve, reject) {
+        $("#label_Funders").html(d.website_text.label_top_left_box);
+        $("#label_Institutions").html(d.website_text.label_top_right_box);
+        $("#label_UOA").html(d.website_text.label_bottom_left_box);
+        $("#label_Beneficiaries").html(d.website_text.label_bottom_right_box);
+        
+        resolve(true);
+    });
+
+}
 
 export function updateInfoBox(d) {
 
@@ -378,6 +351,8 @@ export function updateInfoBox(d) {
 
             $("#info_box_topic_description").html(found.desciption);
             $("#info_box_topic_example").html(found.narrative);
+            $("#info_box_topic_keywords").html(found.keywords);
+            
         }
         resolve(true);
     });
@@ -415,7 +390,8 @@ export function updateModalInfoBox(d) {
             contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.description + "</p>";
             contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Narrative </strong></p>";
             contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.narrative + "</p>";
-            contectMd.innerHTML = contectMd.innerHTML + "<p>1. This is instruction ONE; 2. This is instruction TWO; 3. This is instruction N. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.1. This is instruction ONE; 2. This is instruction TWO; 3. This is instruction N. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's contentThis is instruction ONE; 2. This is instruction TWO; 3. This is instruction N. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.1. This is instruction ONE; 2. This is instruction TWO; 3. This is instruction N. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's contentThis is instruction ONE; 2. This is instruction TWO; 3. This is instruction N. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.1. This is instruction ONE; 2. This is instruction TWO; 3. This is instruction N. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.</p>";
+            contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Keywords </strong></p>";
+            contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.keywords + "</p>";            
         }
         resolve(true);
     });
