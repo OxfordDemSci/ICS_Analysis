@@ -1,4 +1,4 @@
-export function updateFunderChart(data, n=20) {
+export function updateFunderChart(data, bar_colore, n=20) {
   
     var nmax = data.length;
     let nuse;
@@ -73,7 +73,7 @@ export function updateFunderChart(data, n=20) {
                 data: values,
                 itemStyle: {
                     normal: {
-                        color: '#9ecae1',
+                        color: bar_colore,
                         opacity: 0.9,
                         label: {
                             show: true,
