@@ -84,7 +84,7 @@ class Funder(Base):
     __tablename__ = "funder"
 
     id = Column(Integer, primary_key=True)
-    ics_table_id = Column(Integer, primary_key=True)
+    ics_table_id = Column(Integer)
     funder = Column(String)
 
     __table_args__ = (

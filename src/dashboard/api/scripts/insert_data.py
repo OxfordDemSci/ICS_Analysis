@@ -85,6 +85,7 @@ def rename_col(df, col_name):
     return df
 
 def insert_data(table):
+    print(f'Uploading {table.name}')
     df = pd.read_csv(table)
     for col in TABLE_MAP[table.name]['cols_to_convert']:
         df = convert_col_to_int(df, col)
