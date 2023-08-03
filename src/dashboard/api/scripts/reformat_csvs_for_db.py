@@ -78,8 +78,8 @@ def make_ics_table():
 def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     def transform_funders(row):
         if str(row.funder) != 'nan':
-            return row.funder.split(';')
-        return None
+            return [x.lstrip().rstrip() for x in row.funder.split(';')]
+        return np.nan
     df_funders = pd.read_csv(FUNDERS_IN)
     df_funders = df_funders[['REF impact case study identifier', 'Funders[full name]']]
     df_funders.rename(columns={"REF impact case study identifier": 'ics_id', 'Funders[full name]': 'funder'}, inplace=True)
@@ -93,6 +93,9 @@ def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     df_join = df_join[['id', 'funders_list']]
     df_lookup = df_join.explode('funders_list')
     df_lookup.rename(columns={'id': 'ics_table_id', 'funders_list': 'funder'}, inplace=True)
+    df_lookup.dropna(inplace=True)
+    df_lookup = df_lookup[df_lookup.funder != '']  # Drop empty str
+    df_lookup = df_lookup[len(df_lookup.funder) != 0]  # Drop empty lists
     df_lookup.reset_index(inplace=True)
     df_lookup['id'] = df_lookup.index.copy().astype(int)
     df_lookup = df_lookup[['id', 'ics_table_id', 'funder']]

@@ -131,7 +131,7 @@ def get_funders_counts(ics_ids=None):
             SELECT f.funder AS funder, COUNT(*) AS funder_count
             FROM funder f
             JOIN ics i ON f.ics_table_id = i.id
-            WHERE i.ics_id = ANY(:ics_ids)
+            WHERE i.ics_id = ANY(:ics_ids) and f.funder is not NULL
             GROUP BY f.funder
             ORDER BY funder_count DESC
         ''')
