@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  ics_postgres:
+    container_name: oxford_ics_dashboard_db
+    image: postgres:13.11-bullseye
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DB_TEST: ${POSTGRES_DB_TEST}
+    env_file: .env
