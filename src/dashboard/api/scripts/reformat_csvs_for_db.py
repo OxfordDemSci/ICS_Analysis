@@ -2,8 +2,17 @@ from pathlib import Path
 import pandas as pd
 from typing import Union
 import numpy as np
+from dotenv import load_dotenv
+import os
 
-BASE = Path(__file__).resolve().parent.parent.joinpath('app/data')
+
+# define "basedir" environment variable in ./.env file
+load_dotenv()
+
+if Path(__file__).is_dir():
+    BASE = Path(__file__).resolve().parent.parent.joinpath('app/data')
+elif Path(os.getenv('basedir')).is_dir():
+    BASE = Path(os.getenv('basedir')).joinpath('src', 'dashboard', 'api', 'app', 'data')
 ENRICHED_ICS_TABLE = BASE.joinpath('intermediate-tables/enriched_ref_ics_data.csv')
 if not ENRICHED_ICS_TABLE.exists():
     raise FileNotFoundError(f'{str(ENRICHED_ICS_TABLE)} is not in place. This file is not held in github and needs to be in {str(ENRICHED_ICS_TABLE.parent)}')
@@ -83,7 +92,7 @@ def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     df_funders = pd.read_csv(FUNDERS_IN)
     df_funders = df_funders[['REF impact case study identifier', 'Funders[full name]']]
     df_funders.rename(columns={"REF impact case study identifier": 'ics_id', 'Funders[full name]': 'funder'}, inplace=True)
-    df_funders.dropna(subset='ics_id', inplace=True)
+    df_funders.dropna(subset=['ics_id'], inplace=True)
     df_ics = df_ics[['id', 'ics_id']]
     df_ics.set_index('ics_id', inplace=True)
     df_funders.set_index('ics_id', inplace=True)
@@ -95,7 +104,7 @@ def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     df_lookup.rename(columns={'id': 'ics_table_id', 'funders_list': 'funder'}, inplace=True)
     df_lookup.dropna(inplace=True)
     df_lookup = df_lookup[df_lookup.funder != '']  # Drop empty str
-    df_lookup = df_lookup[len(df_lookup.funder) != 0]  # Drop empty lists
+    df_lookup = df_lookup[df_lookup.funder.apply(len) != 0]  # Drop empty lists
     df_lookup.reset_index(inplace=True)
     df_lookup['id'] = df_lookup.index.copy().astype(int)
     df_lookup = df_lookup[['id', 'ics_table_id', 'funder']]
