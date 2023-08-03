@@ -79,6 +79,18 @@ class TopicWeights(Base):
         Index('idx_topic_weights_id', 'id', unique=True),
     )
 
+class TopicGroups(Base):
+    __tablename__ = "topic_groups"
+
+    group_id = Column(Integer, primary_key=True)
+    topic_group = Column(String)
+    description = Column(String)
+    narrative = Column(String)
+
+    __table__args = (
+        Index('idx_topic_groups', 'group_id', unique=True),
+    )
+
 
 class Funder(Base):
     __tablename__ = "funder"

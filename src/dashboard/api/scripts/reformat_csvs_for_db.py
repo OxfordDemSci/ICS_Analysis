@@ -9,25 +9,26 @@ import os
 # define "basedir" environment variable in ./.env file
 load_dotenv()
 
-if Path(__file__).is_dir():
-    BASE = Path(__file__).resolve().parent.parent.joinpath('app/data')
-elif Path(os.getenv('basedir')).is_dir():
-    BASE = Path(os.getenv('basedir')).joinpath('src', 'dashboard', 'api', 'app', 'data')
-ENRICHED_ICS_TABLE = BASE.joinpath('intermediate-tables/enriched_ref_ics_data.csv')
+
+BASE_APP = Path(os.getenv('basedir')).joinpath('src', 'dashboard', 'api', 'app', 'data')
+BASE = Path(os.getenv('basedir')).resolve()
+ENRICHED_ICS_TABLE = BASE.joinpath('data/enriched/enriched_ref_ics_data.csv')
 if not ENRICHED_ICS_TABLE.exists():
     raise FileNotFoundError(f'{str(ENRICHED_ICS_TABLE)} is not in place. This file is not held in github and needs to be in {str(ENRICHED_ICS_TABLE.parent)}')
-OUTPUT_ICS_TABLE = BASE.joinpath('db-data/ICS_DATABASE_TABLE.csv')
+OUTPUT_ICS_TABLE = BASE_APP.joinpath('db-data/ICS_DATABASE_TABLE.csv')
 
 
-TOPICS_DIR = BASE.parent.parent.parent.parent.parent.joinpath('data/dashboard/nn3nn7')
+TOPICS_DIR =BASE.joinpath('data/dashboard/nn3nn7')
 TOPICS_TABLE = TOPICS_DIR.joinpath('topics.xlsx')
 TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath('topics_groups.xlsx')
 WEIGHTS_TABLE = TOPICS_DIR.joinpath('candidate_nn3nn7.xlsx')
-TOPICS_OUT = BASE.joinpath('db-data/TOPICS_TABLE.csv')
-TOPICS_WEIGHTS_OUT = BASE.joinpath('db-data/TOPIC_WEIGHTS_TABLE.csv')
+TOPICS_OUT = BASE_APP.joinpath('db-data/TOPICS_TABLE.csv')
+TOPICS_WEIGHTS_OUT = BASE_APP.joinpath('db-data/TOPIC_WEIGHTS_TABLE.csv')
+TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath('topics_groups.xlsx')
+TOPICS_GROUPS_OUT = BASE_APP.joinpath('db-data/TOPIC_GROUPS_TABLE.csv')
 
 FUNDERS_IN = TOPICS_DIR.parent.joinpath('funders.csv')
-FUNDERS_LOOKUP_OUT = BASE.joinpath('db-data/ICS_TO_FUNDERS_LOOKUP_TABLE.csv')
+FUNDERS_LOOKUP_OUT = BASE_APP.joinpath('db-data/ICS_TO_FUNDERS_LOOKUP_TABLE.csv')
 
 columns_to_keep = [
     'id',
@@ -125,6 +126,13 @@ def make_topics_and_weights():
     topics_df = topics_df.rename(columns={'Topic Name': 'topic_name_long'})
     topics_df.columns = topics_df.columns.str.lower().str.replace(' ', '_')
     topics_df.to_csv(TOPICS_OUT, index=False)
+
+def make_topics_groups_table():
+    group_df = pd.read_excel(TOPICS_GROUPS_TABLE, sheet_name="Sheet1")
+    if np.all(group_df.narrative == "none"):
+        group_df["narrative"] = np.nan
+    group_df.to_csv(TOPICS_GROUPS_OUT, index=False)
+
 
 if __name__ == "__main__":
     print('Making ICS table')

@@ -57,6 +57,10 @@ TABLE_MAP = {
     "TOPIC_WEIGHTS_TABLE.csv": {
         "cols_to_convert": ["id", "topic_id"],
         "table_name": "topic_weights"
+    },
+    "TOPIC_GROUPS_TABLE.csv": {
+        "cols_to_convert": ["group_id"],
+        "table_name": "topic_groups"
     }
 }
 
