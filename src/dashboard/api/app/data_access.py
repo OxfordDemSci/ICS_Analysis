@@ -2,6 +2,7 @@
 from .models import ICS, UOA, Institution, Countries, Topics, Funder
 from .data_queries import (
     get_topics, 
+    get_topic_groups,
     get_funders_counts, 
     get_countries_counts, 
     get_uoa_counts, 
@@ -15,6 +16,7 @@ def get_init():
     init_data = {}
     init_data["website_text"] = get_website_text()    
     init_data["ics_threshold"] = 0.5
+    init_data["topic_groups"] = get_topic_groups()
     init_data['topics'] = get_topics()
     return init_data
 

@@ -10,6 +10,7 @@ from app import db
 from app.models import (
     WebsiteText,
     ICS,
+    TopicGroups,
 )
 def get_topics(topic=None):
     if topic is None:
@@ -38,6 +39,13 @@ def get_topics(topic=None):
             "keywords": None
         })
     return topics
+
+def get_topic_groups():
+    topic_groups = db.session.query(TopicGroups).all()
+
+    # Unpack the response into a dictionary
+    result = [{column: getattr(row, column) for column in row.__table__.columns.keys()} for row in topic_groups]
+    return result
 
 def get_website_text():
     row = db.session.query(WebsiteText).first()
