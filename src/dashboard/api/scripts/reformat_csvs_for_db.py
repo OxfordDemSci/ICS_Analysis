@@ -129,9 +129,13 @@ def make_topics_and_weights():
 
 def make_topics_groups_table():
     group_df = pd.read_excel(TOPICS_GROUPS_TABLE, sheet_name="Sheet1")
+    print(group_df)
     if np.all(group_df.narrative == "none"):
         group_df["narrative"] = np.nan
     group_df.to_csv(TOPICS_GROUPS_OUT, index=False)
+    print(group_df)
+    print(TOPICS_GROUPS_OUT.exists())
+    print(TOPICS_GROUPS_TABLE)
 
 
 if __name__ == "__main__":
@@ -141,3 +145,5 @@ if __name__ == "__main__":
     make_funders_lookup_table(ics_df)
     print('Reformatting topics and weights')
     make_topics_and_weights()
+    print("Making topic groups table")
+    make_topics_groups_table()
