@@ -21,6 +21,7 @@ limiter = Limiter(
                   # application_limits=['60/minute', '1000/hour', '10000/day'],
                   default_limits=['60/minute', '1000/hour', '10000/day'],
                   strategy='fixed-window-elastic-expiry',
+                  storage_uri="memcached://ics_memcached:11211",
                   storage_options={}
                   )
 def create_app(config_name: str) -> Flask:
@@ -32,7 +33,6 @@ def create_app(config_name: str) -> Flask:
     CORS(app, resources={r"/*": {"origins": "*"}})
     limiter.init_app(app)
     print(app_config[config_name])
-    limiter.storage_uri = app_config[config_name].MEMCACHED
     return app
 
 
