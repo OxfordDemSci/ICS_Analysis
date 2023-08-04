@@ -14,6 +14,7 @@ class Configuration:
     ENABLE_CORS = True
     FLASK_APP = "app.wsgi"
     JSON_SORT_KEYS = False
+    MEMCACHED = "memcached://ics_memcached:11211"
 
 class DevelopmentConfig(Configuration):
     DEBUG = True
@@ -26,6 +27,8 @@ class LocalDevelopmentConfig(Configuration):
     POSTGRES_DB_TEST = os.environ.get("POSTGRES_DB_TEST")
     SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB}"
     TEST_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB_TEST}"
+    MEMCACHED = "memcached://localhost:11211"
+
 
 class ProductionConfig(Configuration):
     # Override or add production-specific configuration variables here
