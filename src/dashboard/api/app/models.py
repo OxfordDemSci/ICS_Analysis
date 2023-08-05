@@ -152,6 +152,9 @@ class WebsiteText(Base):
     label_bottom_left_box = Column(String)
     label_top_right_box = Column(String)
     label_bottom_right_box = Column(String)
+    uk_map_colourramp = Column(ARRAY(String))
+    global_colourramp = Column(ARRAY(String))
+    funders_bar_colour = Column(String)
 
 
 
