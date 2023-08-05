@@ -69,10 +69,14 @@ paths:
             type: string
       tags:
         - "ICS data filtered by parameters"
-      summary: "Data filtered by topic, threshold (both required), and postcode_area (institutions), beneficiary (country) and uao (all optional). If optional parameters are null, they will default to all"
+      summary: "Data filtered by topic, threshold (both required), and postcode_area (institutions), beneficiary (country) and uao (all optional). If optional parameters are null, they will default to all - parameters are case sensitive."
       responses:
         "200":
-          description: "Successfully read and filtered topics by parameters"     
+          description: "Successfully read and filtered topics by parameters"
+        "204":
+          description: "Request successful, no content to return"
+        "400":
+          description: "Invalid input parameters"    
   /get_ics_data_for_country:
     get:
       operationId: "app.endpoints.get_ics_data_country"

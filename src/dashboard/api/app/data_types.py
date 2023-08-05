@@ -1,5 +1,113 @@
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from dataclasses import dataclass
+from typing import Union
+
+from app import db
+
+from app.models import (
+    Topics,
+    ICS,
+    Countries,
+    UOA,
+    Funder
+)
+
+@dataclass
+class ThresholdType:
+    value: float
+
+    @property
+    def value(self) -> float:
+        return self._value
+    
+    @value.setter
+    def value(self, new_value: float) -> None:
+        if not 0 <= new_value <= 1:
+            raise ValueError("Threshold must be float between 0 and 1")
+        self._value = new_value
+
+@dataclass 
+class TopicType:
+    value: str | None = None
+
+    @property
+    def value(self) -> Union[str, None]:
+        return self._value
+    
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(Topics.topic_name).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"Topic invalid - {new_value}")        
+
+@dataclass
+class PostCodeAreaType:
+    value: str | None = None
+
+    @property
+    def value(self) -> Union[str, None]:
+        return self._value
+    
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(ICS.postcode).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"Postcode invalid - {new_value}")
+        
+@dataclass
+class BeneficiaryType:
+    value: str | None = None
+
+    @property
+    def value(self) -> Union[str, None]:
+        return self._value
+    
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(Countries.country).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"Beneficiary invalid - {new_value}")
+        
+@dataclass
+class UOAType:
+    value: str | None = None
+
+    @property
+    def value(self) -> Union[str, None]:
+        return self._value
+    
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(UOA.assessment_panel).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"UOA invalid - {new_value}")
+        
+@dataclass
+class FunderType:
+    value: str | None = None
+
+    @property
+    def value(self) -> Union[str, None]:
+        return self._value
+    
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(Funder.funder).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"Funder invalid - {new_value}")
+
+
 
 title_style = ParagraphStyle(
         'Title',

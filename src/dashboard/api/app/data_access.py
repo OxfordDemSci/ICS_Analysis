@@ -1,4 +1,4 @@
-
+from typing import Tuple, Union
 from .models import ICS, UOA, Institution, Countries, Topics, Funder
 from .data_queries import (
     get_topics, 
@@ -11,6 +11,35 @@ from .data_queries import (
     query_dashboard_data,
     get_ics_table_for_country,
     )
+
+from .data_types import (
+    ThresholdType,
+    TopicType,
+    PostCodeAreaType,
+    BeneficiaryType,
+    UOAType,
+    FunderType    
+)
+
+def validate_params(
+        threshold: float,
+        topic: str | None = None,
+        postcode_area: str | None = None,
+        beneficiary: str | None = None,
+        uoa: str | None = None,
+        funder: str | None = None,
+        ) -> Tuple[float, Union[str, None], Union[str, None], Union[str, None], Union[str, None], Union[str, None]]:
+    threshold = ThresholdType(threshold).value
+    topic = None if topic == "null" else TopicType(topic).value
+    postcode_area = None if postcode_area == "null" else PostCodeAreaType(postcode_area).value
+    beneficiary = None if beneficiary == "null" else BeneficiaryType(beneficiary).value
+    uoa = None if uoa == "null" else UOAType(uoa).value
+    funder = None if funder == "null" else FunderType(funder).value
+    return threshold, topic, postcode_area, beneficiary, uoa, funder
+
+
+
+
 
 def get_init():
     init_data = {}
