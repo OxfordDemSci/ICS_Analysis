@@ -32,7 +32,6 @@ def create_app(config_name: str) -> Flask:
     db.init_app(app)
     CORS(app, resources={r"/*": {"origins": "*"}})
     limiter.init_app(app)
-    print(app_config[config_name])
     return app
 
 

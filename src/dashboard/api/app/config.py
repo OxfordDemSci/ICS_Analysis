@@ -26,6 +26,7 @@ class LocalDevelopmentConfig(Configuration):
     POSTGRES_DB_TEST = os.environ.get("POSTGRES_DB_TEST")
     SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB}"
     TEST_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB_TEST}"
+    DEBUG=True
 
 
 class ProductionConfig(Configuration):
