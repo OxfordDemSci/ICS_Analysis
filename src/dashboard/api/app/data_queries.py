@@ -61,6 +61,9 @@ def get_website_text():
         "label_bottom_left_box": row.label_bottom_left_box,
         "label_top_right_box": row.label_top_right_box,
         "label_bottom_right_box": row.label_bottom_right_box,
+        "uk_map_colourramp": row.uk_map_colourramp,
+        "global_colourramp": row.global_colourramp,
+        "funders_bar_colour": row.funders_bar_colour
     }
     return website_text
 
