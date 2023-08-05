@@ -4,6 +4,7 @@ from typing import Union
 import numpy as np
 from dotenv import load_dotenv
 import os
+import ast
 
 
 # define "basedir" environment variable in ./.env file
@@ -29,6 +30,7 @@ TOPICS_GROUPS_OUT = BASE_APP.joinpath('db-data/TOPIC_GROUPS_TABLE.csv')
 
 FUNDERS_IN = TOPICS_DIR.parent.joinpath('funders.csv')
 FUNDERS_LOOKUP_OUT = BASE_APP.joinpath('db-data/ICS_TO_FUNDERS_LOOKUP_TABLE.csv')
+COUNTRIES_LOOKUP_OUT = BASE_APP.joinpath('db-data/ICS_TO_COUNTRY_LOOKUP_TABLE.csv')
 
 columns_to_keep = [
     'id',
@@ -111,6 +113,18 @@ def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     df_lookup = df_lookup[['id', 'ics_table_id', 'funder']]
     df_lookup.to_csv(FUNDERS_LOOKUP_OUT, index=False)
 
+def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
+    df_iso = df_ics[['id', 'countries_iso3']]
+    df_iso = df_iso.copy()
+    df_iso.loc[:, 'country'] = df_iso.countries_iso3.apply(ast.literal_eval)
+    df_iso = df_iso[['id', 'country']]
+    df_iso = df_iso.explode('country')
+    df_iso = df_iso.rename(columns={'id': 'ics_table_id'})
+    df_iso.reset_index(inplace=True)
+    df_iso['id'] = df_iso.index.copy().astype(int)
+    df_iso = df_iso[['id', 'ics_table_id', 'country']]
+    df_iso.to_csv(COUNTRIES_LOOKUP_OUT, index=False)
+
 def make_topics_and_weights():
     weights_df = pd.read_excel(WEIGHTS_TABLE, sheet_name='Sheet1')
     topics_df = pd.read_excel(TOPICS_TABLE, sheet_name='Sheet1')
@@ -129,13 +143,9 @@ def make_topics_and_weights():
 
 def make_topics_groups_table():
     group_df = pd.read_excel(TOPICS_GROUPS_TABLE, sheet_name="Sheet1")
-    print(group_df)
     if np.all(group_df.narrative == "none"):
         group_df["narrative"] = np.nan
     group_df.to_csv(TOPICS_GROUPS_OUT, index=False)
-    print(group_df)
-    print(TOPICS_GROUPS_OUT.exists())
-    print(TOPICS_GROUPS_TABLE)
 
 
 if __name__ == "__main__":
@@ -147,3 +157,5 @@ if __name__ == "__main__":
     make_topics_and_weights()
     print("Making topic groups table")
     make_topics_groups_table()
+    print("Making countries lookup table")
+    make_countries_lookup_table(ics_df)
