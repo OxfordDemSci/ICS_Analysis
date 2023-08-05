@@ -33,9 +33,13 @@ class ProductionConfig(Configuration):
     # Override or add production-specific configuration variables here
     pass
 
+class TestingConfig(LocalDevelopmentConfig):
+    TESTING = True
+
 # Set the active configuration class based on an environment variable
 app_config = {
     'development': DevelopmentConfig,
     'local_development': LocalDevelopmentConfig,
-    'production': ProductionConfig
+    'production': ProductionConfig,
+    'testing': TestingConfig,
 }
