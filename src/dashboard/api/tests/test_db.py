@@ -16,8 +16,4 @@ import pytest
 #     assert True
 
 def test_example(app, session):
-    print(app)
-    print(dir(app))
-    print(session)
-    print(dir(session))
     assert True

@@ -8,6 +8,8 @@ from app import create_app
 from alembic import command
 from alembic.config import Config
 
+from .make_test_data import insert_test_data
+
 
 ALEMBIC = Path(__file__).resolve().parent.parent.joinpath('alembic.ini').resolve()
 
@@ -29,6 +31,10 @@ def db(app: Flask):
     with app.app_context():
         _db.create_all()
         command.upgrade(alembic_cfg, "head")
+
+        # Insert test data
+        with _db.session.begin_nested():
+            insert_test_data(_db.session)
 
         yield _db
         _db.drop_all()
