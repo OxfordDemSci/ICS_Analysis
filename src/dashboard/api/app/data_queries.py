@@ -286,41 +286,6 @@ def get_ics_sql(topic=None, postcode=None, beneficiary=None, uoa=None, funder=No
             sql_str += " AND u.assessment_group = :uoa"
     if funder is not None:
         sql_str += " AND f.funder = :funder"
-
-        
-
-
-    print(sql_str)
-    # if (topic == "All Topics") and (postcode is not None):
-    #     sql = text('''
-    #     SELECT tw.ics_id FROM topic_weights tw 
-    #     JOIN topics t ON tw.topic_id = t.topic_id
-    #     JOIN ics i ON tw.ics_id = i.ics_id
-    #     WHERE tw.probability >= :threshold
-    #     AND i.postcode = :postcode;
-    # ''')
-    # elif (topic == "All Topics") and postcode is None:
-    #     sql = text('''
-    #     SELECT tw.ics_id FROM topic_weights tw 
-    #     JOIN topics t ON tw.topic_id = t.topic_id
-    #     JOIN ics i ON tw.ics_id = i.ics_id
-    #     WHERE tw.probability >= :threshold;
-    # ''')
-    # elif (topic != "All Topics") and postcode is not None:
-    #     sql = text('''
-    #     SELECT tw.ics_id FROM topic_weights tw 
-    #     JOIN topics t ON tw.topic_id = t.topic_id
-    #     JOIN ics i ON tw.ics_id = i.ics_id
-    #     WHERE t.topic_name = :topic AND tw.probability >= :threshold
-    #     AND i.postcode = :postcode;
-    # ''')
-    # else:
-    #     sql = text('''
-    #     SELECT tw.ics_id FROM topic_weights tw 
-    #     JOIN topics t ON tw.topic_id = t.topic_id
-    #     JOIN ics i ON tw.ics_id = i.ics_id
-    #     WHERE t.topic_name = :topic AND tw.probability >= :threshold
-    # ''')
     sql = text(sql_str)
     return sql
     
