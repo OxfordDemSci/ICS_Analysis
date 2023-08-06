@@ -32,7 +32,12 @@ class ProductionConfig(Configuration):
     # Override or add production-specific configuration variables here
     pass
 
-class TestingConfig(LocalDevelopmentConfig):
+class TestingConfig(Configuration):
+    DB_USERNAME = os.environ.get("POSTGRES_USER")
+    DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+    POSTGRES_DB_TEST = os.environ.get("POSTGRES_DB_TEST")
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB_TEST}"
+    TEST_DATABASE_URI = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@localhost:5432/{POSTGRES_DB_TEST}"
     TESTING = True
 
 # Set the active configuration class based on an environment variable
