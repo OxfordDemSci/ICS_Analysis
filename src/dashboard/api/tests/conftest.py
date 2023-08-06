@@ -41,7 +41,7 @@ def db(app: Flask):
         _db.engine.dispose()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def session(app, db):
     with app.app_context():
         connection = db.engine.connect()
