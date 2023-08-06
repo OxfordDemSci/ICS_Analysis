@@ -62,5 +62,42 @@ def test_get_ics_ids_with_threshold_only(session, dataframes, threshold, topic, 
     df_weights = dataframes["TOPIC_WEIGHTS_TABLE"]
     df_weights = df_weights[df_weights.probability >= threshold]
     ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uoa, funder)
-    assert sorted(ics_ids) == sorted(df_weights.ics_id.unique().tolist()) 
+    assert sorted(ics_ids) == sorted(df_weights.ics_id.unique().tolist())
+
+@pytest.mark.parametrize("threshold, topic", [
+    (0.5, "Body Image & Media"),
+    (0.1, "Literature"),
+    (0.9, "Music & Acoustics"),
+    (0.3, "Business & Industry"),
+    (0.4, "Conservation")
+])
+def test_get_ics_ids_with_topic(session, dataframes, threshold, topic):
+    df_weights = dataframes["TOPIC_WEIGHTS_TABLE"]
+    df_topics = dataframes["TOPICS_TABLE"]
+    try:
+        topic_id = df_topics.loc[df_topics["topic_name"] == topic, "topic_id"].values[0]
+        df_weights = df_weights[(df_weights.probability >= threshold) & (df_weights.topic_id == topic_id)]
+        ics_expected = sorted(df_weights.ics_id.unique().tolist())
+    except KeyError:
+        ics_expected = []
+    ics_ids = sorted(get_ics_ids(threshold=threshold, topic=topic))
+    assert ics_ids == ics_expected
+
+@pytest.mark.parametrize("threshold, beneficiary", [
+    (0.5, "GBR"),
+    (0.1, "FRA"),
+    (0.9, "IDN"),
+    (0.6, "IND")
+])
+def test_get_ics_ids_with_beneficiary(session, dataframes, threshold, beneficiary):
+    df_weights = dataframes["TOPIC_WEIGHTS_TABLE"]
+    ics = dataframes["ICS_DATABASE_TABLE"]
+    countries = dataframes["ICS_TO_COUNTRY_LOOKUP_TABLE"]
+    countries_ics_ids = countries[countries.country == beneficiary].ics_table_id.unique().tolist()
+    ics_ids_from_weights = df_weights[df_weights.probability >= threshold].ics_id.unique().tolist()
+    ics_ids_expected = sorted(ics[ics.id.isin(countries_ics_ids)].ics_id.unique().tolist())
+    ics_expected_union = [x for x in ics_ids_expected if x in ics_ids_from_weights]
+    ics_ids = sorted(get_ics_ids(threshold=threshold, beneficiary=beneficiary))
+    assert ics_ids == ics_expected_union
+
 
