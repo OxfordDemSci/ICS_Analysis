@@ -185,7 +185,7 @@ def making_test_data():
     df_uoa.to_csv(BASE_TEST.joinpath("UOA_TABLE.csv"), index=False)
 
     df_websitetext = pd.read_csv(BASE_CSVS.joinpath("WEBSITE_TEXT.csv"))
-    df_websitetext.to_csv(BASE_TEST.joinpath("WEBSITE_TEXT.csv"))
+    df_websitetext.to_csv(BASE_TEST.joinpath("WEBSITE_TEXT.csv"), index=False)
 
 
 
