@@ -5,20 +5,11 @@ from pathlib import Path
 from app.data_queries import (
     get_topics,
     get_topic_groups,
-    get_website_text
+    get_website_text,
+    get_ics_ids
 )
 
 TEST_DATA = Path(__file__).resolve().parent.joinpath('test_data')
-
-# @pytest.fixture
-# def topics_df():
-#     df = pd.read_csv(TEST_DATA.joinpath('TOPICS_TABLE.csv'))
-#     yield df
-
-# @pytest.fixture
-# def topics_groups_df():
-#     df = pd.read_csv(TEST_DATA.joinpath("TOPIC_GROUPS_TABLE.csv"))
-#     yield df
 
 @pytest.fixture
 def dataframes():
@@ -55,7 +46,7 @@ def test_get_topic_groups(session, dataframes):
     topic_groups = [x["topic_group"] for x in topic_groups]
     assert sorted(topic_groups) == sorted(topic_groups_df.topic_group.tolist())
 
-def get_website_text(session, dataframes):
+def test_get_website_text(session, dataframes):
     text_df = dataframes["WEBSITE_TEXT"]
     text = get_website_text()
-    assert sorted(text.keys()) == sorted(text_df.columns)
+    assert sorted(text.keys()) == sorted([x for x in text_df.columns if not x == 'id'])
