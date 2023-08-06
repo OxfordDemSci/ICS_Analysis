@@ -50,3 +50,13 @@ def test_get_website_text(session, dataframes):
     text_df = dataframes["WEBSITE_TEXT"]
     text = get_website_text()
     assert sorted(text.keys()) == sorted([x for x in text_df.columns if not x == 'id'])
+
+@pytest.mark.parametrize("threshold, topic, postcode, beneficiary, uoa, funder",[
+    (0.5, None, None, None, None, None)
+])
+def test_get_ics_ids_with_threshold_only(session, dataframes, threshold, topic, postcode, beneficiary, uoa, funder):
+    df_weights = dataframes["TOPIC_WEIGHTS_TABLE"]
+    df_weights = df_weights[df_weights.probability >= threshold]
+    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uoa, funder)
+    assert sorted(ics_ids) == sorted(df_weights.ics_id.unique().tolist()) 
+
