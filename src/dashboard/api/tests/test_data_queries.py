@@ -5,6 +5,7 @@ from pathlib import Path
 from app.data_queries import (
     get_topics,
     get_topic_groups,
+    get_website_text
 )
 
 TEST_DATA = Path(__file__).resolve().parent.joinpath('test_data')
@@ -53,3 +54,8 @@ def test_get_topic_groups(session, dataframes):
     topic_groups = get_topic_groups()
     topic_groups = [x["topic_group"] for x in topic_groups]
     assert sorted(topic_groups) == sorted(topic_groups_df.topic_group.tolist())
+
+def get_website_text(session, dataframes):
+    text_df = dataframes["WEBSITE_TEXT"]
+    text = get_website_text()
+    assert sorted(text.keys()) == sorted(text_df.columns)
