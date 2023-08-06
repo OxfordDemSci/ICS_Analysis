@@ -32,6 +32,9 @@ FUNDERS_IN = TOPICS_DIR.parent.joinpath('funders.csv')
 FUNDERS_LOOKUP_OUT = BASE_APP.joinpath('db-data/ICS_TO_FUNDERS_LOOKUP_TABLE.csv')
 COUNTRIES_LOOKUP_OUT = BASE_APP.joinpath('db-data/ICS_TO_COUNTRY_LOOKUP_TABLE.csv')
 
+BASE_CSVS = BASE_APP.joinpath('db-data')
+BASE_TEST = BASE_APP.parent.parent.joinpath('tests/test_data')
+
 columns_to_keep = [
     'id',
     'ukprn',
@@ -147,6 +150,46 @@ def make_topics_groups_table():
         group_df["narrative"] = np.nan
     group_df.to_csv(TOPICS_GROUPS_OUT, index=False)
 
+def making_test_data():
+    ics = pd.read_csv(BASE_CSVS.joinpath("ICS_DATABASE_TABLE.csv"))
+    ics = ics.sample(frac=1).reset_index(drop=True)
+    ics_ids = ics.ics_id.tolist()[0:99]
+    ids = ics.id.tolist()[0:99]
+    ukprns = ics.ukprn.tolist()[0:99]
+    ics = ics[ics.ics_id.isin(ics_ids)]
+    ics.to_csv(BASE_TEST.joinpath("ICS_DATABASE_TABLE.csv"), index=False)
+
+    df_country = pd.read_csv(BASE_CSVS.joinpath("ICS_TO_COUNTRY_LOOKUP_TABLE.csv"))
+    df_country = df_country[df_country.ics_table_id.isin(ids)]
+    df_country.to_csv(BASE_TEST.joinpath("ICS_TO_COUNTRY_LOOKUP_TABLE.csv"), index=False)
+
+    df_funders = pd.read_csv(BASE_CSVS.joinpath("ICS_TO_FUNDERS_LOOKUP_TABLE.csv"))
+    df_funders = df_funders[df_funders.ics_table_id.isin(ids)]
+    df_funders.to_csv(BASE_TEST.joinpath("ICS_TO_FUNDERS_LOOKUP_TABLE.csv"), index=False)
+
+    df_inst = pd.read_csv(BASE_CSVS.joinpath("INSTITUTES.csv"))
+    df_inst = df_inst[df_inst.ukprn.isin(ukprns)]
+    df_inst.to_csv(BASE_TEST.joinpath('INSTITUES.csv'), index=False)
+
+    df_topic_groups = pd.read_csv(BASE_CSVS.joinpath("TOPIC_GROUPS_TABLE.csv"))
+    df_topic_groups.to_csv(BASE_TEST.joinpath("TOPIC_GROUPS_TABLE.csv"), index=False)
+
+    df_weights = pd.read_csv(BASE_CSVS.joinpath("TOPIC_WEIGHTS_TABLE.csv"))
+    df_weights = df_weights[df_weights.ics_id.isin(ics_ids)]
+    df_weights.to_csv(BASE_TEST.joinpath("TOPIC_WEIGHTS_TABLE.csv"), index=False)
+
+    df_topics = pd.read_csv(BASE_CSVS.joinpath("TOPICS_TABLE.csv"))
+    df_topics.to_csv(BASE_TEST.joinpath("TOPICS_TABLE.csv"), index=False)
+
+    df_uoa = pd.read_csv(BASE_CSVS.joinpath("UOA_TABLE.csv"))
+    df_uoa.to_csv(BASE_TEST.joinpath("UOA_TABLE.csv"), index=False)
+
+    df_websitetext = pd.read_csv(BASE_CSVS.joinpath("WEBSITE_TEXT.csv"))
+    df_websitetext.to_csv(BASE_TEST.joinpath("WEBSITE_TEXT.csv"))
+
+
+
+
 
 if __name__ == "__main__":
     print('Making ICS table')
@@ -159,3 +202,5 @@ if __name__ == "__main__":
     make_topics_groups_table()
     print("Making countries lookup table")
     make_countries_lookup_table(ics_df)
+    print("Making test data")
+    making_test_data()
