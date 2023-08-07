@@ -124,6 +124,10 @@ paths:
       responses:
         "200":
           description: "Successfully read country ICS table"
+        "204":
+          description: "Request successful, no content to return"
+        "400":
+          description: "Invalid input parameters"
 
   /download_csv:
     get:
@@ -177,6 +181,10 @@ paths:
               schema:
                 type: string
                 format: binary
+        "204":
+          description: "Request successful, no content to return"
+        "400":
+          description: "Invalid input parameters"
   /download_pdf:
     get:
       operationId: "app.endpoints.download_ics_report_as_pdf"
@@ -229,3 +237,7 @@ paths:
               schema:
                 type: string
                 format: binary
+        "204":
+          description: "Request successful, no content to return"
+        "400":
+          description: "Invalid input parameters"
