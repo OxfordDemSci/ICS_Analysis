@@ -42,45 +42,69 @@ def get_ics_data(
         return make_response("", 204)
     return data
 
-def get_ics_data_country(threshold, topic=None, postcode_area=None, beneficiary=None, uoa=None, funder=None):
-    if topic == "null":
-        topic = None
-    if postcode_area == "null":
-        postcode_area = None
-    if beneficiary == "null":
-        beneficiary = None
-    if uoa == "null":
-        uoa = None
-    if funder == "null":
-        funder = None
+def get_ics_data_country(
+        threshold: float,
+        topic: str | None = None,
+        postcode_area: str | None = None,
+        beneficiary: str | None = None,
+        uoa: str | None = None,
+        funder: str | None = None,) -> dict:
+    
+    try:
+        threshold, topic, postcode_area, beneficiary, uoa, funder = validate_params(
+                                                                                    threshold,
+                                                                                    topic,
+                                                                                    postcode_area,
+                                                                                    beneficiary,
+                                                                                    uoa,
+                                                                                    funder)
+            
+    except ValueError as e:
+        abort(400, str(e))
     data = get_country_ics_data(threshold, topic, postcode_area, beneficiary, uoa, funder)
     return data
 
-def download_ics_as_csv(threshold, topic=None, postcode_area=None, beneficiary=None, uoa=None, funder=None):
-    if topic == "null":
-        topic = None
-    if postcode_area == "null":
-        postcode_area = None
-    if beneficiary == "null":
-        beneficiary = None
-    if uoa == "null":
-        uoa = None
-    if funder == "null":
-        funder = None
+def download_ics_as_csv(
+        threshold: float,
+        topic: str | None = None,
+        postcode_area: str | None = None,
+        beneficiary: str | None = None,
+        uoa: str | None = None,
+        funder: str | None = None,) -> dict:
+    
+    try:
+        threshold, topic, postcode_area, beneficiary, uoa, funder = validate_params(
+                                                                                    threshold,
+                                                                                    topic,
+                                                                                    postcode_area,
+                                                                                    beneficiary,
+                                                                                    uoa,
+                                                                                    funder)
+            
+    except ValueError as e:
+        abort(400, str(e))
     data = download_ics_table(threshold, topic, postcode_area, beneficiary, uoa, funder)
     return data
 
-def download_ics_report_as_pdf(threshold, topic=None, postcode_area=None, beneficiary=None, uoa=None, funder=None):
-    if topic == "null":
-        topic = None
-    if postcode_area == "null":
-        postcode_area = None
-    if beneficiary == "null":
-        beneficiary = None
-    if uoa == "null":
-        uoa = None
-    if funder == "null":
-        funder = None
+def download_ics_report_as_pdf(
+        threshold: float,
+        topic: str | None = None,
+        postcode_area: str | None = None,
+        beneficiary: str | None = None,
+        uoa: str | None = None,
+        funder: str | None = None,) -> dict:
+    
+    try:
+        threshold, topic, postcode_area, beneficiary, uoa, funder = validate_params(
+                                                                                    threshold,
+                                                                                    topic,
+                                                                                    postcode_area,
+                                                                                    beneficiary,
+                                                                                    uoa,
+                                                                                    funder)
+            
+    except ValueError as e:
+        abort(400, str(e))
     pdf_data = get_pdf_data(threshold, topic, postcode_area, beneficiary, uoa, funder)
     data = pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder)
     return data
