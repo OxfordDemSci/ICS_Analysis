@@ -62,6 +62,8 @@ def get_ics_data_country(
     except ValueError as e:
         abort(400, str(e))
     data = get_country_ics_data(threshold, topic, postcode_area, beneficiary, uoa, funder)
+    if all(not value for value in data.values()):
+        return make_response("", 204)
     return data
 
 def download_ics_as_csv(

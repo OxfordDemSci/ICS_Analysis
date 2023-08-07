@@ -181,8 +181,6 @@ paths:
               schema:
                 type: string
                 format: binary
-        "204":
-          description: "Request successful, no content to return"
         "400":
           description: "Invalid input parameters"
   /download_pdf:
@@ -237,7 +235,5 @@ paths:
               schema:
                 type: string
                 format: binary
-        "204":
-          description: "Request successful, no content to return"
         "400":
           description: "Invalid input parameters"
