@@ -145,16 +145,17 @@ def test_query_dashboard_data(session, dataframes, threshold):
     data = query_dashboard_data(threshold)
     ics_ids = get_ics_ids(threshold)
     filtered_df = make_query_table(dataframes, threshold)
-    filtered_df = filtered_df[filtered_df.ics_id.isin(ics_ids)]
+    filtered_df = filtered_df[filtered_df.ics_id.isin(ics_ids)].drop_duplicates(subset=["country", "ics_id"])
     data_expected = {}
     data_expected["countries_counts"] = filtered_df["country"].value_counts().to_dict()
     data_expected["funders_counts"] = filtered_df["funder"].value_counts().to_dict()
     data_expected["uoa_counts"] = filtered_df["name_x"].value_counts().to_dict()
     data_expected["institution_counts"] = filtered_df["inst_name"].value_counts().to_dict()
     country_counts = {x["country"]: x["country_count"] for x in data["countries_counts"]}
+    del country_counts[""]
     print(country_counts)
     print(data_expected["countries_counts"])
-    #assert json.dumps(country_counts, sort_keys=True) == json.dumps(data_expected["countries_counts"], sort_keys=True)
+    assert json.dumps(country_counts, sort_keys=True) == json.dumps(data_expected["countries_counts"], sort_keys=True)
     assert True
     assert len(ics_ids) == len(filtered_df.drop_duplicates(subset='ics_id'))
 
