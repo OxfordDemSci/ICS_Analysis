@@ -6,6 +6,7 @@ import pandas as pd
 import geopandas as gpd
 import psycopg2
 from sqlalchemy import create_engine, inspect
+import ast
 
 from alembic import context
 from alembic.config import Config
@@ -82,7 +83,10 @@ def upload_to_db(df, table_name):
         delete_query = f"DELETE FROM {table_name}"
         cursor.execute(delete_query)
         conn.commit()
-        cursor.close()    
+        cursor.close()
+    if table_name == "websitetext":
+        df["uk_map_colourramp"] = df["uk_map_colourramp"].apply(ast.literal_eval)
+        df["global_colourramp"] = df["global_colourramp"].apply(ast.literal_eval)
     df.to_sql(table_name, engine, if_exists='append', index=False)
     
 def convert_col_to_int(df, col_name):
