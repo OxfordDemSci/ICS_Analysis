@@ -48,8 +48,7 @@ def get_topic_groups():
     return result
 
 def get_website_text():
-    row = db.session.query(WebsiteText).first()
-
+    row = db.session.query(WebsiteText).first() 
     website_text = {
         "all_topics_description": row.all_topics_description,
         "about": row.about,

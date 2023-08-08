@@ -131,15 +131,15 @@ def test_get_ics_ids_with_different_parameters(session, dataframes, threshold, t
 
 @pytest.mark.parametrize("threshold", [
     (0.1),
-    # (0.2),
-    # (0.3),
-    # (0.4),
-    # (0.5),
-    # (0.6),
-    # (0.7),
-    # (0.8),
-    # (0.9),
-    # (1.0),
+    (0.2),
+    (0.3),
+    (0.4),
+    (0.5),
+    (0.6),
+    (0.7),
+    (0.8),
+    (0.9),
+    (1.0),
 ])
 def test_query_dashboard_data(session, dataframes, threshold):
     data = query_dashboard_data(threshold)
@@ -153,8 +153,6 @@ def test_query_dashboard_data(session, dataframes, threshold):
     data_expected["institution_counts"] = filtered_df["inst_name"].value_counts().to_dict()
     country_counts = {x["country"]: x["country_count"] for x in data["countries_counts"]}
     del country_counts[""]
-    print(country_counts)
-    print(data_expected["countries_counts"])
     assert json.dumps(country_counts, sort_keys=True) == json.dumps(data_expected["countries_counts"], sort_keys=True)
     assert True
     assert len(ics_ids) == len(filtered_df.drop_duplicates(subset='ics_id'))

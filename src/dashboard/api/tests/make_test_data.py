@@ -1,4 +1,5 @@
 from pathlib import Path
+import ast
 import csv
 from app.models import (
     ICS,
@@ -31,6 +32,9 @@ def insert_test_data(db_session):
         with open(BASE.joinpath(csv_name), 'r', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
+                if csv_name == "WEBSITE_TEXT.csv":
+                    row["uk_map_colourramp"] = ast.literal_eval(row["uk_map_colourramp"])
+                    row["global_colourramp"] = ast.literal_eval(row["global_colourramp"])
                 db_row = model(**row)
                 db_session.add(db_row)
     db_session.commit()
