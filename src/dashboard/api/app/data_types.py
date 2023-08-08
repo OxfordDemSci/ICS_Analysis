@@ -5,13 +5,8 @@ from typing import Union
 
 from app import db
 
-from app.models import (
-    Topics,
-    ICS,
-    Countries,
-    UOA,
-    Funder
-)
+from app.models import Topics, ICS, Countries, UOA, Funder
+
 
 @dataclass
 class ThresholdType:
@@ -20,28 +15,30 @@ class ThresholdType:
     @property
     def value(self) -> float:
         return self._value
-    
+
     @value.setter
     def value(self, new_value: float) -> None:
         if not 0 <= new_value <= 1:
             raise ValueError("Threshold must be float between 0 and 1")
         self._value = new_value
 
-@dataclass 
+
+@dataclass
 class TopicType:
     value: str | None = None
 
     @property
     def value(self) -> Union[str, None]:
         return self._value
-    
+
     @value.setter
     def value(self, new_value: str | None) -> None:
         values = db.session.query(Topics.topic_name).distinct().all()
         if new_value is None or new_value in [x[0] for x in values]:
             self._value = new_value
         else:
-            raise ValueError(f"Topic invalid - {new_value}")        
+            raise ValueError(f"Topic invalid - {new_value}")
+
 
 @dataclass
 class PostCodeAreaType:
@@ -50,7 +47,7 @@ class PostCodeAreaType:
     @property
     def value(self) -> Union[str, None]:
         return self._value
-    
+
     @value.setter
     def value(self, new_value: str | None) -> None:
         values = db.session.query(ICS.postcode).distinct().all()
@@ -58,7 +55,8 @@ class PostCodeAreaType:
             self._value = new_value
         else:
             raise ValueError(f"Postcode invalid - {new_value}")
-        
+
+
 @dataclass
 class BeneficiaryType:
     value: str | None = None
@@ -66,7 +64,7 @@ class BeneficiaryType:
     @property
     def value(self) -> Union[str, None]:
         return self._value
-    
+
     @value.setter
     def value(self, new_value: str | None) -> None:
         values = db.session.query(Countries.country).distinct().all()
@@ -74,7 +72,8 @@ class BeneficiaryType:
             self._value = new_value
         else:
             raise ValueError(f"Beneficiary invalid - {new_value}")
-        
+
+
 @dataclass
 class UOAType:
     value: str | None = None
@@ -82,7 +81,7 @@ class UOAType:
     @property
     def value(self) -> Union[str, None]:
         return self._value
-    
+
     @value.setter
     def value(self, new_value: str | None) -> None:
         values = db.session.query(UOA.assessment_panel).distinct().all()
@@ -90,7 +89,8 @@ class UOAType:
             self._value = new_value
         else:
             raise ValueError(f"UOA invalid - {new_value}")
-        
+
+
 @dataclass
 class FunderType:
     value: str | None = None
@@ -98,7 +98,7 @@ class FunderType:
     @property
     def value(self) -> Union[str, None]:
         return self._value
-    
+
     @value.setter
     def value(self, new_value: str | None) -> None:
         values = db.session.query(Funder.funder).distinct().all()
@@ -108,50 +108,52 @@ class FunderType:
             raise ValueError(f"Funder invalid - {new_value}")
 
 
-
 title_style = ParagraphStyle(
-        'Title',
-        parent=getSampleStyleSheet()['Title'],
-        alignment=TA_CENTER,
-        fontName='Helvetica-Bold',  # Replace with your desired font name
-        fontSize=24,
-    )
+    "Title",
+    parent=getSampleStyleSheet()["Title"],
+    alignment=TA_CENTER,
+    fontName="Helvetica-Bold",  # Replace with your desired font name
+    fontSize=24,
+)
 
 
 subtitle_style = ParagraphStyle(
-        'Heading3',
-        parent=getSampleStyleSheet()['Heading3'],
-        alignment=TA_LEFT,
-        fontName='Helvetica',  # Replace with your desired font name
-        fontSize=18,
-        underlineColor='black',
-        underlineWidth=1)
+    "Heading3",
+    parent=getSampleStyleSheet()["Heading3"],
+    alignment=TA_LEFT,
+    fontName="Helvetica",  # Replace with your desired font name
+    fontSize=18,
+    underlineColor="black",
+    underlineWidth=1,
+)
 
 body_text_style = ParagraphStyle(
-        'BodyStyle',
-        parent=getSampleStyleSheet()["Normal"],
-        alignment=TA_LEFT,
-        fontName='Helvetica',
-        fontSize=12,
-    )
+    "BodyStyle",
+    parent=getSampleStyleSheet()["Normal"],
+    alignment=TA_LEFT,
+    fontName="Helvetica",
+    fontSize=12,
+)
 
 subtitle_style_center = ParagraphStyle(
-        'Heading3',
-        parent=getSampleStyleSheet()['Heading3'],
-        alignment=TA_CENTER,
-        fontName='Helvetica',  # Replace with your desired font name
-        fontSize=18,
-        underlineColor='black',
-        underlineGap=2,
-        underlineWidth=1,
-        )
+    "Heading3",
+    parent=getSampleStyleSheet()["Heading3"],
+    alignment=TA_CENTER,
+    fontName="Helvetica",  # Replace with your desired font name
+    fontSize=18,
+    underlineColor="black",
+    underlineGap=2,
+    underlineWidth=1,
+)
 
 small_centered_style = ParagraphStyle(
-    'SmallCentered',
-    parent=getSampleStyleSheet()['Normal'],  # You can replace 'Normal' with any other style name from the style sheet
+    "SmallCentered",
+    parent=getSampleStyleSheet()[
+        "Normal"
+    ],  # You can replace 'Normal' with any other style name from the style sheet
     fontSize=8,  # Adjust the font size as needed
     alignment=TA_CENTER,
-    fontName='Helvetica-Bold'
+    fontName="Helvetica-Bold",
 )
 
 

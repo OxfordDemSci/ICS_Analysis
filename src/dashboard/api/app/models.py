@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class ICS(Base):
     __tablename__ = "ics"
 
@@ -40,9 +41,7 @@ class ICS(Base):
     postcode = Column(String)
     ics_url = Column(String)
 
-    __table_args__ = (
-        Index('idx_ics_id', 'id', 'ics_id'),
-    )
+    __table_args__ = (Index("idx_ics_id", "id", "ics_id"),)
 
 
 class Topics(Base):
@@ -62,9 +61,7 @@ class Topics(Base):
     cluster = Column(String)
     topic_notes = Column(String)
 
-    __table_args__ = (
-        Index('idx_topics_id', 'topic_id', unique=True),
-    )
+    __table_args__ = (Index("idx_topics_id", "topic_id", unique=True),)
 
 
 class TopicWeights(Base):
@@ -75,9 +72,8 @@ class TopicWeights(Base):
     topic_id = Column(Integer)
     probability = Column(Float)
 
-    __table_args__ = (
-        Index('idx_topic_weights_id', 'id', unique=True),
-    )
+    __table_args__ = (Index("idx_topic_weights_id", "id", unique=True),)
+
 
 class TopicGroups(Base):
     __tablename__ = "topic_groups"
@@ -87,9 +83,7 @@ class TopicGroups(Base):
     description = Column(String)
     narrative = Column(String)
 
-    __table__args = (
-        Index('idx_topic_groups', 'group_id', unique=True),
-    )
+    __table__args = (Index("idx_topic_groups", "group_id", unique=True),)
 
 
 class Funder(Base):
@@ -99,9 +93,7 @@ class Funder(Base):
     ics_table_id = Column(Integer)
     funder = Column(String)
 
-    __table_args__ = (
-        Index('idx_funder_id', 'id', unique=True),
-    )
+    __table_args__ = (Index("idx_funder_id", "id", unique=True),)
 
 
 class UOA(Base):
@@ -113,9 +105,7 @@ class UOA(Base):
     assessment_panel = Column(String(1), nullable=False)
     assessment_group = Column(String(5), nullable=False)
 
-    __table_args__ = (
-        Index('idx_uoa_id', 'id', unique=True),
-    )
+    __table_args__ = (Index("idx_uoa_id", "id", unique=True),)
 
 
 class Institution(Base):
@@ -126,6 +116,7 @@ class Institution(Base):
     name = Column(String)
     postcode = Column(String(8))
 
+
 class Countries(Base):
     __tablename__ = "countries"
 
@@ -133,12 +124,12 @@ class Countries(Base):
     ics_table_id = Column(Integer)
     country = Column(String(3))
 
-    __table_args__ = (
-        Index('idx_countries_id', 'id', unique=True),
-    )
+    __table_args__ = (Index("idx_countries_id", "id", unique=True),)
+
 
 class WebsiteText(Base):
     """One row table with place holders for text to be shown on the page."""
+
     __tablename__ = "websitetext"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -155,9 +146,3 @@ class WebsiteText(Base):
     uk_map_colourramp = Column(ARRAY(String))
     global_colourramp = Column(ARRAY(String))
     funders_bar_colour = Column(String)
-
-
-
-
-
-
