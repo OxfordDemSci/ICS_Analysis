@@ -40,5 +40,21 @@ def test_ics_data(session, app):
                                             "institution_counts",
                                             "ics_table"
                                         ])
+        
+@pytest.mark.parametrize("url, code", [
+    ("/api/get_ics_data?threshold=0.9", 200),
+    ("/api/get_ics_data", 400),
+    ("/api/get_ics_data?thresholds=0.1", 400),
+    ("/api/get_ics_data?threshold=-1", 400),
+    ("/api/get_ics_data?threshold=2", 400),
+    ("/api/get_ics_data?theshold=big", 400),
+    ("/api/get_ics_data?threshold=0.5&topic=Not_a_topic", 400),
+    ("/api/get_ics_data?threshold=1&topic=Cultural%20Capital", 204),
+    ("/api/not_an_endpoint", 404)
+])
+def test_http_codes(session, app, url, code):
+    with app.test_client() as client:
+        response = client.get(url)
+        assert response.status_code == code
 
 
