@@ -1,7 +1,8 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Union
 
 from flask import abort, make_response
+from flask.wrappers import Response
 
 from .data_access import (get_data, get_ics_database_topics, get_init,
                           validate_params)
@@ -11,7 +12,7 @@ from .generate_pdf_report import pdf_report
 BASE = Path(__file__).resolve().parent
 
 
-def read_init() -> Dict[str, dict]:
+def read_init() -> Dict[str, Union[dict, float]]:
     init_data = get_init()
     return init_data
 
@@ -28,7 +29,7 @@ def get_ics_data(
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
-) -> Dict[str, dict]:
+) -> Union[Dict[str, List[Dict[str, str]]], Response]:
     try:
         threshold, topic, postcode_area, beneficiary, uoa, funder = validate_params(
             threshold, topic, postcode_area, beneficiary, uoa, funder
@@ -49,7 +50,7 @@ def download_ics_as_csv(
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
-) -> Dict[str, dict]:
+) -> Response:
     try:
         threshold, topic, postcode_area, beneficiary, uoa, funder = validate_params(
             threshold, topic, postcode_area, beneficiary, uoa, funder

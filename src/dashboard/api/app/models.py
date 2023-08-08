@@ -1,10 +1,10 @@
 from sqlalchemy import ARRAY, Column, Float, Index, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+Base = declarative_base()  # type: ignore
 
 
-class ICS(Base):
+class ICS(Base):  # type: ignore
     __tablename__ = "ics"
 
     id = Column(Integer, primary_key=True)
@@ -43,7 +43,7 @@ class ICS(Base):
     __table_args__ = (Index("idx_ics_id", "id", "ics_id"),)
 
 
-class Topics(Base):
+class Topics(Base):  # type: ignore
     __tablename__ = "topics"
 
     topic_id = Column(Integer, primary_key=True)
@@ -63,7 +63,7 @@ class Topics(Base):
     __table_args__ = (Index("idx_topics_id", "topic_id", unique=True),)
 
 
-class TopicWeights(Base):
+class TopicWeights(Base):  # type: ignore
     __tablename__ = "topic_weights"
 
     id = Column(Integer, primary_key=True)
@@ -74,7 +74,7 @@ class TopicWeights(Base):
     __table_args__ = (Index("idx_topic_weights_id", "id", unique=True),)
 
 
-class TopicGroups(Base):
+class TopicGroups(Base):  # type: ignore
     __tablename__ = "topic_groups"
 
     group_id = Column(Integer, primary_key=True)
@@ -85,7 +85,7 @@ class TopicGroups(Base):
     __table__args = (Index("idx_topic_groups", "group_id", unique=True),)
 
 
-class Funder(Base):
+class Funder(Base):  # type: ignore
     __tablename__ = "funder"
 
     id = Column(Integer, primary_key=True)
@@ -95,7 +95,7 @@ class Funder(Base):
     __table_args__ = (Index("idx_funder_id", "id", unique=True),)
 
 
-class UOA(Base):
+class UOA(Base):  # type: ignore
     __tablename__ = "uoa"
 
     id = Column(Integer, primary_key=True)
@@ -107,7 +107,7 @@ class UOA(Base):
     __table_args__ = (Index("idx_uoa_id", "id", unique=True),)
 
 
-class Institution(Base):
+class Institution(Base):  # type: ignore
     __tablename__ = "institution"
 
     id = Column(Integer, primary_key=True)
@@ -116,7 +116,7 @@ class Institution(Base):
     postcode = Column(String(8))
 
 
-class Countries(Base):
+class Countries(Base):  # type: ignore
     __tablename__ = "countries"
 
     id = Column(Integer, primary_key=True)
@@ -126,7 +126,7 @@ class Countries(Base):
     __table_args__ = (Index("idx_countries_id", "id", unique=True),)
 
 
-class WebsiteText(Base):
+class WebsiteText(Base):  # type: ignore
     """One row table with place holders for text to be shown on the page."""
 
     __tablename__ = "websitetext"
@@ -142,6 +142,6 @@ class WebsiteText(Base):
     label_bottom_left_box = Column(String)
     label_top_right_box = Column(String)
     label_bottom_right_box = Column(String)
-    uk_map_colourramp = Column(ARRAY(String))
-    global_colourramp = Column(ARRAY(String))
+    uk_map_colourramp = Column(ARRAY(String))  # type: ignore
+    global_colourramp = Column(ARRAY(String))  # type: ignore
     funders_bar_colour = Column(String)

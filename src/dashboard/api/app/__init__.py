@@ -1,9 +1,9 @@
 from pathlib import Path
 
-import connexion
-import geopandas as gpd
+import connexion  # type: ignore
+import geopandas as gpd  # type: ignore
 from flask import Flask
-from flask_cors import CORS
+from flask_cors import CORS  # type: ignore
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy

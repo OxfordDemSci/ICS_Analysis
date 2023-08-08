@@ -1,10 +1,12 @@
 import csv
 from collections import defaultdict
 from io import StringIO
-from typing import Dict, List, Optional
+from typing import Any, DefaultDict, Dict, List
 
 from flask import make_response
+from flask.wrappers import Response
 from sqlalchemy import text
+from sqlalchemy.sql.elements import TextClause
 
 from app import db
 from app.models import ICS, TopicGroups, WebsiteText
@@ -127,7 +129,7 @@ def download_ics_table(
     uoa: str | None = None,
     funder: str | None = None,
     limit: int | None = None,
-) -> make_response:
+) -> Response:
     ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
     rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
     csv_data = StringIO()
@@ -197,7 +199,7 @@ def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     return countries
 
 
-def get_uoa_counts(ics_ids: list | None = None) -> Optional[List[Dict[str, str]]]:
+def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     if ics_ids is None:
         sql = text(
             """
@@ -243,11 +245,11 @@ def get_uoa_counts(ics_ids: list | None = None) -> Optional[List[Dict[str, str]]
     return uoa
 
 
-def nested_defaultdict() -> defaultdict:
+def nested_defaultdict() -> DefaultDict:
     return defaultdict(nested_defaultdict)
 
 
-def get_institution_counts(ics_ids: List | None = None) -> defaultdict:
+def get_institution_counts(ics_ids: List | None = None) -> Any:
     if ics_ids is None:
         sql = text(
             """
@@ -267,7 +269,7 @@ def get_institution_counts(ics_ids: List | None = None) -> defaultdict:
         )
         query = db.session.execute(sql, {"ics_ids": ics_ids})
     # institutions = defaultdict(dict)
-    institutions = defaultdict(nested_defaultdict)
+    institutions: DefaultDict = defaultdict(nested_defaultdict)
     for row in query:
         postcode = row.postcode
         institution = row.institution
@@ -288,7 +290,7 @@ def query_dashboard_data(
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
-) -> Dict[str, str]:
+) -> Dict[str, List[Dict[str, str]]]:
     data = {}
     ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uoa, funder)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
@@ -315,7 +317,7 @@ def get_ics_ids(
         for arg_name, arg_val in zip(argument_names, arguments)
         if arg_val is not None
     }
-    query = db.session.execute(sql, params)
+    query: Any = db.session.execute(sql, params)
     ics_ids = [row.ics_id for row in query]
     return ics_ids
 
@@ -326,7 +328,7 @@ def get_ics_sql(
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
-) -> text:
+) -> TextClause:
     sql_str = """
         SELECT DISTINCT(tw.ics_id) FROM topic_weights tw
         JOIN topics t ON tw.topic_id = t.topic_id

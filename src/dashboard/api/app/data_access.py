@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from .data_queries import (get_topic_groups, get_topics, get_website_text,
                            query_dashboard_data)
@@ -32,8 +32,8 @@ def validate_params(
     return threshold, topic, postcode_area, beneficiary, uoa, funder
 
 
-def get_init() -> Dict[str, dict]:
-    init_data: Dict[str, dict] = {}
+def get_init() -> Dict[str, Union[dict, float]]:
+    init_data: Dict[str, Union[dict, float]] = {}
     init_data["website_text"] = get_website_text()
     init_data["ics_threshold"] = 0.5
     init_data["topic_groups"] = get_topic_groups()
@@ -52,6 +52,6 @@ def get_data(
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
-) -> Dict[str, dict]:
+) -> Dict[str, List[Dict[str, str]]]:
     data = query_dashboard_data(threshold, topic, postcode, beneficiary, uoa, funder)
     return data

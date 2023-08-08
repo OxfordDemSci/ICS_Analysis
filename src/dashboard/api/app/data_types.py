@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Union
 
-from reportlab.lib.enums import TA_CENTER, TA_LEFT
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.enums import TA_CENTER, TA_LEFT  # type: ignore
+from reportlab.lib.styles import (ParagraphStyle,  # type: ignore
+                                  getSampleStyleSheet)
 
 from app import db
 from app.models import ICS, UOA, Countries, Funder, Topics
