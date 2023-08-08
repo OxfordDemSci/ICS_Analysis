@@ -110,25 +110,6 @@ def download_ics_table(threshold, topic=None, postcode=None, country=None, uoa=N
     return response
 
 
-
-def get_ics_table_for_country(threshold, topic=None, postcode=None, country=None, uoa=None, funder=None, limit=None):
-    ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
-    sql = text('''
-               SELECT * FROM ics i
-               JOIN countries c
-               ON i.id = c.ics_table_id
-               WHERE c.country = :country
-               AND i.ics_id = ANY(:ics_ids)     
-    ''')
-    if limit is None:
-        query = db.session.execute(sql, {"country": country, "ics_ids": ics_ids})
-    else:
-        query = db.session.execute(sql, {"country": country, "ics_ids": ics_ids}).fetchmany(limit)
-    ics_table = []
-    for row in query:
-        ics_table.append({column.name: getattr(row, column.name) for column in ICS.__table__.columns})
-    return ics_table
-
 def get_funders_counts(ics_ids=None):
     if ics_ids is None:
         sql = text('''

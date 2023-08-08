@@ -42,29 +42,6 @@ def get_ics_data(
         return make_response("", 204)
     return data
 
-def get_ics_data_country(
-        threshold: float,
-        topic: str | None = None,
-        postcode_area: str | None = None,
-        beneficiary: str | None = None,
-        uoa: str | None = None,
-        funder: str | None = None,) -> dict:
-    
-    try:
-        threshold, topic, postcode_area, beneficiary, uoa, funder = validate_params(
-                                                                                    threshold,
-                                                                                    topic,
-                                                                                    postcode_area,
-                                                                                    beneficiary,
-                                                                                    uoa,
-                                                                                    funder)
-            
-    except ValueError as e:
-        abort(400, str(e))
-    data = get_country_ics_data(threshold, topic, postcode_area, beneficiary, uoa, funder)
-    if all(not value for value in data.values()):
-        return make_response("", 204)
-    return data
 
 def download_ics_as_csv(
         threshold: float,
