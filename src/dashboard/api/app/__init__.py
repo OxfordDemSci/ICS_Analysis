@@ -30,7 +30,7 @@ def create_app(config_name: str) -> Flask:
     connexion_app.add_api('api-config.yaml')
     db.init_app(app)
     CORS(app, resources={r"/*": {"origins": "*"}})
-    if config_name == 'local_development':
+    if config_name == 'local_development' or config_name == 'testing':
         limiter._storage_uri = "memcached://localhost:11211"
     else:
         limiter._storage_uri = "memcached://ics_memcached:11211"
