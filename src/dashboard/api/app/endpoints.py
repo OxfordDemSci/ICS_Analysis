@@ -1,9 +1,10 @@
-import json
 from pathlib import Path
 from typing import Dict
+
 from flask import abort, make_response
 
-from .data_access import get_init, get_data, get_ics_database_topics, validate_params
+from .data_access import (get_data, get_ics_database_topics, get_init,
+                          validate_params)
 from .data_queries import download_ics_table, get_pdf_data
 from .generate_pdf_report import pdf_report
 

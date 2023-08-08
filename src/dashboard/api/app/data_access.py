@@ -1,19 +1,9 @@
-from typing import Tuple, Union, Dict
-from .data_queries import (
-    get_topics,
-    get_topic_groups,
-    get_website_text,
-    query_dashboard_data,
-)
+from typing import Dict, Tuple, Union
 
-from .data_types import (
-    ThresholdType,
-    TopicType,
-    PostCodeAreaType,
-    BeneficiaryType,
-    UOAType,
-    FunderType,
-)
+from .data_queries import (get_topic_groups, get_topics, get_website_text,
+                           query_dashboard_data)
+from .data_types import (BeneficiaryType, FunderType, PostCodeAreaType,
+                         ThresholdType, TopicType, UOAType)
 
 
 def validate_params(

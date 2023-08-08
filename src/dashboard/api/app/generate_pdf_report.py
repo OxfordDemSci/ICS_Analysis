@@ -1,31 +1,20 @@
 import io
-from pathlib import Path
-from flask import make_response
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch, cm
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Image, Table, TableStyle
-from reportlab.lib.utils import ImageReader
-from reportlab.platypus import (
-    SimpleDocTemplate,
-    Image,
-    Paragraph,
-    Spacer,
-    Table,
-    TableStyle,
-    PageBreak,
-)
-from reportlab.lib.enums import TA_CENTER, TA_LEFT
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib import colors
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import matplotlib
-from flask import request
-from numpy import log10
 from collections import defaultdict
-from .data_types import styles_map
+from pathlib import Path
+
+import matplotlib
+import matplotlib.pyplot as plt
+from flask import make_response, request
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import cm
+from reportlab.platypus import (Image, PageBreak, Paragraph, SimpleDocTemplate,
+                                Spacer, Table, TableStyle)
+
 from app import postcode_gdf, world_gdf
+
+from .data_types import styles_map
 
 matplotlib.use("agg")  # Set the backend to 'agg' for non-GUI use
 
@@ -63,7 +52,10 @@ def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, fund
         description_text = pdf_data["background_text"]["all_topics_description"]
         narrative_text = "All topics selected"
     else:
-        topic_subtitle_text = f"<u><b>Topic:</b> {pdf_data['topic'][0].get('topic_name')} - <b>Topic Group:</b> {pdf_data['topic'][0].get('topic_group')}</u>"
+        topic_subtitle_text = (
+            f"<u><b>Topic:</b> {pdf_data['topic'][0].get('topic_name')} - <b>Topic Group:</b>"
+            f"{pdf_data['topic'][0].get('topic_group')}</u>"
+        )
         description_text = (
             pdf_data["topic"][0].get("description")
             if pdf_data["topic"][0].get("description")
@@ -167,9 +159,15 @@ def add_uoa_info(pdf_data):
         f"<u>{pdf_data['background_text']['label_bottom_left_box']}</u>", center=True
     )
     if pdf_data["topic"] is None:
-        footnote_text = "<b>Figure 2. Top units of assessment to which impact case studies in all topics were submitted.<b>"
+        footnote_text = (
+            "<b>Figure 2. Top units of assessment to which impact case studies in all topics were"
+            "submitted.<b>"
+        )
     else:
-        footnote_text = f"<b>Figure 2. Top units of assessment to which impact case studies in topic {pdf_data['topic'][0]['topic_name']} were submitted.</b>"
+        footnote_text = (
+            f"<b>Figure 2. Top units of assessment to which impact case studies in topic "
+            f"{pdf_data['topic'][0]['topic_name']} were submitted.</b>"
+        )
     footnote = add_text(footnote_text, footnote=True)
     uoa_table_and_graph = create_uoa_bar_chart(pdf_data["ics_data"]["uoa_counts"])
     uoa_table = Table([[title], [uoa_table_and_graph], [footnote]], colWidths=[15 * cm])
@@ -201,7 +199,10 @@ def add_institutions_info(pdf_data):
     if pdf_data["topic"] is None:
         footnote_text = "<b>Figure 3. UK locations and counts of institutes submitting case studies in all topics.<b>"
     else:
-        footnote_text = f"<b>Figure 3. UK locations and counts of institutes submitting case studies in topic {pdf_data['topic'][0]['topic_name']} were submitted.</b>"
+        footnote_text = (
+            f"<b>Figure 3. UK locations and counts of institutes submitting case studies in topic"
+            f"{pdf_data['topic'][0]['topic_name']} were submitted.</b>"
+        )
     footnote = add_text(footnote_text, footnote=True)
     pc_gdf = postcode_gdf.copy()
     institutions_dict = convert_defaultdict_to_dict(
@@ -297,7 +298,10 @@ def add_beneficiaries_info(pdf_data):
     if pdf_data["topic"] is None:
         footnote_text = "<b>Figure 4. Global locations where impact case studies in all topics claimed impacts.<b>"
     else:
-        footnote_text = f"<b>Figure 4. Global locations where impact case studies in all in topic {pdf_data['topic'][0]['topic_name']} claimed impacts.</b>"
+        footnote_text = (
+            f"<b>Figure 4. Global locations where impact case studies in all in topic "
+            f"{pdf_data['topic'][0]['topic_name']} claimed impacts.</b>"
+        )
     footnote = add_text(footnote_text, footnote=True)
     countries_gdf = world_gdf.copy()
 
@@ -407,7 +411,10 @@ def add_final_footnote(
     request_url = request.url
     params = request_url.split("?")[1]
     print("PARAMS", params)
-    download_csv_url = f'<b>Full table can be download from <u><a href="{base_url}download_csv?{params}">{base_url}download_csv?{params}</a></u></b>'
+    download_csv_url = (
+        f'<b>Full table can be download from <u><a href="{base_url}download_csv?{params}">{base_url}'
+        f"download_csv?{params}</a></u></b>"
+    )
     return add_text(download_csv_url)
 
 
@@ -520,7 +527,6 @@ def create_bar_graph(data, value, label, chart_title):
 
 def create_uoa_bar_chart(data_list):
     # Extract unique assessment_panel values
-    assessment_panels = sorted(set(item["assessment_panel"] for item in data_list))
     # Group data by assessment_panel and create subgroups for each name with uoa_count
     data_dict = {}
     for item in data_list:

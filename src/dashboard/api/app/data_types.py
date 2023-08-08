@@ -1,11 +1,11 @@
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from dataclasses import dataclass
 from typing import Union
 
-from app import db
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 
-from app.models import Topics, ICS, Countries, UOA, Funder
+from app import db
+from app.models import ICS, UOA, Countries, Funder, Topics
 
 
 @dataclass

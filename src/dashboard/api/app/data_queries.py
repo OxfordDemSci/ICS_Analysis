@@ -1,17 +1,13 @@
-from sqlalchemy import text
-from collections import defaultdict
-from flask import make_response
-from io import StringIO
 import csv
+from collections import defaultdict
+from io import StringIO
 from typing import Dict, List, Optional
 
-from app import db
+from flask import make_response
+from sqlalchemy import text
 
-from app.models import (
-    WebsiteText,
-    ICS,
-    TopicGroups,
-)
+from app import db
+from app.models import ICS, TopicGroups, WebsiteText
 
 
 def get_topics(topic: str | None = None):
@@ -24,7 +20,7 @@ def get_topics(topic: str | None = None):
     else:
         sql = text(
             """
-            SELECT topic_name, topic_group, description, narrative, keywords from topics 
+            SELECT topic_name, topic_group, description, narrative, keywords from topics
                    WHERE topic_name = :topic
         """
         )
@@ -178,8 +174,8 @@ def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     if ics_ids is None:
         sql = text(
             """
-            SELECT countries.country as country, count(*) as country_count from countries countries where not country is NULL
-            GROUP BY countries.country order by country_count desc
+            SELECT countries.country as country, count(*) as country_count from countries countries where not country
+            is NULL GROUP BY countries.country order by country_count desc
         """
         )
         query = db.session.execute(sql)
@@ -191,7 +187,7 @@ def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
             JOIN ics i ON c.ics_table_id = i.id
             WHERE i.ics_id = ANY(:ics_ids)
             GROUP BY c.country
-            ORDER BY country_count DESC 
+            ORDER BY country_count DESC
         """
         )
         query = db.session.execute(sql, {"ics_ids": ics_ids})
@@ -223,7 +219,8 @@ def get_uoa_counts(ics_ids: list | None = None) -> Optional[List[Dict[str, str]]
     elif len(ics_ids) > 0:
         sql = text(
             """
-            SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as assessment_group, COUNT(*) AS uoa_count
+            SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as
+            assessment_group, COUNT(*) AS uoa_count
             FROM ics ics
             JOIN uoa uoa ON ics.uoa = uoa.uoa_id
             WHERE ics.ics_id = ANY(:ics_ids)
@@ -254,16 +251,18 @@ def get_institution_counts(ics_ids: List | None = None) -> defaultdict:
     if ics_ids is None:
         sql = text(
             """
-            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM ics 
-            ics JOIN institution ins ON ics.ukprn = ins.ukprn GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY inst_count desc;
+            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM
+            ics ics JOIN institution ins ON ics.ukprn = ins.ukprn GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY
+            inst_count desc;
         """
         )
         query = db.session.execute(sql)
     else:
         sql = text(
             """
-            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM ics 
-            ics JOIN institution ins ON ics.ukprn = ins.ukprn AND ics.ics_id = ANY(:ics_ids) GROUP BY ics.postcode,ics.ukprn, ins.name ORDER BY inst_count desc;
+            SELECT ics.ukprn as ukprn, ics.postcode as postcode, ins.name as institution, COUNT(*) AS inst_count FROM
+            ics ics JOIN institution ins ON ics.ukprn = ins.ukprn AND ics.ics_id = ANY(:ics_ids) GROUP BY ics.postcode,
+            ics.ukprn, ins.name ORDER BY inst_count desc;
         """
         )
         query = db.session.execute(sql, {"ics_ids": ics_ids})
@@ -301,8 +300,13 @@ def query_dashboard_data(
 
 
 def get_ics_ids(
-    threshold, topic=None, postcode=None, beneficiary=None, uoa=None, funder=None
-):
+    threshold: float,
+    topic: str | None = None,
+    postcode: str | None = None,
+    beneficiary: str | None = None,
+    uoa: str | None = None,
+    funder: str | None = None,
+) -> List[str]:
     sql = get_ics_sql(topic, postcode, beneficiary, uoa, funder)
     argument_names = ["threshold", "topic", "postcode", "beneficiary", "uoa", "funder"]
     arguments = [threshold, topic, postcode, beneficiary, uoa, funder]
@@ -316,9 +320,15 @@ def get_ics_ids(
     return ics_ids
 
 
-def get_ics_sql(topic=None, postcode=None, beneficiary=None, uoa=None, funder=None):
+def get_ics_sql(
+    topic: str | None = None,
+    postcode: str | None = None,
+    beneficiary: str | None = None,
+    uoa: str | None = None,
+    funder: str | None = None,
+) -> text:
     sql_str = """
-        SELECT DISTINCT(tw.ics_id) FROM topic_weights tw 
+        SELECT DISTINCT(tw.ics_id) FROM topic_weights tw
         JOIN topics t ON tw.topic_id = t.topic_id
         JOIN ics i ON tw.ics_id = i.ics_id
         JOIN uoa u ON u.uoa_id = i.uoa

@@ -1,12 +1,12 @@
+from pathlib import Path
+
+import connexion
+import geopandas as gpd
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-import connexion
-from pathlib import Path
-import geopandas as gpd
-
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_sqlalchemy import SQLAlchemy
 
 from app.config import app_config
 

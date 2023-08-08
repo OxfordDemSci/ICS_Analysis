@@ -1,5 +1,4 @@
-from geoalchemy2 import Geometry
-from sqlalchemy import Column, Integer, String, ARRAY, Float, Index
+from sqlalchemy import ARRAY, Column, Float, Index, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
