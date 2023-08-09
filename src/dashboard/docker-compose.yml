@@ -27,7 +27,7 @@ services:
     env_file: .env
     build: ./api/
     command: >
-      sh -c "find /app -type f -exec sed -i 's/\r$//' {} + && gunicorn --config gunicorn.config.py wsgi:app"
+      sh -c "find /app -type f -exec sed -i 's/\r$$//' {} + && gunicorn --config gunicorn.config.py wsgi:app"
     # command: python3 wsgi.py
     # volumes:
     #   - type: bind
