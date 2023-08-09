@@ -5,15 +5,14 @@ from pathlib import Path
 import matplotlib  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 from flask import make_response, request
-from matplotlib.backends.backend_agg import (  # type: ignore
+from matplotlib.backends.backend_agg import \
     FigureCanvasAgg as FigureCanvas  # type: ignore
-)
 from reportlab.lib import colors  # type: ignore
 from reportlab.lib.pagesizes import letter  # type: ignore
 from reportlab.lib.units import cm  # type: ignore
+from reportlab.platypus import Paragraph  # type: ignore
 from reportlab.platypus import SimpleDocTemplate  # type: ignore
-from reportlab.platypus import (Image, PageBreak, Paragraph,  # type: ignore
-                                Spacer, Table, TableStyle)
+from reportlab.platypus import Image, PageBreak, Spacer, Table, TableStyle
 
 from app import postcode_gdf, world_gdf
 

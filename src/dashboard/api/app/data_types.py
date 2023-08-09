@@ -11,9 +11,9 @@ from app.models import ICS, UOA, Countries, Funder, Topics
 
 @dataclass
 class ThresholdType:
-    value: float
+    value: float  # type: ignore
 
-    @property
+    @property  # type: ignore
     def value(self) -> float:
         return self._value
 
@@ -26,9 +26,9 @@ class ThresholdType:
 
 @dataclass
 class TopicType:
-    value: str | None = None
+    value: str | None = None  # type: ignore
 
-    @property
+    @property  # type: ignore
     def value(self) -> Union[str, None]:
         return self._value
 
@@ -43,9 +43,9 @@ class TopicType:
 
 @dataclass
 class PostCodeAreaType:
-    value: str | None = None
+    value: str | None = None  # type: ignore
 
-    @property
+    @property  # type: ignore
     def value(self) -> Union[str, None]:
         return self._value
 
@@ -60,9 +60,9 @@ class PostCodeAreaType:
 
 @dataclass
 class BeneficiaryType:
-    value: str | None = None
+    value: str | None = None  # type: ignore
 
-    @property
+    @property  # type: ignore
     def value(self) -> Union[str, None]:
         return self._value
 
@@ -77,9 +77,9 @@ class BeneficiaryType:
 
 @dataclass
 class UOAType:
-    value: str | None = None
+    value: str | None = None  # type: ignore
 
-    @property
+    @property  # type: ignore
     def value(self) -> Union[str, None]:
         return self._value
 
@@ -94,9 +94,9 @@ class UOAType:
 
 @dataclass
 class FunderType:
-    value: str | None = None
+    value: str | None = None  # type: ignore
 
-    @property
+    @property  # type: ignore
     def value(self) -> Union[str, None]:
         return self._value
 
