@@ -2,8 +2,8 @@
 
 openapi: 3.0.0
 info:
-  title: "RP Flask REST API"
-  description: "An API about people and notes"
+  title: "University of Oxford ICS Analysis Dashboard"
+  description: "REST API powering the ICS Analysis Dashboard"
   version: "1.0.0"
 servers:
   - url: "/api"
