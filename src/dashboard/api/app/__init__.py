@@ -7,6 +7,9 @@ from flask_cors import CORS  # type: ignore
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
+from flask import request
+import logging
+import socket
 
 from app.config import app_config
 
@@ -16,14 +19,26 @@ postcode_gdf = gpd.read_file(
 )
 world_gdf = gpd.read_file(BASE_GEODATA.joinpath("geodata.gpkg"), layer="world")
 
+def get_nginx_ip():
+    try:
+        nginx_ip = socket.gethostbyname("ics_nginx")
+        return nginx_ip
+    except socket.gaierror:
+        return None
+
+def is_exempt():
+    nginx_ip = get_nginx_ip()
+    return request.remote_addr == nginx_ip
+
 
 db = SQLAlchemy()
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["60/minute", "1000/hour", "10000/day"],
+    default_limits=["3/minute", "1000/hour", "10000/day"],
     strategy="fixed-window-elastic-expiry",
     storage_uri="",  # Set in create_app()
     storage_options={},
+    default_limits_exempt_when=is_exempt
 )
 
 
@@ -34,6 +49,9 @@ def create_app(config_name: str) -> Flask:
     connexion_app.add_api("api-config.yaml")
     db.init_app(app)
     CORS(app, resources={r"/*": {"origins": "*"}})
+    logging.basicConfig(level=logging.INFO)
+    app.logger.addHandler(logging.StreamHandler())  # Log to the terminal
+    app.logger.setLevel(logging.INFO)
     if config_name == "local_development" or config_name == "testing":
         limiter._storage_uri = "memcached://localhost:11211"
     else:
