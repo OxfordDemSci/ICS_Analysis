@@ -34,7 +34,7 @@ def is_exempt():
 db = SQLAlchemy()
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["3/minute", "1000/hour", "10000/day"],
+    default_limits=["60/minute", "1000/hour", "10000/day"],
     strategy="fixed-window-elastic-expiry",
     storage_uri="",  # Set in create_app()
     storage_options={},
