@@ -32,3 +32,5 @@ Run `alembic upgrade head`
 ### Unit and end-to-end tests
 Tests have been written to test the application's data queries and the endpoints using `pytest`. A test application and database are defined in `tests/conftest.py` with tables from `tests/test_data` being automatically inserted into the test database for the tests, which is torn down after the tests.
 All tests can be run by running `pytest tests --disable-warnings`
+
+## Frontend
