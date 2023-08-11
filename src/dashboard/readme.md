@@ -7,4 +7,12 @@ The dashboard frontend and backend are all launched and linked together using Do
 ## API and Database
 
 ### Running the API app locally
-The API/database can be run independently of the front-end for testing/debugging purposes. Changes made to the app when running it in this way will be reflected in the running app without having to restart it. As data is not persisted 
+The API/database can be run independently of the front-end for testing/debugging purposes. Changes made to the app when running it in this way will be reflected in the running app without having to restart it. As data is not persisted in the database container, the following steps will need to be followed to start the app and populate the database.
+Start the database container
+`cd` to ./api/scripts/postgres_local_dev and run `docker-compose up -d –build`
+Prepare the tables for the database (this only needs to be done once per table version. If tables change, this will need to be re-run)
+`cd` back to the api root `./api/` and run `python scripts/reformat_csvs_for_db.py`. This will also create the tables used in the unit tests.
+Insert the tables to the database
+From the same directory, run `python scripts/insert_data.py`. This script will create the database schema and insert the tables to the database. This script will fail if the `csv` tables are changed to differ from the database schema. To change the schema, see **Database migrations**
+Run the app in debug mode
+`python ./wsgi.py`
