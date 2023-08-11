@@ -19,7 +19,7 @@ From the same directory, run `python scripts/insert_data.py`. This script will c
 4. Run the app in debug mode:\
 `python ./wsgi.py`
 
-### Database migrations
+### Database migrations - only required if changes made to DB Schema
 The application uses `alembic` to apply version control to changes to the database schema. This process only needs to be followed when tables schemas or their fields' data-types change. The database schema is defined in app/models.py, with a model class for each table. A database should be running (from either of the docker-compose lines mentioned above) for this to work.
 1. Set the database credentials in `alembic.ini`:\
 This cannot be set via the environment variables in line 63 `sqlalchemy.url = postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432/ics` so it needs to be hardcoded **and reset following the migration**.

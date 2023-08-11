@@ -1,31 +1,34 @@
 from pathlib import Path
-import pytest
 
-from flask import Flask
+import pytest
 import sqlalchemy as sa
-from app import db as _db
-from app import create_app
+from flask import Flask
+
 from alembic import command
 from alembic.config import Config
+from app import create_app
+from app import db as _db
 
 from .make_test_data import insert_test_data
 
+ALEMBIC = Path(__file__).resolve().parent.parent.joinpath("alembic.ini").resolve()
 
-ALEMBIC = Path(__file__).resolve().parent.parent.joinpath('alembic.ini').resolve()
 
 @pytest.fixture
 def exist():
     return ALEMBIC
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def app():
-    app = create_app('testing')
+    app = create_app("testing")
     with app.app_context():
         yield app
 
+
 @pytest.fixture(scope="session")
 def db(app: Flask):
-    #Set up the test db and apply alembic migrations
+    # Set up the test db and apply alembic migrations
     alembic_cfg = Config(ALEMBIC)
     alembic_cfg.set_main_option("sqlalchemy.url", app.config["TEST_DATABASE_URI"])
     with app.app_context():

@@ -87,7 +87,11 @@ class UOAType:
     def value(self, new_value: str | None) -> None:
         values_panel = db.session.query(UOA.assessment_panel).distinct().all()
         values_group = db.session.query(UOA.assessment_group).distinct().all()
-        if new_value is None or new_value in [x[0] for x in values_panel] or new_value in [x[0] for x in values_group]:
+        if (
+            new_value is None
+            or new_value in [x[0] for x in values_panel]
+            or new_value in [x[0] for x in values_group]
+        ):
             self._value = new_value
         else:
             raise ValueError(f"UOA invalid - {new_value}")
