@@ -268,7 +268,6 @@ def get_institution_counts(ics_ids: List | None = None) -> Any:
         """
         )
         query = db.session.execute(sql, {"ics_ids": ics_ids})
-    # institutions = defaultdict(dict)
     institutions: DefaultDict = defaultdict(nested_defaultdict)
     for row in query:
         postcode = row.postcode
