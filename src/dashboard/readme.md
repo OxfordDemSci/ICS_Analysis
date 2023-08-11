@@ -30,7 +30,14 @@ Run `alembic upgrade head`
 **Data should then be added to the database through the `./scripts/insert_data.py` file - This may need editing based on the changes you have made to the database.
 
 ### Unit and end-to-end tests
-Tests have been written to test the application's data queries and the endpoints using `pytest`. A test application and database are defined in `tests/conftest.py` with tables from `tests/test_data` being automatically inserted into the test database for the tests, which is torn down after the tests.
+Tests have been written to test the application's data queries and the endpoints using `pytest`. A test application and database are defined in `tests/conftest.py` with tables from `tests/test_data` being automatically inserted into the test database for the tests, which is torn down after the tests.\
 All tests can be run by running `pytest tests --disable-warnings`
+
+### Linting
+Following any changes, linting can be run on the code through the following commands from within the `api` folder:\
+1. `python -m black app`
+2. `python -m flake8 app`
+3. `python -m isort app`
+4. `python -m mypy app`
 
 ## Frontend
