@@ -25,7 +25,6 @@ export function highlightFeatureGlobalImactMap(e, _infoBox, _map) {
         }
         
         _infoBox.addTo(_map);
-        //let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px;">'+country+' [ <b>' + country_count + '</b> ]</p>';
         
         let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 4px;"><b>'+e.target.feature.properties.country + '</b><br/>Impact factor: '+e.target.feature.properties.countriy_count+'</p>';
         document.getElementById('infoBoxMapGlobal_info').innerHTML = html;
@@ -38,13 +37,10 @@ export function RestyleLayerGlobalImactMap(_layer, palette) {
     
     let propertyName = "countriy_count";
     let Opacity = 0.8; 
-    //console.log(_layer);
     _layer.eachLayer(function(featureInstanceLayer) {
-       var propertyValue = featureInstanceLayer.feature.properties[propertyName];
+    var propertyValue = featureInstanceLayer.feature.properties[propertyName];
         
 
-        
-        
         if( typeof propertyValue === 'undefined' || propertyValue === null ){
             
 //                featureInstanceLayer.setStyle({
@@ -158,9 +154,7 @@ export function loadLagentGlobalImactMap(title, colors, breaks, subtitles) {
     var subtitlesArray = Array(colors.length).fill('');
     subtitlesArray[0] = subtitles[0];
     subtitlesArray[colors.length-1] = subtitles[1];    
-    
-//    html += '<div style="width:100px">' + subtitles[0] + '</div>';
-    
+  
     html += '<ul style="list-style-type: none;margin-top: 2px;margin-bottom: 2px;padding-inline-start: 10px;">';
     for (var i = 0, len = colors.length; i < len; i++) {
         var rgb = _ImageFromRGB.hexToRGB(colors[i]);
@@ -169,7 +163,7 @@ export function loadLagentGlobalImactMap(title, colors, breaks, subtitles) {
         html += '<li><img width="16px" height="16px" src="' + mCanvas.toDataURL() + '"><span>&#32;&#32;&#32;&#32;	&nbsp;&nbsp;' + breaks[i] + '</span></li>';
     }
     html += '</ul>';
-//    html += '<div style="width:100px">' + subtitles[1] + '</div>';
+
     document.getElementById('legend_mapGlobal_info').innerHTML = html;
 
 }
@@ -198,12 +192,7 @@ export function updateGlobalImactMap(_map, _layer, geoJson, dataCountries_counts
             }
     }
 
-//    $(geoJson.features).each(function (key, data_g) {
-//                _layer.addData(data_g);
-//    });
-    
-//   let result = geoJson.filter(val => val.countriy_count !== null);
-   
+
    _layer.addTo(_map);
    _layer.addData(geoJson); 
    
@@ -215,8 +204,7 @@ export function updateGlobalImactMap(_map, _layer, geoJson, dataCountries_counts
 
     RestyleLayerGlobalImactMap(_layer, palette);
     loadLagentGlobalImactMap("Impact", palette["colors"], palette["breaks"], "subtitles");
-    
-    //console.log(palette);
+
     const resizeObserver = new ResizeObserver(() => {
         _map.invalidateSize();
     });

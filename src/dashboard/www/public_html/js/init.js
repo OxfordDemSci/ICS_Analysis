@@ -1,6 +1,21 @@
-export function setTopicsMenu(t) {
+export function setTopicsMenu(d) {
 
     return new Promise((resolve, reject) => {
+        
+        let g = d.topic_groups;
+        const groups = document.getElementById('idGroups');
+        
+        groups.innerHTML = "";
+            groups.innerHTML = groups.innerHTML +
+                    '<option value="0">All Groups</option>';
+        for (var i = 0; i < g.length; i++) {
+
+                groups.innerHTML = groups.innerHTML +
+                        '<option value="' + g[i]['group_id'] + '" >' + g[i]['topic_group'] + '</option>';
+           
+        }       
+        
+        let t = d.topics;
         const list = document.getElementById('idTopics');
         list.innerHTML = "";
         for (var i = 0; i < t.length; i++) {

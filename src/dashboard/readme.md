@@ -48,3 +48,7 @@ Following any changes, linting can be run on the code through the following comm
 4. `python -m mypy app`
 
 ## Frontend
+ICS table currently shows all fields from the api request (database). To change the order and filter the fields to show, the changes needs to be done in  `src\dashboard\www\public_html\js\main.js`. Line 33 showld be commented out and line 34 uncomented.
+In the file `src\dashboard\www\public_html\js\ICSTable_columns.js` variable `columns` should be updated. 
+
+

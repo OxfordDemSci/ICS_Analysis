@@ -44,12 +44,8 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
             .map((item) => item.name)
             .filter((value, index, self) => self.indexOf(value) === index);
 
-
-    
     _utils.updateAssessmentSelection(category_assessment);
-    
-    
-    
+
 
     var my_json = JSON.stringify(data);
 
@@ -190,7 +186,13 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
                     {
                         name: 'UOA',
                         type: 'pie',
-                        radius: '50%',
+                        radius: ['40%', '70%'],
+                        center: ['50%', '50%'],
+                        itemStyle: {
+                            borderRadius: 10,
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        },
                         data: values,
                         emphasis: {
                             itemStyle: {
@@ -203,12 +205,12 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
                 ]
             };
 
+//  color: ["#fff5f0", "#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"]
 
     let chartDom_bottom_left = document.getElementById("chartContainer_bottom_left");
     let echart_bottom_left = echarts.init(chartDom_bottom_left);
     echart_bottom_left.setOption(optionUOAChart, true);
     new ResizeObserver(() => echart_bottom_left.resize()).observe(chartDom_bottom_left);
-
 }
 
 

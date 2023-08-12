@@ -1,13 +1,15 @@
-var API_URL = "./api/";
+//var API_URL = "./api/";
+var API_URL = "http://127.0.0.1:8000/api/";
 
-import * as _api from './api.js?version=2.7'
-import * as _init from './init.js?version=4.8'
-import * as _utils from './utils.js?version=5.9'
-import * as _UOAChart from './uoa_chart.js?version=5.9'
+import * as _api from './api.js?version=2.8'
+import * as _init from './init.js?version=4.9'
+import * as _utils from './utils.js?version=6.5'
+import * as _UOAChart from './uoa_chart.js?version=6.2'
 import * as _funderChart from './funder_chart.js?version=3.4'
 import * as _GlobalImactMap from './global_impact_map.js?version=3.8'
 import * as _UKMap from './UK_map.js?version=5.8'
-
+import * as _ICSTable_columns from './ICSTable_columns.js?version=5.8'
+import * as _generateReport from './generate_report.js?version=0.8'
 
 var slc_postcode_area=null;
 var slc_beneficiary=null;
@@ -16,18 +18,21 @@ var slc_topic=null;
 var slc_threshold=0.5;
 var slc_funder=null;
 var slc_numberFundersLimit=30;
-
-let palette_colors_GlobalMap = ["#f7fbff", "#e9f2f9", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"];
-let palette_colors_UKMap = ["#fff5f0", "#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
-let color_bar_Funder = "#9ecae1";
+var slc_group_ID=0;
+var slc_group_Name="All Groups";
 
 
 let initialData = _api.getInitData(API_URL);
 let GlobalBoundary = _api.getGlobalBoundary();
 let UKPostCodeAreasBoundary = _api.getUKPostCodeAreasBoundary();
 
-   
-console.log(initialData);
+let palette_colors_GlobalMap = initialData.website_text.global_colourramp;
+let palette_colors_UKMap = initialData.website_text.uk_map_colourramp;
+let color_bar_Funder = initialData.website_text.funders_bar_colour;
+
+let ICSTable_columns = null;
+//let ICSTable_columns = _ICSTable_columns.getICSTable_columns();
+let ICSTable_max_text_length = 40;
 
 
 // base map
@@ -149,8 +154,6 @@ infoboxMapGlobal.remove(mapGlobal);
 
 
 
-
-
 // end  setting a g lobal map 
 //******************************************************************************
 
@@ -219,7 +222,7 @@ var layerUK = L.geoJson(null, {
                                         slc_uoa,
                                         slc_funder).then(result => {
                             console.log("click UK map", result);
-                            _utils.LoadCurrentICSTable(result.ics_table);
+                            _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);
                             if ( document.getElementById('chKeepPOSTarea').checked === false ){    
                                 _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);                    
                             }                            
@@ -302,7 +305,7 @@ legendUKmap.addTo(mapUK);
 //******************************************************************************
  //_utils.updateInfoBox(initialData);
 
-_init.setTopicsMenu(initialData.topics).then(() => {
+_init.setTopicsMenu(initialData).then(() => {
     _utils.initialSetInfoBox(initialData);
 }).then(() => 
     _api.get_ics_data(API_URL, 
@@ -313,12 +316,11 @@ _init.setTopicsMenu(initialData.topics).then(() => {
                       slc_uoa,
                       slc_funder)         
 ).then(result => {
-      console.log(result);
     _init.setContactInfo(initialData.website_text.contact); 
     _init.setAboutInfo(initialData.website_text.about); 
     _utils.updateModalInfoBox(initialData);
     _utils.initialSetLabels(initialData);
-    _utils.LoadCurrentICSTable(result.ics_table);
+    _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);
     _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
     _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
     _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
@@ -338,8 +340,8 @@ $(window).on("resize", function () {
 }).trigger("resize");
 
 
-
-$("#idTopics .list-group-item").click(function (e) {
+//$("#idTopics .list-group-item").click(function (e) {
+$("#idTopics").on('click','li',function(e){    
     
     $("#idTopics .list-group-item").removeClass("active");
     $(e.target).addClass("active");
@@ -364,7 +366,7 @@ $("#idTopics .list-group-item").click(function (e) {
                       slc_beneficiary,
                       slc_uoa,
                       slc_funder).then(result => {
-        _utils.LoadCurrentICSTable(result.ics_table);                  
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                  
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);                   
         _utils.updateInfoBox(initialData);
         _utils.updateModalInfoBox(initialData);
@@ -393,7 +395,7 @@ $("#Options_of_Assessment").change(function(){
                       slc_beneficiary,
                       slc_uoa,
                       slc_funder).then(result => {
-        _utils.LoadCurrentICSTable(result.ics_table);                    
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
         _UOAChart.updateUOAChart(result.uoa_counts);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
@@ -420,7 +422,7 @@ function resetSelectionUKmap(){
                       slc_beneficiary,
                       slc_uoa,
                       slc_funder).then(result => {
-        _utils.LoadCurrentICSTable(result.ics_table);                    
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
         _UOAChart.updateUOAChart(result.uoa_counts);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
@@ -435,13 +437,19 @@ function resetSelectionUKmap(){
 
     
 $( "#reload_selected_options" ).on( "click", function() {
-    
+
      $('#Options_of_Assessment').prop("selectedIndex", 0);
+      $('#idGroups').prop("selectedIndex", 0);
+      
+      _init.setTopicsMenu(initialData);
      
      $("#idTopics .list-group-item").removeClass("active");
      $("#idTopics .list-group-item").first().addClass("active");
      
      $('[data-bs-toggle="tooltip"]').tooltip('hide'); 
+
+     slc_group_ID=0;
+     slc_group_Name="All Groups";
 
      slc_topic=null;
      slc_postcode_area=null;
@@ -451,6 +459,7 @@ $( "#reload_selected_options" ).on( "click", function() {
      infoboxSelectedUKmap.remove(mapUK);
     _utils.progressMenuOn();
     
+    
     _api.get_ics_data(API_URL, 
                       slc_threshold,
                       slc_topic,
@@ -458,7 +467,7 @@ $( "#reload_selected_options" ).on( "click", function() {
                       slc_beneficiary,
                       slc_uoa,
                       slc_funder).then(result => {
-        _utils.LoadCurrentICSTable(result.ics_table);                   
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                   
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
         _UOAChart.updateUOAChart(result.uoa_counts);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
@@ -506,8 +515,6 @@ var FundersChart = echarts.init(document.getElementById('chartContainer_top_left
 
 FundersChart.on('click', function(params) {
 
-    console.log(encodeURIComponent(params.name));
-    
     slc_funder=params.name;
     _utils.progressMenuOn();
     
@@ -518,7 +525,7 @@ FundersChart.on('click', function(params) {
                       slc_beneficiary,
                       slc_uoa,
                       slc_funder).then(result => {
-        _utils.LoadCurrentICSTable(result.ics_table);                    
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
         _UOAChart.updateUOAChart(result.uoa_counts);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
@@ -547,7 +554,7 @@ $("#numberFundersLimit").change(function(){
                       slc_beneficiary,
                       slc_uoa,
                       slc_funder).then(result => {
-        _utils.LoadCurrentICSTable(result.ics_table);                    
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
         _UOAChart.updateUOAChart(result.uoa_counts);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
@@ -575,7 +582,7 @@ $('#customRangeThreshold').on('change', function (event) {
                       slc_beneficiary,
                       slc_uoa,
                       slc_funder).then(result => {
-        _utils.LoadCurrentICSTable(result.ics_table);                    
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
         _UOAChart.updateUOAChart(result.uoa_counts);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
@@ -611,13 +618,87 @@ $( "#btnAbout" ).on( "click", function() {
 
 
 $( "#btnGenerateReport" ).on( "click", function() {
+
+                        _utils.progressMenuOn();
+                        _generateReport.GenerateReport(
+                                                    API_URL, 
+                                                    "ICS_table.csv",
+                                                    slc_threshold, 
+                                                    slc_topic, 
+                                                    slc_postcode_area, 
+                                                    slc_beneficiary, 
+                                                    slc_uoa, 
+                                                    slc_funder).then(result => {
+                            setTimeout(() => {
+                                console.log("report was created");
+                                _utils.progressMenuOff();
+                            }, 1000);                            
+                        }).catch(error => {
+                            console.log('In the catch', error);
+                            _utils.progressMenuOff();
+                        });                  
+                
+                
+});
+
+
+
+$("#idGroups").change(function (e) {
+    e.preventDefault();
     
- _utils.GenerateReport(API_URL, 
-                "ICS_table.csv",
-                slc_threshold, 
-                slc_topic, 
-                slc_postcode_area, 
-                slc_beneficiary, 
-                slc_uoa, 
-                slc_funder);
+    var selectedGroupValue = $('#idGroups').children("option:selected").val();
+    slc_group_ID = parseInt(selectedGroupValue);
+    let topic_groups = initialData.topic_groups;
+
+    if (slc_group_ID === 0) {
+        slc_group_Name = "All Groups";
+    } else {
+        slc_group_Name = topic_groups.filter(element => (element.group_id === slc_group_ID))[0].topic_group;
+    }
+
+   // _utils.updateTopicsMenu(initialData.topics, slc_group_Name);
+
+     $('#Options_of_Assessment').prop("selectedIndex", 0);
+     $("#idTopics .list-group-item").removeClass("active");
+     $("#idTopics .list-group-item").first().addClass("active");
+     
+     $('[data-bs-toggle="tooltip"]').tooltip('hide'); 
+
+
+     slc_postcode_area=null;
+     slc_beneficiary=null;
+     slc_uoa=null;
+     slc_funder=null;
+     infoboxSelectedUKmap.remove(mapUK);
+    
+    _utils.progressMenuOn();
+    
+    _utils.updateTopicsMenu(initialData.topics, slc_group_Name).then(() => {
+        slc_topic = _utils.getActiveTopic();
+    }).then(() =>
+        _api.get_ics_data(API_URL,
+                slc_threshold,
+                slc_topic,
+                slc_postcode_area,
+                slc_beneficiary,
+                slc_uoa,
+                slc_funder)
+    ).then(result => {
+        _init.setContactInfo(initialData.website_text.contact);
+        _init.setAboutInfo(initialData.website_text.about);
+        _utils.updateModalInfoBox(initialData);
+        _utils.initialSetLabels(initialData);
+        _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
+        _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
+        _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+        //console.log(result.institution_counts);
+        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
+    }).then(() => {
+        document.getElementById('firstloader').style.display = 'none';
+    }).catch(error => {
+        console.log('In the catch', error);
+    });
+
 });

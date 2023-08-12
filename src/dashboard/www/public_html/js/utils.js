@@ -109,19 +109,29 @@ export function ResiseICSTable() {
 
 
   
-export function LoadCurrentICSTable(oResults) {
+export function LoadCurrentICSTable(oResults, _columns_ntitles, _max_txt_lenght) {
 
     var oTblReport = $("#tblReportResultsICSTabl");
+    var max_txt_lenght = _max_txt_lenght;
+
     var columns_ntitles = [];
-    
-    for (var key in oResults[0]) {
-       columns_ntitles.push(
-                {
-                     title: key,
-                     data: key
-                }
-        );       
+
+    if ( _columns_ntitles == null || _columns_ntitles.length === 0)  {
+
+        for (var key in oResults[0]) {
+            columns_ntitles.push(
+                    {
+                        title: key,
+                        data: key
+                    }
+            );
+        }
+
+    } else {
+        columns_ntitles = _columns_ntitles;
     }
+
+
 
     // reinitialize the datatable
     if ($.fn.DataTable.isDataTable('#tblReportResultsICSTabl')) {
@@ -145,7 +155,27 @@ export function LoadCurrentICSTable(oResults) {
         "info": false,
         "columnDefs": [
             {
-                render: $.fn.dataTable.render.ellipsis(18),
+                render: function (data, type, row, meta) {
+
+                    if (typeof data === 'undefined') {
+                        return;
+                    }
+                    if (data == null) {
+                        return data;
+                    }
+
+                    if (data.length > 40) {
+                        if (meta.settings.aoColumns[meta.col].title === 'ics_url') {
+                            return('<a href="' + data.toString() + '" target="_blank">' + data.toString().substr(0, 30) + '...</a>');
+                        } else {
+                            return('<span title="' + data.toString().substring(0, 500) + '" style="text-overflow: ellipsis;">' + data.toString().substr(0, 38) + '...</span>');
+                        }
+
+                    } else {
+                        return data;
+                    }
+
+                },
                 targets: "_all"
             },
             {"width": "200px", targets: [0, 1, 2, 3, 26]}],
@@ -249,7 +279,7 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
     
     if (ch_Funder) {
         
-        let instaTextFunder = (Funder != null && Funder.length > 13) ? Funder.substr(0, 16)+"..." : Funder == null?"":Funder;
+        let instaTextFunder = (Funder != null && Funder.length > 13) ? Funder.substr(0, 16)+" ..." : Funder == null?"":Funder;
         
         document.getElementById('label_selected_Funder').innerHTML = instaTextFunder;
         
@@ -291,7 +321,7 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
 
 export function initialSetInfoBox(d) {
     return new Promise(function (resolve, reject) {
-        $("#dv_startup").html(d.website_text.label_info_box);
+        $("#dv_startup").html(d.website_text.all_topics_description);
         resolve(true);
     });
 
@@ -381,17 +411,30 @@ export function updateModalInfoBox(d) {
                 break;
             }
         }
+        
+        contectMd.innerHTML="";
+        
         if (active_topic === "All Topics") {
 
             contectMd.innerHTML = d.website_text.instructions;
 
         } else {
-            contectMd.innerHTML = "<p class='lead mb-1'><strong> Description </strong></p>";
-            contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.description + "</p>";
-            contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Narrative </strong></p>";
-            contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.narrative + "</p>";
-            contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Keywords </strong></p>";
-            contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.keywords + "</p>";            
+
+            if (found.description){
+                contectMd.innerHTML = "<p class='lead mb-1'><strong> Description </strong></p>";
+                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.description + "</p>";
+            }
+            
+            if (found.narrative){
+                contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Narrative </strong></p>";
+                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.narrative + "</p>";
+            }
+            
+            if (found.keywords){
+                contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Keywords </strong></p>";
+                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.keywords + "</p>";  
+            }            
+                      
         }
         resolve(true);
     });
@@ -462,3 +505,56 @@ export function updateAssessmentSelection(d) {
 
 
 
+
+export function updateTopicsMenu_single(d, t) {
+    
+        let topics_filted_by_group;
+        if (t === "All Groups"){
+            topics_filted_by_group = d;
+        }else{
+            topics_filted_by_group = d.filter(element => (element.topic_group === t));
+        }
+        
+        const list = document.getElementById('idTopics');
+        list.innerHTML = "";
+        for (var i = 0; i < topics_filted_by_group.length; i++) {
+
+            if (i === 0) {
+                list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item active" data-alias="' + topics_filted_by_group[i]['topic_name'] + '" >' + topics_filted_by_group[i]['topic_name'] + '</li>';
+            } else {
+                list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+            }
+        }  
+        
+}
+
+export function updateTopicsMenu(d, t) {
+
+    return new Promise((resolve, reject) => {
+
+        let topics_filted_by_group;
+        if (t === "All Groups"){
+            topics_filted_by_group = d;
+        }else{
+            topics_filted_by_group = d.filter(element => (element.topic_group === t));
+        }
+        
+        $("#idTopics .list-group-item").removeClass("active");
+        const list = document.getElementById('idTopics');
+        list.innerHTML = "";
+        for (var i = 0; i < topics_filted_by_group.length; i++) {
+
+            if (i === 0) {
+                list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item active" data-alias="' + topics_filted_by_group[i]['topic_name'] + '" >' + topics_filted_by_group[i]['topic_name'] + '</li>';
+            } else {
+                list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+            }
+        }          
+        
+        resolve(true);
+    });
+}

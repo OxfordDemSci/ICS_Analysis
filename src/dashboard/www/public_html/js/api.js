@@ -32,14 +32,16 @@ export function get_ics_data(api_url,
     if (api_url.substr(-1) !== '/')
         api_url += '/';
     const fullUrl = api_url + 'init';
-
+    
+    //const uoa_par = (uoa === "All") ? null : uoa;
+    
     let data = {};
     data = {
         threshold: threshold,
         topic: topic,
         postcode_area: postcode_area,
         beneficiary: beneficiary,
-        uoa: uoa,
+        uoa: (uoa === "All") ? null : uoa,
         funder: funder
     };
     $.each(data, function(key, value){
