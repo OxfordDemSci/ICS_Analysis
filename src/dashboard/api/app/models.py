@@ -1,4 +1,5 @@
 from sqlalchemy import ARRAY, Column, Float, Index, Integer, String
+from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()  # type: ignore
@@ -145,3 +146,4 @@ class WebsiteText(Base):  # type: ignore
     uk_map_colourramp = Column(ARRAY(String))  # type: ignore
     global_colourramp = Column(ARRAY(String))  # type: ignore
     funders_bar_colour = Column(String)
+    uoa_bar_colours = Column(JSON)  # type ignore
