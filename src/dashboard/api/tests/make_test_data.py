@@ -1,5 +1,6 @@
 import ast
 import csv
+import json
 from pathlib import Path
 
 from app.models import (ICS, UOA, Countries, Funder, Institution, TopicGroups,
@@ -32,6 +33,7 @@ def insert_test_data(db_session):
                     row["global_colourramp"] = ast.literal_eval(
                         row["global_colourramp"]
                     )
+                    row["uoa_bar_colours"] = json.dumps(row["uoa_bar_colours"])
                 db_row = model(**row)
                 db_session.add(db_row)
     db_session.commit()
