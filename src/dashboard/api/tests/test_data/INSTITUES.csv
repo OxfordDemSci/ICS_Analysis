@@ -1,58 +1,64 @@
 id,ukprn,name,postcode
 1,10007774,University of Oxford,OX1 2JD
-2,10007768,University of Lancaster,LA1 4YW
 5,10007158,University of Southampton,SO17 1BJ
-6,10007779,The Royal Veterinary College,NW1 0TU
-7,10007851,University of Derby,DE22 1GB
-8,10000824,Bournemouth University,BH12 5BB
-11,10007823,Edge Hill University,L39 4QP
+9,10007162,"University of the Arts, London",WC1V 7EY
 15,10007802,University of Reading,RG6 6UR
-17,10007152,University of Bedfordshire,LU1 3JU
+16,10007806,University of Sussex,BN1 9RH
+18,10007150,University of Kent,CT2 7NZ
 20,10007788,University of Cambridge,CB2 1TN
+21,10001883,De Montfort University,LE1 9BH
 22,10007790,University of Edinburgh,EH1 1HT
 23,10007795,University of Leeds,LS2 9JT
 25,10005343,The Queen's University of Belfast,BT7 1NN
-35,10007811,Bishop Grosseteste University College Lincoln,LN1 3DY
-45,10007114,University of the Highlands and Islands,IV3 5SQ
-46,10007775,"Queen Mary and Westfield College, University of London",E1 4NS
+27,10007772,Edinburgh Napier University,EH11 4BN
+28,10007854,Cardiff Metropolitan University,CF5 2SG
+29,10007849,University of Abertay Dundee,DD1 1HG
+32,10000961,Brunel University,UB8 3PH
+34,10004180,The Manchester Metropolitan University,M15 6BH
+39,10001478,The City University,EC1V 0HB
+47,10007144,University of East London,E16 2RD
 51,10001282,University of Northumbria at Newcastle,NE1 8ST
-53,10007145,University of Gloucestershire,GL50 2RH
 54,10007140,Birmingham City University,B42 2SU
-56,10007794,University of Glasgow,G12 8QQ
 57,10001726,Coventry University,CV1 5FB
-58,10007155,University of Portsmouth,PO1 2UP
-64,10007801,University of Plymouth,PL4 8AA
+59,10040812,Harper Adams University,TF10 8NB
+62,10007856,Prifysgol Aberystwyth,SY23 2AX
+63,10003614,University of Winchester,SO22 4NR
 65,10007789,University of East Anglia,NR4 7TJ
 66,10007786,University of Bristol,BS8 1TH
-69,10005337,"Queen Margaret University, Edinburgh",EH21 6UU
-71,10007163,University of Warwick,CV4 7AL
-72,10007138,The University of Northampton,NN2 5PH
+68,10006841,The University of Bolton,BL3 5AB
 73,10007796,University of Leicester,LE1 7RH
-75,10007762,Glasgow Caledonian University,G4 0BA
-76,10007165,The University of Westminster,W1B 2HW
-89,10007167,University of York,YO10 5DD
+77,10007148,University of Huddersfield,HD1 3DH
+84,10004063,London School of Economics & Political Science,WC2A 2AE
+85,10004351,Middlesex University,NW4 4BT
+86,10007773,Open University(The),MK7 6AA
 90,10007151,University of Lincoln,LN6 7TS
+91,10007784,University College London,WC1E 6BT
 93,10004113,Loughborough University,LE11 3TU
-97,10007147,University of Hertfordshire,AL10 9AB
+95,10007771,London School of Hygiene and Tropical Medicine,WC1E 7HT
+96,10003956,Liverpool Hope University,L16 9JD
 98,10007157,University of Sheffield,S10 2TN
 99,10007143,University of Durham,DH1 3LE
-104,10007769,London Business School,NW1 4SA
-105,10006840,University of Birmingham,B15 2TT
-113,10000291,Anglia Ruskin University,CM1 1SQ
+101,10007805,University of Strathclyde,G1 1XQ
+107,10007792,University of Exeter,EX4 4PY
+108,10005790,Sheffield Hallam University,S1 1WB
+109,10007852,University of Dundee,DD1 4HN
+112,10007159,University of Sunderland,SR1 3SD
 116,10005553,Royal Holloway College and Bedford New College,TW20 0EX
 119,10007767,University of Keele,ST5 5BG
 121,10003645,King's College London,WC2R 2LS
-125,10007759,Aston University,B4 7ET
+126,10007848,University of Chester,CH1 4BJ
 128,10007798,The University of Manchester,M13 9PL
+130,10007154,University of Nottingham,NG7 2RD
 132,10007799,University of Newcastle Upon Tyne,NE1 7RU
-133,10007857,Bangor University,LL57 2DG
+136,10007149,University of Hull,HU6 7RX
 137,10007793,University of Glamorgan / Prifysgol Morgannwg,CF37 1DL
-140,10007843,"St Mary's University College, Twickenham",TW1 4SX
 141,10001143,Canterbury Christ Church University,CT1 1UT
 143,10007760,Birkbeck College,WC1E 7HX
 144,10006842,University of Liverpool,L69 3BX
-147,10007713,York St John University,YO31 7EX
-148,10007858,University of Wales: Trinity Saint David,SA31 3EP
-152,10004078,London South Bank University,SE1 0AA
 155,10003957,Liverpool John Moores University,L3 5UX
+156,10007850,University of Bath (The),BA2 7AY
+157,10000385,The Arts University College at Bournemouth,BH12 5HH
+159,10004930,Oxford Brookes University,OX3 0BP
+160,10007780,School of Oriental and African Studies,WC1H 0XG
+162,10007141,University of Central Lancashire,PR1 2HE
 163,10003270,"Imperial College of Science, Technology and Medicine",SW7 2AZ
