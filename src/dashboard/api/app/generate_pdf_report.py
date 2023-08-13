@@ -446,15 +446,7 @@ def create_bar_graph(data, value, label, chart_title, bar_colour):
     # Extract the labels and values for the top 20 elements
     top_labels = [item[label].strip() for item in sorted_data[:20]]
     top_values = [item[value] for item in sorted_data[:20]]
-
-    # # If there are more than 20 elements, calculate the sum of the remaining values
-    # This is moved to lower down (others in graph is masking shown values because it's too high.)
-    # if len(data) > 20:
-    #     others_sum = sum(item[value] for item in sorted_data[20:])
-    #     top_labels.append('Others')
-    #     top_values.append(others_sum)
-
-    # Create a light blue bar graph with black text
+    
     fig, ax = plt.subplots()
     bars = ax.bar(top_labels, top_values, color=bar_colour, edgecolor="black")
 
@@ -486,11 +478,12 @@ def create_bar_graph(data, value, label, chart_title, bar_colour):
 
     # Save the bar graph as an image in memory
     buffer = io.BytesIO()
-    canvas = FigureCanvas(plt.gcf())
-    plt.close(fig)
+    plt.savefig(buffer, format="png")
+    buffer.seek(0)
 
     # Add the image to the story list
     img = Image(buffer, width=14 * cm, height=10 * cm)
+    
 
     # If there are more than 20 elements, calculate the sum of the remaining values
     if len(data) > 20:
