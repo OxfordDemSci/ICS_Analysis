@@ -1,6 +1,7 @@
 import csv
 from collections import defaultdict
 from io import StringIO
+import json
 from typing import Any, DefaultDict, Dict, List
 
 from flask import make_response
@@ -79,6 +80,7 @@ def get_website_text():
         "uk_map_colourramp": row.uk_map_colourramp,
         "global_colourramp": row.global_colourramp,
         "funders_bar_colour": row.funders_bar_colour,
+        "uoa_bar_colours": json.loads(row.uoa_bar_colours)
     }
     return website_text
 
