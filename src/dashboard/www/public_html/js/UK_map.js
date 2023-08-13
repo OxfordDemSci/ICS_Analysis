@@ -6,7 +6,7 @@ function sort_unique(arr) {
   if (arr.length === 0) return arr;
   arr = arr.sort(function (a, b) { return a*1 - b*1; });
   var ret = [arr[0]];
-  for (var i = 1; i < arr.length; i++) { //Start loop at 1: arr[0] can never be a duplicate
+  for (var i = 1; i < arr.length; i++) { 
     if (arr[i-1] !== arr[i]) {
       ret.push(arr[i]);
     }
@@ -31,11 +31,7 @@ export function getPaletteUKMap_deprecated(data, palette_colors) {
 let vls = [];
 let cnt = 0;
 for (var key in data) {
-    
-//    for (var value in data[key]) {
-//       //console.log(data[key][value]);
-//       cnt = cnt + data[key].postcode_total ;
-//    }
+
            vls.push(
                 data[key].postcode_total   
             );
@@ -168,7 +164,7 @@ export function loadLagentUKMap(title, colors, breaks, subtitles) {
         html += '<li><img width="16px" height="16px" src="' + mCanvas.toDataURL() + '"><span>&#32;&#32;&#32;&#32; &nbsp;&nbsp;' + breaks[i] + '</span></li>';
     }
     html += '</ul>';
-//    html += '<div style="width:100px">' + subtitles[1] + '</div>';
+
     document.getElementById('legend_UKmap_info').innerHTML = html;
 
 }
