@@ -24,7 +24,7 @@ The API/database can be run independently from the front-end for testing/debuggi
 From the same directory, run `python scripts/insert_data.py`. This script will create the database schema and insert the tables to the database. This script will fail if the `csv` tables are changed to differ from the database schema. To change the schema, see *Database migrations*
 4. Run the app in debug mode:\
 `python ./wsgi.py`
-**The `api/app/data/db-data/WEBSITE_TEXT.csv` holds text and colourramps to be used in the frontend. Please edit this table to make changes to the frontend. Please do not add fields to this table until you have read *Database migrations* below.**
+**The `api/app/data/db-data/WEBSITE_TEXT.csv` holds text and colourramps to be used in the frontend and pdf reports. Please edit this table to make changes to the frontend. Please do not add fields to this table until you have read *Database migrations* below.**
 
 ### Database migrations - only required if changes made to DB Schema
 The application uses `alembic` [https://alembic.sqlalchemy.org/en/latest/](https://alembic.sqlalchemy.org/en/latest/) to apply version control to changes to the database schema. This process only needs to be followed when tables schemas or their fields' data-types change. The database schema is defined in `api/app/models.py`, with a model class for each table. A database should be running (from either of the docker-compose lines mentioned above) for the following process to work.
