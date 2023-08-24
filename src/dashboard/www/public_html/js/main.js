@@ -4,10 +4,10 @@ var API_URL = "http://127.0.0.1:8000/api/";
 import * as _api from './api.js?version=2.8'
 import * as _init from './init.js?version=4.9'
 import * as _utils from './utils.js?version=6.5'
-import * as _UOAChart from './uoa_chart.js?version=6.2'
-import * as _funderChart from './funder_chart.js?version=3.4'
-import * as _GlobalImactMap from './global_impact_map.js?version=3.8'
-import * as _UKMap from './UK_map.js?version=5.8'
+import * as _UOAChart from './uoa_chart.js?version=6.3'
+import * as _funderChart from './funder_chart.js?version=3.5'
+import * as _GlobalImactMap from './global_impact_map.js?version=3.9'
+import * as _UKMap from './UK_map.js?version=6.0'
 import * as _ICSTable_columns from './ICSTable_columns.js?version=5.8'
 import * as _generateReport from './generate_report.js?version=0.8'
 
@@ -17,7 +17,7 @@ var slc_uoa=null;
 var slc_topic=null;
 var slc_threshold=0.5;
 var slc_funder=null;
-var slc_numberFundersLimit=30;
+var slc_numberFundersLimit=10;
 var slc_group_ID=0;
 var slc_group_Name="All Groups";
 
@@ -318,8 +318,9 @@ _init.setTopicsMenu(initialData).then(() => {
 ).then(result => {
     _init.setContactInfo(initialData.website_text.contact); 
     _init.setAboutInfo(initialData.website_text.about); 
+    _init.setHelpInfo(initialData.website_text.instructions); 
     _utils.updateModalInfoBox(initialData);
-    _utils.initialSetLabels(initialData);
+    //_utils.initialSetLabels(initialData);
     _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);
     _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
     _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
@@ -614,6 +615,14 @@ $( "#btnContact" ).on( "click", function() {
 
 $( "#btnAbout" ).on( "click", function() {
     $('#idMdAbout').modal('show');
+});
+
+$( "#btnHelp" ).on( "click", function() {
+    $('#idMdHelp').modal('show');
+});
+
+$( "#label_Assessment_question" ).on( "click", function() {
+    $('#idMdAssessmentQuestion').modal('show');
 });
 
 

@@ -44,6 +44,12 @@ export function setAboutInfo(t) {
 
 }
 
+export function setHelpInfo(t) {
+   
+    document.getElementById('contentHelp').innerHTML = t;
+
+}
+
 export function setTopicsMenu2(t) {
 
     const list = document.getElementById('idTopics');

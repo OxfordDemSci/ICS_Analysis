@@ -22,8 +22,11 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
     }
 
 
-    for (var i = 0; i < nuse ; i++) {
+//    data = data.filter(value => value.uoa_count > 0);
+//    console.log(data); 
 
+    for (var i = 0; i < nuse ; i++) {
+        
         values.push(
                 {
                     name: data[i]['name'],
@@ -45,7 +48,6 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
             .filter((value, index, self) => self.indexOf(value) === index);
 
     _utils.updateAssessmentSelection(category_assessment);
-
 
     var my_json = JSON.stringify(data);
 
@@ -100,18 +102,26 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
             }
         },
         grid: {
-            left: '3%',
+            left: '8%',
             right: '4%',
-            bottom: '3%',
+            bottom: '10%',
             containLabel: true
         },
         xAxis: {
-            type: 'value'
+            type: 'value',
+            axisLabel: { show: true },
+            name: 'Submissions',
+            nameLocation: 'middle',
+            nameGap: 30               
         },
         yAxis: {
             realtimeSort: true,
             type: 'category',
-            data: category_assessment
+            data: category_assessment,
+            axisLabel: { show: true },
+            name: 'Main Panel',
+            nameLocation: 'middle',
+            nameGap: 30            
         },
         transform: {
         type: 'sort',
@@ -184,7 +194,7 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
                 },
                 series: [
                     {
-                        name: 'UOA',
+                        name: 'Impact Case Studies submitted',
                         type: 'pie',
                         radius: ['40%', '70%'],
                         center: ['50%', '50%'],

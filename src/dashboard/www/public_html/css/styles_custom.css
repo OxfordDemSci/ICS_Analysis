@@ -8,6 +8,25 @@
     background-color: white;
 }
 
+#label_View_Details{
+    cursor: pointer;
+    color: black;
+}
+#label_View_Details:hover {
+    color: #333333;
+    background-color: white;
+}
+
+#label_Assessment_question{
+    cursor: pointer;
+    color: gray;
+}
+#label_Assessment_question:hover {
+    color: black;
+    background-color: white;
+}
+
+
 .text-overflow{
     overflow: hidden;
     text-overflow: ellipsis;

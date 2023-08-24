@@ -416,7 +416,7 @@ export function updateModalInfoBox(d) {
         
         if (active_topic === "All Topics") {
 
-            contectMd.innerHTML = d.website_text.instructions;
+            contectMd.innerHTML = d.website_text.all_topics_description;
 
         } else {
 

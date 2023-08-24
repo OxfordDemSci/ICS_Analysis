@@ -148,7 +148,7 @@ export function RestyleLayerUKMap(_layer, palette) {
 
 export function loadLagentUKMap(title, colors, breaks, subtitles) {
 
-    var html = '<div style="width:60px"><p>' + title + '</p></div>';
+    var html = '<div style="width:80px"><p>' + title + '</p></div>';
     
     var subtitlesArray = Array(colors.length).fill('');
     subtitlesArray[0] = subtitles[0];
@@ -209,7 +209,7 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
 
     RestyleLayerUKMap(_layer, palette);
     
-    loadLagentUKMap("Counts", palette["colors"], palette["breaks"], "subtitles");
+    loadLagentUKMap("Institutions", palette["colors"], palette["breaks"], "subtitles");
     
     const resizeObserver = new ResizeObserver(() => {
         _map.invalidateSize();
@@ -293,7 +293,7 @@ export function highlightFeatureUKMap(e, _infoBox, _map, slc_postcode_area) {
                 });
 
                 _infoBox.addTo(_map);
-                let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px;">Post-Code [ <b>' + pc_area + '</b> ]</p>';
+                let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px;">Submissions from Postcode [ <b>' + pc_area + '</b> ]</p>';
                 html += '<ul style="list-style-type: none;margin-top: 2px;margin-bottom: 2px;padding: 4px;">';
                 for (var key in institutions) {
                     html += '<li>&check; ' + key + ': ' + institutions[key] + '</li>';

@@ -26,7 +26,7 @@ export function highlightFeatureGlobalImactMap(e, _infoBox, _map) {
         
         _infoBox.addTo(_map);
         
-        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 4px;"><b>'+e.target.feature.properties.country + '</b><br/>Impact factor: '+e.target.feature.properties.countriy_count+'</p>';
+        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 4px;"><b>'+e.target.feature.properties.country + '</b><br/>Beneficiaries: '+e.target.feature.properties.countriy_count+'</p>';
         document.getElementById('infoBoxMapGlobal_info').innerHTML = html;
     }
 
@@ -69,7 +69,7 @@ export function clickGlobalImactMap(e, _mapGlobal, _mapGlobalPopup) {
                     if (_mapGlobal) {
                         _mapGlobalPopup
                                 .setLatLng(e.latlng)
-                                .setContent("<b>"+e.target.feature.properties.country + '</b><br/>Impact factor: '+e.target.feature.properties.countriy_count)
+                                .setContent("<b>"+e.target.feature.properties.country + '</b><br/>Beneficiaries: '+e.target.feature.properties.countriy_count)
                                 .openOn(_mapGlobal);
                     }  
                 }
@@ -149,7 +149,7 @@ export function getPaletteGlobalImactMap_deprecated(dataCountries_counts, palett
 
 export function loadLagentGlobalImactMap(title, colors, breaks, subtitles) {
 
-    var html = '<div style="width:60px"><p>' + title + '</p></div>';
+    var html = '<div style="width:80px"><p>' + title + '</p></div>';
     
     var subtitlesArray = Array(colors.length).fill('');
     subtitlesArray[0] = subtitles[0];
@@ -203,7 +203,7 @@ export function updateGlobalImactMap(_map, _layer, geoJson, dataCountries_counts
     let palette  = getPaletteGlobalImactMap(dataCountries_counts, palette_colors);
 
     RestyleLayerGlobalImactMap(_layer, palette);
-    loadLagentGlobalImactMap("Impact", palette["colors"], palette["breaks"], "subtitles");
+    loadLagentGlobalImactMap("Beneficiaries", palette["colors"], palette["breaks"], "subtitles");
 
     const resizeObserver = new ResizeObserver(() => {
         _map.invalidateSize();

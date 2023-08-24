@@ -34,7 +34,7 @@ export function updateFunderChart(data, bar_colore, n=20) {
                     
     var optionFunderChart = {
         grid: {
-            left: "2%",
+            left: "10%",
             top: "10%",
             right: "10%",
             bottom: "5%",
@@ -66,7 +66,10 @@ export function updateFunderChart(data, bar_colore, n=20) {
             axisLine: { show: true }            
         },
         yAxis: {
-
+            axisLabel: { show: true },
+            name: 'Impact Case Studies',
+            nameLocation: 'middle',
+            nameGap: 50
         },
         series: [{
                 type: 'bar',
