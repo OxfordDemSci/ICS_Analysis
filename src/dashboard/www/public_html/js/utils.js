@@ -475,6 +475,16 @@ export function progressMenuOff() {
 
 
 export function updateAssessmentSelection(d) {
+    
+    const Assessment_labels_lookup = [
+        { name: "All", label: "All Assessment" },   
+        { name: "A", label: "Assessment A" },
+        { name: "B", label: "Assessment B"},
+        { name: "C", label: "Assessment C" },
+        { name: "D", label: "Assessment D" },
+        { name: "STEM", label: "Assessment STEM" },
+        { name: "SHAPE", label: "Assessment SHAPE" }
+    ];
   
     const list = document.getElementById('Options_of_Assessment');
     
@@ -483,23 +493,23 @@ export function updateAssessmentSelection(d) {
     d.sort();
     
     list.innerHTML = list.innerHTML +
-                    '<option value="All">All</option>';
+                    '<option value="All">' + Assessment_labels_lookup.find(({ name }) => name === "All").label + '</option>';
     
     for (var i = 0; i < d.length; i++) {
 
             list.innerHTML = list.innerHTML +
-                    '<option value="' + d[i] + '">' + d[i] + '</option>';
+                    '<option value="' + d[i] + '">' + Assessment_labels_lookup.find(({ name }) => name === d[i]).label + '</option>';
       
     }
       
     if (d.includes("A") && d.includes("B")){
         list.innerHTML = list.innerHTML +
-                    '<option value="STEM">STEM</option>';
+                    '<option value="STEM">' + Assessment_labels_lookup.find(({ name }) => name === "STEM").label + '</option>';
     }  
  
     if (d.includes("C") && d.includes("D")){
         list.innerHTML = list.innerHTML +
-                    '<option value="SHAPE">SHAPE</option>';
+                    '<option value="SHAPE">' + Assessment_labels_lookup.find(({ name }) => name === "SHAPE").label + '</option>';
     }      
 }
 

@@ -3,7 +3,7 @@ var API_URL = "http://127.0.0.1:8000/api/";
 
 import * as _api from './api.js?version=2.8'
 import * as _init from './init.js?version=4.9'
-import * as _utils from './utils.js?version=6.5'
+import * as _utils from './utils.js?version=6.6'
 import * as _UOAChart from './uoa_chart.js?version=6.3'
 import * as _funderChart from './funder_chart.js?version=3.5'
 import * as _GlobalImactMap from './global_impact_map.js?version=3.9'
@@ -20,7 +20,6 @@ var slc_funder=null;
 var slc_numberFundersLimit=10;
 var slc_group_ID=0;
 var slc_group_Name="All Groups";
-
 
 let initialData = _api.getInitData(API_URL);
 let GlobalBoundary = _api.getGlobalBoundary();
