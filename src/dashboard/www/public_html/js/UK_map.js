@@ -201,7 +201,7 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
    _layer.addTo(_map);
    _layer.addData(geoJson); 
    
-   document.getElementById('Institutions_count').innerHTML = cnt;
+   // document.getElementById('Institutions_count').innerHTML = cnt;
    
     _utils.removeSelectedLayer(_map, "institutions");
     
@@ -209,7 +209,7 @@ export function updateUKMap(_map, _layer, geoJson, data, palette_colors) {
 
     RestyleLayerUKMap(_layer, palette);
     
-    loadLagentUKMap("Institutions", palette["colors"], palette["breaks"], "subtitles");
+    loadLagentUKMap("Submissions", palette["colors"], palette["breaks"], "subtitles");
     
     const resizeObserver = new ResizeObserver(() => {
         _map.invalidateSize();
@@ -293,7 +293,7 @@ export function highlightFeatureUKMap(e, _infoBox, _map, slc_postcode_area) {
                 });
 
                 _infoBox.addTo(_map);
-                let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px;">Submissions from Postcode [ <b>' + pc_area + '</b> ]</p>';
+                let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px;">Submissions from postcode area: <b>' + pc_area + '</b></p>';
                 html += '<ul style="list-style-type: none;margin-top: 2px;margin-bottom: 2px;padding: 4px;">';
                 for (var key in institutions) {
                     html += '<li>&check; ' + key + ': ' + institutions[key] + '</li>';
@@ -331,7 +331,7 @@ export function selectFeatureUKMap(e, _infoBox, _map) {
         
         let popover_text=''; 
         
-        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px; color:#0c4128">Selected [ <b>'+pc_area +'</b> ]</p>';
+        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 2px; color:#0c4128">Selected postcode area: <b>'+pc_area +'</b></p>';
         html += '<ul style="list-style: none;margin-top: 2px;margin-bottom: 2px;padding: 4px;color:#0c4128">';
         for (var key in institutions) {
             html += '<li>&check; ' + key+ ': '+institutions[key]+'</li>';

@@ -3,28 +3,46 @@ export function getICSTable_columns() {
 
  var columns=[
     {
+        "title": "title",
+        "data": "title",
+        "sTitle": "title",
+        "mData": "title"
+    },
+    {
         "title": "ics_url",
         "data": "ics_url",
         "sTitle": "ics_url",
         "mData": "ics_url"
     },    
     {
-        "title": "id",
-        "data": "id",
-        "sTitle": "id",
-        "mData": "id"
-    },
-    {
-        "title": "ukprn",
-        "data": "ukprn",
-        "sTitle": "ukprn",
-        "mData": "ukprn"
-    },
-    {
         "title": "institution_name",
         "data": "institution_name",
         "sTitle": "institution_name",
         "mData": "institution_name"
+    },
+    {
+        "title": "inst_postcode",
+        "data": "inst_postcode",
+        "sTitle": "inst_postcode",
+        "mData": "inst_postcode"
+    },
+    {
+        "title": "unit_of_assessment_name",
+        "data": "unit_of_assessment_name",
+        "sTitle": "unit_of_assessment_name",
+        "mData": "unit_of_assessment_name"
+    },
+    {
+        "title": "summary_impact_type",
+        "data": "summary_impact_type",
+        "sTitle": "summary_impact_type",
+        "mData": "summary_impact_type"
+    },
+    {
+        "title": "countries_iso3",
+        "data": "countries_iso3",
+        "sTitle": "countries_iso3",
+        "mData": "countries_iso3"
     },
     {
         "title": "main_panel",
@@ -39,12 +57,6 @@ export function getICSTable_columns() {
         "mData": "unit_of_assessment_number"
     },
     {
-        "title": "unit_of_assessment_name",
-        "data": "unit_of_assessment_name",
-        "sTitle": "unit_of_assessment_name",
-        "mData": "unit_of_assessment_name"
-    },
-    {
         "title": "multiple_submission_letter",
         "data": "multiple_submission_letter",
         "sTitle": "multiple_submission_letter",
@@ -55,6 +67,18 @@ export function getICSTable_columns() {
         "data": "multiple_submission_name",
         "sTitle": "multiple_submission_name",
         "mData": "multiple_submission_name"
+    },
+    {
+        "title": "id",
+        "data": "id",
+        "sTitle": "id",
+        "mData": "id"
+    },
+    {
+        "title": "ukprn",
+        "data": "ukprn",
+        "sTitle": "ukprn",
+        "mData": "ukprn"
     },
     {
         "title": "joint_submission",
@@ -69,22 +93,10 @@ export function getICSTable_columns() {
         "mData": "ics_id"
     },
     {
-        "title": "title",
-        "data": "title",
-        "sTitle": "title",
-        "mData": "title"
-    },
-    {
         "title": "is_continued_from_2014",
         "data": "is_continued_from_2014",
         "sTitle": "is_continued_from_2014",
         "mData": "is_continued_from_2014"
-    },
-    {
-        "title": "summary_impact_type",
-        "data": "summary_impact_type",
-        "sTitle": "summary_impact_type",
-        "mData": "summary_impact_type"
     },
     {
         "title": "countries",
@@ -169,18 +181,6 @@ export function getICSTable_columns() {
         "data": "uoa",
         "sTitle": "uoa",
         "mData": "uoa"
-    },
-    {
-        "title": "countries_iso3",
-        "data": "countries_iso3",
-        "sTitle": "countries_iso3",
-        "mData": "countries_iso3"
-    },
-    {
-        "title": "inst_postcode",
-        "data": "inst_postcode",
-        "sTitle": "inst_postcode",
-        "mData": "inst_postcode"
     },
     {
         "title": "inst_postcode_district",

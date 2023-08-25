@@ -54,7 +54,8 @@ export function RestyleLayerGlobalImactMap(_layer, palette) {
                 featureInstanceLayer.setStyle({
                 fillColor: _utils.getColor(propertyValue, palette),
                 fillOpacity: Opacity,
-                weight: 0.5
+                weight: 0.5,
+                color: "black"
             });
         }       
         
@@ -196,7 +197,7 @@ export function updateGlobalImactMap(_map, _layer, geoJson, dataCountries_counts
    _layer.addTo(_map);
    _layer.addData(geoJson); 
    
-   document.getElementById('Beneficiaries_count').innerHTML = cnt;
+   // document.getElementById('Beneficiaries_count').innerHTML = cnt;
     
     _utils.removeSelectedLayer(_map, "countriy_count");
     

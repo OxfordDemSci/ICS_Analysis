@@ -298,7 +298,7 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
         document.getElementById('label_selected_Institutions').style.cursor = "pointer";
     } else {
 
-        document.getElementById('label_selected_Institutions').innerHTML = "All in UK";
+        document.getElementById('label_selected_Institutions').innerHTML = "All";
         let link_popover_Institutions = document.getElementById('popover_Institutions');
         document.getElementById('label_selected_Institutions').style.textDecoration = "none";
         document.getElementById('label_selected_Institutions').style.cursor = "default";
@@ -477,15 +477,15 @@ export function progressMenuOff() {
 export function updateAssessmentSelection(d) {
     
     const Assessment_labels_lookup = [
-        { name: "All", label: "All Assessment" },   
-        { name: "A", label: "Assessment A" },
-        { name: "B", label: "Assessment B"},
-        { name: "C", label: "Assessment C" },
-        { name: "D", label: "Assessment D" },
-        { name: "STEM", label: "Assessment STEM" },
-        { name: "SHAPE", label: "Assessment SHAPE" }
+        { name: "All", label: "All Disciplines" },
+        { name: "A", label: "Panel A: Medicine, Health, and Life Sciences" },
+        { name: "B", label: "Panel B: Physical Sciences, Engineering, and Mathematics"},
+        { name: "C", label: "Panel C: Social Sciences" },
+        { name: "D", label: "Panel D: Arts and Humanities" },
+        { name: "STEM", label: "All STEM Disciplines" },
+        { name: "SHAPE", label: "All SHAPE Disciplines" }
     ];
-  
+
     const list = document.getElementById('Options_of_Assessment');
     
     list.innerHTML = "";
@@ -495,22 +495,25 @@ export function updateAssessmentSelection(d) {
     list.innerHTML = list.innerHTML +
                     '<option value="All">' + Assessment_labels_lookup.find(({ name }) => name === "All").label + '</option>';
     
+    if (d.includes("C") && d.includes("D")){
+        list.innerHTML = list.innerHTML +
+                    '<option value="SHAPE">' + Assessment_labels_lookup.find(({ name }) => name === "SHAPE").label + '</option>';
+    }
+
     for (var i = 0; i < d.length; i++) {
+
+            if (d[i] === 'B' | d[i] === 'A') continue;
 
             list.innerHTML = list.innerHTML +
                     '<option value="' + d[i] + '">' + Assessment_labels_lookup.find(({ name }) => name === d[i]).label + '</option>';
       
     }
       
-    if (d.includes("A") && d.includes("B")){
-        list.innerHTML = list.innerHTML +
-                    '<option value="STEM">' + Assessment_labels_lookup.find(({ name }) => name === "STEM").label + '</option>';
-    }  
+    // if (d.includes("A") && d.includes("B")){
+    //     list.innerHTML = list.innerHTML +
+    //                 '<option value="STEM">' + Assessment_labels_lookup.find(({ name }) => name === "STEM").label + '</option>';
+    // }
  
-    if (d.includes("C") && d.includes("D")){
-        list.innerHTML = list.innerHTML +
-                    '<option value="SHAPE">' + Assessment_labels_lookup.find(({ name }) => name === "SHAPE").label + '</option>';
-    }      
 }
 
 

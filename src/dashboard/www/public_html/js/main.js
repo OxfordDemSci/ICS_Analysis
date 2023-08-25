@@ -15,7 +15,7 @@ var slc_postcode_area=null;
 var slc_beneficiary=null;
 var slc_uoa=null;
 var slc_topic=null;
-var slc_threshold=0.5;
+var slc_threshold=1;
 var slc_funder=null;
 var slc_numberFundersLimit=10;
 var slc_group_ID=0;
@@ -29,8 +29,8 @@ let palette_colors_GlobalMap = initialData.website_text.global_colourramp;
 let palette_colors_UKMap = initialData.website_text.uk_map_colourramp;
 let color_bar_Funder = initialData.website_text.funders_bar_colour;
 
-let ICSTable_columns = null;
-//let ICSTable_columns = _ICSTable_columns.getICSTable_columns();
+//let ICSTable_columns = null;
+let ICSTable_columns = _ICSTable_columns.getICSTable_columns();
 let ICSTable_max_text_length = 40;
 
 
@@ -55,7 +55,7 @@ var basemaps = {
 var mapGlobalOptions = {
         zoomControl: true,
         attributionControl: false,
-        center: [48.864716, 2.349014],
+        center: [40, 25],
         zoom: 1,
         maxZoom: 11,
         minZoom: 1,
@@ -174,7 +174,7 @@ var basemapsUKmap = {
 var mapUKOptions = {
         zoomControl: true,
         attributionControl: false,
-        center: [55.10, -3.22],
+        center: [54.5, -3],
         zoom: 5,
         maxZoom: 11,
         minZoom: 1,

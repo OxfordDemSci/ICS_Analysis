@@ -132,8 +132,16 @@ def make_topics_and_weights():
     weights_df = weights_df.rename(columns={'REF impact case study identifier': 'ics_id'})
     cols = [x for x in weights_df.columns if isinstance(x, int)]
     cols.insert(0, 'ics_id')
+
+    weights_df[cols[1:]] = 0
+    for i in range(weights_df.shape[0]):
+        weights_df.at[i, weights_df.at[i, 'BERT_topic']] = 1
+
     weights_df = weights_df[cols]
     weights_df = weights_df.fillna(0)
+
+    # weights_df[cols[1:]] = weights_df[cols[1:]].apply(lambda x: x.replace(x.max(), 1), axis=1)
+
     df_long = pd.melt(weights_df, id_vars=['ics_id'], var_name='topic_id', value_name='probability')
     df_long['id'] = df_long.index.copy().astype('int')
     df_long = df_long[['id', 'ics_id', 'topic_id', 'probability']]
