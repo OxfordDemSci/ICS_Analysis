@@ -70,6 +70,7 @@ columns_to_keep = [
     'ics_url',
 ]
 
+
 def strip_uoa(row):
     uoa_string = row.uoa
     if uoa_string[-1].isalpha():
@@ -80,6 +81,7 @@ def strip_uoa(row):
     
     return uoa_int
 
+
 def make_ics_table():
     ics_df = pd.read_csv(ENRICHED_ICS_TABLE)
     rename_cols = {'inst_id': 'ukprn', 'uoa_id': 'uoa', 'inst_postcode_area': 'postcode', 'covid-statement': 'covid_statement'}
@@ -89,6 +91,7 @@ def make_ics_table():
     ics_df = ics_df[columns_to_keep]
     ics_df.to_csv(OUTPUT_ICS_TABLE, index=False)
     return ics_df
+
 
 def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     def transform_funders(row):
@@ -114,6 +117,7 @@ def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     df_lookup = df_lookup[['id', 'ics_table_id', 'funder']]
     df_lookup.to_csv(FUNDERS_LOOKUP_OUT, index=False)
 
+
 def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
     df_iso = df_ics[['id', 'countries_iso3']]
     df_iso = df_iso.copy()
@@ -126,21 +130,27 @@ def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
     df_iso = df_iso[['id', 'ics_table_id', 'country']]
     df_iso.to_csv(COUNTRIES_LOOKUP_OUT, index=False)
 
-def make_topics_and_weights():
+
+def make_topics_and_weights(scale_weights: str | None = None) -> None:
     weights_df = pd.read_excel(WEIGHTS_TABLE, sheet_name='Sheet1')
     topics_df = pd.read_excel(TOPICS_TABLE, sheet_name='Sheet1')
     weights_df = weights_df.rename(columns={'REF impact case study identifier': 'ics_id'})
     cols = [x for x in weights_df.columns if isinstance(x, int)]
     cols.insert(0, 'ics_id')
 
-    weights_df[cols[1:]] = 0
-    for i in range(weights_df.shape[0]):
-        weights_df.at[i, weights_df.at[i, 'BERT_topic']] = 1
+    if scale_weights == 'binary':
+        weights_df[cols[1:]] = 0
+        for i in range(weights_df.shape[0]):
+            weights_df.at[i, weights_df.at[i, 'BERT_topic']] = 1
 
     weights_df = weights_df[cols]
     weights_df = weights_df.fillna(0)
 
-    # weights_df[cols[1:]] = weights_df[cols[1:]].apply(lambda x: x.replace(x.max(), 1), axis=1)
+    if scale_weights == 'maxTo1':
+        weights_df[cols[1:]] = weights_df[cols[1:]].apply(lambda x: x.replace(x.max(), 1), axis=1)
+
+    if scale_weights == 'scaleTo1':
+        weights_df[cols[1:]] = weights_df[cols[1:]].divide(weights_df[cols[1:]].max(axis=1), axis=0)
 
     df_long = pd.melt(weights_df, id_vars=['ics_id'], var_name='topic_id', value_name='probability')
     df_long['id'] = df_long.index.copy().astype('int')
@@ -203,7 +213,7 @@ if __name__ == "__main__":
     print('Making funders lookup')
     make_funders_lookup_table(ics_df)
     print('Reformatting topics and weights')
-    make_topics_and_weights()
+    make_topics_and_weights(scale_weights='scaleTo1')
     print("Making topic groups table")
     make_topics_groups_table()
     print("Making countries lookup table")

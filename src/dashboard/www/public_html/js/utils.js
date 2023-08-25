@@ -494,11 +494,14 @@ export function updateAssessmentSelection(d) {
     
     list.innerHTML = list.innerHTML +
                     '<option value="All">' + Assessment_labels_lookup.find(({ name }) => name === "All").label + '</option>';
-    
-    if (d.includes("C") && d.includes("D")){
-        list.innerHTML = list.innerHTML +
-                    '<option value="SHAPE">' + Assessment_labels_lookup.find(({ name }) => name === "SHAPE").label + '</option>';
-    }
+
+    list.innerHTML = list.innerHTML +
+                '<option value="SHAPE">' + Assessment_labels_lookup.find(({ name }) => name === "SHAPE").label + '</option>';
+
+    // if (d.includes("C") && d.includes("D")){
+    //     list.innerHTML = list.innerHTML +
+    //                 '<option value="SHAPE">' + Assessment_labels_lookup.find(({ name }) => name === "SHAPE").label + '</option>';
+    // }
 
     for (var i = 0; i < d.length; i++) {
 
