@@ -118,7 +118,7 @@ export function getUKPostCodeAreasBoundary() {
 
     var result = "";
     $.ajax({
-        url: "./data/UK_postcode_area.geojson",
+        url: "./data/UK_postcode_area_v7.geojson",
         async: false,
         type: 'get',
         dataType: 'json',
