@@ -19,7 +19,7 @@ var slc_threshold=1;
 var slc_funder=null;
 var slc_numberFundersLimit=10;
 var slc_group_ID=0;
-var slc_group_Name="All Groups";
+var slc_group_Name="All Clusters";
 
 let initialData = _api.getInitData(API_URL);
 let GlobalBoundary = _api.getGlobalBoundary();
@@ -449,7 +449,7 @@ $( "#reload_selected_options" ).on( "click", function() {
      $('[data-bs-toggle="tooltip"]').tooltip('hide'); 
 
      slc_group_ID=0;
-     slc_group_Name="All Groups";
+     slc_group_Name="All Clusters";
 
      slc_topic=null;
      slc_postcode_area=null;
@@ -659,7 +659,7 @@ $("#idGroups").change(function (e) {
     let topic_groups = initialData.topic_groups;
 
     if (slc_group_ID === 0) {
-        slc_group_Name = "All Groups";
+        slc_group_Name = "All Clusters";
     } else {
         slc_group_Name = topic_groups.filter(element => (element.group_id === slc_group_ID))[0].topic_group;
     }

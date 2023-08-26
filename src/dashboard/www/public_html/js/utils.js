@@ -525,7 +525,7 @@ export function updateAssessmentSelection(d) {
 export function updateTopicsMenu_single(d, t) {
     
         let topics_filted_by_group;
-        if (t === "All Groups"){
+        if (t === "All Clusters"){
             topics_filted_by_group = d;
         }else{
             topics_filted_by_group = d.filter(element => (element.topic_group === t));
@@ -551,7 +551,7 @@ export function updateTopicsMenu(d, t) {
     return new Promise((resolve, reject) => {
 
         let topics_filted_by_group;
-        if (t === "All Groups"){
+        if (t === "All Clusters"){
             topics_filted_by_group = d;
         }else{
             topics_filted_by_group = d.filter(element => (element.topic_group === t));

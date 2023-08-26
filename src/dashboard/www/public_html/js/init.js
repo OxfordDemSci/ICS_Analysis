@@ -7,7 +7,7 @@ export function setTopicsMenu(d) {
         
         groups.innerHTML = "";
             groups.innerHTML = groups.innerHTML +
-                    '<option value="0">All Groups</option>';
+                    '<option value="0">All Clusters</option>';
         for (var i = 0; i < g.length; i++) {
 
                 groups.innerHTML = groups.innerHTML +
