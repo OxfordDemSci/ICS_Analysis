@@ -44,6 +44,12 @@ export function setAboutInfo(t) {
 
 }
 
+export function setTeamInfo(t) {
+
+    document.getElementById('contentTeam').innerHTML = t;
+
+}
+
 export function setHelpInfo(t) {
    
     document.getElementById('contentHelp').innerHTML = t;

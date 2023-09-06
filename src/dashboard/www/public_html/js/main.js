@@ -317,7 +317,8 @@ _init.setTopicsMenu(initialData).then(() => {
 ).then(result => {
     _init.setContactInfo(initialData.website_text.contact); 
     _init.setAboutInfo(initialData.website_text.about); 
-    _init.setHelpInfo(initialData.website_text.instructions); 
+    _init.setTeamInfo(initialData.website_text.team);
+    _init.setHelpInfo(initialData.website_text.instructions);
     _utils.updateModalInfoBox(initialData);
     //_utils.initialSetLabels(initialData);
     _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);
@@ -614,6 +615,10 @@ $( "#btnContact" ).on( "click", function() {
 
 $( "#btnAbout" ).on( "click", function() {
     $('#idMdAbout').modal('show');
+});
+
+$( "#btnTeam" ).on( "click", function() {
+    $('#idMdTeam').modal('show');
 });
 
 $( "#btnHelp" ).on( "click", function() {

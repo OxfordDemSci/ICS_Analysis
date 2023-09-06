@@ -20,10 +20,8 @@ OUTPUT_ICS_TABLE = BASE_APP.joinpath('db-data/ICS_DATABASE_TABLE.csv')
 
 
 TOPICS_DIR =BASE.joinpath('data/dashboard/nn3nn7')
-# TOPICS_TABLE = TOPICS_DIR.joinpath('topics.bak.xlsx')
 TOPICS_TABLE = TOPICS_DIR.joinpath('topics.xlsx')
 TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath('topics_groups.xlsx')
-# WEIGHTS_TABLE = TOPICS_DIR.joinpath('candidate_nn3nn7.xlsx')
 WEIGHTS_TABLE = TOPICS_DIR.joinpath('nn3_threshold0.01_reduced.xlsx')
 TOPICS_OUT = BASE_APP.joinpath('db-data/TOPICS_TABLE.csv')
 TOPICS_WEIGHTS_OUT = BASE_APP.joinpath('db-data/TOPIC_WEIGHTS_TABLE.csv')

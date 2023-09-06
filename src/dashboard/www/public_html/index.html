@@ -39,10 +39,11 @@
                         <i class="fa-solid fa-grip"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
                         <li><a class="dropdown-item" id="btnHelp" href="#">Help</a></li>
-                        <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>
+                        <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
+                        <li><a class="dropdown-item" id="btnTeam" href="#">Team</a></li>
                         <li><a class="dropdown-item" id="btnSettings" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item"  id="btnContact" href="#">Contact</a></li>
                     </ul>
@@ -516,12 +517,43 @@
                     </div>                    
                 </div>
             </div>
-        </div>                             
+        </div>
+
         <!-- end  modals About -->
+
+        <!--  modals Team -->
+        <div class="modal fade "  data-backdrop="false"  id="idMdTeam" tabindex="-1"  aria-labelledby="ModalTeam" style="opacity: 0.95;z-index: 2200">
+            <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important"  role="document" id="idModalTeam-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                        <h5 class="modal-title" id="ModalTeamLabel">Team</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                        <div class="container">
+
+                            <div id="contentTeam">
+
+                            </div>
+
+                            <div class="mw-100">
+                                <div class="form-group col-12">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer p-1" >
+                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end  modals Team -->
         
         
-        
-         <!--  modals label_Assessment Question -->
+        <!--  modals label_Assessment Question -->
         <div class="modal fade "  data-backdrop="false"  id="idMdAssessmentQuestion" tabindex="-1"  aria-labelledby="ModalAssessmentQuestion" style="opacity: 0.95;z-index: 2200">
             <div class="modal-dialog"  role="document" id="idMdAssessmentQuestion-dialog">
                 <div class="modal-content">
