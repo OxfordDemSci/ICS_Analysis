@@ -421,12 +421,12 @@ export function updateModalInfoBox(d) {
         } else {
 
             if (found.description){
-                contectMd.innerHTML = "<p class='lead mb-1'><strong> Description </strong></p>";
+                contectMd.innerHTML = "<p class='lead mb-1'><strong> Topic Description </strong></p>";
                 contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.description + "</p>";
             }
             
             if (found.narrative){
-                contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Narrative </strong></p>";
+                contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Example Impact Case Studies </strong></p>";
                 contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.narrative + "</p>";
             }
             

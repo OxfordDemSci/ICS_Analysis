@@ -189,6 +189,10 @@
     border: 1px solid #0b2543;
 }
 
+.text-bg-dark-navy {
+  color: #fff !important;
+  background-color: #002147 !important;
+}
 
 .bg-dark-navy {
     --bs-bg-opacity: 1;
