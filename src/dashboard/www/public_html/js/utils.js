@@ -379,7 +379,7 @@ export function updateInfoBox(d) {
 
         } else {
 
-            $("#info_box_topic_description").html(found.desciption);
+            $("#info_box_topic_description").html(found.description);
             $("#info_box_topic_example").html(found.narrative);
             $("#info_box_topic_keywords").html(found.keywords);
             
