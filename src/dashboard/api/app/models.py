@@ -54,12 +54,6 @@ class Topics(Base):  # type: ignore
     description = Column(String)
     narrative = Column(String)
     keywords = Column(String)
-    charlie_suggested = Column(String)
-    topic_name_long = Column(String)
-    hierarchical_grouping = Column(String)
-    cluster_name = Column(String)
-    cluster = Column(String)
-    topic_notes = Column(String)
 
     __table_args__ = (Index("idx_topics_id", "topic_id", unique=True),)
 

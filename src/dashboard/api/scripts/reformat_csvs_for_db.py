@@ -20,9 +20,11 @@ OUTPUT_ICS_TABLE = BASE_APP.joinpath('db-data/ICS_DATABASE_TABLE.csv')
 
 
 TOPICS_DIR =BASE.joinpath('data/dashboard/nn3nn7')
+# TOPICS_TABLE = TOPICS_DIR.joinpath('topics.bak.xlsx')
 TOPICS_TABLE = TOPICS_DIR.joinpath('topics.xlsx')
 TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath('topics_groups.xlsx')
-WEIGHTS_TABLE = TOPICS_DIR.joinpath('candidate_nn3nn7.xlsx')
+# WEIGHTS_TABLE = TOPICS_DIR.joinpath('candidate_nn3nn7.xlsx')
+WEIGHTS_TABLE = TOPICS_DIR.joinpath('nn3_threshold0.01_reduced.xlsx')
 TOPICS_OUT = BASE_APP.joinpath('db-data/TOPICS_TABLE.csv')
 TOPICS_WEIGHTS_OUT = BASE_APP.joinpath('db-data/TOPIC_WEIGHTS_TABLE.csv')
 TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath('topics_groups.xlsx')
@@ -135,6 +137,9 @@ def make_topics_and_weights(scale_weights: str | None = None) -> None:
     weights_df = pd.read_excel(WEIGHTS_TABLE, sheet_name='Sheet1')
     topics_df = pd.read_excel(TOPICS_TABLE, sheet_name='Sheet1')
     weights_df = weights_df.rename(columns={'REF impact case study identifier': 'ics_id'})
+
+    topics_df = topics_df[['topic_id', 'group_id', 'topic_group', 'topic_name', 'description', 'narrative', 'keywords']]
+
     cols = [x for x in weights_df.columns if isinstance(x, int)]
     cols.insert(0, 'ics_id')
 
