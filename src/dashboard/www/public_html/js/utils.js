@@ -231,7 +231,7 @@ export function getColor(v, palette) {
 export function setHightBoxs() {
 
     var h = window.innerHeight;
-    $("#info_box").height(h - 457);
+    $("#info_box").height(h - 232);
     $("#chart_cardbox_top_left").height(h / 2 - 94);
     $("#chart_cardbox_bottom_left").height(h / 2 - 94);
     $("#map_cardbox_top_right").height(h / 2 - 94);

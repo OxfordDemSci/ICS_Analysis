@@ -1,636 +1,713 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="SHAPE of Impact: Exploring research impact from social sciences, humanities, and the arts through the United Kingdom's 2021 Research Excellence Framework (REF2021)." />
-        <meta name="author" content="Oxford: Investigators: Melinda C. Mills, Douglas Leasure, Charles Rahal, Sander Wagner, Maksym Bondarenko, David Kerr, Bo Zhao, Linda Li, Yifan Lu, and Mark Verhagen; Research Support: Hamza Shams, Bradley Smith, Michelle Thorpe" />
-        <title>SHAPE of Impact</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="css/styles.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>    
-        <link href="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
-        <link href="css/styles_custom.css?version=1.0" rel="stylesheet" />
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description"
+          content="SHAPE of Impact: Exploring research impact from social sciences, humanities, and the arts through the United Kingdom's 2021 Research Excellence Framework (REF2021)."/>
+    <meta name="author"
+          content="Oxford: Investigators: Melinda C. Mills, Douglas Leasure, Charles Rahal, Sander Wagner, Maksym Bondarenko, David Kerr, Bo Zhao, Linda Li, Yifan Lu, and Mark Verhagen; Research Support: Hamza Shams, Bradley Smith, Michelle Thorpe"/>
+    <title>SHAPE of Impact</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="css/styles.css" rel="stylesheet"/>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
+    <link href="css/styles_custom.css?version=1.0" rel="stylesheet"/>
 
-    </head>
-    <body class="sb-nav-fixed">
-        <div id="firstloader"></div>
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark-navy ">
-            <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">
+</head>
+<body class="sb-nav-fixed">
+<div id="firstloader"></div>
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark-navy ">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="index.html">
 
-                <img class="opacity-75" src="./img/logo/pngegg_w.png" width="160px">
+        <img class="opacity-75" src="./img/logo/pngegg_w.png" width="160px">
 
+    </a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="fa-solid fa-grip"></i>
             </a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-            <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-
-                </div>
-            </form>
-            <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-grip"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" id="btnHelp" href="#">Help</a></li>
-                        <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
-                        <li><a class="dropdown-item" id="btnTeam" href="#">Team</a></li>
-                        <li><a class="dropdown-item" id="btnSettings" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item"  id="btnContact" href="#">Contact</a></li>
-                    </ul>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" id="btnHelp" href="#">Help</a></li>
+                <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
+                <li><a class="dropdown-item" id="btnTeam" href="#">Team</a></li>
+                <li><a class="dropdown-item" id="btnSettings" href="#">Settings</a></li>
+                <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>
+                <li>
+                    <hr class="dropdown-divider"/>
                 </li>
+                <li><a class="dropdown-item" id="btnContact" href="#">Contact</a></li>
             </ul>
+        </li>
+    </ul>
+</nav>
+
+<!-- LEFT CONTROL PANEL -->
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion " id="sidenavAccordion">
+            <div class="sb-sidenav-menu sb-sidenav-dark-navy" style="overflow-y: hidden;">
+                <div class="nav">
+
+                    <!-- TOPIC CLUSTER SELECTOR -->
+                    <div class="sb-sidenav-menu-heading" style="padding-bottom:0.1rem">TOPIC CLUSTERS</div>
+                    <div class="m-2">
+                        <select id="idGroups" class="form-select form-select-sm"
+                                style="padding-top: 0.1rem; padding-bottom: 0.5rem;">
+                        </select>
+                    </div>
+
+                    <!-- TOPICS SELECTOR -->
+                    <div class="sb-sidenav-menu-heading" style="padding-top: 1rem; padding-bottom: 0.1rem;">TOPICS</div>
+                    <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper"
+                         style="height: calc(100vh - 475px);">
+                        <div class="">
+                            <ul class="list-group list-group-flush" id="idTopics" style="font-size: 0.8rem">
+                                <li class="list-group-item">1</li>
+                                <li class="list-group-item">2</li>
+                                <li class="list-group-item">3</li>
+                                <li class="list-group-item active">4</li>
+                                <li class="list-group-item">5</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- SELECTED FILTERS INFO -->
+                    <div class="sb-sidenav-menu-heading pb-0" style="padding-top: 0.5rem">SELECTED FILTERS
+                        <span class="badge bg-primary rounded-pill"
+                              id="reload_selected_options"
+                              style="visibility: hidden; cursor: pointer; float:right"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-title="Reload selected options">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </span>
+                    </div>
+                    <div class="m-2">
+                        <ul class="list-group pb-0 mb-0" style="font-size: 0.8rem;">
+                            <li class="list-group-item pb-0 pt-0">
+                                <label class="text-muted pr-4"
+                                       id="label_selectedBox_Topic">Topic:</label>&nbsp;<label
+                                    id="label_selected_Topics">All Topics</label>
+                            </li>
+                            <li class="list-group-item pb-0 pt-0">
+                                <label class="text-muted pr-4" id="label_selectedBox_Institutions">Institution
+                                    postcode:</label>&nbsp;
+                                <a href="#"
+                                   id="popover_Institutions"
+                                   class="text-white"
+                                   tabindex="0"
+                                   data-bs-toggle="popover"
+                                   data-bs-trigger="focus"
+                                   data-bs-content="ad" style="text-decoration: none">
+                                    <label id="label_selected_Institutions"> All</label>
+                                </a>
+                            </li>
+                            <li class="list-group-item pb-0 pt-0">
+                                <label class="text-muted pr-4"
+                                       id="label_selectedBox_Beneficiaries">Beneficiaries:</label>&nbsp;<label
+                                    id="label_selected_Beneficiaries"> Global</label>
+                            </li>
+                            <li class="list-group-item pb-0 pt-0">
+                                <label class="text-muted pr-4" id="label_selectedBox_Assessment">Main
+                                    Panel:</label>&nbsp;<label
+                                    id="label_selected_Assessment"> All</label>
+                            </li>
+                            <li class="list-group-item pb-0 pt-0">
+                                <label class="text-muted pr-4"
+                                       id="label_selectedBox_Funder">Funder:</label>&nbsp;<label
+                                    id="label_selected_Funder" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    data-bs-title="All"> All</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- VIEW AND DOWNLOAD DATA BUTTOM -->
+                    <div class="sb-sidenav-menu-heading" style="padding-top:0.5rem; padding-bottom:0rem"><label id="label_Addons"></label></div>
+                    <a class="nav-link" id="ics_table_all_btn" href="#" style="color:white; padding-top:0.5rem">
+                        <div class="sb-nav-link-icon" style="color: white"><i class="fas fa-table"></i></div>
+                        <label id="label_sub_addons_Impact_Case_Studies" style="cursor:pointer;"></label>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="sb-sidenav-footer sb-sidenav-dark-navy-footer">
+                <div class="small align-items-center"> &copy; 2023 University of Oxford <br/> Built by <a
+                        href="https://www.gisrede.com" target="_blank">GISRede</a></div>
+            </div>
         </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion " id="sidenavAccordion">
-                    <div class="sb-sidenav-menu sb-sidenav-dark-navy" style="overflow-y: hidden;">
-                        <div class="nav">
+    </div>
 
-                            <div class="sb-sidenav-menu-heading">TOPIC CLUSTERS</div>
-                            <div class="m-2" >
-                                <select id="idGroups" class="form-select form-select-sm" style="padding-top: 0.1rem; padding-bottom: 0.1rem;">
-                                </select>
-                            </div> 
+    <!-- MAIN PANEL -->
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
 
-                            <div class="sb-sidenav-menu-heading">Topics</div>
-                            <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper" style="height: calc(100vh - 420px);">
-                                <div class="">     
-                                    <ul class="list-group list-group-flush" id="idTopics" style="font-size: 0.8rem;">
-                                        <li class="list-group-item ">1</li>
-                                        <li class="list-group-item ">2</li>
-                                        <li class="list-group-item">3</li>
-                                        <li class="list-group-item active">4</li>
-                                        <li class="list-group-item">5</li>
-                                    </ul>
-                                </div>                            
-                            </div> 
-                            <div class="sb-sidenav-menu-heading"><label id="label_Addons"></label></div>
-                            <a class="nav-link" id="ics_table_all_btn" href="#" style="color: white">
-                                <div class="sb-nav-link-icon" style="color: white"><i class="fas fa-table"></i></div>
-                                <label id="label_sub_addons_Impact_Case_Studies"></label>
-                            </a>
+                <div class="row mt-4">
+                    <div class="col-xl-3 col-md-3">
+
+                        <!-- TOPIC NARRATIVE -->
+                        <div class="card bg-white mb-0" style="padding-right: 0px; margin-right: 0px">
+                            <div class="card-body" style="padding-right: 0px; margin-right: 5px; padding-bottom: 0px">
+
+                                <div id="info_box" style="overflow-y: auto;width: 100%;">
+
+                                    <div id="dv_startup" style="display: block">
+                                        s
+                                    </div>
+
+                                    <div id="dv_Description_Narrative" style="display: none">
+                                        <div class="text-bg-dark-navy p-1">Topic Description</div>
+                                        <p id="info_box_topic_description" class="text-700 fw-semi-bold "
+                                           style="font-size: 0.9rem">
+                                        </p>
+                                        <div class="text-bg-dark-navy p-1">Example Impact Case Studies</div>
+                                        <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2"
+                                           style="font-size: 0.9rem">
+                                        </p>
+                                        <div class="text-bg-dark-navy p-1">Keywords</div>
+                                        <p id="info_box_topic_keywords" class="text-700 fw-semi-bold mt-2"
+                                           style="font-size: 0.9rem">
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div id="btnViewDetailsInfoBox"
+                                 class="card-footer d-flex align-items-center justify-content-between" style="">
+                                <p class="small p-0 m-0"><label id="label_View_Details">Expand Text</label></p>
+                                <div class="small"><i class="fas fa-angle-right"></i></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="sb-sidenav-footer sb-sidenav-dark-navy-footer">
-                        <div class="small align-items-center"> &copy; 2023 University of Oxford <br/> Built by <a href="https://www.gisrede.com" target="_blank">GISRede</a> </div>
-                    </div>
-                </nav>
-            </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
 
-                        <div class="row mt-4">
-                            <div class="col-xl-3 col-md-3">
+                    <!-- GRAPHING PANELS -->
+                    <div class="col-xl-9 col-md-9">
 
-                                <div class="card" style="padding-right: 0px; margin-right: 0px;background-color: #002147;min-height: 180px;">
-                                    <div class="card-header">
-                                        <div  class="d-flex justify-content-between align-items-center" style="color: #fff">
-                                            Selected Filters
-                                            <span class="badge bg-primary rounded-pill" 
-                                                  id="reload_selected_options" 
-                                                  style="visibility: hidden; cursor: pointer"
-                                                  data-bs-toggle="tooltip" 
-                                                  data-bs-placement="top" 
-                                                  data-bs-title="Reload selected options">
-                                                <i class="fa-solid fa-arrows-rotate"></i>
-                                            </span>
+                        <div class="container-fluid">
+                            <div class="row">
+
+                                <!-- FUNDERS GRAPH -->
+                                <div class="col-md-6">
+                                    <div class="card mb-2" id="chart_cardbox_top_left" style="min-width: 300px">
+                                        <div class="card-header">
+                                            <div id="label_Funders" class="d-flex">Top Funders</div>
                                         </div>
-                                    </div>                                    
-                                    <div class="card-body" style="padding: 0px; margin-right: 0px; ">
-                                        <ul class="list-group" style="font-size: 0.8rem;">
-                                            <li class="list-group-item ">
-                                                <label class="text-muted pr-4" id="label_selectedBox_Topic">Topic:</label>&nbsp;<label id="label_selected_Topics">All Topics</label>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <label class="text-muted pr-4" id="label_selectedBox_Institutions">Institution postcode:</label>&nbsp;
-                                                <a href="#" 
-                                                   id="popover_Institutions" 
-                                                   class="text-white" 
-                                                   tabindex="0" 
-                                                   data-bs-toggle="popover" 
-                                                   data-bs-trigger="focus" 
-                                                   data-bs-content="ad" style="text-decoration: none">
-                                                    <label id="label_selected_Institutions"> All</label>
-                                                </a>
-                                            </li>
-                                            <li class="list-group-item ">
-                                                <label class="text-muted pr-4" id="label_selectedBox_Beneficiaries">Beneficiaries:</label>&nbsp;<label id="label_selected_Beneficiaries"> Global</label>
-                                            </li>
-                                            <li class="list-group-item ">
-                                                <label class="text-muted pr-4" id="label_selectedBox_Assessment">Main Panel:</label>&nbsp;<label id="label_selected_Assessment"> All</label>
-                                            </li>
-                                            <li class="list-group-item ">
-                                                <label class="text-muted pr-4" id="label_selectedBox_Funder">Funder:</label>&nbsp;<label id="label_selected_Funder" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="All"> All</label>
-                                            </li>                                            
-                                        </ul>                                        
+                                        <div class="card-body d-flex justify-content-center"
+                                             style=" padding: 0px;margin: 0px">
+                                            <div class="goal-chart-wrapper" id="chartContainer_top_left">
+                                                <div class="" id="Chart_top_left"></div>
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
 
-
-
-                                <div class="card bg-white  mb-0" style="padding-right: 0px; margin-right: 0px">
-                                    <div class="card-body" style="padding-right: 0px; margin-right: 0px; padding-bottom: 0px">
-
-                                        <div id="info_box" style="overflow-y: auto;width: 100%;">
-
-                                            <div id="dv_startup" style="display: block">
-                                                s
+                                <!-- INSTITUTIONS MAP -->
+                                <div class="col-md-6">
+                                    <div class="card mb-2" id="map_cardbox_top_right" style="min-width: 300px">
+                                        <div class="card-header">
+                                            <div>
+                                                <label id="label_Institutions">UK Institutions</label>
+                                                <!--                                                        <span class="badge bg-secondary" id="Institutions_count">0</span>-->
                                             </div>
+                                        </div>
+                                        <div class="card-body d-flex justify-content-center"
+                                             style=" padding: 0px;margin: 0px">
 
-                                            <div id="dv_Description_Narrative" style="display: none">
-                                                <div class="text-bg-dark-navy p-1">Topic Description </div>
-                                                <p id="info_box_topic_description" class="text-700 fw-semi-bold " style="font-size: 0.9rem" >
-                                                </p>
-                                                <div class="text-bg-dark-navy p-1">Example Impact Case Studies</div>
-                                                <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2" style="font-size: 0.9rem" >
-                                                </p>
-                                                <div class="text-bg-dark-navy p-1">Keywords</div>
-                                                <p id="info_box_topic_keywords" class="text-700 fw-semi-bold mt-2" style="font-size: 0.9rem" >
-                                                </p>                                                     
-                                            </div>
+                                            <div class="bg-white" id="map_uk" style="min-height: 50px;"></div>
 
-                                        </div>                                      
-
-                                    </div>
-                                    <div id="btnViewDetailsInfoBox" class="card-footer d-flex align-items-center justify-content-between" style="">
-                                        <p class="small p-0 m-0" ><label id="label_View_Details">Expand Text</label></p>
-                                        <div class="small"><i class="fas fa-angle-right"></i></div>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
 
-                            <div class="col-xl-9 col-md-9" >
+                            <div class="row">
 
-                                <div class="container-fluid">
-                                    <div class="row">
-
-                                        <div class="col-md-6">
-                                            <div class="card mb-2" id="chart_cardbox_top_left" style="min-width: 300px">
-                                                <div class="card-header">
-                                                    <div id="label_Funders" class="d-flex">Top Funders</div>
+                                <!-- UNITS OF ASSESSMENT GRAPH -->
+                                <div class="col-md-6">
+                                    <div class="card mb-2" id="chart_cardbox_bottom_left" style="min-width: 300px">
+                                        <div class="card-header" style="">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="d-flex" id="label_UOA">Units of Assessment</div>
                                                 </div>
-                                                <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
-                                                    <div class="goal-chart-wrapper" id="chartContainer_top_left">
-                                                        <div class="" id="Chart_top_left"></div>
-                                                    </div>
+                                                <div class="col-md-6 d-flex justify-content-end">
 
-                                                </div>
-                                            </div>
-                                        </div>
+                                                    <div class="d-inline-flex  col-form-label text-right"
+                                                         style="padding-top: 0rem;padding-bottom: 0rem;">
 
-                                        <div class="col-md-6">
-                                            <div class="card mb-2" id="map_cardbox_top_right" style="min-width: 300px">
-                                                <div class="card-header">
-                                                    <div>
-                                                        <label id="label_Institutions">UK Institutions</label>
-<!--                                                        <span class="badge bg-secondary" id="Institutions_count">0</span>-->
-                                                    </div>
-                                                </div>
-                                                <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
-
-                                                    <div class="bg-white" id="map_uk" style="min-height: 50px;"></div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row">
-
-                                        <div class="col-md-6">
-                                            <div class="card mb-2" id="chart_cardbox_bottom_left" style="min-width: 300px">
-                                                <div class="card-header" style="">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="d-flex" id="label_UOA">Units of Assessment</div>
-                                                        </div>
-                                                        <div class="col-md-6 d-flex justify-content-end">
-
-                                                            <div class="d-inline-flex  col-form-label text-right" style="padding-top: 0rem;padding-bottom: 0rem;">
-                                                                
-                                                                <div class="form-label d-flex justify-content-end align-items-end pe-3" style="min-width: 130px !important; margin-bottom: 0rem; font-size: 0.9rem">
-                                                                    <label id="label_Assessment">
-                                                                        Assessment 
-                                                                    </label>
-                                                                    <label id="label_Assessment_question">
-                                                                        <i class="fas fa-question-circle" style="padding-left: 0.3rem;  font-size: 0.8rem"></i>
-                                                                    </label>
-                                                                    
-                                                                </div>
-                                                                
-                                                                <select id="Options_of_Assessment" class="form-select form-select-sm" style="padding-top: 0rem;padding-bottom: 0rem;">
-                                                                    <option value="All" selected>All Disciplines</option>
-                                                                    <option value="SHAPE">All SHAPE Disciplines</option>
-<!--                                                                    <option value="A">Panel A, UoA 4: Pyschology, Psychiatry, & Neuroscience</option>-->
-<!--                                                                    <option value="B">Physical Sciences, Engineering, Mathematics (Panel B)</option>-->
-                                                                    <option value="C">Panel C: Social Sciences</option>
-                                                                    <option value="D">Panel D: Arts and Humanities</option>
-<!--                                                                    <option value="STEM">STEM</option>-->
-
-                                                                </select>
-                                                            </div>          
+                                                        <div class="form-label d-flex justify-content-end align-items-end pe-3"
+                                                             style="min-width: 130px !important; margin-bottom: 0rem; font-size: 0.9rem">
+                                                            <label id="label_Assessment">
+                                                                Assessment
+                                                            </label>
+                                                            <label id="label_Assessment_question">
+                                                                <i class="fas fa-question-circle"
+                                                                   style="padding-left: 0.3rem;  font-size: 0.8rem"></i>
+                                                            </label>
 
                                                         </div>
+
+                                                        <select id="Options_of_Assessment"
+                                                                class="form-select form-select-sm"
+                                                                style="padding-top: 0rem;padding-bottom: 0rem;">
+                                                            <option value="All" selected>All Disciplines</option>
+                                                            <option value="SHAPE">All SHAPE Disciplines</option>
+                                                            <!--                                                                    <option value="A">Panel A, UoA 4: Pyschology, Psychiatry, & Neuroscience</option>-->
+                                                            <!--                                                                    <option value="B">Physical Sciences, Engineering, Mathematics (Panel B)</option>-->
+                                                            <option value="C">Panel C: Social Sciences</option>
+                                                            <option value="D">Panel D: Arts and Humanities</option>
+                                                            <!--                                                                    <option value="STEM">STEM</option>-->
+
+                                                        </select>
                                                     </div>
-                                                </div>
-                                                <div class="card-body d-flex justify-content-center" style=" padding: 0px;margin: 0px" >
-                                                    <div class="goal-chart-wrapper" id="chartContainer_bottom_left">
-                                                        <div class="" id="Chart_bottom_left"></div>
-                                                    </div>
 
                                                 </div>
-                                            </div> 
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="card mb-2" id="map_cardbox_bottom_right" >
-                                                <div class="card-header">
-                                                    <div>
-                                                        <label id="label_Beneficiaries">Impact Beneficiaries</label>
-<!--                                                        <span class="badge bg-secondary" id="Beneficiaries_count">0</span>-->
-                                                    </div>
-                                                </div>
-                                                <div class="card-body d-flex justify-content-center" style="padding: 0px;margin: 0px" >
-
-                                                    <div class="bg-white" id="map_global" style="min-height: 50px;"></div>
-
-                                                </div>                                                
-
                                             </div>
                                         </div>
-
-                                    </div>    
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </main>
-
-                <footer class="py-3 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="row">
-                            <div class="col-xl-3 col-md-3 logo-section">
-                                <img class="center-block d-block mx-auto"  src="./img/logo/OxLCDSlogo_90.png">
-                            </div>
-                            <div class="col-xl-3 col-md-3 logo-section">
-                                <img class="center-block d-block mx-auto"  src="./img/logo/BA_Primary_90.png">
-                            </div>
-                            <div class="col-xl-3 col-md-3 logo-section">
-                                <img class="center-block d-block mx-auto"  src="./img/logo/AofSS_90.png">
-                            </div>
-                            <div class="col-xl-3 col-md-3 logo-section">
-                                <img class="center-block d-block mx-auto" src="./img/logo/Oxford_Population_Health_90.png">
-                            </div>                           
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>
-
-        <!--        modals ICS table -->
-
-        <div class="modal fade" id="ics_table_all_modal" tabindex="-1" aria-labelledby="ics_table_all_modalLabel" aria-hidden="false">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ics_table_all_modal_title">Impact Case Studies</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <table id="tblReportResultsICSTabl" class="table table-striped nowrap table_ICS " cellspacing="0" width="100%"></table>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="btnDownlaodICSTable">Download</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--  end modals ICS table -->
-
-        <!--  modals View Details -->
-        <div class="modal fade "  data-backdrop="false"  id="idMdViewDetailsInfoBox" tabindex="-1"  aria-labelledby="ModalViewDetailsInfoBox" style="opacity: 0.95;z-index: 2200">
-            <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important"  role="document" id="idModalViewDetailsInfoBox-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding: 0.5rem;cursor: move;">
-                        <h5 class="modal-title" id="ModalViewDetailsInfoBoxLabel"></h5>                 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
-                        <div class="container">
-
-                            <div id="contectforViewDetailsInfoBox">
-                            </div> 
-
-                            <div class="mw-100"> 
-                                <div class="form-group col-12">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer p-1" >
-                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
-                    </div>                    
-                </div>
-            </div>
-        </div>                             
-        <!-- end  modals View Details -->
-
-        <!--  modals Settings -->
-        <div class="modal fade "  data-backdrop="false"  id="idMdSettings" tabindex="-1"  aria-labelledby="ModalSettings" style="opacity: 0.95;z-index: 2200">
-            <div class="modal-dialog"  role="document" id="idModalSettings-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ModalSettingsLabel"></h5>                 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="container">
-
-                            <div class="row">
-
-                                <div class="col-sm-6">
-                                    <label class="form-check-label" for="chCountryLabels">Show country name labels:</label>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="">
-                                        <input class="form-check-input" type="checkbox" id="chCountryLabels">                                   
-                                    </div>                                    
-                                </div>
-
-                            </div> 
-
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
-                                </div>                        
-                            </div>
-
-                            <div class="row mt-2">
-
-                                <div class="col-sm-6">
-                                    <label class="form-check-label" for="chCountryLabels">Number of funders to show on chart plot:</label>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <select id="numberFundersLimit" class="form-select form-select-sm" style="padding-top: 0rem;padding-bottom: 0rem;">
-                                        <option value="10" selected>10</option>
-                                        <option value="20">20</option>
-                                        <option value="30">30</option>
-                                        <option value="40">40</option>
-                                        <option value="50">50</option>
-                                        <option value="60">60</option>
-                                    </select>                               
-                                </div>
-
-                            </div>  
-
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
-                                </div>                        
-                            </div>                    
-
-                            <div class="row">
-
-                                <div class="col-sm-6">
-                                    <label class="form-check-label" for="chKeepPOSTarea">Show other postcodes when one is selected:</label>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="">
-                                        <input class="form-check-input" type="checkbox" id="chKeepPOSTarea" checked>                                   
-                                    </div>                                    
-                                </div>
-
-                            </div> 
-
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
-                                </div>                        
-                            </div>
-
-                            <div class="row mt-2">
-
-                                <div class="col-sm-6">
-                                    <label id="idMdSettingsLabel" >Topic Specificity [<strong> <label id="idMdSettingsThresholdValue" >1</label> ]</strong></label>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="mt-1">
-                                        <input type="range" class="form-range" min="0" max="1" value="1" step="0.1" id="customRangeThreshold">
-                                        <div class="container" style="margin-top: -10px; padding-right:0px; padding-left:0px">                                    
-                                            <div class="row" >
-                                                <div class="col" style="font-family: 'Poppins', sans-serif;color: black;font-size: 0.85em;color: #888">Less</div>
-                                                <div class="col col-sm-auto">
-                                                    <div class="float-right" style="font-family: 'Poppins', sans-serif;color: black;font-size: 0.85em;color: #888">More</div>
-                                                </div>
+                                        <div class="card-body d-flex justify-content-center"
+                                             style=" padding: 0px;margin: 0px">
+                                            <div class="goal-chart-wrapper" id="chartContainer_bottom_left">
+                                                <div class="" id="Chart_bottom_left"></div>
                                             </div>
-                                        </div>                                    
-                                    </div>                                    
+
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <!-- BENEFICIARIES MAP -->
+                                <div class="col-md-6">
+                                    <div class="card mb-2" id="map_cardbox_bottom_right">
+                                        <div class="card-header">
+                                            <div>
+                                                <label id="label_Beneficiaries">Impact Beneficiaries</label>
+                                                <!--                                                        <span class="badge bg-secondary" id="Beneficiaries_count">0</span>-->
+                                            </div>
+                                        </div>
+                                        <div class="card-body d-flex justify-content-center"
+                                             style="padding: 0px;margin: 0px">
+
+                                            <div class="bg-white" id="map_global" style="min-height: 50px;"></div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
 
-                    <div class="modal-footer p-1" >
-                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
-                    </div>                    
+                    </div>
                 </div>
             </div>
-        </div>                             
-        <!-- end  modals Settings -->
+        </main>
 
-        <!--  modals Settings -->
-        <div class="modal fade "  data-backdrop="false"  id="idMdContact" tabindex="-1"  aria-labelledby="ModalContact" style="opacity: 0.95;z-index: 2200">
-            <div class="modal-dialog"  role="document" id="idModalContact-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ModalContactLabel">Contact</h5>                 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- LOGOS FOOTER -->
+        <footer class="py-3 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="row">
+                    <div class="col-xl-3 col-md-3 logo-section">
+                        <img class="center-block d-block mx-auto" src="./img/logo/OxLCDSlogo_90.png">
                     </div>
-
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label id="lblContact"></label>
-                                </div>                        
-                            </div>
-
-                        </div>
+                    <div class="col-xl-3 col-md-3 logo-section">
+                        <img class="center-block d-block mx-auto" src="./img/logo/BA_Primary_90.png">
                     </div>
-
-                    <div class="modal-footer p-1" >
-                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
-                    </div>                    
+                    <div class="col-xl-3 col-md-3 logo-section">
+                        <img class="center-block d-block mx-auto" src="./img/logo/AofSS_90.png">
+                    </div>
+                    <div class="col-xl-3 col-md-3 logo-section">
+                        <img class="center-block d-block mx-auto" src="./img/logo/Oxford_Population_Health_90.png">
+                    </div>
                 </div>
             </div>
-        </div>                             
-        <!-- end  modals Settings -->
+        </footer>
+    </div>
+</div>
 
+<!--        modals ICS table -->
 
-        <!--  modals About -->
-        <div class="modal fade "  data-backdrop="false"  id="idMdAbout" tabindex="-1"  aria-labelledby="ModalAbout" style="opacity: 0.95;z-index: 2200">
-            <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important"  role="document" id="idModalAbout-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding: 0.5rem;cursor: move;">
-                        <h5 class="modal-title" id="ModalAboutLabel">About</h5>                 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
+<div class="modal fade" id="ics_table_all_modal" tabindex="-1" aria-labelledby="ics_table_all_modalLabel"
+     aria-hidden="false">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ics_table_all_modal_title">Impact Case Studies</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table id="tblReportResultsICSTabl" class="table table-striped nowrap table_ICS " cellspacing="0"
+                       width="100%"></table>
 
-                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
-                        <div class="container">
-
-                            <div id="contentAbout">
-
-                            </div> 
-
-                            <div class="mw-100"> 
-                                <div class="form-group col-12">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer p-1" >
-                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
-                    </div>                    
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnDownlaodICSTable">Download</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- end  modals About -->
+<!--  end modals ICS table -->
 
-        <!--  modals Team -->
-        <div class="modal fade "  data-backdrop="false"  id="idMdTeam" tabindex="-1"  aria-labelledby="ModalTeam" style="opacity: 0.95;z-index: 2200">
-            <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important"  role="document" id="idModalTeam-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding: 0.5rem;cursor: move;">
-                        <h5 class="modal-title" id="ModalTeamLabel">Team</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!--  modals View Details -->
+<div class="modal fade " data-backdrop="false" id="idMdViewDetailsInfoBox" tabindex="-1"
+     aria-labelledby="ModalViewDetailsInfoBox" style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important" role="document"
+         id="idModalViewDetailsInfoBox-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                <h5 class="modal-title" id="ModalViewDetailsInfoBoxLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                <div class="container">
+
+                    <div id="contectforViewDetailsInfoBox">
                     </div>
 
-                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
-                        <div class="container">
-
-                            <div id="contentTeam">
-
-                            </div>
-
-                            <div class="mw-100">
-                                <div class="form-group col-12">
-                                </div>
-                            </div>
+                    <div class="mw-100">
+                        <div class="form-group col-12">
                         </div>
                     </div>
-
-                    <div class="modal-footer p-1" >
-                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
-                    </div>
                 </div>
+            </div>
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
-        <!-- end  modals Team -->
-        
-        
-        <!--  modals label_Assessment Question -->
-        <div class="modal fade "  data-backdrop="false"  id="idMdAssessmentQuestion" tabindex="-1"  aria-labelledby="ModalAssessmentQuestion" style="opacity: 0.95;z-index: 2200">
-            <div class="modal-dialog"  role="document" id="idMdAssessmentQuestion-dialog">
-                <div class="modal-content">
-                  <div class="modal-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <p class="mt-2">
-                                        Submissions to the Research Excellence Framework (REF) were made into <a href="https://www.ref.ac.uk/about/uoa/" target="_blank">34 units of assessment</a> divided into four Main Panels:
-                                        <br><br>Main Panel A:  Medicine, Health, and Life Sciences
-                                        <br>Main Panel B:  Physical Sciences, Engineering, and Mathematics
-                                        <br>Main Panel C:  Social Sciences
-                                        <br>Main Panel D:  Arts and Humanities
-                                        <br><br>The results shown here are limited to SHAPE disciplines (Social Sciences, Humanities and the Arts for People and the Economy). This includes Main Panels C and D as well as unit of assessment 4 from Main Panel A (Psychology, Psychiatry, and Neuroscience).
-                                    </p>        
-                                </div>                        
-                            </div>
+    </div>
+</div>
+<!-- end  modals View Details -->
 
+<!--  modals Settings -->
+<div class="modal fade " data-backdrop="false" id="idMdSettings" tabindex="-1" aria-labelledby="ModalSettings"
+     style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog" role="document" id="idModalSettings-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalSettingsLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="chCountryLabels">Show country name labels:</label>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="">
+                                <input class="form-check-input" type="checkbox" id="chCountryLabels">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
                         </div>
                     </div>
 
-                    <div class="modal-footer p-1" >
-                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
-                    </div>                    
-                </div>
-            </div>
-        </div>                             
-        <!-- end  modals label_Assessment Question -->  
-        
-        
-        <!--  modals Help -->
-        <div class="modal fade "  data-backdrop="false"  id="idMdHelp" tabindex="-1"  aria-labelledby="ModalHelp" style="opacity: 0.95;z-index: 2200">
-            <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important"  role="document" id="idModalHelp-dialog">
-                <div class="modal-content">
-                    <div class="modal-header" style="padding: 0.5rem;cursor: move;">
-                        <h5 class="modal-title" id="ModalHelpLabel">Help</h5>                 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="row mt-2">
+
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="chCountryLabels">Number of funders to show on chart
+                                plot:</label>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <select id="numberFundersLimit" class="form-select form-select-sm"
+                                    style="padding-top: 0rem;padding-bottom: 0rem;">
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                                <option value="60">60</option>
+                            </select>
+                        </div>
+
                     </div>
 
-                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
-                        <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
+                        </div>
+                    </div>
 
-                            <div id="contentHelp">
+                    <div class="row">
 
-                            </div> 
+                        <div class="col-sm-6">
+                            <label class="form-check-label" for="chKeepPOSTarea">Show other postcodes when one is
+                                selected:</label>
+                        </div>
 
-                            <div class="mw-100"> 
-                                <div class="form-group col-12">
+                        <div class="col-sm-6">
+                            <div class="">
+                                <input class="form-check-input" type="checkbox" id="chKeepPOSTarea" checked>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <div class="col-sm-6">
+                            <label id="idMdSettingsLabel">Topic Specificity [<strong> <label
+                                    id="idMdSettingsThresholdValue">1</label> ]</strong></label>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="mt-1">
+                                <input type="range" class="form-range" min="0" max="1" value="1" step="0.1"
+                                       id="customRangeThreshold">
+                                <div class="container" style="margin-top: -10px; padding-right:0px; padding-left:0px">
+                                    <div class="row">
+                                        <div class="col"
+                                             style="font-family: 'Poppins', sans-serif;color: black;font-size: 0.85em;color: #888">
+                                            Less
+                                        </div>
+                                        <div class="col col-sm-auto">
+                                            <div class="float-right"
+                                                 style="font-family: 'Poppins', sans-serif;color: black;font-size: 0.85em;color: #888">
+                                                More
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="modal-footer p-1" >
-                        <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button> 
-                    </div>                    
                 </div>
             </div>
-        </div>                             
-        <!-- end  modals Help -->        
+
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals Settings -->
+
+<!--  modals Settings -->
+<div class="modal fade " data-backdrop="false" id="idMdContact" tabindex="-1" aria-labelledby="ModalContact"
+     style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog" role="document" id="idModalContact-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalContactLabel">Contact</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label id="lblContact"></label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals Settings -->
 
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
-        <!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>-->
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+<!--  modals About -->
+<div class="modal fade " data-backdrop="false" id="idMdAbout" tabindex="-1" aria-labelledby="ModalAbout"
+     style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important" role="document"
+         id="idModalAbout-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                <h5 class="modal-title" id="ModalAboutLabel">About</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+            <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                <div class="container">
 
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>     
+                    <div id="contentAbout">
+
+                    </div>
+
+                    <div class="mw-100">
+                        <div class="form-group col-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end  modals About -->
+
+<!--  modals Team -->
+<div class="modal fade " data-backdrop="false" id="idMdTeam" tabindex="-1" aria-labelledby="ModalTeam"
+     style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important" role="document"
+         id="idModalTeam-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                <h5 class="modal-title" id="ModalTeamLabel">Team</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                <div class="container">
+
+                    <div id="contentTeam">
+
+                    </div>
+
+                    <div class="mw-100">
+                        <div class="form-group col-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals Team -->
 
 
-        <script src="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.js"></script>
-        <script src="js/DataTables/dataRender/ellipsis.min.js"></script>
-    </body>
+<!--  modals label_Assessment Question -->
+<div class="modal fade " data-backdrop="false" id="idMdAssessmentQuestion" tabindex="-1"
+     aria-labelledby="ModalAssessmentQuestion" style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog" role="document" id="idMdAssessmentQuestion-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="mt-2">
+                                Submissions to the Research Excellence Framework (REF) were made into <a
+                                    href="https://www.ref.ac.uk/about/uoa/" target="_blank">34 units of assessment</a>
+                                divided into four Main Panels:
+                                <br><br>Main Panel A: Medicine, Health, and Life Sciences
+                                <br>Main Panel B: Physical Sciences, Engineering, and Mathematics
+                                <br>Main Panel C: Social Sciences
+                                <br>Main Panel D: Arts and Humanities
+                                <br><br>The results shown here are limited to SHAPE disciplines (Social Sciences,
+                                Humanities and the Arts for People and the Economy). This includes Main Panels C and D
+                                as well as unit of assessment 4 from Main Panel A (Psychology, Psychiatry, and
+                                Neuroscience).
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals label_Assessment Question -->
+
+
+<!--  modals Help -->
+<div class="modal fade " data-backdrop="false" id="idMdHelp" tabindex="-1" aria-labelledby="ModalHelp"
+     style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important" role="document"
+         id="idModalHelp-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                <h5 class="modal-title" id="ModalHelpLabel">Help</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                <div class="container">
+
+                    <div id="contentHelp">
+
+                    </div>
+
+                    <div class="mw-100">
+                        <div class="form-group col-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals Help -->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+<script src="js/scripts.js"></script>
+<!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+<script src="js/datatables-simple-demo.js"></script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.js"></script>
+<script src="js/DataTables/dataRender/ellipsis.min.js"></script>
+</body>
 </html>
 
 <script src="./js/main.js?version=7.5" type="module"></script>
@@ -644,22 +721,21 @@
         popover_Institutions.disable();
 
         $('[data-bs-toggle="tooltip"]').tooltip();
-        
+
         document.getElementById('label_Addons').innerHTML = "View and Download Data";
-        document.getElementById('label_sub_addons_Impact_Case_Studies').innerHTML = "Impact Case Studies";
+        document.getElementById('label_sub_addons_Impact_Case_Studies').innerHTML = "Enhanced REF Database";
         document.getElementById('label_View_Details').innerHTML = "Expand Text";
         document.getElementById('label_Assessment').innerHTML = "Main Panel(s)";
-        
+
         document.getElementById('label_Funders').innerHTML = "Top Funders";
         document.getElementById('label_Institutions').innerHTML = "UK Institutions";
         document.getElementById('label_UOA').innerHTML = "Units of Assessment";
         document.getElementById('label_Beneficiaries').innerHTML = "Impact Beneficiaries";
-        
+
 
     });
 
 
-
-</script>   
+</script>
 
 
