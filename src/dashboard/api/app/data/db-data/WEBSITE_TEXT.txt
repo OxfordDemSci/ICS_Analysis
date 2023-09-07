@@ -59,7 +59,7 @@ The SHAPE of Impact project was undertaken by researchers at <a href="https://ww
 
 <h4>Professor Melinda C. Mills MBE FBA FAcSS</h4>
 <h5>Director, Professor of Demography</h5>
-<p><img src="./img/staff/melinda.png" alt="Professor Melinda Mills"  style="width:300px; float: left; margin-right: 1em"> 
+<p><img src="./img/staff/melinda.png" alt="Professor Melinda Mills"  style="width:200px; float: left; margin-right: 1em">
 Melinda Mills is Director of the Leverhulme Centre for Demographic Science and Nuffield Professor of Demography. Her main research areas are combining a social science and genetic approach to the study of behavioural outcomes, with a focus on reproduction (fertility), chronotype, nonstandard, precarious employment and assortative mating. Mills has published 7 books and over 100 articles in the highest academic journals across multiple scientific disciplines including Nature Genetics, Science, Proceedings of the National Academy of Sciences, Annual Review of Sociology, JAMA Psychiatry, Journal of Marriage and Family and Social Forces. Her books on globalization, uncertainty and life course have garnered considerable citations, as has her work on fertility and reproductive behaviour. She has written 2 statistical textbooks, Introducing Survival and Event History Analysis (in R) (2011) and An Introduction to Statistical Genetic Data Analysis (MIT, 2020). Mills has supervised over 20 PhD students, 50 Master students and around 15 postdoctoral researchers. Professor Melinda Mills conceived and oversaw the SHAPE of Impact project.</p>
 
 
