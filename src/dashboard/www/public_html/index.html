@@ -76,7 +76,7 @@
                     <!-- TOPICS SELECTOR -->
                     <div class="sb-sidenav-menu-heading" style="padding-top: 1rem; padding-bottom: 0.1rem;">TOPICS</div>
                     <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper"
-                         style="height: calc(100vh - 475px);">
+                         style="height: calc(100vh - 440px);">
                         <div class="">
                             <ul class="list-group list-group-flush" id="idTopics" style="font-size: 0.8rem">
                                 <li class="list-group-item">1</li>
@@ -95,12 +95,12 @@
                               style="visibility: hidden; cursor: pointer; float:right"
                               data-bs-toggle="tooltip"
                               data-bs-placement="top"
-                              data-bs-title="Reload selected options">
+                              data-bs-title="Reset filters">
                             <i class="fa-solid fa-arrows-rotate"></i>
                         </span>
                     </div>
                     <div class="m-2">
-                        <ul class="list-group pb-0 mb-0" style="font-size: 0.8rem;">
+                        <ul class="list-group pb-0 mb-0" style="font-size: 0.8rem">
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4"
                                        id="label_selectedBox_Topic">Topic:</label>&nbsp;<label
@@ -147,25 +147,31 @@
                 </div>
             </div>
 
-            <!-- FOOTER -->
+            <!-- FOOTER
             <div class="sb-sidenav-footer sb-sidenav-dark-navy-footer">
-                <div class="small align-items-center"> &copy; 2023 University of Oxford <br/> Built by <a
+                <div class="small align-items-center"> &copy; 2023 University of Oxford <br/> Web development by <a
                         href="https://www.gisrede.com" target="_blank">GISRede</a></div>
             </div>
+             -->
         </nav>
     </div>
 
     <!-- MAIN PANEL -->
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid px-4">
+            <div class="container-fluid px-4" style="padding:0; margin:0;">
 
                 <div class="row mt-4">
                     <div class="col-xl-3 col-md-3">
 
                         <!-- TOPIC NARRATIVE -->
                         <div class="card bg-white mb-0" style="padding-right: 0px; margin-right: 0px">
-                            <div class="card-body" style="padding-right: 0px; margin-right: 5px; padding-bottom: 0px">
+                            <!--
+                            <div class="card-header">
+                                <div id="label_topic" class="d-flex">Topic</div>
+                            </div>
+                            -->
+                            <div class="card-body" style="padding-right: 0px; margin-right: 10px; padding-bottom: 0px">
 
                                 <div id="info_box" style="overflow-y: auto;width: 100%;">
 
@@ -173,7 +179,7 @@
                                         s
                                     </div>
 
-                                    <div id="dv_Description_Narrative" style="display: none">
+                                    <div id="dv_Description_Narrative" style="display: none; margin-right: 10px">
                                         <div class="text-bg-dark-navy p-1">Topic Description</div>
                                         <p id="info_box_topic_description" class="text-700 fw-semi-bold "
                                            style="font-size: 0.9rem">
