@@ -1,4 +1,128 @@
 import * as _utils from './utils.js?version=2.6'
+import * as _quartile from './quartile.js?version=1'
+
+let palette_colors = ["#fff5f0", "#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
+
+function getMaxOfJson(jsonalreadyparsed, property) {
+    var max = null;
+    for (var i=0 ; i<jsonalreadyparsed.length ; i++) {
+
+            if(max == null){
+
+                max = jsonalreadyparsed[i][property];
+
+            } else {
+
+            if (parseFloat(jsonalreadyparsed[i][property]) > max){
+
+                max = jsonalreadyparsed[i][property];
+
+            }
+
+        }
+
+    }
+    return max;
+}
+function getMinOfJson(jsonalreadyparsed, property) {
+    var min = null;
+    for (var i=0 ; i<jsonalreadyparsed.length ; i++) {
+
+            if(min == null){
+
+                min = jsonalreadyparsed[i][property];
+
+            } else {
+
+            if (parseFloat(jsonalreadyparsed[i][property]) < min){
+
+                min = jsonalreadyparsed[i][property];
+
+            }
+
+        }
+
+    }
+    return min;
+}
+
+export function getColor(v, palette) {
+    
+    if (v === undefined || v === null) {
+        return "#EBEBE4";
+    }
+ 
+    let xcase = false;
+    let color;
+    let breaks = palette["breaks"];
+    let colors = palette["colors"];
+    let lp = breaks.length;
+    
+    if (lp === 1){
+        return colors[0];
+    }
+
+    if (breaks[lp - 2] === breaks[lp - 1]) {
+        lp--;
+        xcase = true;
+    } 
+
+    for (let i = 0; i < lp-1 ; i++) {
+
+            if (v >= breaks[i] && v <= breaks[i + 1]) {
+                color = colors[i];
+            }
+    }
+
+    if (xcase && v >= breaks[lp-1]) {
+         color = colors[lp-1];
+    }
+    
+    if (v < breaks[0]) {
+         color = colors[0];
+    }      
+
+    return color;
+
+}
+
+function uniqueArray(arr) {
+    var a = [];
+    for (var i=0, l=arr.length; i<l; i++)
+        if (a.indexOf(arr[i]) === -1 && arr[i] !== '')
+            a.push(arr[i]);
+    return a;
+}
+
+export function getPaletteQuartile(dt, palette_colors) {
+  
+    let breaks = [];
+    let cont = 1;
+    let Quartile;
+
+    
+    for (var i = 0; i < 10; i++) {
+       Quartile = Math.round(_quartile.Quartile(dt, cont*0.1));
+       breaks.push(Quartile);
+        cont++;  
+    }  
+
+    let breaks_unique = uniqueArray(breaks);
+
+    let palette_final = [];
+    let diference = palette_colors.length-breaks_unique.length;
+    for (var i = 0; i < breaks_unique.length; i++) {
+             palette_final.push(
+                    palette_colors[i+diference]
+            );
+    }  
+    let palette = {"breaks":breaks_unique, "colors":palette_final};
+    
+    console.log(palette);
+   
+    return palette;
+ 
+}
 
 function find_in_object(my_object, my_criteria) {
 
@@ -55,6 +179,20 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
     let new_array = [];
     let new_series = [];
 
+   var all_values = [];
+   for (var i = 0; i < onlyUnique_name.length; i++) {
+        for (var j = 0; j < category_assessment.length; j++) {
+            var data_filter = data_json.filter(element => (element.name === onlyUnique_name[i] && element.assessment_panel === category_assessment[j]));
+            if (data_filter.length > 0) {
+                all_values.push(data_filter[0].uoa_count);
+            } 
+        }
+    }    
+    
+  
+    let palette_colors_final = getPaletteQuartile(all_values, palette_colors);
+ 
+  
 
     for (var i = 0; i < onlyUnique_name.length; i++) {
        
@@ -86,7 +224,10 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
                     emphasis: {
                         focus: 'series'
                     },
-                    data: values_array
+                    data: values_array.map(function(val, i) {return val === 0 ? null : val;}),
+                    itemStyle: {
+                        color: (seriesIndex) => getColor(seriesIndex.value, palette_colors_final) 
+                    }
                 }
         );
 
@@ -99,6 +240,25 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
             axisPointer: {
                 // Use axis to trigger tooltip
                 type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+            },
+            formatter: function (params) {
+                var output = params[0].axisValueLabel + '<br/>';
+
+
+                output += '<table class="w-full">';
+
+                params.reverse().forEach(function (param) {
+            
+                    if (param.value > 0) {
+                        output += `<tr>
+              <td style="width: 25px;"><span style="background-color: ${param.color};  height: 15px;width: 15px;border-radius: 50%;display: inline-block;"></span></td>
+              <td>${param.seriesName}</td>
+              <td class="fw-bold" style="padding-left: 15px !important;">${param.value}</td>
+            </tr>`;
+                    }
+                });
+
+                return output + '</table>';
             }
         },
         grid: {
@@ -165,7 +325,17 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
 
 
     var optionUOAChart =
-            {
+            {  visualMap: [
+                    {
+                        type: 'continuous',
+                        min: getMinOfJson(values, "value"),
+                        max: getMaxOfJson(values, "value"),
+                        inRange: {
+                            color: palette_colors
+                        },
+                        show: false
+                    }
+                ],
                 tooltip: {
                     trigger: 'item'
                 },
