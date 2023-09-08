@@ -4,7 +4,7 @@ var API_URL = "http://127.0.0.1:8000/api/";
 import * as _api from './api.js?version=2.8'
 import * as _init from './init.js?version=4.9'
 import * as _utils from './utils.js?version=6.6'
-import * as _UOAChart from './uoa_chart.js?version=6.3'
+import * as _UOAChart from './uoa_chart.js?version=6.4'
 import * as _funderChart from './funder_chart.js?version=3.5'
 import * as _GlobalImactMap from './global_impact_map.js?version=3.9'
 import * as _UKMap from './UK_map.js?version=6.0'
@@ -47,7 +47,7 @@ var basemaps = {
         )
 };
 
-
+console.log(initialData);
 
 //******************************************************************************
 // start setting a g lobal map 
@@ -315,6 +315,7 @@ _init.setTopicsMenu(initialData).then(() => {
                       slc_uoa,
                       slc_funder)         
 ).then(result => {
+    console.log(result);
     _init.setContactInfo(initialData.website_text.contact); 
     _init.setAboutInfo(initialData.website_text.about); 
     _init.setHelpInfo(initialData.website_text.instructions); 
