@@ -236,6 +236,10 @@ export function setHightBoxs() {
     $("#chart_cardbox_bottom_left").height(h / 2 - 94);
     $("#map_cardbox_top_right").height(h / 2 - 94);
     $("#map_cardbox_bottom_right").height(h / 2 - 94);
+    $("#card_Topic_Description").height(h / 2 - 94);
+    $("#card_Topic_Description_overflow").height(h / 2 - 145);
+    $("#card_Impact_Case_Studies").height(h / 2 - 94);
+    $("#card_Impact_Case_Studies_overflow").height(h / 2 - 145);
     
 }
 
@@ -339,15 +343,76 @@ export function initialSetLabels(d) {
 
 }
 
+function updateModal_Example_Impact_Case_Studies_expand(d) {
+
+        let contectMd = document.getElementById("content_Modal_Example_Impact_Case_Studies_expand");
+
+        let active_topic = getActiveTopicValue();
+
+        var topics = d.topics;
+        var index = 0;
+        var found;
+        var entry;
+        for (index = 0; index < topics.length; ++index) {
+            entry = topics[index];
+            if (entry.topic_name === active_topic) {
+                found = entry;
+                break;
+            }
+        }
+        
+        contectMd.innerHTML="";
+
+            if (found.narrative){
+                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.narrative + "</p>";
+            }
+
+      
+
+}
+
+function updateModal_Topic_description_expand(d) {
+
+        let contectMd = document.getElementById("content_Modal_Topic_description_expand");
+
+        let active_topic = getActiveTopicValue();
+
+        var topics = d.topics;
+        var index = 0;
+        var found;
+        var entry;
+        for (index = 0; index < topics.length; ++index) {
+            entry = topics[index];
+            if (entry.topic_name === active_topic) {
+                found = entry;
+                break;
+            }
+        }
+        
+        contectMd.innerHTML="";
+
+            if (found.description){
+                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.description + "</p>";
+            }
+
+            
+            if (found.keywords){
+                contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Keywords </strong></p>";
+                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.keywords + "</p>";  
+            }            
+
+}
+
+
 export function updateInfoBox(d) {
 
     return new Promise(function (resolve, reject) {
 
-        var dvStartup = document.getElementById("dv_startup");
+        var dvStartup_Box = document.getElementById("dv_startup_box");
         var dvDescription_Narrative = document.getElementById("dv_Description_Narrative");
 
-        if (dvStartup.style.display === "block") {
-            dvStartup.style.display = "none";
+        if (dvStartup_Box.style.display === "block") {
+            dvStartup_Box.style.display = "none";
         }
 
         if (dvDescription_Narrative.style.display === "none") {
@@ -369,8 +434,8 @@ export function updateInfoBox(d) {
         }
         if (active_topic === "All Topics") {
 
-            if (dvStartup.style.display === "none") {
-                dvStartup.style.display = "block";
+            if (dvStartup_Box.style.display === "none") {
+                dvStartup_Box.style.display = "block";
             }
 
             if (dvDescription_Narrative.style.display === "block") {
@@ -382,7 +447,8 @@ export function updateInfoBox(d) {
             $("#info_box_topic_description").html(found.description);
             $("#info_box_topic_example").html(found.narrative);
             $("#info_box_topic_keywords").html(found.keywords);
-            
+            updateModal_Topic_description_expand(d);
+            updateModal_Example_Impact_Case_Studies_expand(d);
         }
         resolve(true);
     });

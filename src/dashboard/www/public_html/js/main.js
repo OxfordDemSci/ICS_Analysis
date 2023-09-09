@@ -511,6 +511,13 @@ $( "#btnViewDetailsInfoBox" ).on( "click", function() {
     $('#idMdViewDetailsInfoBox').modal('show');
 });
 
+$( "#label_Topic_Description_expand" ).on( "click", function() {
+    $('#idMd_Topic_description_expand').modal('show');
+});
+
+$( "#label_Example_Impact_Case_Studies_expand" ).on( "click", function() {
+    $('#idMd_Example_Impact_Case_Studies_expand').modal('show');
+});
 
 var FundersChart = echarts.init(document.getElementById('chartContainer_top_left'));
 
@@ -697,6 +704,8 @@ $("#idGroups").change(function (e) {
                 slc_uoa,
                 slc_funder)
     ).then(result => {
+        _utils.updateInfoBox(initialData);
+        _utils.updateModalInfoBox(initialData);        
         _init.setContactInfo(initialData.website_text.contact);
         _init.setAboutInfo(initialData.website_text.about);
         _utils.updateModalInfoBox(initialData);
