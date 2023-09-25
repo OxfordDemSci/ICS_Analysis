@@ -543,13 +543,13 @@ export function progressMenuOff() {
 export function updateAssessmentSelection(d) {
     
     const Assessment_labels_lookup = [
-        { name: "All", label: "All Disciplines" },
+        { name: "All", label: "SHAPE by Panel" },
         { name: "A", label: "Panel A: Medicine, Health, and Life Sciences" },
         { name: "B", label: "Panel B: Physical Sciences, Engineering, and Mathematics"},
         { name: "C", label: "Panel C: Social Sciences" },
         { name: "D", label: "Panel D: Arts and Humanities" },
         { name: "STEM", label: "All STEM Disciplines" },
-        { name: "SHAPE", label: "All SHAPE Disciplines" }
+        { name: "SHAPE", label: "SHAPE by UoA" }
     ];
 
     const list = document.getElementById('Options_of_Assessment');
