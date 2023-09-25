@@ -76,7 +76,7 @@
                     <!-- TOPICS SELECTOR -->
                     <div class="sb-sidenav-menu-heading" style="padding-top: 1rem; padding-bottom: 0.1rem;">TOPICS</div>
                     <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper"
-                         style="height: calc(100vh - 440px);">
+                         style="height: calc(100vh - 483px);">
                         <div class="">
                             <ul class="list-group list-group-flush" id="idTopics" style="font-size: 0.8rem">
                                 <li class="list-group-item">1</li>
@@ -139,20 +139,20 @@
                     </div>
 
                     <!-- VIEW AND DOWNLOAD DATA BUTTOM -->
-                    <div class="sb-sidenav-menu-heading" style="padding-top:0.5rem; padding-bottom:0rem"><label id="label_Addons"></label></div>
+                    <div class="sb-sidenav-menu-heading" style="padding-top:0.5rem; padding-bottom:0rem"><label
+                            id="label_Addons"></label></div>
                     <a class="nav-link" id="ics_table_all_btn" href="#" style="color:white; padding-top:0.5rem">
                         <div class="sb-nav-link-icon" style="color: white"><i class="fas fa-table"></i></div>
-                        <label id="label_sub_addons_Impact_Case_Studies" style="cursor:pointer;"></label>
+                        <label id="label_sub_addons_Impact_Case_Studies" style="cursor:pointer; font-size:0.9rem"></label>
                     </a>
                 </div>
             </div>
 
-            <!-- FOOTER
+            <!-- FOOTER -->
             <div class="sb-sidenav-footer sb-sidenav-dark-navy-footer">
                 <div class="small align-items-center"> &copy; 2023 University of Oxford <br/> Web development by <a
                         href="https://www.gisrede.com" target="_blank">GISRede</a></div>
             </div>
-             -->
         </nav>
     </div>
 
@@ -165,7 +165,8 @@
                     <div class="col-xl-3 col-md-3">
 
                         <!-- startup INFO -->
-                        <div class="card bg-white mb-0" id="dv_startup_box" style="padding-right: 0px; margin-right: 0px; display: block" >
+                        <div class="card bg-white mb-0" id="dv_startup_box"
+                             style="padding-right: 0px; margin-right: 0px; display: block">
                             <div class="card-body" style="padding-right: 0px; margin-right: 10px; padding-bottom: 0px">
 
                                 <div id="info_box" style="overflow-y: auto;width: 100%;">
@@ -174,20 +175,20 @@
                                         s
                                     </div>
 
-<!--                                    <div id="dv_Description_Narrative" style="display: none; margin-right: 10px">
-                                        <div class="text-bg-dark-navy p-1">Topic Description</div>
-                                        <p id="info_box_topic_description" class="text-700 fw-semi-bold "
-                                           style="font-size: 0.9rem">
-                                        </p>
-                                        <div class="text-bg-dark-navy p-1">Example Impact Case Studies</div>
-                                        <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2"
-                                           style="font-size: 0.9rem">
-                                        </p>
-                                        <div class="text-bg-dark-navy p-1">Keywords</div>
-                                        <p id="info_box_topic_keywords" class="text-700 fw-semi-bold mt-2"
-                                           style="font-size: 0.9rem">
-                                        </p>
-                                    </div>-->
+                                    <!--                                    <div id="dv_Description_Narrative" style="display: none; margin-right: 10px">
+                                                                            <div class="text-bg-dark-navy p-1">Topic Description</div>
+                                                                            <p id="info_box_topic_description" class="text-700 fw-semi-bold "
+                                                                               style="font-size: 0.9rem">
+                                                                            </p>
+                                                                            <div class="text-bg-dark-navy p-1">Example Impact Case Studies</div>
+                                                                            <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2"
+                                                                               style="font-size: 0.9rem">
+                                                                            </p>
+                                                                            <div class="text-bg-dark-navy p-1">Keywords</div>
+                                                                            <p id="info_box_topic_keywords" class="text-700 fw-semi-bold mt-2"
+                                                                               style="font-size: 0.9rem">
+                                                                            </p>
+                                                                        </div>-->
 
                                 </div>
 
@@ -199,34 +200,40 @@
                             </div>
                         </div>
                         <!-- End startup INFO -->
-                    
+
                         <!-- TOPIC Description & Narrative -->
                         <div class="container-fluid" id="dv_Description_Narrative" style="display: none">
-                            <div class="row" >
+                            <div class="row">
                                 <div class="col-md-12">
                                     <div class="card mb-2" id="card_Topic_Description">
                                         <div class="card-header">
                                             <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="d-flex">Topic Description</div>
-                                             </div>
-                                            <div class="col-md-4 d-flex justify-content-end">
-                                                <label id="label_Topic_Description_expand">
-                                                    <i class="fa-solid fa-expand" style="padding-top: 0.3rem;  font-size: 0.9rem"></i>
-                                                </label>
+                                                <div class="col-md-8">
+                                                    <div class="d-flex">Topic Description</div>
+                                                </div>
+                                                <div class="col-md-4 d-flex justify-content-end">
+                                                    <label id="label_Topic_Description_expand">
+                                                        <i class="fa-solid fa-expand"
+                                                           style="padding-top: 0.3rem;  font-size: 0.9rem;  cursor:pointer;"></i>
+                                                    </label>
+                                                </div>
                                             </div>
-                                            </div>
-<!--                                            <div id="" class="d-flex">Topic Description</div>-->
+                                            <!--                                            <div id="" class="d-flex">Topic Description</div>-->
                                         </div>
                                         <div class="card-body d-flex justify-content-center"
                                              style=" padding: 0px;margin: 0px">
-                                            
-                                               <div id="card_Topic_Description_overflow" style="overflow-y: auto;width: 100%;">
-                                                <p id="info_box_topic_description" class="text-700 fw-semi-bold p-2" style="font-size: 0.9rem"></p>
-                                                
-                                                <div class="text-bg-dark-navy p-1">Keywords</div>
-                                                <p id="info_box_topic_keywords" class="text-700 fw-semi-bold mt-2 p-2" style="font-size: 0.9rem"></p>                                                
-                                               </div>
+
+                                            <div id="card_Topic_Description_overflow"
+                                                 style="overflow-y: auto;width: 100%;">
+                                                <p id="info_box_topic_description" class="text-700 fw-semi-bold p-2"
+                                                   style="font-size: 0.9rem">
+                                                </p>
+
+                                                <!--<div class="text-bg-dark-navy p-1">Keywords</div>-->
+                                                <div class="text-bg p-1">Keywords</div>
+                                                <p id="info_box_topic_keywords" class="text-700 fw-semi-bold mt-2 p-2"
+                                                   style="font-size: 0.9rem"></p>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -238,29 +245,36 @@
                                     <div class="card mb-2" id="card_Impact_Case_Studies">
                                         <div class="card-header">
                                             <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="d-flex">Example Impact Case Studies</div>
-                                             </div>
-                                            <div class="col-md-4 d-flex justify-content-end">
-                                                <label id="label_Example_Impact_Case_Studies_expand">
-                                                    <i class="fa-solid fa-expand" style="padding-top: 0.3rem;  font-size: 0.9rem"></i>
-                                                </label>
+                                                <div class="col-md-8">
+                                                    <div class="d-flex">Example Impact Case Studies</div>
+                                                </div>
+                                                <div class="col-md-4 d-flex justify-content-end">
+                                                    <label id="label_Example_Impact_Case_Studies_expand">
+                                                        <i class="fa-solid fa-expand"
+                                                           style="padding-top: 0.3rem;  font-size: 0.9rem; cursor:pointer;"></i>
+                                                    </label>
+                                                </div>
                                             </div>
-                                            </div>                                           
-                                       </div>
+                                        </div>
                                         <div class="card-body d-flex justify-content-center"
                                              style="padding: 0px;margin: 0px">
 
-                                               <div id="card_Impact_Case_Studies_overflow" style="overflow-y: auto;width: 100%;">
-                                                <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2 p-2" style="font-size: 0.9rem"></p>
-                                               </div>                                            
+                                            <div id="card_Impact_Case_Studies_overflow"
+                                                 style="overflow-y: auto;width: 100%;">
+                                                <p class="text-700 fst-italic mt-2 p-2" style="font-size: 0.8rem">
+                                                    Click "Enhanced REF Database" (bottom-left) to browse a complete
+                                                    listing of Impact Case Studies in this topic.
+                                                </p>
+                                                <p id="info_box_topic_example" class="text-700 fw-semi-bold mt-2 p-2"
+                                                   style="font-size: 0.9rem"></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                   <!-- End TOPIC Description & Narrative -->
-                       
+                        <!-- End TOPIC Description & Narrative -->
+
                     </div>
 
                     <!-- GRAPHING PANELS -->
@@ -753,7 +767,8 @@
 <!-- end  modals Help -->
 
 <!--  modals Topic description expand -->
-<div class="modal fade " data-backdrop="false" id="idMd_Topic_description_expand" tabindex="-1" aria-labelledby="Modal_Topic_description_expand"
+<div class="modal fade " data-backdrop="false" id="idMd_Topic_description_expand" tabindex="-1"
+     aria-labelledby="Modal_Topic_description_expand"
      style="opacity: 0.95;z-index: 2200">
     <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important" role="document"
          id="idMd_Topic_description_expand-dialog">
@@ -787,13 +802,15 @@
 
 
 <!--  modals Topic description expand -->
-<div class="modal fade " data-backdrop="false" id="idMd_Example_Impact_Case_Studies_expand" tabindex="-1" aria-labelledby="Modal_Example_Impact_Case_Studies_expand"
+<div class="modal fade " data-backdrop="false" id="idMd_Example_Impact_Case_Studies_expand" tabindex="-1"
+     aria-labelledby="Modal_Example_Impact_Case_Studies_expand"
      style="opacity: 0.95;z-index: 2200">
     <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important" role="document"
          id="idMd_Example_Impact_Case_Studies_expand-dialog">
         <div class="modal-content">
             <div class="modal-header" style="padding: 0.5rem;cursor: move;">
-                <h5 class="modal-title" id="idMd_Example_Impact_Case_Studies_expandLabel">Example Impact Case Studies</h5>
+                <h5 class="modal-title" id="idMd_Example_Impact_Case_Studies_expandLabel">Example Impact Case
+                    Studies</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
