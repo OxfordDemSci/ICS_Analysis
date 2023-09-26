@@ -197,7 +197,7 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
 
     let palette_colors_final = getPaletteQuartile(all_values, palette_colors);
 
-
+    
     for (var i = 0; i < onlyUnique_name.length; i++) {
 
         let values_array = [];
@@ -223,7 +223,7 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
                 type: 'bar',
                 stack: 'total',
                 label: {
-                    show: true
+                    show: (i > 10) ? false : true
                 },
                 emphasis: {
                     focus: 'series'
