@@ -4,7 +4,7 @@ var API_URL = "./api/";
 import * as _api from './api.js?version=2.8'
 import * as _init from './init.js?version=4.9'
 import * as _utils from './utils.js?version=6.6'
-import * as _UOAChart from './uoa_chart.js?version=6.3'
+import * as _UOAChart from './uoa_chart.js?version=6.4'
 import * as _funderChart from './funder_chart.js?version=3.5'
 import * as _GlobalImactMap from './global_impact_map.js?version=3.9'
 import * as _UKMap from './UK_map.js?version=6.0'
@@ -225,7 +225,7 @@ var layerUK = L.geoJson(null, {
                             if ( document.getElementById('chKeepPOSTarea').checked === false ){    
                                 _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);                    
                             }                            
-                            _UOAChart.updateUOAChart(result.uoa_counts);
+                            _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
                             _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder,  20);    
                             _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
                         }).then(() => {
@@ -371,7 +371,7 @@ $("#idTopics").on('click','li',function(e){
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);                   
         _utils.updateInfoBox(initialData);
         _utils.updateModalInfoBox(initialData);
-        _UOAChart.updateUOAChart(result.uoa_counts);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit); 
         _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
@@ -398,7 +398,7 @@ $("#Options_of_Assessment").change(function(){
                       slc_funder).then(result => {
         _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
-        _UOAChart.updateUOAChart(result.uoa_counts);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
         _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
@@ -425,7 +425,7 @@ function resetSelectionUKmap(){
                       slc_funder).then(result => {
         _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
-        _UOAChart.updateUOAChart(result.uoa_counts);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
         _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
@@ -470,7 +470,7 @@ $( "#reload_selected_options" ).on( "click", function() {
                       slc_funder).then(result => {
         _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                   
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
-        _UOAChart.updateUOAChart(result.uoa_counts);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
         _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
@@ -507,9 +507,9 @@ $( "#btnDownlaodICSTable" ).on( "click", function() {
 });
 
 
-$( "#btnViewDetailsInfoBox" ).on( "click", function() {
-    $('#idMdViewDetailsInfoBox').modal('show');
-});
+//$( "#btnViewDetailsInfoBox" ).on( "click", function() {
+//    $('#idMdViewDetailsInfoBox').modal('show');
+//});
 
 $( "#label_Topic_Description_expand" ).on( "click", function() {
     $('#idMd_Topic_description_expand').modal('show');
@@ -535,7 +535,7 @@ FundersChart.on('click', function(params) {
                       slc_funder).then(result => {
         _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
-        _UOAChart.updateUOAChart(result.uoa_counts);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
         _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
@@ -564,7 +564,7 @@ $("#numberFundersLimit").change(function(){
                       slc_funder).then(result => {
         _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
-        _UOAChart.updateUOAChart(result.uoa_counts);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
         _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
@@ -592,7 +592,7 @@ $('#customRangeThreshold').on('change', function (event) {
                       slc_funder).then(result => {
         _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area, slc_beneficiary, slc_funder);    
-        _UOAChart.updateUOAChart(result.uoa_counts);
+        _UOAChart.updateUOAChart(result.uoa_counts, slc_numberFundersLimit);
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
         _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);

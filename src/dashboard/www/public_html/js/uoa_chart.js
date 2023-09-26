@@ -252,9 +252,10 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
 
 
                 output += '<table class="w-full">';
-
-                params.reverse().forEach(function (param) {
-
+                
+                //params.reverse().forEach(function (param) {
+                params.forEach(function (param) {
+                    
                     if (param.value > 0) {
                         output += `<tr>
               <td style="width: 25px;"><span style="background-color: ${param.color};  height: 15px;width: 15px;border-radius: 50%;display: inline-block;"></span></td>
@@ -262,6 +263,7 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
               <td class="fw-bold" style="padding-left: 15px !important;">${param.value}</td>
             </tr>`;
                     }
+                    
                 });
 
                 return output + '</table>';

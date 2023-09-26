@@ -231,7 +231,7 @@ export function getColor(v, palette) {
 export function setHightBoxs() {
 
     var h = window.innerHeight;
-    $("#info_box").height(h - 232);
+    $("#info_box").height(h - 194);
     $("#chart_cardbox_top_left").height(h / 2 - 94);
     $("#chart_cardbox_bottom_left").height(h / 2 - 94);
     $("#map_cardbox_top_right").height(h / 2 - 94);
@@ -319,7 +319,7 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
     document.getElementById('label_selected_Assessment').innerHTML = valueUOA;
 
     var active_topic = document.querySelector("#idTopics li.active").getAttribute("data-alias");
-    document.getElementById('label_selected_Topics').innerHTML = active_topic;
+    document.getElementById('label_selected_Topics').innerHTML = (active_topic.length > 13) ? active_topic.substr(0, 16)+" ..." : active_topic;
 
 }
 
