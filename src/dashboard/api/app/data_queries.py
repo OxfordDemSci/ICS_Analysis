@@ -17,14 +17,14 @@ def get_topics(topic: str | None = None):
     if topic is None:
         sql = text(
             """
-            SELECT topic_name, topic_group, description, narrative, keywords from topics
+            SELECT topic_id, topic_name, topic_group, description, narrative, keywords from topics ORDER BY topic_id
         """
         )
     else:
         sql = text(
             """
-            SELECT topic_name, topic_group, description, narrative, keywords from topics
-                   WHERE topic_name = :topic
+            SELECT topic_id, topic_name, topic_group, description, narrative, keywords from topics
+                   WHERE topic_name = :topic ORDER BY topic_id
         """
         )
     params = {"topic": topic}
