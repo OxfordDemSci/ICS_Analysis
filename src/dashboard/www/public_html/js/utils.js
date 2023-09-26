@@ -391,14 +391,13 @@ function updateModal_Topic_description_expand(d) {
         contectMd.innerHTML="";
 
             if (found.description){
-                contectMd.innerHTML = contectMd.innerHTML + "<b>"+active_topic+"</b><br/>"+"<p>" + found.description + "</p>";
+                contectMd.innerHTML = contectMd.innerHTML + "<h6>"+active_topic+"</h6><p>"+found.description+"</p>";
             }
 
             
             if (found.keywords){
-                contectMd.innerHTML = contectMd.innerHTML + "<p class='lead mb-1'><strong> Keywords </strong></p>";
-                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.keywords + "</p>";  
-            }            
+                contectMd.innerHTML = contectMd.innerHTML + "<p>Keywords: " + found.keywords + "</p>";
+            }
 
 }
 
@@ -443,7 +442,7 @@ export function updateInfoBox(d) {
 
         } else {
             
-            let description_final = "<b>"+active_topic+"</b><br/>" + found.description
+            let description_final = "<h6>"+active_topic+"</h6><p>"+found.description+"</p><p>Keywords: "+found.keywords+"</p>"
             $("#info_box_topic_description").html(description_final);
             $("#info_box_topic_example").html(found.narrative);
             $("#info_box_topic_keywords").html(found.keywords);
