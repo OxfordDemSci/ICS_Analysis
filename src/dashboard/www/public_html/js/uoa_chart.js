@@ -249,16 +249,14 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
             },
             formatter: function (params) {
                 var output = params[0].axisValueLabel + '<br/>';
-                
-                let cnt = 1;
+
 
                 output += '<table class="w-full">';
                 
                 //params.reverse().forEach(function (param) {
                 params.forEach(function (param) {
                     
-                    if (param.value > 0 && cnt <= 10) {
-                        cnt++;
+                    if (param.value > 0) {
                         output += `<tr>
               <td style="width: 25px;"><span style="background-color: ${param.color};  height: 15px;width: 15px;border-radius: 50%;display: inline-block;"></span></td>
               <td>${param.seriesName}</td>

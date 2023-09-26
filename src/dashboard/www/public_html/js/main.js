@@ -4,7 +4,7 @@ var API_URL = "./api/";
 import * as _api from './api.js?version=2.8'
 import * as _init from './init.js?version=4.9'
 import * as _utils from './utils.js?version=6.6'
-import * as _UOAChart from './uoa_chart.js?version=6.3'
+import * as _UOAChart from './uoa_chart.js?version=6.4'
 import * as _funderChart from './funder_chart.js?version=3.5'
 import * as _GlobalImactMap from './global_impact_map.js?version=3.9'
 import * as _UKMap from './UK_map.js?version=6.0'
@@ -507,9 +507,9 @@ $( "#btnDownlaodICSTable" ).on( "click", function() {
 });
 
 
-$( "#btnViewDetailsInfoBox" ).on( "click", function() {
-    $('#idMdViewDetailsInfoBox').modal('show');
-});
+//$( "#btnViewDetailsInfoBox" ).on( "click", function() {
+//    $('#idMdViewDetailsInfoBox').modal('show');
+//});
 
 $( "#label_Topic_Description_expand" ).on( "click", function() {
     $('#idMd_Topic_description_expand').modal('show');
