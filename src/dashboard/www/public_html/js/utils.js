@@ -388,11 +388,10 @@ function updateModal_Topic_description_expand(d) {
                 break;
             }
         }
-        
         contectMd.innerHTML="";
 
             if (found.description){
-                contectMd.innerHTML = contectMd.innerHTML + "<p>" + found.description + "</p>";
+                contectMd.innerHTML = contectMd.innerHTML + "<b>"+active_topic+"</b><br/>"+"<p>" + found.description + "</p>";
             }
 
             
@@ -443,8 +442,9 @@ export function updateInfoBox(d) {
             }
 
         } else {
-
-            $("#info_box_topic_description").html(found.description);
+            
+            let description_final = "<b>"+active_topic+"</b><br/>" + found.description
+            $("#info_box_topic_description").html(description_final);
             $("#info_box_topic_example").html(found.narrative);
             $("#info_box_topic_keywords").html(found.keywords);
             updateModal_Topic_description_expand(d);

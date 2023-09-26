@@ -118,7 +118,7 @@ export function getPaletteQuartile(dt, palette_colors) {
     }  
     let palette = {"breaks":breaks_unique, "colors":palette_final};
     
-    console.log(palette);
+    //console.log(palette);
    
     return palette;
  
