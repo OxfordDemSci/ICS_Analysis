@@ -97,6 +97,7 @@ var layerGlobal = L.geoJson(null, {
                                         slc_beneficiary,
                                         slc_uoa,
                                         slc_funder).then(result => {
+                            _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);                
                             _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);                    
                             _UOAChart.updateUOAChart(result.uoa_counts);
                             _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
