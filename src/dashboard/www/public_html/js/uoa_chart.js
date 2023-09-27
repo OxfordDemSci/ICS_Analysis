@@ -1,10 +1,10 @@
 import * as _utils from './utils.js?version=2.6'
 import * as _quartile from './quartile.js?version=1'
 
+var slc_numberUoALimit=100;
+var slc_numberUoALabelLimit=15;
+
 // let palette_colors = ["#fff5f0", "#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
-// let palette_colors= ["#002147", "#3B6367", "#626142", "#B67831", "#BA472E"];
-// let palette_colors = ["#1e466e", "#376795", "#528fad", "#72bcd5", "#aadce0", "#ffe6b7", "#ffd06f", "#f7aa58", "#ef8a47", "#e76254"]
-// let palette_colors = ["#e76254", "#aadce0", "#ef8a47", "#72bcd5", "#f7aa58", "#528fad", "#ffd06f", "#376795", "#ffe6b7", "#1e466e"]
 let palette_colors = ["#e76254", "#ef8a47", "#f7aa58", "#ffd06f", "#ffe6b7", "#aadce0", "#72bcd5", "#528fad", "#376795", "#1e466e"]
 
 function getMaxOfJson(jsonalreadyparsed, property) {
@@ -197,7 +197,7 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
 
     let palette_colors_final = getPaletteQuartile(all_values, palette_colors);
 
-
+    
     for (var i = 0; i < onlyUnique_name.length; i++) {
 
         let values_array = [];
@@ -223,7 +223,7 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
                 type: 'bar',
                 stack: 'total',
                 label: {
-                    show: true
+                    show: (i > slc_numberUoALabelLimit) ? false : true
                 },
                 emphasis: {
                     focus: 'series'
@@ -402,14 +402,14 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
 }
 
 
-export function updateUOAChart(data, n = 20) {
+export function updateUOAChart(data) {
 
     let ActiveAssessment = _utils.getActiveAssessment();
 
     if (ActiveAssessment !== "All") {
-        updateUOAChart_selected_Assessment(data, n = 20);
+        updateUOAChart_selected_Assessment(data, slc_numberUoALimit);
     } else {
-        updateUOAChart_all_Assessment(data, n);
+        updateUOAChart_all_Assessment(data, slc_numberUoALimit);
     }
 
 }
