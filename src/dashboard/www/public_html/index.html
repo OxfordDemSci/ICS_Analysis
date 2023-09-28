@@ -76,7 +76,7 @@
                     <!-- TOPICS SELECTOR -->
                     <div class="sb-sidenav-menu-heading" style="padding-top: 1rem; padding-bottom: 0.1rem;">TOPICS</div>
                     <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper"
-                         style="height: calc(100vh - 483px);">
+                         style="height: calc(100vh - 480px)">
                         <div class="">
                             <ul class="list-group list-group-flush" id="idTopics" style="font-size: 0.8rem">
                                 <li class="list-group-item">1</li>
@@ -89,7 +89,7 @@
                     </div>
 
                     <!-- SELECTED FILTERS INFO -->
-                    <div class="sb-sidenav-menu-heading pb-0" style="padding-top: 0.5rem">SELECTED FILTERS
+                    <div class="sb-sidenav-menu-heading pb-0" style="padding-top: 0.5rem; margin-top: 10px">SELECTED FILTERS
                         <span class="badge bg-primary rounded-pill"
                               id="reload_selected_options"
                               style="visibility: hidden; cursor: pointer; float:right"
@@ -104,7 +104,8 @@
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4"
                                        id="label_selectedBox_Topic">Topic:</label>&nbsp;<label
-                                    id="label_selected_Topics">All Topics</label>
+                                    id="label_selected_Topics" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    data-bs-title="All Topics">All Topics</label>
                             </li>
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4" id="label_selectedBox_Institutions">Institution
@@ -116,18 +117,21 @@
                                    data-bs-toggle="popover"
                                    data-bs-trigger="focus"
                                    data-bs-content="ad" style="text-decoration: none">
-                                    <label id="label_selected_Institutions"> All</label>
+                                    <label id="label_selected_Institutions" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    data-bs-title="All"> All</label>
                                 </a>
                             </li>
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4"
                                        id="label_selectedBox_Beneficiaries">Beneficiaries:</label>&nbsp;<label
-                                    id="label_selected_Beneficiaries"> Global</label>
+                                    id="label_selected_Beneficiaries" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    data-bs-title="Global"> Global</label>
                             </li>
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4" id="label_selectedBox_Assessment">Main
                                     Panel:</label>&nbsp;<label
-                                    id="label_selected_Assessment"> All</label>
+                                    id="label_selected_Assessment" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    data-bs-title="All"> All</label>
                             </li>
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4"
