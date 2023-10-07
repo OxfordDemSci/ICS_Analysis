@@ -1,8 +1,13 @@
 # DGG launch script to configure server
 
+# hostname
+sudo hostnamectl set-hostname shapeimpact
+
 # update
-sudo apt-get update 
-sudo apt-get upgrade
+sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get auto-remove -y && sudo reboot now
+
+sudo crontab -e
+# @weekly apt-get update -y && apt-get upgrade -y && apt-get auto-remove -y
 
 #---- docker ----#
 
@@ -16,10 +21,8 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-sudo apt-get install docker-compose
+sudo apt-get update && \ 
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-compose
 
 # add user to docker group
 sudo usermod -aG docker ubuntu
@@ -43,10 +46,10 @@ echo -e "\tIdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
 
 # clone repository
 cd ~
-git clone git@github.com:OxfordDemSci/UK_vehicle_database
+git clone git@github.com:OxfordDemSci/ICS_Analysis
 
 # deploy
-cd ~/UK_vehicle_database
+cd ~/ICS_Analysis/src/dashboard
 docker-compose up -d --build
 
 

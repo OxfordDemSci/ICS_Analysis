@@ -46,7 +46,8 @@ def word_lemmatizer(text):
 
 def reflection_tokenizer(text):
     # @TODO pass in support_path
-    stop_list = pd.read_csv(os.path.join(os.getcwd(), '..', '..', 'data', 'support',
+    stop_list = pd.read_csv(os.path.join(os.getcwd(),# '..', '..', 
+                                         'data', 'support',
                                          'custom_stopwords.txt'))
     custom_stop = stop_list['words'].to_list()
     stop = nltk.corpus.stopwords.words('english')
@@ -135,16 +136,14 @@ def co_occurrence(sentences, window_size):
 
 def clean_free_text(s):
     s = re.sub(r'http\S+', '', s)
-    s = re.sub('[^a-zA-Z]+', ' ', s)
-    s = s.replace("Summary of the impact indicative maximum 100 words ", "")
-    s = s.replace("Summary of the impact ", "")
-    s = s.replace("Underpinning research indicative maximum 500 words ", "")
-    s = s.replace("Underpinning research ", "")
-    s = s.replace("References to the research indicative maximum of six references ", "")
-    s = s.replace("References to the research ", "")
-    s = s.replace("Details of the impact indicative maximum 750 words ", "")
-    s = s.replace("Details of the impact  ", "")
-    s = s.replace("Sources to corroborate the impact indicative maximum of 10 references ", "")
+    s = s.replace("Summary of the impact", "")
+    s = s.replace("indicative maximum 100 words", "")
+    s = s.replace("Underpinning research", "")
+    s = s.replace("indicative maximum 500 words", "")
+    s = s.replace("References to the research", "")
+    s = s.replace("indicative maximum of six references", "")
+    s = s.replace("Details of the impact", "")
+    s = s.replace("indicative maximum 750 words", "")
     s = s.replace("Sources to corroborate the impact ", "")
     return s.strip()
 

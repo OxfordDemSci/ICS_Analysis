@@ -1,10 +1,11 @@
+.Rhistory
 .idea
 private*
 data/edit
 data/enriched
 data/merged
 data/raw
-
+data/tmp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
