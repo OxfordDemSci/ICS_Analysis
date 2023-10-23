@@ -1,11 +1,10 @@
 .Rhistory
 .idea
-private*
+local/*
+data/dimensions_returns
 data/edit
-data/enriched
-data/merged
 data/raw
-data/tmp
+data/shapefiles
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
