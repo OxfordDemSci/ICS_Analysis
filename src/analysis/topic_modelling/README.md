@@ -1,1 +1,1 @@
-For topic modelling of the research summarises and description.
+To use GPU for BERTopic, please follow the instructions [here](https://docs.rapids.ai/install) to install `cuml`. Please note that you will need to use MacOS or Linux or WSL to use `cuml`.
