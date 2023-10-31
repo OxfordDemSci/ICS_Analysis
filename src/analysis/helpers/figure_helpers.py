@@ -2,7 +2,6 @@ import re
 import os
 import ast
 import json
-import warnings
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -18,18 +17,15 @@ from helpers.general_helpers import return_paper_level
 from nltk.stem.snowball import SnowballStemmer
 import gender_guesser.detector as gender
 d = gender.Detector()
-from helpers.text_helpers import freq_dist, co_occurrence, set_diag, truncate_colormap
-warnings.filterwarnings('ignore')
-mpl.rc('font', family='helvetica')
-csfont = {'fontname': 'helvetica'}
-hfont = {'fontname': 'helvetica'}
+#from helpers.text_helpers import freq_dist, co_occurrence, set_diag, truncate_colormap
 
 
 def savefigures(plt, filepath, filename):
-    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
+    mpl.use('Agg')
+#    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
     plt.savefig(os.path.join(filepath, filename + '.svg'), bbox_inches='tight')
-    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
-                dpi=1200, transparent=True, facecolor='white')
+#    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
+#                dpi=1200, transparent=True, facecolor='white')
 
 
 def plot_impact_type_combined(df, figure_path):

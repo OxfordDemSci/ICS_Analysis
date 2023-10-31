@@ -1,0 +1,2714 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1139.531422pt" height="854.029344pt" viewBox="0 0 1139.531422 854.029344" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2023-10-31T19:21:03.081515</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.7.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 854.029344 
+L 1139.531422 854.029344 
+L 1139.531422 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 88.02 367.044344 
+L 366.800868 367.044344 
+L 366.800868 29.432344 
+L 88.02 29.432344 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m1fcd2d687f" d="M 0 0 
+L 0 6 
+" style="stroke: #262626; stroke-width: 1.25"/>
+      </defs>
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="88.02" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <!-- 0 -->
+      <g style="fill: #262626" transform="translate(83.406563 397.365906) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-30" d="M 2125 250 
+Q 2803 250 3148 723 
+Q 3494 1197 3494 2112 
+L 3494 2496 
+Q 3494 3341 3126 3837 
+Q 2758 4333 2105 4333 
+Q 1453 4333 1091 3849 
+Q 730 3366 730 2483 
+L 730 2093 
+Q 730 1190 1098 720 
+Q 1466 250 2125 250 
+z
+M 2125 -51 
+Q 1306 -51 835 521 
+Q 365 1094 365 2093 
+L 365 2477 
+Q 365 3482 829 4054 
+Q 1293 4627 2105 4627 
+Q 2918 4627 3388 4051 
+Q 3859 3475 3859 2496 
+L 3859 2106 
+Q 3859 1101 3404 525 
+Q 2950 -51 2125 -51 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="163.021579" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <!-- 50 -->
+      <g style="fill: #262626" transform="translate(154.481579 397.365906) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-35" d="M 1715 -51 
+Q 1050 -51 672 294 
+Q 294 640 243 1178 
+L 589 1178 
+Q 730 243 1715 243 
+Q 2259 243 2569 576 
+Q 2880 909 2880 1485 
+Q 2880 2022 2569 2352 
+Q 2259 2682 1779 2682 
+Q 1056 2682 646 2182 
+L 512 2182 
+L 512 4576 
+L 3008 4576 
+L 3008 4269 
+L 813 4269 
+L 813 2592 
+Q 1197 2976 1837 2976 
+Q 2445 2976 2845 2566 
+Q 3245 2157 3245 1485 
+Q 3245 781 2816 365 
+Q 2387 -51 1715 -51 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-35"/>
+       <use xlink:href="#Graphik-Light-30" x="56.099991"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="238.023158" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <!-- 100 -->
+      <g style="fill: #262626" transform="translate(226.220501 397.365906) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-31" d="M 1222 0 
+L 1222 4205 
+L 173 3475 
+L 173 3808 
+L 1274 4576 
+L 1574 4576 
+L 1574 0 
+L 1222 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-31"/>
+       <use xlink:href="#Graphik-Light-30" x="36.799988"/>
+       <use xlink:href="#Graphik-Light-30" x="102.699982"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="313.024736" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <!-- 150 -->
+      <g style="fill: #262626" transform="translate(301.908955 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-31"/>
+       <use xlink:href="#Graphik-Light-35" x="36.799988"/>
+       <use xlink:href="#Graphik-Light-30" x="92.899979"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_5">
+      <defs>
+       <path id="m16a61e213b" d="M 0 0 
+L -6 0 
+" style="stroke: #262626; stroke-width: 1.25"/>
+      </defs>
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="334.647233" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <!-- WT -->
+      <g style="fill: #262626" transform="translate(47.813125 340.058014) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-57" d="M 1421 0 
+L 211 4576 
+L 570 4576 
+L 1619 544 
+L 2829 4576 
+L 3078 4576 
+L 4243 531 
+L 5350 4576 
+L 5677 4576 
+L 4422 0 
+L 4077 0 
+L 2950 3942 
+L 1760 0 
+L 1421 0 
+z
+" transform="scale(0.015625)"/>
+        <path id="Graphik-Light-54" d="M 1613 0 
+L 1613 4282 
+L 192 4282 
+L 192 4576 
+L 3386 4576 
+L 3386 4282 
+L 1965 4282 
+L 1965 0 
+L 1613 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-57"/>
+       <use xlink:href="#Graphik-Light-54" x="91.999985"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="266.442788" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <!-- NIHR -->
+      <g style="fill: #262626" transform="translate(36.516875 271.853569) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-4e" d="M 589 0 
+L 589 4576 
+L 1075 4576 
+L 3635 493 
+L 3635 4576 
+L 3974 4576 
+L 3974 0 
+L 3552 0 
+L 934 4179 
+L 934 0 
+L 589 0 
+z
+" transform="scale(0.015625)"/>
+        <path id="Graphik-Light-49" d="M 621 0 
+L 621 4576 
+L 979 4576 
+L 979 0 
+L 621 0 
+z
+" transform="scale(0.015625)"/>
+        <path id="Graphik-Light-48" d="M 589 0 
+L 589 4576 
+L 947 4576 
+L 947 2445 
+L 3642 2445 
+L 3642 4576 
+L 4000 4576 
+L 4000 0 
+L 3642 0 
+L 3642 2144 
+L 947 2144 
+L 947 0 
+L 589 0 
+z
+" transform="scale(0.015625)"/>
+        <path id="Graphik-Light-52" d="M 589 0 
+L 589 4576 
+L 1843 4576 
+Q 2554 4576 2976 4278 
+Q 3398 3981 3398 3347 
+L 3398 3322 
+Q 3398 2278 2214 2112 
+L 3667 0 
+L 3270 0 
+L 1837 2086 
+L 947 2086 
+L 947 0 
+L 589 0 
+z
+M 947 2374 
+L 1862 2374 
+Q 3040 2374 3040 3322 
+L 3040 3347 
+Q 3040 3853 2736 4067 
+Q 2432 4282 1862 4282 
+L 947 4282 
+L 947 2374 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-4e"/>
+       <use xlink:href="#Graphik-Light-49" x="71.299988"/>
+       <use xlink:href="#Graphik-Light-48" x="96.299973"/>
+       <use xlink:href="#Graphik-Light-52" x="167.999954"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="198.238344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <!-- ESRC -->
+      <g style="fill: #262626" transform="translate(33.535313 203.649125) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-45" d="M 589 0 
+L 589 4576 
+L 3219 4576 
+L 3219 4282 
+L 947 4282 
+L 947 2496 
+L 2790 2496 
+L 2790 2202 
+L 947 2202 
+L 947 294 
+L 3334 294 
+L 3334 0 
+L 589 0 
+z
+" transform="scale(0.015625)"/>
+        <path id="Graphik-Light-53" d="M 1971 -51 
+Q 1171 -51 758 323 
+Q 346 698 269 1312 
+L 621 1312 
+Q 762 243 1971 243 
+Q 2502 243 2828 518 
+Q 3155 794 3155 1222 
+Q 3155 1696 2889 1907 
+Q 2624 2118 1926 2227 
+Q 1158 2342 803 2620 
+Q 448 2899 448 3430 
+Q 448 3962 848 4294 
+Q 1248 4627 1888 4627 
+Q 2522 4627 2902 4326 
+Q 3283 4026 3360 3475 
+L 3034 3475 
+Q 2867 4333 1888 4333 
+Q 1363 4333 1072 4102 
+Q 781 3872 781 3456 
+Q 781 3066 1037 2858 
+Q 1293 2650 1984 2547 
+Q 2790 2426 3145 2147 
+Q 3501 1869 3501 1248 
+Q 3501 698 3075 323 
+Q 2650 -51 1971 -51 
+z
+" transform="scale(0.015625)"/>
+        <path id="Graphik-Light-43" d="M 2464 -51 
+Q 1491 -51 915 582 
+Q 339 1216 339 2259 
+L 339 2310 
+Q 339 3315 950 3974 
+Q 1562 4634 2464 4634 
+Q 3200 4634 3705 4259 
+Q 4211 3885 4314 3200 
+L 3955 3200 
+Q 3846 3757 3472 4051 
+Q 3098 4346 2470 4346 
+Q 1696 4346 1200 3782 
+Q 704 3219 704 2317 
+L 704 2266 
+Q 704 1338 1181 794 
+Q 1658 250 2470 250 
+Q 3098 250 3510 570 
+Q 3923 890 4032 1472 
+L 4365 1472 
+Q 4243 749 3731 349 
+Q 3219 -51 2464 -51 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-53" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-52" x="116.799988"/>
+       <use xlink:href="#Graphik-Light-43" x="177.399979"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="130.033899" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <!-- MRC -->
+      <g style="fill: #262626" transform="translate(37.97375 135.444681) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-4d" d="M 589 0 
+L 589 4576 
+L 1101 4576 
+L 2714 646 
+L 4333 4576 
+L 4832 4576 
+L 4832 0 
+L 4480 0 
+L 4480 4128 
+L 2758 0 
+L 2643 0 
+L 922 4128 
+L 922 0 
+L 589 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-4d"/>
+       <use xlink:href="#Graphik-Light-52" x="85.099991"/>
+       <use xlink:href="#Graphik-Light-43" x="145.699982"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="61.829455" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <!-- DHSC -->
+      <g style="fill: #262626" transform="translate(30.3 67.240236) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-44" d="M 947 294 
+L 1754 294 
+Q 2701 294 3193 835 
+Q 3686 1376 3686 2278 
+L 3686 2330 
+Q 3686 3219 3200 3750 
+Q 2714 4282 1747 4282 
+L 947 4282 
+L 947 294 
+z
+M 589 0 
+L 589 4576 
+L 1779 4576 
+Q 2874 4576 3466 3952 
+Q 4058 3328 4058 2330 
+L 4058 2272 
+Q 4058 1267 3472 633 
+Q 2886 0 1766 0 
+L 589 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-44"/>
+       <use xlink:href="#Graphik-Light-48" x="68.599991"/>
+       <use xlink:href="#Graphik-Light-53" x="140.299973"/>
+       <use xlink:href="#Graphik-Light-43" x="200.499969"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_10">
+     <!-- Paper Funders -->
+     <g style="fill: #262626" transform="translate(22.659375 263.630531) rotate(-90) scale(0.2 -0.2)">
+      <defs>
+       <path id="Graphik-Light-50" d="M 589 0 
+L 589 4576 
+L 1798 4576 
+Q 2509 4576 2934 4262 
+Q 3360 3949 3360 3290 
+L 3360 3264 
+Q 3360 2592 2937 2275 
+Q 2515 1958 1805 1958 
+L 947 1958 
+L 947 0 
+L 589 0 
+z
+M 947 2246 
+L 1830 2246 
+Q 3002 2246 3002 3264 
+L 3002 3290 
+Q 3002 3821 2694 4051 
+Q 2387 4282 1818 4282 
+L 947 4282 
+L 947 2246 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-61" d="M 1414 -51 
+Q 902 -51 592 195 
+Q 282 442 282 902 
+Q 282 1440 717 1677 
+Q 1152 1914 1850 1914 
+L 2547 1914 
+L 2547 2214 
+Q 2547 2682 2345 2896 
+Q 2144 3110 1702 3110 
+Q 870 3110 762 2400 
+L 429 2400 
+Q 486 2899 844 3148 
+Q 1203 3398 1715 3398 
+Q 2886 3398 2886 2214 
+L 2886 0 
+L 2547 0 
+L 2547 512 
+Q 2182 -51 1414 -51 
+z
+M 1440 224 
+Q 1907 224 2227 467 
+Q 2547 710 2547 1082 
+L 2547 1651 
+L 1862 1651 
+Q 1485 1651 1225 1593 
+Q 966 1536 793 1363 
+Q 621 1190 621 902 
+Q 621 224 1440 224 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-70" d="M 525 -1165 
+L 525 3347 
+L 864 3347 
+L 864 2566 
+Q 1018 2912 1366 3155 
+Q 1715 3398 2138 3398 
+Q 2784 3398 3213 2937 
+Q 3642 2477 3642 1709 
+L 3642 1658 
+Q 3642 883 3219 416 
+Q 2797 -51 2138 -51 
+Q 1670 -51 1340 182 
+Q 1011 416 864 762 
+L 864 -1165 
+L 525 -1165 
+z
+M 2112 237 
+Q 2650 237 2970 611 
+Q 3290 986 3290 1645 
+L 3290 1696 
+Q 3290 2362 2950 2736 
+Q 2611 3110 2106 3110 
+Q 1587 3110 1222 2732 
+Q 858 2355 858 1696 
+L 858 1645 
+Q 858 979 1213 608 
+Q 1568 237 2112 237 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-65" d="M 1862 -51 
+Q 1139 -51 707 416 
+Q 275 883 275 1638 
+L 275 1690 
+Q 275 2445 707 2921 
+Q 1139 3398 1811 3398 
+Q 2451 3398 2864 2979 
+Q 3277 2560 3277 1766 
+L 3277 1645 
+L 627 1645 
+Q 640 966 957 601 
+Q 1274 237 1862 237 
+Q 2739 237 2912 934 
+L 3251 934 
+Q 3149 461 2777 205 
+Q 2406 -51 1862 -51 
+z
+M 640 1920 
+L 2925 1920 
+Q 2899 2515 2608 2812 
+Q 2317 3110 1811 3110 
+Q 1325 3110 1005 2787 
+Q 685 2464 640 1920 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-72" d="M 525 0 
+L 525 3347 
+L 864 3347 
+L 864 2643 
+Q 1190 3366 1997 3392 
+L 1997 3072 
+Q 864 3027 864 1856 
+L 864 0 
+L 525 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-20" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-46" d="M 589 0 
+L 589 4576 
+L 3194 4576 
+L 3194 4282 
+L 947 4282 
+L 947 2464 
+L 2714 2464 
+L 2714 2170 
+L 947 2170 
+L 947 0 
+L 589 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-75" d="M 1670 -51 
+Q 1120 -51 806 259 
+Q 493 570 493 1229 
+L 493 3347 
+L 832 3347 
+L 832 1248 
+Q 832 243 1747 243 
+Q 2189 243 2515 528 
+Q 2842 813 2842 1312 
+L 2842 3347 
+L 3181 3347 
+L 3181 0 
+L 2842 0 
+L 2842 640 
+Q 2720 346 2406 147 
+Q 2093 -51 1670 -51 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-6e" d="M 525 0 
+L 525 3347 
+L 864 3347 
+L 864 2694 
+Q 986 2989 1306 3193 
+Q 1626 3398 2048 3398 
+Q 2605 3398 2921 3072 
+Q 3238 2746 3238 2061 
+L 3238 0 
+L 2899 0 
+L 2899 2080 
+Q 2899 3104 1971 3104 
+Q 1523 3104 1193 2816 
+Q 864 2528 864 2029 
+L 864 0 
+L 525 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-64" d="M 1779 -51 
+Q 1120 -51 697 400 
+Q 275 851 275 1626 
+L 275 1677 
+Q 275 2438 716 2918 
+Q 1158 3398 1830 3398 
+Q 2688 3398 3053 2605 
+L 3053 4947 
+L 3392 4947 
+L 3392 0 
+L 3053 0 
+L 3053 774 
+Q 2906 442 2563 195 
+Q 2221 -51 1779 -51 
+z
+M 1811 237 
+Q 2342 237 2700 611 
+Q 3059 986 3059 1651 
+L 3059 1702 
+Q 3059 2374 2729 2742 
+Q 2400 3110 1862 3110 
+Q 1312 3110 969 2732 
+Q 627 2355 627 1690 
+L 627 1638 
+Q 627 973 960 605 
+Q 1293 237 1811 237 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-73" d="M 1530 -58 
+Q 947 -58 611 227 
+Q 275 512 243 998 
+L 570 998 
+Q 666 230 1530 230 
+Q 1946 230 2163 406 
+Q 2381 582 2381 889 
+Q 2381 1197 2189 1337 
+Q 1997 1478 1504 1568 
+Q 870 1683 611 1881 
+Q 352 2080 352 2502 
+Q 352 2912 678 3155 
+Q 1005 3398 1453 3398 
+Q 2496 3398 2618 2490 
+L 2291 2490 
+Q 2170 3110 1446 3110 
+Q 1094 3110 880 2947 
+Q 666 2784 666 2515 
+Q 666 2234 861 2096 
+Q 1056 1958 1581 1869 
+Q 2176 1760 2441 1568 
+Q 2707 1376 2707 915 
+Q 2707 480 2396 211 
+Q 2086 -58 1530 -58 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#Graphik-Light-50"/>
+      <use xlink:href="#Graphik-Light-61" x="56.799988"/>
+      <use xlink:href="#Graphik-Light-70" x="109.699982"/>
+      <use xlink:href="#Graphik-Light-65" x="170.899979"/>
+      <use xlink:href="#Graphik-Light-72" x="226.299973"/>
+      <use xlink:href="#Graphik-Light-20" x="261.09996"/>
+      <use xlink:href="#Graphik-Light-46" x="285.799957"/>
+      <use xlink:href="#Graphik-Light-75" x="339.799942"/>
+      <use xlink:href="#Graphik-Light-6e" x="397.699936"/>
+      <use xlink:href="#Graphik-Light-64" x="455.999924"/>
+      <use xlink:href="#Graphik-Light-65" x="517.199921"/>
+      <use xlink:href="#Graphik-Light-72" x="572.599915"/>
+      <use xlink:href="#Graphik-Light-73" x="607.399902"/>
+     </g>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 88.02 351.698344 
+L 233.523063 351.698344 
+L 233.523063 317.596122 
+L 88.02 317.596122 
+z
+" clip-path="url(#pbabfea9f79)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 88.02 283.493899 
+L 262.023663 283.493899 
+L 262.023663 249.391677 
+L 88.02 249.391677 
+z
+" clip-path="url(#pbabfea9f79)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 88.02 215.289455 
+L 263.523694 215.289455 
+L 263.523694 181.187233 
+L 88.02 181.187233 
+z
+" clip-path="url(#pbabfea9f79)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 88.02 147.08501 
+L 311.524705 147.08501 
+L 311.524705 112.982788 
+L 88.02 112.982788 
+z
+" clip-path="url(#pbabfea9f79)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 88.02 78.880566 
+L 353.525589 78.880566 
+L 353.525589 44.778344 
+L 88.02 44.778344 
+z
+" clip-path="url(#pbabfea9f79)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 78.02 334.647233 
+L 78.02 61.829455 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 88.02 377.044344 
+L 313.024736 377.044344 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_11">
+    <!-- 97 -->
+    <g style="fill: #262626" transform="translate(238.523063 339.374733) scale(0.16 -0.16)">
+     <defs>
+      <path id="Graphik-Light-39" d="M 1798 -45 
+Q 1229 -45 861 240 
+Q 493 525 397 1050 
+L 742 1050 
+Q 922 250 1805 250 
+Q 2438 250 2771 694 
+Q 3104 1139 3110 2170 
+L 3110 2413 
+Q 2957 2061 2595 1862 
+Q 2234 1664 1811 1664 
+Q 1126 1664 723 2073 
+Q 320 2483 320 3136 
+Q 320 3808 742 4217 
+Q 1165 4627 1862 4627 
+Q 2650 4627 3053 4121 
+Q 3456 3616 3456 2739 
+L 3456 2214 
+Q 3456 -45 1798 -45 
+z
+M 1856 1952 
+Q 2368 1952 2717 2256 
+Q 3066 2560 3066 3053 
+Q 3066 3610 2749 3978 
+Q 2432 4346 1862 4346 
+Q 1325 4346 1005 4016 
+Q 685 3686 685 3149 
+Q 685 2605 992 2278 
+Q 1299 1952 1856 1952 
+z
+" transform="scale(0.015625)"/>
+      <path id="Graphik-Light-37" d="M 954 0 
+L 2656 4282 
+L 179 4282 
+L 179 4576 
+L 3104 4576 
+L 3104 4518 
+L 1318 0 
+L 954 0 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Graphik-Light-39"/>
+     <use xlink:href="#Graphik-Light-37" x="59.899994"/>
+    </g>
+   </g>
+   <g id="text_12">
+    <!-- 116 -->
+    <g style="fill: #262626" transform="translate(267.023663 271.170288) scale(0.16 -0.16)">
+     <defs>
+      <path id="Graphik-Light-36" d="M 1978 -51 
+Q 1421 -51 1053 211 
+Q 685 474 534 893 
+Q 384 1312 384 1875 
+L 384 2208 
+Q 384 3418 851 4022 
+Q 1318 4627 2106 4627 
+Q 2630 4627 2972 4364 
+Q 3315 4102 3392 3584 
+L 3053 3584 
+Q 2912 4326 2086 4326 
+Q 1466 4326 1104 3836 
+Q 742 3347 736 2317 
+L 736 2131 
+Q 890 2496 1245 2704 
+Q 1600 2912 2016 2912 
+Q 2714 2912 3114 2499 
+Q 3514 2086 3514 1446 
+Q 3514 774 3094 361 
+Q 2675 -51 1978 -51 
+z
+M 1978 237 
+Q 2509 237 2829 566 
+Q 3149 896 3149 1434 
+Q 3149 1978 2841 2301 
+Q 2534 2624 1971 2624 
+Q 1466 2624 1120 2313 
+Q 774 2003 774 1491 
+Q 774 941 1088 589 
+Q 1402 237 1978 237 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-31" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-36" x="73.599976"/>
+    </g>
+   </g>
+   <g id="text_13">
+    <!-- 117 -->
+    <g style="fill: #262626" transform="translate(268.523694 202.965844) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-31" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-37" x="73.599976"/>
+    </g>
+   </g>
+   <g id="text_14">
+    <!-- 149 -->
+    <g style="fill: #262626" transform="translate(316.524705 134.761399) scale(0.16 -0.16)">
+     <defs>
+      <path id="Graphik-Light-34" d="M 2573 0 
+L 2573 1030 
+L 211 1030 
+L 211 1139 
+L 2426 4576 
+L 2925 4576 
+L 2925 1325 
+L 3558 1325 
+L 3558 1030 
+L 2925 1030 
+L 2925 0 
+L 2573 0 
+z
+M 685 1325 
+L 2573 1325 
+L 2573 4314 
+L 685 1325 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-34" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-39" x="96.299973"/>
+    </g>
+   </g>
+   <g id="text_15">
+    <!-- 177 -->
+    <g style="fill: #262626" transform="translate(358.525589 66.556955) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-37" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-37" x="87.199982"/>
+    </g>
+   </g>
+   <g id="text_16">
+    <!-- A. -->
+    <g style="fill: #262626" transform="translate(88.02 23.432344) scale(0.21 -0.21)">
+     <defs>
+      <path id="Graphik-Light-41" d="M 211 0 
+L 1856 4576 
+L 2330 4576 
+L 3974 0 
+L 3616 0 
+L 3110 1402 
+L 1050 1402 
+L 550 0 
+L 211 0 
+z
+M 2080 4282 
+L 1152 1690 
+L 3008 1690 
+L 2080 4282 
+z
+" transform="scale(0.015625)"/>
+      <path id="Graphik-Light-2e" d="M 730 -32 
+Q 621 -32 541 48 
+Q 461 128 461 237 
+Q 461 352 541 432 
+Q 621 512 730 512 
+Q 845 512 925 432 
+Q 1005 352 1005 237 
+Q 1005 128 925 48 
+Q 845 -32 730 -32 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Graphik-Light-41"/>
+     <use xlink:href="#Graphik-Light-2e" x="65.399994"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_10">
+    <path d="M 460.786667 367.044344 
+L 739.567535 367.044344 
+L 739.567535 29.432344 
+L 460.786667 29.432344 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_5">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="460.786667" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <!-- 0 -->
+      <g style="fill: #262626" transform="translate(456.173229 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="522.748298" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <!-- 200 -->
+      <g style="fill: #262626" transform="translate(509.762204 397.365906) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-32" d="M 128 0 
+L 128 83 
+L 1965 1984 
+Q 2336 2368 2509 2697 
+Q 2682 3027 2682 3392 
+Q 2682 3840 2419 4086 
+Q 2157 4333 1709 4333 
+Q 1254 4333 966 4061 
+Q 678 3789 614 3245 
+L 282 3245 
+Q 333 3891 720 4259 
+Q 1107 4627 1708 4627 
+Q 2310 4627 2675 4294 
+Q 3040 3962 3040 3379 
+Q 3040 2611 2170 1760 
+L 691 294 
+L 3104 294 
+L 3104 0 
+L 128 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-32"/>
+       <use xlink:href="#Graphik-Light-30" x="53.699997"/>
+       <use xlink:href="#Graphik-Light-30" x="119.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="584.709929" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <!-- 400 -->
+      <g style="fill: #262626" transform="translate(571.318054 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-34"/>
+       <use xlink:href="#Graphik-Light-30" x="59.499985"/>
+       <use xlink:href="#Graphik-Light-30" x="125.399979"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="646.67156" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <!-- 600 -->
+      <g style="fill: #262626" transform="translate(633.244685 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-36"/>
+       <use xlink:href="#Graphik-Light-30" x="59.999985"/>
+       <use xlink:href="#Graphik-Light-30" x="125.899979"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="708.633191" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_21">
+      <!-- 800 -->
+      <g style="fill: #262626" transform="translate(695.325534 397.365906) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-38" d="M 1869 -51 
+Q 1242 -51 787 301 
+Q 333 653 333 1274 
+Q 333 1734 611 2048 
+Q 890 2362 1338 2477 
+Q 973 2579 749 2838 
+Q 525 3098 525 3475 
+Q 525 3987 925 4307 
+Q 1325 4627 1869 4627 
+Q 2413 4627 2809 4307 
+Q 3206 3987 3206 3488 
+Q 3206 3104 2992 2848 
+Q 2778 2592 2406 2477 
+Q 2867 2355 3132 2051 
+Q 3398 1747 3398 1286 
+Q 3398 653 2956 301 
+Q 2515 -51 1869 -51 
+z
+M 1869 250 
+Q 2394 250 2714 522 
+Q 3034 794 3034 1299 
+Q 3034 1779 2707 2048 
+Q 2381 2317 1881 2317 
+Q 1382 2317 1040 2041 
+Q 698 1766 698 1286 
+Q 698 787 1030 518 
+Q 1363 250 1869 250 
+z
+M 1888 2605 
+Q 2310 2605 2579 2838 
+Q 2848 3072 2848 3488 
+Q 2848 3859 2569 4099 
+Q 2291 4339 1869 4339 
+Q 1440 4339 1161 4102 
+Q 883 3866 883 3475 
+Q 883 3072 1180 2838 
+Q 1478 2605 1888 2605 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-38"/>
+       <use xlink:href="#Graphik-Light-30" x="58.299988"/>
+       <use xlink:href="#Graphik-Light-30" x="124.199982"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_6">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="334.647233" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_22">
+      <!-- DHSC -->
+      <g style="fill: #262626" transform="translate(403.066667 340.058014) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-44"/>
+       <use xlink:href="#Graphik-Light-48" x="68.599991"/>
+       <use xlink:href="#Graphik-Light-53" x="140.299973"/>
+       <use xlink:href="#Graphik-Light-43" x="200.499969"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="266.442788" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_23">
+      <!-- NERC -->
+      <g style="fill: #262626" transform="translate(404.748854 271.853569) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-4e"/>
+       <use xlink:href="#Graphik-Light-45" x="71.299988"/>
+       <use xlink:href="#Graphik-Light-52" x="127.899979"/>
+       <use xlink:href="#Graphik-Light-43" x="188.499969"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="198.238344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_24">
+      <!-- EPSRC -->
+      <g style="fill: #262626" transform="translate(398.350417 203.649125) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-50" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-53" x="113.399979"/>
+       <use xlink:href="#Graphik-Light-52" x="173.599976"/>
+       <use xlink:href="#Graphik-Light-43" x="234.199966"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="130.033899" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_25">
+      <!-- EC -->
+      <g style="fill: #262626" transform="translate(423.213542 135.444681) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-43" x="56.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="61.829455" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_26">
+      <!-- ESRC -->
+      <g style="fill: #262626" transform="translate(406.301979 67.240236) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-53" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-52" x="116.799988"/>
+       <use xlink:href="#Graphik-Light-43" x="177.399979"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="patch_11">
+    <path d="M 460.786667 351.698344 
+L 501.681343 351.698344 
+L 501.681343 317.596122 
+L 460.786667 317.596122 
+z
+" clip-path="url(#p3ec4bd3245)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 460.786667 283.493899 
+L 521.818873 283.493899 
+L 521.818873 249.391677 
+L 460.786667 249.391677 
+z
+" clip-path="url(#p3ec4bd3245)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 460.786667 215.289455 
+L 539.477938 215.289455 
+L 539.477938 181.187233 
+L 460.786667 181.187233 
+z
+" clip-path="url(#p3ec4bd3245)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 460.786667 147.08501 
+L 557.137003 147.08501 
+L 557.137003 112.982788 
+L 460.786667 112.982788 
+z
+" clip-path="url(#p3ec4bd3245)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 460.786667 78.880566 
+L 726.292256 78.880566 
+L 726.292256 44.778344 
+L 460.786667 44.778344 
+z
+" clip-path="url(#p3ec4bd3245)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 450.786667 334.647233 
+L 450.786667 61.829455 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 460.786667 377.044344 
+L 708.633191 377.044344 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_27">
+    <!-- 132 -->
+    <g style="fill: #262626" transform="translate(506.681343 339.374733) scale(0.16 -0.16)">
+     <defs>
+      <path id="Graphik-Light-33" d="M 1766 -51 
+Q 1088 -51 675 336 
+Q 262 723 237 1293 
+L 563 1293 
+Q 608 826 912 534 
+Q 1216 243 1773 243 
+Q 2323 243 2620 512 
+Q 2918 781 2918 1267 
+Q 2918 1722 2656 1984 
+Q 2394 2246 1875 2246 
+L 1542 2246 
+L 1542 2547 
+L 1850 2547 
+Q 2317 2547 2547 2790 
+Q 2778 3034 2778 3418 
+Q 2778 3821 2531 4073 
+Q 2285 4326 1837 4326 
+Q 1370 4326 1075 4060 
+Q 781 3795 736 3373 
+L 416 3373 
+Q 448 3904 845 4265 
+Q 1242 4627 1837 4627 
+Q 2426 4627 2774 4281 
+Q 3123 3936 3123 3424 
+Q 3123 3059 2921 2793 
+Q 2720 2528 2374 2419 
+Q 2797 2323 3040 2025 
+Q 3283 1728 3283 1267 
+Q 3283 653 2867 301 
+Q 2451 -51 1766 -51 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-33" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-32" x="93.499985"/>
+    </g>
+   </g>
+   <g id="text_28">
+    <!-- 197 -->
+    <g style="fill: #262626" transform="translate(526.818873 271.170288) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-39" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-37" x="96.699982"/>
+    </g>
+   </g>
+   <g id="text_29">
+    <!-- 254 -->
+    <g style="fill: #262626" transform="translate(544.477938 202.965844) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-32"/>
+     <use xlink:href="#Graphik-Light-35" x="53.699997"/>
+     <use xlink:href="#Graphik-Light-34" x="109.799988"/>
+    </g>
+   </g>
+   <g id="text_30">
+    <!-- 311 -->
+    <g style="fill: #262626" transform="translate(562.137003 134.761399) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-33"/>
+     <use xlink:href="#Graphik-Light-31" x="56.699997"/>
+     <use xlink:href="#Graphik-Light-31" x="93.499985"/>
+    </g>
+   </g>
+   <g id="text_31">
+    <!-- 857 -->
+    <g style="fill: #262626" transform="translate(731.292256 66.556955) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-38"/>
+     <use xlink:href="#Graphik-Light-35" x="58.299988"/>
+     <use xlink:href="#Graphik-Light-37" x="114.399979"/>
+    </g>
+   </g>
+   <g id="text_32">
+    <!-- B. -->
+    <g style="fill: #262626" transform="translate(460.786667 23.432344) scale(0.21 -0.21)">
+     <defs>
+      <path id="Graphik-Light-42" d="M 589 0 
+L 589 4576 
+L 1888 4576 
+Q 2528 4576 2902 4294 
+Q 3277 4013 3277 3418 
+L 3277 3392 
+Q 3277 2618 2496 2400 
+Q 3501 2214 3501 1286 
+L 3501 1261 
+Q 3501 646 3123 323 
+Q 2746 0 2080 0 
+L 589 0 
+z
+M 941 288 
+L 2074 288 
+Q 3155 288 3155 1261 
+L 3155 1286 
+Q 3155 2234 1952 2234 
+L 941 2234 
+L 941 288 
+z
+M 941 2515 
+L 1894 2515 
+Q 2925 2515 2925 3398 
+L 2925 3424 
+Q 2925 4288 1882 4288 
+L 941 4288 
+L 941 2515 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Graphik-Light-42"/>
+     <use xlink:href="#Graphik-Light-2e" x="60.399994"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g id="patch_18">
+    <path d="M 833.553333 367.044344 
+L 1112.334202 367.044344 
+L 1112.334202 29.432344 
+L 833.553333 29.432344 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_5">
+    <g id="xtick_10">
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="833.553333" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_33">
+      <!-- 0 -->
+      <g style="fill: #262626" transform="translate(828.939896 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="906.095844" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_34">
+      <!-- 100 -->
+      <g style="fill: #262626" transform="translate(894.293188 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-31"/>
+       <use xlink:href="#Graphik-Light-30" x="36.799988"/>
+       <use xlink:href="#Graphik-Light-30" x="102.699982"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_22">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="978.638355" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_35">
+      <!-- 200 -->
+      <g style="fill: #262626" transform="translate(965.652261 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-32"/>
+       <use xlink:href="#Graphik-Light-30" x="53.699997"/>
+       <use xlink:href="#Graphik-Light-30" x="119.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_13">
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="1051.180865" y="377.044344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_36">
+      <!-- 300 -->
+      <g style="fill: #262626" transform="translate(1037.984771 397.365906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-33"/>
+       <use xlink:href="#Graphik-Light-30" x="56.699997"/>
+       <use xlink:href="#Graphik-Light-30" x="122.599991"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_6">
+    <g id="ytick_11">
+     <g id="line2d_24">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="334.647233" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_37">
+      <!-- EPSRC -->
+      <g style="fill: #262626" transform="translate(771.117083 340.058014) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-50" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-53" x="113.399979"/>
+       <use xlink:href="#Graphik-Light-52" x="173.599976"/>
+       <use xlink:href="#Graphik-Light-43" x="234.199966"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="266.442788" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_38">
+      <!-- WT -->
+      <g style="fill: #262626" transform="translate(793.346458 271.853569) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-57"/>
+       <use xlink:href="#Graphik-Light-54" x="91.999985"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_13">
+     <g id="line2d_26">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="198.238344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_39">
+      <!-- EC -->
+      <g style="fill: #262626" transform="translate(795.980208 203.649125) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-43" x="56.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_14">
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="130.033899" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_40">
+      <!-- ESRC -->
+      <g style="fill: #262626" transform="translate(779.068646 135.444681) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-53" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-52" x="116.799988"/>
+       <use xlink:href="#Graphik-Light-43" x="177.399979"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_15">
+     <g id="line2d_28">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="61.829455" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_41">
+      <!-- AHRC -->
+      <g style="fill: #262626" transform="translate(776.224896 67.240236) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-41"/>
+       <use xlink:href="#Graphik-Light-48" x="65.399994"/>
+       <use xlink:href="#Graphik-Light-52" x="137.099976"/>
+       <use xlink:href="#Graphik-Light-43" x="197.699966"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="patch_19">
+    <path d="M 833.553333 351.698344 
+L 864.021188 351.698344 
+L 864.021188 317.596122 
+L 833.553333 317.596122 
+z
+" clip-path="url(#p59c8cdb5d0)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 833.553333 283.493899 
+L 870.550014 283.493899 
+L 870.550014 249.391677 
+L 833.553333 249.391677 
+z
+" clip-path="url(#p59c8cdb5d0)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 833.553333 215.289455 
+L 872.000864 215.289455 
+L 872.000864 181.187233 
+L 833.553333 181.187233 
+z
+" clip-path="url(#p59c8cdb5d0)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 833.553333 147.08501 
+L 895.214467 147.08501 
+L 895.214467 112.982788 
+L 833.553333 112.982788 
+z
+" clip-path="url(#p59c8cdb5d0)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 833.553333 78.880566 
+L 1099.058922 78.880566 
+L 1099.058922 44.778344 
+L 833.553333 44.778344 
+z
+" clip-path="url(#p59c8cdb5d0)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 823.553333 334.647233 
+L 823.553333 61.829455 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 833.553333 377.044344 
+L 1051.180865 377.044344 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_42">
+    <!-- 42 -->
+    <g style="fill: #262626" transform="translate(869.021188 339.374733) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-34"/>
+     <use xlink:href="#Graphik-Light-32" x="59.499985"/>
+    </g>
+   </g>
+   <g id="text_43">
+    <!-- 51 -->
+    <g style="fill: #262626" transform="translate(875.550014 271.170288) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-35"/>
+     <use xlink:href="#Graphik-Light-31" x="56.099991"/>
+    </g>
+   </g>
+   <g id="text_44">
+    <!-- 53 -->
+    <g style="fill: #262626" transform="translate(877.000864 202.965844) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-35"/>
+     <use xlink:href="#Graphik-Light-33" x="56.099991"/>
+    </g>
+   </g>
+   <g id="text_45">
+    <!-- 85 -->
+    <g style="fill: #262626" transform="translate(900.214467 134.761399) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-38"/>
+     <use xlink:href="#Graphik-Light-35" x="58.299988"/>
+    </g>
+   </g>
+   <g id="text_46">
+    <!-- 366 -->
+    <g style="fill: #262626" transform="translate(1104.058922 66.556955) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-33"/>
+     <use xlink:href="#Graphik-Light-36" x="56.699997"/>
+     <use xlink:href="#Graphik-Light-36" x="116.699982"/>
+    </g>
+   </g>
+   <g id="text_47">
+    <!-- C. -->
+    <g style="fill: #262626" transform="translate(833.553333 23.432344) scale(0.21 -0.21)">
+     <use xlink:href="#Graphik-Light-43"/>
+     <use xlink:href="#Graphik-Light-2e" x="72.499985"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_4">
+   <g id="patch_26">
+    <path d="M 88.02 772.636344 
+L 366.800868 772.636344 
+L 366.800868 435.024344 
+L 88.02 435.024344 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_7">
+    <g id="xtick_14">
+     <g id="line2d_29">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="88.02" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_48">
+      <!-- 0 -->
+      <g style="fill: #262626" transform="translate(83.406563 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_30">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="166.109879" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_49">
+      <!-- 20 -->
+      <g style="fill: #262626" transform="translate(157.737223 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-32"/>
+       <use xlink:href="#Graphik-Light-30" x="53.699997"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_16">
+     <g id="line2d_31">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="244.199758" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_50">
+      <!-- 40 -->
+      <g style="fill: #262626" transform="translate(235.421321 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-34"/>
+       <use xlink:href="#Graphik-Light-30" x="59.499985"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_17">
+     <g id="line2d_32">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="322.289637" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_51">
+      <!-- 60 -->
+      <g style="fill: #262626" transform="translate(313.4762 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-36"/>
+       <use xlink:href="#Graphik-Light-30" x="59.999985"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_52">
+     <!-- Instances of Funding -->
+     <g style="fill: #262626" transform="translate(142.171997 823.473219) scale(0.18 -0.18)">
+      <defs>
+       <path id="Graphik-Light-74" d="M 1472 -45 
+Q 1075 -45 864 179 
+Q 653 403 653 806 
+L 653 3059 
+L 160 3059 
+L 160 3347 
+L 653 3347 
+L 653 4109 
+L 992 4109 
+L 992 3347 
+L 1869 3347 
+L 1869 3059 
+L 992 3059 
+L 992 832 
+Q 992 243 1491 243 
+Q 1702 243 1914 314 
+L 1914 26 
+Q 1715 -45 1472 -45 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-63" d="M 1875 -51 
+Q 1190 -51 732 419 
+Q 275 890 275 1638 
+L 275 1690 
+Q 275 2445 736 2921 
+Q 1197 3398 1875 3398 
+Q 2419 3398 2812 3110 
+Q 3206 2822 3270 2285 
+L 2938 2285 
+Q 2880 2688 2585 2899 
+Q 2291 3110 1875 3110 
+Q 1338 3110 982 2723 
+Q 627 2336 627 1690 
+L 627 1638 
+Q 627 992 979 614 
+Q 1331 237 1875 237 
+Q 2310 237 2620 480 
+Q 2931 723 2989 1158 
+L 3302 1158 
+Q 3232 621 2838 285 
+Q 2445 -51 1875 -51 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-6f" d="M 1894 237 
+Q 2445 237 2800 621 
+Q 3155 1005 3155 1645 
+L 3155 1696 
+Q 3155 2342 2796 2726 
+Q 2438 3110 1894 3110 
+Q 1344 3110 985 2723 
+Q 627 2336 627 1696 
+L 627 1645 
+Q 627 1011 982 624 
+Q 1338 237 1894 237 
+z
+M 3040 425 
+Q 2573 -51 1888 -51 
+Q 1203 -51 739 429 
+Q 275 909 275 1645 
+L 275 1696 
+Q 275 2438 742 2918 
+Q 1210 3398 1894 3398 
+Q 2586 3398 3046 2924 
+Q 3507 2451 3507 1702 
+L 3507 1651 
+Q 3507 902 3040 425 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-66" d="M 672 0 
+L 672 3059 
+L 166 3059 
+L 166 3347 
+L 672 3347 
+L 672 3949 
+Q 672 4454 928 4710 
+Q 1184 4966 1619 4966 
+Q 1805 4966 1990 4909 
+L 1990 4621 
+Q 1818 4678 1632 4678 
+Q 1344 4678 1177 4505 
+Q 1011 4333 1011 3981 
+L 1011 3347 
+L 1946 3347 
+L 1946 3059 
+L 1011 3059 
+L 1011 0 
+L 672 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-69" d="M 538 0 
+L 538 3347 
+L 877 3347 
+L 877 0 
+L 538 0 
+z
+M 873 4134 
+Q 806 4064 704 4064 
+Q 602 4064 531 4134 
+Q 461 4205 461 4307 
+Q 461 4403 531 4473 
+Q 602 4544 704 4544 
+Q 806 4544 873 4473 
+Q 941 4403 941 4307 
+Q 941 4205 873 4134 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-67" d="M 1843 -1203 
+Q 1158 -1203 787 -918 
+Q 416 -634 346 -192 
+L 691 -192 
+Q 845 -915 1837 -915 
+Q 2406 -915 2729 -636 
+Q 3053 -358 3053 237 
+L 3053 922 
+Q 2906 589 2563 349 
+Q 2221 109 1786 109 
+Q 1133 109 704 550 
+Q 275 992 275 1709 
+L 275 1754 
+Q 275 2464 720 2931 
+Q 1165 3398 1830 3398 
+Q 2688 3398 3053 2624 
+L 3053 3347 
+L 3392 3347 
+L 3392 224 
+Q 3386 -486 2966 -844 
+Q 2547 -1203 1843 -1203 
+z
+M 1818 397 
+Q 2342 397 2700 758 
+Q 3059 1120 3059 1728 
+L 3059 1779 
+Q 3059 2400 2729 2755 
+Q 2400 3110 1862 3110 
+Q 1318 3110 972 2745 
+Q 627 2381 627 1766 
+L 627 1715 
+Q 627 1107 966 752 
+Q 1306 397 1818 397 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#Graphik-Light-49"/>
+      <use xlink:href="#Graphik-Light-6e" x="24.999985"/>
+      <use xlink:href="#Graphik-Light-73" x="83.299973"/>
+      <use xlink:href="#Graphik-Light-74" x="129.799957"/>
+      <use xlink:href="#Graphik-Light-61" x="163.599945"/>
+      <use xlink:href="#Graphik-Light-6e" x="216.499939"/>
+      <use xlink:href="#Graphik-Light-63" x="274.799927"/>
+      <use xlink:href="#Graphik-Light-65" x="330.399918"/>
+      <use xlink:href="#Graphik-Light-73" x="385.799911"/>
+      <use xlink:href="#Graphik-Light-20" x="432.299896"/>
+      <use xlink:href="#Graphik-Light-6f" x="456.999893"/>
+      <use xlink:href="#Graphik-Light-66" x="516.099884"/>
+      <use xlink:href="#Graphik-Light-20" x="549.399872"/>
+      <use xlink:href="#Graphik-Light-46" x="574.099869"/>
+      <use xlink:href="#Graphik-Light-75" x="628.099854"/>
+      <use xlink:href="#Graphik-Light-6e" x="685.999847"/>
+      <use xlink:href="#Graphik-Light-64" x="744.299835"/>
+      <use xlink:href="#Graphik-Light-69" x="805.499832"/>
+      <use xlink:href="#Graphik-Light-6e" x="827.599823"/>
+      <use xlink:href="#Graphik-Light-67" x="885.899811"/>
+     </g>
+     <!--        (UoA 4)       -->
+     <g style="fill: #262626" transform="translate(168.20309 843.552781) scale(0.18 -0.18)">
+      <defs>
+       <path id="Graphik-Light-28" d="M 1408 -947 
+Q 352 307 352 1997 
+Q 352 3693 1408 4947 
+L 1754 4947 
+Q 710 3648 710 1997 
+Q 710 352 1754 -947 
+L 1408 -947 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-55" d="M 2163 -45 
+Q 1382 -45 953 390 
+Q 525 826 525 1638 
+L 525 4576 
+L 877 4576 
+L 877 1677 
+Q 877 256 2170 256 
+Q 2842 256 3165 611 
+Q 3488 966 3488 1760 
+L 3488 4576 
+L 3846 4576 
+L 3846 1709 
+Q 3846 870 3424 412 
+Q 3002 -45 2163 -45 
+z
+" transform="scale(0.015625)"/>
+       <path id="Graphik-Light-29" d="M 166 -934 
+Q 1210 365 1210 2010 
+Q 1210 3661 166 4960 
+L 506 4960 
+Q 1562 3718 1562 2010 
+Q 1562 307 506 -934 
+L 166 -934 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#Graphik-Light-20"/>
+      <use xlink:href="#Graphik-Light-20" x="24.699997"/>
+      <use xlink:href="#Graphik-Light-20" x="49.399994"/>
+      <use xlink:href="#Graphik-Light-20" x="74.099991"/>
+      <use xlink:href="#Graphik-Light-20" x="98.799988"/>
+      <use xlink:href="#Graphik-Light-20" x="123.499985"/>
+      <use xlink:href="#Graphik-Light-20" x="148.199982"/>
+      <use xlink:href="#Graphik-Light-28" x="172.899979"/>
+      <use xlink:href="#Graphik-Light-55" x="202.799973"/>
+      <use xlink:href="#Graphik-Light-6f" x="270.999954"/>
+      <use xlink:href="#Graphik-Light-41" x="330.099945"/>
+      <use xlink:href="#Graphik-Light-20" x="395.499939"/>
+      <use xlink:href="#Graphik-Light-34" x="420.199936"/>
+      <use xlink:href="#Graphik-Light-29" x="479.699921"/>
+      <use xlink:href="#Graphik-Light-20" x="509.599915"/>
+      <use xlink:href="#Graphik-Light-20" x="534.299911"/>
+      <use xlink:href="#Graphik-Light-20" x="558.999908"/>
+      <use xlink:href="#Graphik-Light-20" x="583.699905"/>
+      <use xlink:href="#Graphik-Light-20" x="608.399902"/>
+      <use xlink:href="#Graphik-Light-20" x="633.099899"/>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_8">
+    <g id="ytick_16">
+     <g id="line2d_33">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="740.239233" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_53">
+      <!-- EC -->
+      <g style="fill: #262626" transform="translate(50.446875 745.650014) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-43" x="56.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_17">
+     <g id="line2d_34">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="672.034788" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_54">
+      <!-- WT -->
+      <g style="fill: #262626" transform="translate(47.813125 677.445569) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-57"/>
+       <use xlink:href="#Graphik-Light-54" x="91.999985"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_18">
+     <g id="line2d_35">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="603.830344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_55">
+      <!-- MRC -->
+      <g style="fill: #262626" transform="translate(37.97375 609.241125) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-4d"/>
+       <use xlink:href="#Graphik-Light-52" x="85.099991"/>
+       <use xlink:href="#Graphik-Light-43" x="145.699982"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_19">
+     <g id="line2d_36">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="535.625899" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_56">
+      <!-- ESRC -->
+      <g style="fill: #262626" transform="translate(33.535313 541.036681) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-53" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-52" x="116.799988"/>
+       <use xlink:href="#Graphik-Light-43" x="177.399979"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_20">
+     <g id="line2d_37">
+      <g>
+       <use xlink:href="#m16a61e213b" x="78.02" y="467.421455" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_57">
+      <!-- NIHR -->
+      <g style="fill: #262626" transform="translate(36.516875 472.832236) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-4e"/>
+       <use xlink:href="#Graphik-Light-49" x="71.299988"/>
+       <use xlink:href="#Graphik-Light-48" x="96.299973"/>
+       <use xlink:href="#Graphik-Light-52" x="167.999954"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_58">
+     <!-- ICS Funders -->
+     <g style="fill: #262626" transform="translate(25.894687 658.881906) rotate(-90) scale(0.2 -0.2)">
+      <use xlink:href="#Graphik-Light-49"/>
+      <use xlink:href="#Graphik-Light-43" x="24.999985"/>
+      <use xlink:href="#Graphik-Light-53" x="97.499969"/>
+      <use xlink:href="#Graphik-Light-20" x="157.699966"/>
+      <use xlink:href="#Graphik-Light-46" x="182.399963"/>
+      <use xlink:href="#Graphik-Light-75" x="236.399948"/>
+      <use xlink:href="#Graphik-Light-6e" x="294.299942"/>
+      <use xlink:href="#Graphik-Light-64" x="352.59993"/>
+      <use xlink:href="#Graphik-Light-65" x="413.799927"/>
+      <use xlink:href="#Graphik-Light-72" x="469.199921"/>
+      <use xlink:href="#Graphik-Light-73" x="503.999908"/>
+     </g>
+    </g>
+   </g>
+   <g id="patch_27">
+    <path d="M 88.02 757.290344 
+L 162.205385 757.290344 
+L 162.205385 723.188122 
+L 88.02 723.188122 
+z
+" clip-path="url(#pbeff535b14)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 88.02 689.085899 
+L 209.059313 689.085899 
+L 209.059313 654.983677 
+L 88.02 654.983677 
+z
+" clip-path="url(#pbeff535b14)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 88.02 620.881455 
+L 248.104252 620.881455 
+L 248.104252 586.779233 
+L 88.02 586.779233 
+z
+" clip-path="url(#pbeff535b14)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 88.02 552.67701 
+L 294.95818 552.67701 
+L 294.95818 518.574788 
+L 88.02 518.574788 
+z
+" clip-path="url(#pbeff535b14)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 88.02 484.472566 
+L 353.525589 484.472566 
+L 353.525589 450.370344 
+L 88.02 450.370344 
+z
+" clip-path="url(#pbeff535b14)" style="fill: #00a0df; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 78.02 740.239233 
+L 78.02 467.421455 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_33">
+    <path d="M 88.02 782.636344 
+L 322.289637 782.636344 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_59">
+    <!-- 19 -->
+    <g style="fill: #262626" transform="translate(167.205385 744.966733) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-39" x="36.799988"/>
+    </g>
+   </g>
+   <g id="text_60">
+    <!-- 31 -->
+    <g style="fill: #262626" transform="translate(214.059313 676.762288) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-33"/>
+     <use xlink:href="#Graphik-Light-31" x="56.699997"/>
+    </g>
+   </g>
+   <g id="text_61">
+    <!-- 41 -->
+    <g style="fill: #262626" transform="translate(253.104252 608.557844) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-34"/>
+     <use xlink:href="#Graphik-Light-31" x="59.499985"/>
+    </g>
+   </g>
+   <g id="text_62">
+    <!-- 53 -->
+    <g style="fill: #262626" transform="translate(299.95818 540.353399) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-35"/>
+     <use xlink:href="#Graphik-Light-33" x="56.099991"/>
+    </g>
+   </g>
+   <g id="text_63">
+    <!-- 68 -->
+    <g style="fill: #262626" transform="translate(358.525589 472.148955) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-36"/>
+     <use xlink:href="#Graphik-Light-38" x="59.999985"/>
+    </g>
+   </g>
+   <g id="text_64">
+    <!-- D. -->
+    <g style="fill: #262626" transform="translate(88.02 429.024344) scale(0.21 -0.21)">
+     <use xlink:href="#Graphik-Light-44"/>
+     <use xlink:href="#Graphik-Light-2e" x="68.599991"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_5">
+   <g id="patch_34">
+    <path d="M 460.786667 772.636344 
+L 739.567535 772.636344 
+L 739.567535 435.024344 
+L 460.786667 435.024344 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_9">
+    <g id="xtick_18">
+     <g id="line2d_38">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="460.786667" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_65">
+      <!-- 0 -->
+      <g style="fill: #262626" transform="translate(456.173229 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_19">
+     <g id="line2d_39">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="508.198379" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_66">
+      <!-- 100 -->
+      <g style="fill: #262626" transform="translate(496.395723 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-31"/>
+       <use xlink:href="#Graphik-Light-30" x="36.799988"/>
+       <use xlink:href="#Graphik-Light-30" x="102.699982"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_20">
+     <g id="line2d_40">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="555.610091" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_67">
+      <!-- 200 -->
+      <g style="fill: #262626" transform="translate(542.623998 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-32"/>
+       <use xlink:href="#Graphik-Light-30" x="53.699997"/>
+       <use xlink:href="#Graphik-Light-30" x="119.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_21">
+     <g id="line2d_41">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="603.021804" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_68">
+      <!-- 300 -->
+      <g style="fill: #262626" transform="translate(589.82571 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-33"/>
+       <use xlink:href="#Graphik-Light-30" x="56.699997"/>
+       <use xlink:href="#Graphik-Light-30" x="122.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_22">
+     <g id="line2d_42">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="650.433516" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_69">
+      <!-- 400 -->
+      <g style="fill: #262626" transform="translate(637.041641 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-34"/>
+       <use xlink:href="#Graphik-Light-30" x="59.499985"/>
+       <use xlink:href="#Graphik-Light-30" x="125.399979"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_23">
+     <g id="line2d_43">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="697.845228" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_70">
+      <!-- 500 -->
+      <g style="fill: #262626" transform="translate(684.691791 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-35"/>
+       <use xlink:href="#Graphik-Light-30" x="56.099991"/>
+       <use xlink:href="#Graphik-Light-30" x="121.999985"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_71">
+     <!-- Instances of Funding -->
+     <g style="fill: #262626" transform="translate(514.938663 823.473219) scale(0.18 -0.18)">
+      <use xlink:href="#Graphik-Light-49"/>
+      <use xlink:href="#Graphik-Light-6e" x="24.999985"/>
+      <use xlink:href="#Graphik-Light-73" x="83.299973"/>
+      <use xlink:href="#Graphik-Light-74" x="129.799957"/>
+      <use xlink:href="#Graphik-Light-61" x="163.599945"/>
+      <use xlink:href="#Graphik-Light-6e" x="216.499939"/>
+      <use xlink:href="#Graphik-Light-63" x="274.799927"/>
+      <use xlink:href="#Graphik-Light-65" x="330.399918"/>
+      <use xlink:href="#Graphik-Light-73" x="385.799911"/>
+      <use xlink:href="#Graphik-Light-20" x="432.299896"/>
+      <use xlink:href="#Graphik-Light-6f" x="456.999893"/>
+      <use xlink:href="#Graphik-Light-66" x="516.099884"/>
+      <use xlink:href="#Graphik-Light-20" x="549.399872"/>
+      <use xlink:href="#Graphik-Light-46" x="574.099869"/>
+      <use xlink:href="#Graphik-Light-75" x="628.099854"/>
+      <use xlink:href="#Graphik-Light-6e" x="685.999847"/>
+      <use xlink:href="#Graphik-Light-64" x="744.299835"/>
+      <use xlink:href="#Graphik-Light-69" x="805.499832"/>
+      <use xlink:href="#Graphik-Light-6e" x="827.599823"/>
+      <use xlink:href="#Graphik-Light-67" x="885.899811"/>
+     </g>
+     <!--       (Panel C)      -->
+     <g style="fill: #262626" transform="translate(539.484757 843.552781) scale(0.18 -0.18)">
+      <defs>
+       <path id="Graphik-Light-6c" d="M 538 0 
+L 538 4947 
+L 883 4947 
+L 883 0 
+L 538 0 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#Graphik-Light-20"/>
+      <use xlink:href="#Graphik-Light-20" x="24.699997"/>
+      <use xlink:href="#Graphik-Light-20" x="49.399994"/>
+      <use xlink:href="#Graphik-Light-20" x="74.099991"/>
+      <use xlink:href="#Graphik-Light-20" x="98.799988"/>
+      <use xlink:href="#Graphik-Light-20" x="123.499985"/>
+      <use xlink:href="#Graphik-Light-28" x="148.199982"/>
+      <use xlink:href="#Graphik-Light-50" x="178.099976"/>
+      <use xlink:href="#Graphik-Light-61" x="234.899963"/>
+      <use xlink:href="#Graphik-Light-6e" x="287.799957"/>
+      <use xlink:href="#Graphik-Light-65" x="346.099945"/>
+      <use xlink:href="#Graphik-Light-6c" x="401.499939"/>
+      <use xlink:href="#Graphik-Light-20" x="423.699936"/>
+      <use xlink:href="#Graphik-Light-43" x="448.399933"/>
+      <use xlink:href="#Graphik-Light-29" x="520.899918"/>
+      <use xlink:href="#Graphik-Light-20" x="550.799911"/>
+      <use xlink:href="#Graphik-Light-20" x="575.499908"/>
+      <use xlink:href="#Graphik-Light-20" x="600.199905"/>
+      <use xlink:href="#Graphik-Light-20" x="624.899902"/>
+      <use xlink:href="#Graphik-Light-20" x="649.599899"/>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_10">
+    <g id="ytick_21">
+     <g id="line2d_44">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="740.239233" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_72">
+      <!-- EPSRC -->
+      <g style="fill: #262626" transform="translate(398.350417 745.650014) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-50" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-53" x="113.399979"/>
+       <use xlink:href="#Graphik-Light-52" x="173.599976"/>
+       <use xlink:href="#Graphik-Light-43" x="234.199966"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_22">
+     <g id="line2d_45">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="672.034788" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_73">
+      <!-- BA -->
+      <g style="fill: #262626" transform="translate(423.672917 677.445569) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-42"/>
+       <use xlink:href="#Graphik-Light-41" x="60.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_23">
+     <g id="line2d_46">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="603.830344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_74">
+      <!-- AHRC -->
+      <g style="fill: #262626" transform="translate(403.458229 609.241125) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-41"/>
+       <use xlink:href="#Graphik-Light-48" x="65.399994"/>
+       <use xlink:href="#Graphik-Light-52" x="137.099976"/>
+       <use xlink:href="#Graphik-Light-43" x="197.699966"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_24">
+     <g id="line2d_47">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="535.625899" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_75">
+      <!-- EC -->
+      <g style="fill: #262626" transform="translate(423.213542 541.036681) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-43" x="56.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_25">
+     <g id="line2d_48">
+      <g>
+       <use xlink:href="#m16a61e213b" x="450.786667" y="467.421455" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_76">
+      <!-- ESRC -->
+      <g style="fill: #262626" transform="translate(406.301979 472.832236) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-53" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-52" x="116.799988"/>
+       <use xlink:href="#Graphik-Light-43" x="177.399979"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="patch_35">
+    <path d="M 460.786667 757.290344 
+L 512.93955 757.290344 
+L 512.93955 723.188122 
+L 460.786667 723.188122 
+z
+" clip-path="url(#p02fd444bb2)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 460.786667 689.085899 
+L 515.784253 689.085899 
+L 515.784253 654.983677 
+L 460.786667 654.983677 
+z
+" clip-path="url(#p02fd444bb2)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 460.786667 620.881455 
+L 526.21483 620.881455 
+L 526.21483 586.779233 
+L 460.786667 586.779233 
+z
+" clip-path="url(#p02fd444bb2)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_38">
+    <path d="M 460.786667 552.67701 
+L 574.574776 552.67701 
+L 574.574776 518.574788 
+L 460.786667 518.574788 
+z
+" clip-path="url(#p02fd444bb2)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_39">
+    <path d="M 460.786667 484.472566 
+L 726.292256 484.472566 
+L 726.292256 450.370344 
+L 460.786667 450.370344 
+z
+" clip-path="url(#p02fd444bb2)" style="fill: #a5907e; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_40">
+    <path d="M 450.786667 740.239233 
+L 450.786667 467.421455 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_41">
+    <path d="M 460.786667 782.636344 
+L 697.845228 782.636344 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_77">
+    <!-- 110 -->
+    <g style="fill: #262626" transform="translate(517.93955 744.966733) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-31" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-30" x="73.599976"/>
+    </g>
+   </g>
+   <g id="text_78">
+    <!-- 116 -->
+    <g style="fill: #262626" transform="translate(520.784253 676.762288) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-31" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-36" x="73.599976"/>
+    </g>
+   </g>
+   <g id="text_79">
+    <!-- 138 -->
+    <g style="fill: #262626" transform="translate(531.21483 608.557844) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-33" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-38" x="93.499985"/>
+    </g>
+   </g>
+   <g id="text_80">
+    <!-- 240 -->
+    <g style="fill: #262626" transform="translate(579.574776 540.353399) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-32"/>
+     <use xlink:href="#Graphik-Light-34" x="53.699997"/>
+     <use xlink:href="#Graphik-Light-30" x="113.199982"/>
+    </g>
+   </g>
+   <g id="text_81">
+    <!-- 560 -->
+    <g style="fill: #262626" transform="translate(731.292256 472.148955) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-35"/>
+     <use xlink:href="#Graphik-Light-36" x="56.099991"/>
+     <use xlink:href="#Graphik-Light-30" x="116.099976"/>
+    </g>
+   </g>
+   <g id="text_82">
+    <!-- E. -->
+    <g style="fill: #262626" transform="translate(460.786667 429.024344) scale(0.21 -0.21)">
+     <use xlink:href="#Graphik-Light-45"/>
+     <use xlink:href="#Graphik-Light-2e" x="56.599991"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_6">
+   <g id="patch_42">
+    <path d="M 833.553333 772.636344 
+L 1112.334202 772.636344 
+L 1112.334202 435.024344 
+L 833.553333 435.024344 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_11">
+    <g id="xtick_24">
+     <g id="line2d_49">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="833.553333" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_83">
+      <!-- 0 -->
+      <g style="fill: #262626" transform="translate(828.939896 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_25">
+     <g id="line2d_50">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="885.107817" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_84">
+      <!-- 100 -->
+      <g style="fill: #262626" transform="translate(873.30516 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-31"/>
+       <use xlink:href="#Graphik-Light-30" x="36.799988"/>
+       <use xlink:href="#Graphik-Light-30" x="102.699982"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_26">
+     <g id="line2d_51">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="936.6623" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_85">
+      <!-- 200 -->
+      <g style="fill: #262626" transform="translate(923.676206 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-32"/>
+       <use xlink:href="#Graphik-Light-30" x="53.699997"/>
+       <use xlink:href="#Graphik-Light-30" x="119.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_27">
+     <g id="line2d_52">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="988.216783" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_86">
+      <!-- 300 -->
+      <g style="fill: #262626" transform="translate(975.020689 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-33"/>
+       <use xlink:href="#Graphik-Light-30" x="56.699997"/>
+       <use xlink:href="#Graphik-Light-30" x="122.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_28">
+     <g id="line2d_53">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="1039.771266" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_87">
+      <!-- 400 -->
+      <g style="fill: #262626" transform="translate(1026.379391 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-34"/>
+       <use xlink:href="#Graphik-Light-30" x="59.499985"/>
+       <use xlink:href="#Graphik-Light-30" x="125.399979"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_29">
+     <g id="line2d_54">
+      <g>
+       <use xlink:href="#m1fcd2d687f" x="1091.32575" y="782.636344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_88">
+      <!-- 500 -->
+      <g style="fill: #262626" transform="translate(1078.172312 802.957906) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-35"/>
+       <use xlink:href="#Graphik-Light-30" x="56.099991"/>
+       <use xlink:href="#Graphik-Light-30" x="121.999985"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_89">
+     <!-- Instances of Funding  -->
+     <g style="fill: #262626" transform="translate(885.482049 823.473219) scale(0.18 -0.18)">
+      <use xlink:href="#Graphik-Light-49"/>
+      <use xlink:href="#Graphik-Light-6e" x="24.999985"/>
+      <use xlink:href="#Graphik-Light-73" x="83.299973"/>
+      <use xlink:href="#Graphik-Light-74" x="129.799957"/>
+      <use xlink:href="#Graphik-Light-61" x="163.599945"/>
+      <use xlink:href="#Graphik-Light-6e" x="216.499939"/>
+      <use xlink:href="#Graphik-Light-63" x="274.799927"/>
+      <use xlink:href="#Graphik-Light-65" x="330.399918"/>
+      <use xlink:href="#Graphik-Light-73" x="385.799911"/>
+      <use xlink:href="#Graphik-Light-20" x="432.299896"/>
+      <use xlink:href="#Graphik-Light-6f" x="456.999893"/>
+      <use xlink:href="#Graphik-Light-66" x="516.099884"/>
+      <use xlink:href="#Graphik-Light-20" x="549.399872"/>
+      <use xlink:href="#Graphik-Light-46" x="574.099869"/>
+      <use xlink:href="#Graphik-Light-75" x="628.099854"/>
+      <use xlink:href="#Graphik-Light-6e" x="685.999847"/>
+      <use xlink:href="#Graphik-Light-64" x="744.299835"/>
+      <use xlink:href="#Graphik-Light-69" x="805.499832"/>
+      <use xlink:href="#Graphik-Light-6e" x="827.599823"/>
+      <use xlink:href="#Graphik-Light-67" x="885.899811"/>
+      <use xlink:href="#Graphik-Light-20" x="947.099808"/>
+     </g>
+     <!--       (Panel D)      -->
+     <g style="fill: #262626" transform="translate(912.602986 843.552781) scale(0.18 -0.18)">
+      <use xlink:href="#Graphik-Light-20"/>
+      <use xlink:href="#Graphik-Light-20" x="24.699997"/>
+      <use xlink:href="#Graphik-Light-20" x="49.399994"/>
+      <use xlink:href="#Graphik-Light-20" x="74.099991"/>
+      <use xlink:href="#Graphik-Light-20" x="98.799988"/>
+      <use xlink:href="#Graphik-Light-20" x="123.499985"/>
+      <use xlink:href="#Graphik-Light-28" x="148.199982"/>
+      <use xlink:href="#Graphik-Light-50" x="178.099976"/>
+      <use xlink:href="#Graphik-Light-61" x="234.899963"/>
+      <use xlink:href="#Graphik-Light-6e" x="287.799957"/>
+      <use xlink:href="#Graphik-Light-65" x="346.099945"/>
+      <use xlink:href="#Graphik-Light-6c" x="401.499939"/>
+      <use xlink:href="#Graphik-Light-20" x="423.699936"/>
+      <use xlink:href="#Graphik-Light-44" x="448.399933"/>
+      <use xlink:href="#Graphik-Light-29" x="516.999924"/>
+      <use xlink:href="#Graphik-Light-20" x="546.899918"/>
+      <use xlink:href="#Graphik-Light-20" x="571.599915"/>
+      <use xlink:href="#Graphik-Light-20" x="596.299911"/>
+      <use xlink:href="#Graphik-Light-20" x="620.999908"/>
+      <use xlink:href="#Graphik-Light-20" x="645.699905"/>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_12">
+    <g id="ytick_26">
+     <g id="line2d_55">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="740.239233" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_90">
+      <!-- EC -->
+      <g style="fill: #262626" transform="translate(795.980208 745.650014) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-43" x="56.599991"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_27">
+     <g id="line2d_56">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="672.034788" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_91">
+      <!-- ESRC -->
+      <g style="fill: #262626" transform="translate(779.068646 677.445569) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-45"/>
+       <use xlink:href="#Graphik-Light-53" x="56.599991"/>
+       <use xlink:href="#Graphik-Light-52" x="116.799988"/>
+       <use xlink:href="#Graphik-Light-43" x="177.399979"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_28">
+     <g id="line2d_57">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="603.830344" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_92">
+      <!-- BA -->
+      <g style="fill: #262626" transform="translate(796.439583 609.241125) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-42"/>
+       <use xlink:href="#Graphik-Light-41" x="60.399994"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_29">
+     <g id="line2d_58">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="535.625899" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_93">
+      <!-- LT -->
+      <g style="fill: #262626" transform="translate(798.806458 541.036681) scale(0.14 -0.14)">
+       <defs>
+        <path id="Graphik-Light-4c" d="M 589 0 
+L 589 4576 
+L 947 4576 
+L 947 294 
+L 3168 294 
+L 3168 0 
+L 589 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#Graphik-Light-4c"/>
+       <use xlink:href="#Graphik-Light-54" x="52.999985"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_30">
+     <g id="line2d_59">
+      <g>
+       <use xlink:href="#m16a61e213b" x="823.553333" y="467.421455" style="fill: #262626; stroke: #262626; stroke-width: 1.25"/>
+      </g>
+     </g>
+     <g id="text_94">
+      <!-- AHRC -->
+      <g style="fill: #262626" transform="translate(776.224896 472.832236) scale(0.14 -0.14)">
+       <use xlink:href="#Graphik-Light-41"/>
+       <use xlink:href="#Graphik-Light-48" x="65.399994"/>
+       <use xlink:href="#Graphik-Light-52" x="137.099976"/>
+       <use xlink:href="#Graphik-Light-43" x="197.699966"/>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="patch_43">
+    <path d="M 833.553333 757.290344 
+L 883.045637 757.290344 
+L 883.045637 723.188122 
+L 833.553333 723.188122 
+z
+" clip-path="url(#pd117d34307)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_44">
+    <path d="M 833.553333 689.085899 
+L 889.232175 689.085899 
+L 889.232175 654.983677 
+L 833.553333 654.983677 
+z
+" clip-path="url(#pd117d34307)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_45">
+    <path d="M 833.553333 620.881455 
+L 911.400603 620.881455 
+L 911.400603 586.779233 
+L 833.553333 586.779233 
+z
+" clip-path="url(#pd117d34307)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_46">
+    <path d="M 833.553333 552.67701 
+L 916.556051 552.67701 
+L 916.556051 518.574788 
+L 833.553333 518.574788 
+z
+" clip-path="url(#pd117d34307)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_47">
+    <path d="M 833.553333 484.472566 
+L 1099.058922 484.472566 
+L 1099.058922 450.370344 
+L 833.553333 450.370344 
+z
+" clip-path="url(#pd117d34307)" style="fill: #ffb600; opacity: 0.65; stroke: #1a1a1a; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_48">
+    <path d="M 823.553333 740.239233 
+L 823.553333 467.421455 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_49">
+    <path d="M 833.553333 782.636344 
+L 1091.32575 782.636344 
+" style="fill: none; stroke: #262626; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_95">
+    <!-- 96 -->
+    <g style="fill: #262626" transform="translate(888.045637 744.966733) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-39"/>
+     <use xlink:href="#Graphik-Light-36" x="59.899994"/>
+    </g>
+   </g>
+   <g id="text_96">
+    <!-- 108 -->
+    <g style="fill: #262626" transform="translate(894.232175 676.762288) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-30" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-38" x="102.699982"/>
+    </g>
+   </g>
+   <g id="text_97">
+    <!-- 151 -->
+    <g style="fill: #262626" transform="translate(916.400603 608.557844) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-35" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-31" x="92.899979"/>
+    </g>
+   </g>
+   <g id="text_98">
+    <!-- 161 -->
+    <g style="fill: #262626" transform="translate(921.556051 540.353399) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-31"/>
+     <use xlink:href="#Graphik-Light-36" x="36.799988"/>
+     <use xlink:href="#Graphik-Light-31" x="96.799973"/>
+    </g>
+   </g>
+   <g id="text_99">
+    <!-- 515 -->
+    <g style="fill: #262626" transform="translate(1104.058922 472.148955) scale(0.16 -0.16)">
+     <use xlink:href="#Graphik-Light-35"/>
+     <use xlink:href="#Graphik-Light-31" x="56.099991"/>
+     <use xlink:href="#Graphik-Light-35" x="92.899979"/>
+    </g>
+   </g>
+   <g id="text_100">
+    <!-- F. -->
+    <g style="fill: #262626" transform="translate(833.553333 429.024344) scale(0.21 -0.21)">
+     <use xlink:href="#Graphik-Light-46"/>
+     <use xlink:href="#Graphik-Light-2e" x="53.999985"/>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pbabfea9f79">
+   <rect x="88.02" y="29.432344" width="278.780868" height="337.612"/>
+  </clipPath>
+  <clipPath id="p3ec4bd3245">
+   <rect x="460.786667" y="29.432344" width="278.780868" height="337.612"/>
+  </clipPath>
+  <clipPath id="p59c8cdb5d0">
+   <rect x="833.553333" y="29.432344" width="278.780868" height="337.612"/>
+  </clipPath>
+  <clipPath id="pbeff535b14">
+   <rect x="88.02" y="435.024344" width="278.780868" height="337.612"/>
+  </clipPath>
+  <clipPath id="p02fd444bb2">
+   <rect x="460.786667" y="435.024344" width="278.780868" height="337.612"/>
+  </clipPath>
+  <clipPath id="pd117d34307">
+   <rect x="833.553333" y="435.024344" width="278.780868" height="337.612"/>
+  </clipPath>
+ </defs>
+</svg>
