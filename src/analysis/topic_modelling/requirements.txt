@@ -1,0 +1,8 @@
+bertopic==0.15.0
+beautifulsoup4==4.12.2
+cuda-python==12.2.0
+cudf-cu12==23.8.0
+cuml-cu12==23.8.0
+openpyxl==3.1.2
+plotly==5.16.1
+loguru==0.7.1
