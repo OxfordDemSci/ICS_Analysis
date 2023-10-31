@@ -2,7 +2,6 @@
 
 # The SHAPE of Impact
 
----
 ![coverage](https://img.shields.io/badge/Purpose-Research-yellow)
 [![Generic badge](https://img.shields.io/badge/Python-3.7-red.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/License-CCBY4.0-purple.svg)](https://shields.io/)
@@ -60,7 +59,7 @@ The majority of the analysis is split into three distinct types/parts.
     * iv. The Inter- and Multidisciplinary Nature of Impact	83
     * v. The Gendered Nature of Underpinning Research
 
-* The interactive dashboard. This is found in `./src/dashboard`, and is a standalone repository which is linked to this one as a submodule. The dashboard is built using [Streamlit](https://streamlit.io/), and is hosted on [Heroku](https://www.heroku.com/).
+* The interactive dashboard. This is found in `./src/dashboard`, and is a standalone repository which is linked to this one as a submodule. 
 
 ### Dashboard
 
