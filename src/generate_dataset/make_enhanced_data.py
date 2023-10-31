@@ -4,6 +4,7 @@ import csv
 import ast
 import requests
 import spacy.util
+import unicodedata
 import numpy as np
 import pandas as pd
 from textblob import TextBlob
@@ -94,6 +95,9 @@ def clean_ics_level(raw_path, edit_path):
     raw_ics = pd.read_excel(
         os.path.join(raw_path,
                      'raw_ref_ics_data.xlsx'))
+    raw_ics['Title'] = raw_ics['Title'].apply(lambda val: unicodedata. \
+                                              normalize('NFKD', str(val)). \
+                                              encode('ascii', 'ignore').decode())
     raw_ics = format_ids(raw_ics)
     raw_ics.to_excel(os.path.join(edit_path, 'clean_ref_ics_data.xlsx'))
     return raw_ics
@@ -234,7 +238,7 @@ def get_readability_scores(df):
         composite score for the entire DataFrame.
 
     """
-    print('Calculating Readability Scores')
+    print('Calculating Readability Scores!')
     section_columns = [
         "1. Summary of the impact",
         "2. Underpinning research",
@@ -414,6 +418,11 @@ def make_countries_file(manual_path):
                        sheet_name='funders_countries_lookup',
                        engine='openpyxl'
                        )
+    for var in ['suggested_Countries[alpha-3]_change',
+                'suggested_Countries[union]_change',
+                'suggested_Countries[region]_change']:
+        df[var] = df[var].str.strip()
+
     df['countries_extracted'] = np.where(df['suggested_Countries[alpha-3]_change'].isnull(),
                                          df['Countries[alpha-3]'],
                                          df['suggested_Countries[alpha-3]_change'])
@@ -444,10 +453,13 @@ def make_funder_file(manual_path):
                        sheet_name='funders_countries_lookup',
                        engine='openpyxl'
                        )
+    var = 'suggested_CountriesFunders[full name]_change'
     df = df[['REF impact case study identifier',
-             'suggested_CountriesFunders[full name]_change']]
-    df = df[df['suggested_CountriesFunders[full name]_change'].notnull()]
-    df = df.rename({'suggested_CountriesFunders[full name]_change': 'funders_extracted'}, axis=1)
+             var]]
+    df[var] = df[var].str.strip()
+    df[var] = np.where(df[var].str.len() < 2 | df[var].isnull(), np.nan, df[var])
+    df = df[df[var].notnull()]
+    df = df.rename({var: 'funders_extracted'}, axis=1)
     df['funders_extracted'] = df['funders_extracted'].str.replace('EURC', 'EC')
     df['funders_extracted'] = df['funders_extracted'].str.replace('NIHCR', 'NIHR')
     df['funders_extracted'] = df['funders_extracted'].str.replace('LHT', 'LT')
@@ -503,7 +515,7 @@ def load_dept_vars(df, edit_path):
     return pd.merge(df, dept_vars, how='left',
                     left_on=['inst_id', 'Unit of assessment number'],
                     right_on=['inst_id', 'uoa_id'],
-                    )
+                    ).drop('uoa_id', axis=1)
 
 def load_topic_data(df, manual_path, topic_path):
     print('Loading topic data')
@@ -527,13 +539,16 @@ def load_topic_data(df, manual_path, topic_path):
                                 sheet_name='Sheet1',
                                 index_col=None
                                 )
-    topic_lookup = pd.read_csv(os.path.join(manual_path, 'topic_lookup', 'topics.csv'),
+    topic_lookup = pd.read_csv(os.path.join(manual_path, 'topic_lookup', 'topic_lookup.csv'),
                                index_col=None)
     topic_lookup = topic_lookup.rename({'description': 'topic_description',
                                         'narrative': 'topic_narrative',
                                         'keywords': 'topic_keywords'}, axis=1)
     df = pd.merge(df, topic_model, how='left', on='REF impact case study identifier')
     df = pd.merge(df, topic_lookup, how='left', left_on='BERT_topic', right_on='topic_id')
+    df['cluster_id'] = df['cluster_id'].astype('int', errors='ignore')
+    df['topic_id'] = df['topic_id'].astype('int', errors='ignore')
+
     return df
 
 
@@ -579,7 +594,7 @@ def make_and_load_tags(df, raw_path, edit_path):
     tags = pd.read_csv(os.path.join(edit_path, 'clean_ref_ics_tags_data.csv'))
     df = pd.merge(df, tags, how='left',
                   left_on='REF impact case study identifier',
-                  right_on='REF case study identifier')
+                  right_on='REF case study identifier').drop('REF case study identifier', axis=1)
     return df
 
 
@@ -646,6 +661,22 @@ def load_scientometric_data(df, dim_path):
                 pass
             try:
                 mydict[paper]['Altmetric'] = ics_df.at[index, 'Altmetric']
+            except ValueError:
+                pass
+            try:
+                mydict[paper]['Abstract'] = ics_df.at[index, 'abstract']
+            except ValueError:
+                pass
+            try:
+                mydict[paper]['Authors'] = ics_df.at[index, 'authors']
+            except ValueError:
+                pass
+            try:
+                mydict[paper]['Funding'] = ics_df.at[index, 'funder_orgs']
+            except ValueError:
+                pass
+            try:
+                mydict[paper]['Concepts,'] = ics_df.at[index, 'concepts']
             except ValueError:
                 pass
             try:
