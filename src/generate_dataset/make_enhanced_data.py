@@ -781,7 +781,6 @@ def return_dim_id(path, filename):
 
 
 if __name__ == "__main__":
-    print(sys.argv)
     project_path = Path(os.path.abspath(''))
     data_path = project_path / '..' / '..' /'data'
 
@@ -841,12 +840,13 @@ if __name__ == "__main__":
     df = load_topic_data(df, manual_path, topic_path)
     df = make_and_load_tags(df, raw_path, edit_path)
     
-    if (sys.argv[1] and not sys.argv[1].startswith("-")):
-        ## Path provided
-        if ('.csv' not in sys.argv[1]):
-            print("Provide valid .csv path to write final file to")
-        else:
-            df.to_csv(sys.argv[1], index=False)
+    if (len(sys.argv) > 1):
+        if not sys.argv[1].startswith("-"):
+            ## Path provided
+            if ('.csv' not in sys.argv[1]):
+                print("Provide valid .csv path to write final file to")
+            else:
+                df.to_csv(sys.argv[1], index=False)
     elif ('-f' in sys.argv):
         ## Path not provided but output file already exists
         print("Force overwriting final output file")
