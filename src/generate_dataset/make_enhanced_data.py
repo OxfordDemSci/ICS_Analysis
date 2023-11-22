@@ -2,16 +2,30 @@ import os
 import re
 import csv
 import ast
+import sys
 import requests
 import spacy.util
 import unicodedata
 import numpy as np
 import pandas as pd
+
+from pathlib import Path
 from textblob import TextBlob
 from textstat import textstat
 from markdown import markdown
 from bs4 import BeautifulSoup
 from get_dimensions_data import get_dimensions_data, make_paper_level
+
+
+def log_row_count(func):
+    """Decorator to log the number of rows in a DataFrame after applying a function."""
+    def wrapper(df, *args, **kwargs):
+        # Apply the function
+        result = func(df, *args, **kwargs)
+        # Print the number of rows
+        print(f"Number of rows after {func.__name__}: {len(result)}")
+        return result
+    return wrapper
 
 
 def get_impact_data(raw_path):
@@ -20,11 +34,11 @@ def get_impact_data(raw_path):
 
     url = "https://results2021.ref.ac.uk/impact/export-all"
     r = requests.get(url, allow_redirects=True)
-    open(os.path.join(raw_path,  'raw_ref_ics_data.xlsx'), 'wb').write(r.content)
+    open(raw_path / 'raw_ref_ics_data.xlsx', 'wb').write(r.content)
 
     url = "https://results2021.ref.ac.uk/impact/export-tags-all"
     r = requests.get(url, allow_redirects=True)
-    open(os.path.join(raw_path,  'raw_ref_ics_tags_data.xlsx'), 'wb').write(r.content)
+    open(raw_path / 'raw_ref_ics_tags_data.xlsx', 'wb').write(r.content)
 
 
 def get_environmental_data(raw_path):
@@ -33,7 +47,7 @@ def get_environmental_data(raw_path):
 
     url = "https://results2021.ref.ac.uk/environment/export-all"
     r = requests.get(url, allow_redirects=True)
-    open(os.path.join(raw_path,  'raw_ref_environment_data.xlsx'), 'wb').write(r.content)
+    open(raw_path / 'raw_ref_environment_data.xlsx', 'wb').write(r.content)
 
 
 def get_all_results(raw_path):
@@ -42,7 +56,7 @@ def get_all_results(raw_path):
 
     url = "https://results2021.ref.ac.uk/profiles/export-all"
     r = requests.get(url, allow_redirects=True)
-    open(os.path.join(raw_path,  'raw_ref_results_data.xlsx'), 'wb').write(r.content)
+    open(raw_path / 'raw_ref_results_data.xlsx', 'wb').write(r.content)
 
 
 def get_output_data(raw_path):
@@ -50,7 +64,7 @@ def get_output_data(raw_path):
     print('Getting Outputs Data!')
     url = "https://results2021.ref.ac.uk/outputs/export-all"
     r = requests.get(url, allow_redirects=True)
-    open(os.path.join(raw_path,  'raw_ref_outputs_data.xlsx'), 'wb').write(r.content)
+    open(raw_path / 'raw_ref_outputs_data.xlsx', 'wb').write(r.content)
 
 
 def check_id_overlap(a, b):
@@ -75,6 +89,8 @@ def format_ids(df):
             columns={'Institution code (UKPRN)': 'inst_id'})
     df = df.copy()[df['inst_id'] != ' ']
     df = df.astype({'inst_id': 'int'})
+    df['uoa_id'] = df['Unit of assessment number'].astype(int).astype(
+        str) + df['Multiple submission letter'].fillna('').astype(str)
     return (df)
 
 
@@ -88,19 +104,77 @@ def merge_ins_uoa(df1, df2):
     return (df1.merge(df2, how='left', left_on=['inst_id', 'uoa_id'],
                       right_on=['inst_id', 'uoa_id']))
 
-
+@log_row_count
 def clean_ics_level(raw_path, edit_path):
     ## Add stars to ICS level
     print('Cleaning ICS Level Data!')
     raw_ics = pd.read_excel(
-        os.path.join(raw_path,
-                     'raw_ref_ics_data.xlsx'))
+        raw_path / 'raw_ref_ics_data.xlsx')
     raw_ics['Title'] = raw_ics['Title'].apply(lambda val: unicodedata. \
                                               normalize('NFKD', str(val)). \
                                               encode('ascii', 'ignore').decode())
     raw_ics = format_ids(raw_ics)
-    raw_ics.to_excel(os.path.join(edit_path, 'clean_ref_ics_data.xlsx'))
+    raw_ics.to_excel(edit_path /'clean_ref_ics_data.xlsx')
     return raw_ics
+
+def clean_dep_level(raw_path, edit_path):
+    
+    ## Generate wide score card at department level
+    raw_results = pd.read_excel(raw_path / 'raw_ref_results_data.xlsx',
+                                skiprows=6)
+    [n_results, k_results] = raw_results.shape
+    raw_results = format_ids(raw_results)
+    raw_results = raw_results.rename(
+        columns={'FTE of submitted staff': 'fte',
+                 '% of eligible staff submitted': 'fte_pc'})
+    
+    ## Make wide score card by institution and uoa_id
+    score_types = ['4*', '3*', '2*', '1*', 'Unclassified'] # types of scores
+    wide_score_card = pd.pivot(
+        raw_results[['inst_id', 'uoa_id', 'Profile'] + score_types],
+        index=['inst_id', 'uoa_id'], columns=['Profile'], values=score_types)
+    wide_score_card.columns = wide_score_card.columns.map('_'.join)
+    wide_score_card = wide_score_card.reset_index()
+    
+    ## Obtain relevant environment data
+    raw_env_path = raw_path /'raw_ref_environment_data.xlsx'
+    raw_env_doctoral = pd.read_excel(
+        raw_env_path,
+        sheet_name="ResearchDoctoralDegreesAwarded", skiprows=4)
+    raw_env_doctoral = format_ids(raw_env_doctoral)
+    number_cols = [col for col in raw_env_doctoral.columns if 'Number of doctoral' in col]
+    raw_env_doctoral['num_doc_degrees_total'] = raw_env_doctoral[number_cols].sum(axis=1)
+
+    # 3.2. Sheet Two: Research income
+    raw_env_income = pd.read_excel(
+        raw_env_path,
+        sheet_name="ResearchIncome", skiprows=4)
+    raw_env_income = format_ids(raw_env_income)
+    raw_env_income = raw_env_income.\
+        rename(columns = {'Average income for academic years 2013-14 to 2019-20': 'av_income',
+                          'Total income for academic years 2013-14 to 2019-20': 'tot_income'})
+    tot_inc = raw_env_income[raw_env_income['Income source'] == 'Total income']
+
+    # 3.3. Research Income In-Kind
+    raw_env_income_inkind = pd.read_excel(
+        raw_env_path,
+        sheet_name="ResearchIncomeInKind", skiprows=4)
+    raw_env_income_inkind = format_ids(raw_env_income_inkind)
+    raw_env_income_inkind = raw_env_income_inkind.rename(
+        columns={'Total income for academic years 2013-14 to 2019-20': 'tot_inc_kind'})
+
+    tot_inc_kind = raw_env_income_inkind.loc[raw_env_income_inkind['Income source']=='Total income-in-kind']    
+
+    ## Merge all dept level data together
+    raw_dep = merge_ins_uoa(raw_results[['inst_id', 'uoa_id', 'fte', 'fte_pc']].drop_duplicates(),
+                             wide_score_card)
+    raw_dep = merge_ins_uoa(raw_dep,
+                             raw_env_doctoral[['inst_id', 'uoa_id', 'num_doc_degrees_total']])
+    raw_dep = merge_ins_uoa(raw_dep,
+                             tot_inc[['inst_id', 'uoa_id', 'av_income', 'tot_income']])
+    raw_dep = merge_ins_uoa(raw_dep,
+                             tot_inc_kind[['inst_id', 'uoa_id', 'tot_inc_kind']])
+    raw_dep.to_excel(edit_path / 'clean_ref_dep_data.xlsx')
 
 
 def markdown_to_text(text):
@@ -224,8 +298,8 @@ def count_noun_verb_phrases(text):
 
     return noun_phrase_count, verb_phrase_count
 
-
-def get_readability_scores(df):
+@log_row_count
+def get_readability_scores(df, section_columns):
     """
     Calculate the Flesch readability score for each section of text in a pandas DataFrame, as well as a composite score
     for the entire DataFrame.
@@ -239,13 +313,7 @@ def get_readability_scores(df):
 
     """
     print('Calculating Readability Scores!')
-    section_columns = [
-        "1. Summary of the impact",
-        "2. Underpinning research",
-        "3. References to the research",
-        "4. Details of the impact",
-        "5. Sources to corroborate the impact",
-    ]
+
     for i, s in zip(range(1, 6), section_columns):
         # Apply the textstat.flesch_reading_ease function to each cell in the current section column of the DataFrame.
         df[f"s{i}_flesch_score"] = df[s].apply(
@@ -262,8 +330,8 @@ def get_readability_scores(df):
     # Return the DataFrame with the new columns added.
     return df
 
-
-def get_pos_features(df):
+@log_row_count
+def get_pos_features(df, section_columns):
     """
     Calculate the number of noun phrases and verb phrases in each section of text in a pandas DataFrame.
 
@@ -274,13 +342,7 @@ def get_pos_features(df):
         A DataFrame with new columns added for the number of noun phrases and verb phrases in each section of text.
     """
     print('Calculating POS Features')
-    section_columns = [
-        "1. Summary of the impact",
-        "2. Underpinning research",
-        "3. References to the research",
-        "4. Details of the impact",
-        "5. Sources to corroborate the impact",
-    ]
+
     for i, s in zip(range(1, 6), section_columns):
         # Apply the count_noun_verb_phrases function to each cell in the current section column of the DataFrame.
         df[[f"s{i}_np_count", f"s{i}_vp_count"]] = df[s].apply(
@@ -289,7 +351,7 @@ def get_pos_features(df):
     # Return the DataFrame with the new columns added.
     return df
 
-
+@log_row_count
 def get_sentiment_score(text):
     """
     Get the sentiment polarity score of a text using TextBlob.
@@ -320,8 +382,8 @@ def get_sentiment_score(text):
     # Return the sentiment polarity score.
     return sentiment_score
 
-
-def get_sentiment_scores(df):
+@log_row_count
+def get_sentiment_scores(df, section_columns):
     """
     Calculate the sentiment score for each section of text in a pandas DataFrame, as well as the overall sentiment score
     for the entire DataFrame.
@@ -335,13 +397,7 @@ def get_sentiment_scores(df):
 
     """
     print('Calculating Sentiment Scores!')
-    section_columns = [
-        "1. Summary of the impact",
-        "2. Underpinning research",
-        "3. References to the research",
-        "4. Details of the impact",
-        "5. Sources to corroborate the impact",
-    ]
+
     # Calculate the sentiment score for each section of text in the DataFrame.
     for i, s in zip(range(1, 6), section_columns):
         df[f"s{i}_sentiment_score"] = df[s].apply(
@@ -356,43 +412,43 @@ def get_sentiment_scores(df):
     # Return the DataFrame with the new columns added.
     return df
 
+    # TODO: Decide whether this can go?
+    # #   - df: DataFrame object, the pickled DataFrame
+    # df = pandas.read_pickle(
+    #     root_dir.joinpath("data", "merged", "merged_ref_data_exc_output.pkl")
+    # )
 
-    #   - df: DataFrame object, the pickled DataFrame
-    df = pandas.read_pickle(
-        root_dir.joinpath("data", "merged", "merged_ref_data_exc_output.pkl")
-    )
+    # # Load extra data from a toml file and create a new Pandas DataFrame
+    # #   - extra_data: dict, the dictionary of extra data
+    # print('Loading extra country and funder data')
+    # extra_data = toml.load(
+    #     root_dir.joinpath("src", "clean_data", "extra_data", "ics_country_funder.toml")
+    # )
+    # #   - df_extra: DataFrame object, the new DataFrame created from the dictionary
+    # df_extra = pandas.DataFrame(extra_data["impact case study"])
 
-    # Load extra data from a toml file and create a new Pandas DataFrame
-    #   - extra_data: dict, the dictionary of extra data
-    print('Loading extra country and funder data')
-    extra_data = toml.load(
-        root_dir.joinpath("src", "clean_data", "extra_data", "ics_country_funder.toml")
-    )
-    #   - df_extra: DataFrame object, the new DataFrame created from the dictionary
-    df_extra = pandas.DataFrame(extra_data["impact case study"])
+    # print('Merge data')
+    # # Merge the original DataFrame with the new one based on a common identifier
+    # #   - df: DataFrame object, the merged DataFrame
+    # df = pandas.merge(df, df_extra, how="left", on="REF impact case study identifier")
+    # print('Calculate readability scores')
+    # df = get_readability_scores(df)
+    # print('Get part-of-speech features')
+    # df = get_pos_features(df)
+    # print('Get sentiment scores')
+    # df = get_sentiment_scores(df)
+    # return df
 
-    print('Merge data')
-    # Merge the original DataFrame with the new one based on a common identifier
-    #   - df: DataFrame object, the merged DataFrame
-    df = pandas.merge(df, df_extra, how="left", on="REF impact case study identifier")
-    print('Calculate readability scores')
-    df = get_readability_scores(df)
-    print('Get part-of-speech features')
-    df = get_pos_features(df)
-    print('Get sentiment scores')
-    df = get_sentiment_scores(df)
-    return df
-
-
+@log_row_count
 def add_postcodes(df, sup_path):
     print('Add some postcodes!')
-    postcodes = pd.read_csv(os.path.join(sup_path, 'ukprn_postcode.csv'))
+    postcodes = pd.read_csv(sup_path / 'ukprn_postcode.csv')
     df = pd.merge(df, postcodes, how='left', on='inst_id')
     df['inst_postcode_district'] = df['Post Code'].apply(lambda x: x.split(' ')[0])
     df['inst_postcode_area'] = df['inst_postcode_district'].apply(lambda x: x[0:re.search(r"\d", x).start()])
     return df
 
-
+@log_row_count
 def add_url(df):
     field = 'REF impact case study identifier'
     df['ics_url'] = df[field].apply(lambda x: 'https://results2021.ref.ac.uk/impact/' + x + '?page=1')
@@ -400,13 +456,14 @@ def add_url(df):
 
 
 def get_paths(data_path):
-    raw_path = os.path.join(data_path, 'raw')
-    edit_path = os.path.join(data_path, 'edit')
-    sup_path = os.path.join(data_path, 'supplementary')
-    manual_path = os.path.join(data_path, 'manual')
-    final_path = os.path.join(data_path, 'final')
-    topic_path = os.path.join(data_path, 'topic_model')
-    dim_path = os.path.join(data_path, 'dimensions_returns')
+    data_path = Path(data_path)
+    raw_path = data_path / 'raw'
+    edit_path = data_path / 'edit'
+    sup_path = data_path / 'supplementary'
+    manual_path = data_path / 'manual'
+    final_path = data_path / 'final'
+    topic_path = data_path / 'topic_model'
+    dim_path = data_path / 'dimensions_returns'
     return (raw_path, edit_path, sup_path, manual_path,
             final_path, topic_path, dim_path)
 
@@ -439,7 +496,7 @@ def make_countries_file(manual_path):
              'union_extracted']]
     return df
 
-
+@log_row_count
 def load_country(df, manual_path):
     print('Loading clean country data')
     country = make_countries_file(manual_path)
@@ -466,19 +523,18 @@ def make_funder_file(manual_path):
     df['funders_extracted'] = df['funders_extracted'].str.replace('WCT', 'WT')
     return df[['REF impact case study identifier', 'funders_extracted']]
 
-
+@log_row_count
 def load_funder(df, manual_path):
     print('Loading clean funder data')
     funder = make_funder_file(manual_path)
     return pd.merge(df, funder, how='left', on='REF impact case study identifier')
 
-
+@log_row_count
 def load_dept_vars(df, edit_path):
 
     print('Loading department variables')
 
-    dept_vars = pd.read_excel(os.path.join(edit_path,
-                                           'clean_ref_dep_data.xlsx'),
+    dept_vars = pd.read_excel(edit_path / 'clean_ref_dep_data.xlsx',
                               engine='openpyxl')
 
     dept_vars['ICS_GPA'] = (pd.to_numeric(dept_vars['4*_Impact'], errors='coerce')*4 +
@@ -508,15 +564,21 @@ def load_dept_vars(df, edit_path):
                            'Environment_GPA',
                            'Output_GPA',
                            'Overall_GPA']]
-    dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('A', '')
-    dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('B', '')
-    dept_vars['uoa_id'] = dept_vars['uoa_id'].astype(int)
-    df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
+    
+    ## Removed to avoid double merging
+    # dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('A', '')
+    # dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('B', '')
+    # dept_vars['uoa_id'] = dept_vars['uoa_id'].astype(int)
+    
+    # df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
+    
     return pd.merge(df, dept_vars, how='left',
-                    left_on=['inst_id', 'Unit of assessment number'],
+                    left_on=['inst_id', 'uoa_id'],
                     right_on=['inst_id', 'uoa_id'],
                     ).drop('uoa_id', axis=1)
 
+
+@log_row_count
 def load_topic_data(df, manual_path, topic_path):
     print('Loading topic data')
     vars = ['REF impact case study identifier',
@@ -534,12 +596,12 @@ def load_topic_data(df, manual_path, topic_path):
             'BERT_topic_term_9',
             'BERT_topic_term_10',
             'max_prob']
-    topic_model = pd.read_excel(os.path.join(topic_path, 'nn3_threshold0.01_reduced.xlsx'),
+    topic_model = pd.read_excel(topic_path / 'nn3_threshold0.01_reduced.xlsx',
                                 usecols=vars,
                                 sheet_name='Sheet1',
                                 index_col=None
                                 )
-    topic_lookup = pd.read_csv(os.path.join(manual_path, 'topic_lookup', 'topic_lookup.csv'),
+    topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv',
                                index_col=None)
     topic_lookup = topic_lookup.rename({'description': 'topic_description',
                                         'narrative': 'topic_narrative',
@@ -551,10 +613,10 @@ def load_topic_data(df, manual_path, topic_path):
 
     return df
 
-
+@log_row_count
 def make_and_load_tags(df, raw_path, edit_path):
     print('Loading and merging tags!')
-    tags = pd.read_excel(os.path.join(raw_path, 'raw_ref_ics_tags_data.xlsx'),
+    tags = pd.read_excel(raw_path / 'raw_ref_ics_tags_data.xlsx',
                          sheet_name='Sheet1',
                          skiprows=4,
                          usecols=['REF case study identifier',
@@ -564,7 +626,7 @@ def make_and_load_tags(df, raw_path, edit_path):
                                   'Tag group']
                          )
     tags = tags[tags['REF case study identifier'].notnull()]
-    with open(os.path.join(edit_path, 'clean_ref_ics_tags_data.csv'), 'w', newline='') as csvfile:
+    with open(edit_path / 'clean_ref_ics_tags_data.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['REF case study identifier',
                          'Underpinning research subject tag values',
@@ -591,16 +653,24 @@ def make_and_load_tags(df, raw_path, edit_path):
                              res_tag_value, res_tag_group,
                              reg_tag_value, reg_tag_group]
                             )
-    tags = pd.read_csv(os.path.join(edit_path, 'clean_ref_ics_tags_data.csv'))
+    tags = pd.read_csv(edit_path / 'clean_ref_ics_tags_data.csv')
     df = pd.merge(df, tags, how='left',
                   left_on='REF impact case study identifier',
                   right_on='REF case study identifier').drop('REF case study identifier', axis=1)
     return df
 
-
-
+@log_row_count
 def load_scientometric_data(df, dim_path):
-    dim_df = pd.read_excel(os.path.join(dim_path, 'merged_dimensions.xlsx'))
+    print("Loading scientometric data")
+    
+    file_path = dim_path / 'merged_dimensions.xlsx'
+    
+    if not file_path.exists():
+        print(f"File not found: {file_path}")
+        print("Returning original file")
+        return df
+
+    dim_df = pd.read_excel(file_path)
     merger = pd.DataFrame(columns=['REF impact case study identifier',
                                    'scientometric_data'])
     index = 0
@@ -706,40 +776,83 @@ def load_scientometric_data(df, dim_path):
 
 
 def return_dim_id(path, filename):
-    with open(os.path.join(path, filename), "r") as file:
+    with open(path / filename, "r") as file:
         return file.readline().strip()
 
 
-def main():
-    data_path = os.path.join(os.getcwd(), '..', '..', 'data')
-    my_project_id = return_dim_id(os.path.join(os.getcwd(), '..', '..', 'assets'),
-                                  'dimensions_project_id.txt')
+if __name__ == "__main__":
+    project_path = Path(os.path.abspath(''))
+    data_path = project_path / '..' / '..' /'data'
+
     (raw_path, edit_path, sup_path,
      manual_path, final_path, topic_path,
      dim_path) = get_paths(data_path)
-    get_environmental_data(raw_path)
-    get_impact_data(raw_path)
-    get_all_results(raw_path)
-    get_output_data(raw_path)
-    if (os.path.exists(os.path.join(dim_path, 'doi_returns_dimensions.xlsx')) is False) and\
-       (os.path.exists(os.path.join(dim_path, 'isbns_returns_dimensions.xlsx')) is False) and\
-       (os.path.exists(os.path.join(dim_path, 'title_returns_dimensions.xlsx')) is False):
-        get_dimensions_data(manual_path, dim_path, my_project_id)
-    make_paper_level(dim_path)
+    
+    if not (raw_path / 'raw_ref_environment_data.xlsx').exists():
+        get_environmental_data(raw_path)
+    if not ((raw_path / 'raw_ref_ics_tags_data.xlsx').exists() and\
+        (raw_path / 'raw_ref_ics_data.xlsx').exists()):
+        get_impact_data(raw_path)
+    if not (raw_path / 'raw_ref_results_data.xlsx').exists():
+        get_all_results(raw_path)
+    if not (raw_path / 'raw_ref_outputs_data.xlsx').exists():
+        get_output_data(raw_path)
+
+    clean_dep_level(raw_path, edit_path)
+
+    if '-bq' in sys.argv:
+        print("Including Big-Query collection")
+        if not ((dim_path / 'doi_returns_dimensions.xlsx').exists() and\
+                (dim_path / 'isbns_returns_dimensions.xlsx').exists() and\
+                (dim_path / 'title_returns_dimensions.xlsx').exists()):
+            
+            my_project_id = return_dim_id(project_path / '..' / '..' / 'assets' /
+                                          'dimensions_project_id.txt')
+            get_dimensions_data(manual_path, dim_path, my_project_id)
+    
+        make_paper_level(dim_path)
+
+    section_columns = [
+        "1. Summary of the impact",
+        "2. Underpinning research",
+        "3. References to the research",
+        "4. Details of the impact",
+        "5. Sources to corroborate the impact",
+    ]
+    
     df = clean_ics_level(raw_path, edit_path)
-    df = get_readability_scores(df)
-    df = get_pos_features(df)
-    df = get_sentiment_scores(df)
+    
+    if '-top' in sys.argv:
+        print("Estimating topic model")
+    
+    if '-tm' in sys.argv:
+        df = get_readability_scores(df, section_columns)
+        df = get_pos_features(df, section_columns)
+        df = get_sentiment_scores(df, section_columns)
+    
     df = add_postcodes(df, sup_path)
     df = add_url(df)
     df = load_country(df, manual_path)
     df = load_funder(df, manual_path)
     df = load_scientometric_data(df, dim_path)
+    
     df = load_dept_vars(df, edit_path)
     df = load_topic_data(df, manual_path, topic_path)
     df = make_and_load_tags(df, raw_path, edit_path)
-    df.to_csv(os.path.join(final_path, 'enhanced_ref_data.csv'), index=False)
-
-
-if __name__ == "__main__":
-    main()
+    
+    if (len(sys.argv) > 1):
+        if not sys.argv[1].startswith("-"):
+            ## Path provided
+            if ('.csv' not in sys.argv[1]):
+                print("Provide valid .csv path to write final file to")
+            else:
+                df.to_csv(sys.argv[1], index=False)
+    elif ('-f' in sys.argv):
+        ## Path not provided but output file already exists
+        print("Force overwriting final output file")
+        df.to_csv(final_path / 'enhanced_ref_data.csv', index=False)
+    else:
+        ## Path not provided and output file does not exist
+        if (final_path / 'enhanced_ref_data.csv').exists():
+            print("Writing final file")
+            df.to_csv(final_path / 'enhanced_ref_data.csv', index=False)
