@@ -844,8 +844,13 @@ def return_dim_id(path, filename):
 
 
 if __name__ == "__main__":
-    project_path = Path(os.path.abspath(''))
-    data_path = project_path / '..' / '..' /'data'
+    # This will get the directory where the script is located
+    current_file = Path(__file__).resolve()
+    project_root = current_file.parent
+    while not (project_root / '.git').exists():
+        project_root = project_root.parent
+    
+    data_path = project_root / 'data'
 
     (raw_path, edit_path, sup_path,
      manual_path, final_path, topic_path,
@@ -904,13 +909,16 @@ if __name__ == "__main__":
                 (dim_path / 'isbns_returns_dimensions.xlsx').exists() and\
                 (dim_path / 'title_returns_dimensions.xlsx').exists()):
             
-            my_project_id = return_dim_id(project_path / '..' / '..' / 'assets' /
+            my_project_id = return_dim_id(project_root / 'assets' /
                                           'dimensions_project_id.txt')
             get_dimensions_data(manual_path, dim_path, my_project_id)
         else:
-            print("Dimensions data already found, skipping collection " +
-                  "(use -bqf to force new collection)." +
-                  " Just generating paper level data from the dimensions data.")
+            if '-bqf' in sys.argv:
+                get_dimensions_data(manual_path, dim_path, my_project_id)
+            else:
+                print("Dimensions data already found, skipping collection " +
+                    "(use -bqf to force new collection)." +
+                    " Just generating paper level data from the dimensions data.")
         make_paper_level(dim_path)
     #TODO: Consider moving the output path for merged_dimensions.xlsx to the data/edit folder?
     
@@ -919,7 +927,7 @@ if __name__ == "__main__":
     if '-top' in sys.argv:
         ## Generate new topic model
         print("Generating new topic model... This will take some time.")
-        bert_script_path = project_path / '..' / '..' / 'topic_modelling' / 'bert.py'
+        bert_script_path = project_root / 'topic_modelling' / 'bert.py'
         run_args = [
             edit_path / 'clean_ref_ics_data.xlsx',
             topic_path]
@@ -928,7 +936,7 @@ if __name__ == "__main__":
         subprocess.run(run_command)
         
         print("Reducing topic model... This will take some time.")
-        reduce_script_path = project_path / '..' / '..' / 'topic_modelling' / 'bert_reduce.py'
+        reduce_script_path = project_root / 'topic_modelling' / 'bert_reduce.py'
         reduce_args = [
             topic_path,
             'nn3_threshold0.01']
