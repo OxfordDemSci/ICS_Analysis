@@ -25,7 +25,7 @@ def get_ics_topics() -> Dict[str, dict]:
 def get_ics_data(
     threshold: float,
     topic: str | None = None,
-    postcode_area: str | None = None,
+    postcode_area: list | None = None,
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
@@ -46,7 +46,7 @@ def get_ics_data(
 def download_ics_as_csv(
     threshold: float,
     topic: str | None = None,
-    postcode_area: str | None = None,
+    postcode_area: list | None = None,
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
@@ -65,7 +65,7 @@ def download_ics_as_csv(
 def download_ics_report_as_pdf(
     threshold: float,
     topic: str | None = None,
-    postcode_area: str | None = None,
+    postcode_area: list | None = None,
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,

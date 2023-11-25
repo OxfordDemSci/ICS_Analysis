@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-import pandas as pd
+import pandas as pd  # type: ignore
 import pytest
 
 from app.data_queries import (get_ics_ids, get_topic_groups, get_topics,
@@ -96,7 +96,7 @@ def test_get_ics_ids_with_threshold_only(
 def test_get_ics_ids_with_topic(session, dataframes, threshold, topic):
     df_weights = dataframes["TOPIC_WEIGHTS_TABLE"]
     df_topics = dataframes["TOPICS_TABLE"]
-    #breakpoint()
+    # breakpoint()
     try:
         topic_id = df_topics.loc[df_topics["topic_name"] == topic, "topic_id"].values[0]
         df_weights = df_weights[
