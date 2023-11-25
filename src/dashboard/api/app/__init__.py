@@ -53,9 +53,7 @@ def create_app(config_name: str) -> Flask:
     logging.basicConfig(level=logging.INFO)
     app.logger.addHandler(logging.StreamHandler())  # Log to the terminal
     app.logger.setLevel(logging.INFO)
-    if config_name == "local_development" or config_name == "testing":
-        limiter._storage_uri = "memcached://localhost:11211"
-    else:
+    if config_name not in ["local_development", "testing"]:
         limiter._storage_uri = "memcached://ics_memcached:11211"
-    limiter.init_app(app)
+        limiter.init_app(app)
     return app
