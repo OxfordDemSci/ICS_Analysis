@@ -86,16 +86,17 @@ def test_get_ics_ids_with_threshold_only(
 @pytest.mark.parametrize(
     "threshold, topic",
     [
-        (0.5, "Body Image & Media"),
+        (0.5, "Body image & Media"),
         (0.1, "Literature"),
-        (0.9, "Music & Acoustics"),
-        (0.3, "Business & Industry"),
+        (0.9, "Music"),
+        (0.3, "Business & Entrepreneurialism"),
         (0.4, "Conservation"),
     ],
 )
 def test_get_ics_ids_with_topic(session, dataframes, threshold, topic):
     df_weights = dataframes["TOPIC_WEIGHTS_TABLE"]
     df_topics = dataframes["TOPICS_TABLE"]
+    #breakpoint()
     try:
         topic_id = df_topics.loc[df_topics["topic_name"] == topic, "topic_id"].values[0]
         df_weights = df_weights[
