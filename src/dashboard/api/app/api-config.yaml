@@ -45,7 +45,7 @@ paths:
             type: string
         - name: postcode_area
           in: query
-          description: Postcode area to query (Defaults to All if null)
+          description: List of postcode area(s) to query (Defaults to All if null)
           required: false
           schema:
             type: array
