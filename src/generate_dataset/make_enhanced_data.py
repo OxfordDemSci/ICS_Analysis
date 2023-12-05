@@ -5,6 +5,7 @@ import ast
 import sys
 import requests
 import spacy.util
+import subprocess
 import unicodedata
 import numpy as np
 import pandas as pd
@@ -298,8 +299,8 @@ def count_noun_verb_phrases(text):
 
     return noun_phrase_count, verb_phrase_count
 
-@log_row_count
-def get_readability_scores(df, section_columns):
+
+def gen_readability_scores(df, edit_path, section_columns):
     """
     Calculate the Flesch readability score for each section of text in a pandas DataFrame, as well as a composite score
     for the entire DataFrame.
@@ -312,9 +313,12 @@ def get_readability_scores(df, section_columns):
         composite score for the entire DataFrame.
 
     """
+    output_path = edit_path / 'ics_readability.csv'
+    
     print('Calculating Readability Scores!')
-
+    col_names = []
     for i, s in zip(range(1, 6), section_columns):
+        col_names.append(f"s{i}_flesch_score")
         # Apply the textstat.flesch_reading_ease function to each cell in the current section column of the DataFrame.
         df[f"s{i}_flesch_score"] = df[s].apply(
             lambda x: textstat.flesch_reading_ease(markdown_to_text(x))
@@ -327,11 +331,29 @@ def get_readability_scores(df, section_columns):
         ),
         axis=1,
     )
-    # Return the DataFrame with the new columns added.
-    return df
+    col_names.append('flesch_score')
+    col_names.append('REF impact case study identifier')
+    
+    print(f"Writing readability scores to {output_path}")
+    
+    df[col_names].to_csv(output_path, index=False)
+
 
 @log_row_count
-def get_pos_features(df, section_columns):
+def get_readability_scores(df, edit_path):
+    file_path = edit_path / 'ics_readability.csv'
+    
+    print('Loading Readability Scores!')
+    readability = pd.read_csv(file_path, index_col=None)
+    
+    assert len(df) == len(readability)
+    assert set(df['REF impact case study identifier']) == set(readability['REF impact case study identifier'])
+    
+    return pd.merge(df, readability, on = ['REF impact case study identifier'],
+                 how = 'left')
+
+
+def gen_pos_features(df, edit_path, section_columns):
     """
     Calculate the number of noun phrases and verb phrases in each section of text in a pandas DataFrame.
 
@@ -341,17 +363,39 @@ def get_pos_features(df, section_columns):
     Returns:
         A DataFrame with new columns added for the number of noun phrases and verb phrases in each section of text.
     """
+    output_path = edit_path / "ics_pos_features.csv"
+    
     print('Calculating POS Features')
-
+    col_names = []
     for i, s in zip(range(1, 6), section_columns):
+        col_names.append(f"s{i}_np_count")
+        col_names.append(f"s{i}_vp_count")
         # Apply the count_noun_verb_phrases function to each cell in the current section column of the DataFrame.
         df[[f"s{i}_np_count", f"s{i}_vp_count"]] = df[s].apply(
             lambda x: pd.Series(count_noun_verb_phrases(x))
         )
-    # Return the DataFrame with the new columns added.
-    return df
+    
+    col_names.append('REF impact case study identifier')
+    
+    print(f"Writing pos features to {output_path}")
+    
+    df[col_names].to_csv(output_path, index=False)
+
 
 @log_row_count
+def get_pos_features(df, edit_path):
+    file_path = edit_path / 'ics_pos_features.csv'
+    
+    print('Loading pos features!')
+    pos_features = pd.read_csv(file_path, index_col=None)
+    
+    assert len(df) == len(pos_features)
+    assert set(df['REF impact case study identifier']) == set(pos_features['REF impact case study identifier'])
+    
+    return pd.merge(df, pos_features, on = ['REF impact case study identifier'],
+                 how = 'left')
+
+
 def get_sentiment_score(text):
     """
     Get the sentiment polarity score of a text using TextBlob.
@@ -382,8 +426,8 @@ def get_sentiment_score(text):
     # Return the sentiment polarity score.
     return sentiment_score
 
-@log_row_count
-def get_sentiment_scores(df, section_columns):
+
+def gen_sentiment_scores(df, edit_path, section_columns):
     """
     Calculate the sentiment score for each section of text in a pandas DataFrame, as well as the overall sentiment score
     for the entire DataFrame.
@@ -396,10 +440,15 @@ def get_sentiment_scores(df, section_columns):
         sentiment score of the DataFrame.
 
     """
+    output_path = edit_path / "ics_sentiment_scores.csv"
+    
     print('Calculating Sentiment Scores!')
+    col_names = []
 
     # Calculate the sentiment score for each section of text in the DataFrame.
     for i, s in zip(range(1, 6), section_columns):
+        col_names.append(f"s{i}_sentiment_score")
+        
         df[f"s{i}_sentiment_score"] = df[s].apply(
             lambda x: get_sentiment_score(x)
         )
@@ -409,35 +458,28 @@ def get_sentiment_scores(df, section_columns):
         lambda x: get_sentiment_score("\n".join([x[s] for s in section_columns])),
         axis=1,
     )
-    # Return the DataFrame with the new columns added.
-    return df
+    
+    col_names.append("sentiment_score")
+    col_names.append("REF impact case study identifier")
+    
+    print(f"Writing sentiment scores to {output_path}")
+    
+    df[col_names].to_csv(output_path, index=False)
 
-    # TODO: Decide whether this can go?
-    # #   - df: DataFrame object, the pickled DataFrame
-    # df = pandas.read_pickle(
-    #     root_dir.joinpath("data", "merged", "merged_ref_data_exc_output.pkl")
-    # )
 
-    # # Load extra data from a toml file and create a new Pandas DataFrame
-    # #   - extra_data: dict, the dictionary of extra data
-    # print('Loading extra country and funder data')
-    # extra_data = toml.load(
-    #     root_dir.joinpath("src", "clean_data", "extra_data", "ics_country_funder.toml")
-    # )
-    # #   - df_extra: DataFrame object, the new DataFrame created from the dictionary
-    # df_extra = pandas.DataFrame(extra_data["impact case study"])
+@log_row_count
+def get_sentiment_scores(df, edit_path):
+    file_path = edit_path / 'ics_sentiment_scores.csv'
+    
+    print('Loading sentiment scores!')
+    sentiment_scores = pd.read_csv(file_path, index_col=None)
+    
+    assert len(df) == len(sentiment_scores)
+    assert set(df['REF impact case study identifier']) == set(sentiment_scores['REF impact case study identifier'])
+    
+    return pd.merge(df, sentiment_scores, on = ['REF impact case study identifier'],
+                 how = 'left')
 
-    # print('Merge data')
-    # # Merge the original DataFrame with the new one based on a common identifier
-    # #   - df: DataFrame object, the merged DataFrame
-    # df = pandas.merge(df, df_extra, how="left", on="REF impact case study identifier")
-    # print('Calculate readability scores')
-    # df = get_readability_scores(df)
-    # print('Get part-of-speech features')
-    # df = get_pos_features(df)
-    # print('Get sentiment scores')
-    # df = get_sentiment_scores(df)
-    # return df
 
 @log_row_count
 def add_postcodes(df, sup_path):
@@ -581,6 +623,15 @@ def load_dept_vars(df, edit_path):
 @log_row_count
 def load_topic_data(df, manual_path, topic_path):
     print('Loading topic data')
+    
+    topic_model_path = topic_path / 'nn3_threshold0.01_reduced.xlsx'
+    
+    if not topic_model_path.exists():
+        print(f"File not found: {topic_model_path}")
+        print("WARNING: Not including topic model data columns.")
+        print("Returning original file")
+        return df
+    
     vars = ['REF impact case study identifier',
             'BERT_topic',
             'BERT_prob',
@@ -596,16 +647,27 @@ def load_topic_data(df, manual_path, topic_path):
             'BERT_topic_term_9',
             'BERT_topic_term_10',
             'max_prob']
-    topic_model = pd.read_excel(topic_path / 'nn3_threshold0.01_reduced.xlsx',
+    topic_model = pd.read_excel(topic_model_path,
                                 usecols=vars,
                                 sheet_name='Sheet1',
                                 index_col=None
                                 )
-    topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv',
-                               index_col=None)
+    try:
+        topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv',
+                                   index_col=None)
+    except FileNotFoundError:
+        print(f"{manual_path / 'topic_lookup' / 'topic_lookup.csv'} not found!")
+        print("WARNING: Not including topic model data columns.")
+        return df
+
     topic_lookup = topic_lookup.rename({'description': 'topic_description',
                                         'narrative': 'topic_narrative',
                                         'keywords': 'topic_keywords'}, axis=1)
+    try:
+        assert set(df['REF impact case study identifier']) == set(topic_model['REF impact case study identifier'])
+    except AssertionError:
+        print("AssertionError: not all ICSs have an associated topic")
+    
     df = pd.merge(df, topic_model, how='left', on='REF impact case study identifier')
     df = pd.merge(df, topic_lookup, how='left', left_on='BERT_topic', right_on='topic_id')
     df['cluster_id'] = df['cluster_id'].astype('int', errors='ignore')
@@ -667,6 +729,7 @@ def load_scientometric_data(df, dim_path):
     
     if not file_path.exists():
         print(f"File not found: {file_path}")
+        print("WARNING: Not including scientometric data columns.")
         print("Returning original file")
         return df
 
@@ -781,12 +844,41 @@ def return_dim_id(path, filename):
 
 
 if __name__ == "__main__":
-    project_path = Path(os.path.abspath(''))
-    data_path = project_path / '..' / '..' /'data'
+    # This will get the directory where the script is located
+    current_file = Path(__file__).resolve()
+    project_root = current_file.parent
+    while not (project_root / '.git').exists():
+        project_root = project_root.parent
+    
+    data_path = project_root / 'data'
 
     (raw_path, edit_path, sup_path,
      manual_path, final_path, topic_path,
      dim_path) = get_paths(data_path)
+    
+    csv_out = [arg for arg in sys.argv if '.csv' in arg]
+    
+    if csv_out:
+        output_path = csv_out[0]
+        print(f"Will write final dataset to provided path: {output_path}")
+        write = True
+    else:
+        output_path = final_path / 'enhanced_ref_data.csv'
+        if not (final_path / 'enhanced_ref_data.csv').exists():
+            ## Standard output file does not exist yet
+            print(f"Will write final dataset to default path: {output_path}")
+            write = True
+        else:
+            ## Path not provided but output file already exists
+            if ('-f' in sys.argv):
+                print(f"WARNING: Will force overwrite dataset at default path: {output_path}")
+                write = True
+            else:
+                print("WARNING: Not overwriting final dataset as file already exists.\n" +
+                        "Use -f to force overwrite or provide a custom path.\n" +
+                        "Only intermittent files will be generated and saved.")
+                write = False
+    
     
     if not (raw_path / 'raw_ref_environment_data.xlsx').exists():
         get_environmental_data(raw_path)
@@ -799,60 +891,78 @@ if __name__ == "__main__":
         get_output_data(raw_path)
 
     clean_dep_level(raw_path, edit_path)
-
-    if '-bq' in sys.argv:
-        print("Including Big-Query collection")
-        if not ((dim_path / 'doi_returns_dimensions.xlsx').exists() and\
-                (dim_path / 'isbns_returns_dimensions.xlsx').exists() and\
-                (dim_path / 'title_returns_dimensions.xlsx').exists()):
-            
-            my_project_id = return_dim_id(project_path / '..' / '..' / 'assets' /
-                                          'dimensions_project_id.txt')
-            get_dimensions_data(manual_path, dim_path, my_project_id)
-    
-        make_paper_level(dim_path)
-
-    section_columns = [
-        "1. Summary of the impact",
-        "2. Underpinning research",
-        "3. References to the research",
-        "4. Details of the impact",
-        "5. Sources to corroborate the impact",
-    ]
     
     df = clean_ics_level(raw_path, edit_path)
-    
-    if '-top' in sys.argv:
-        print("Estimating topic model")
-    
-    if '-tm' in sys.argv:
-        df = get_readability_scores(df, section_columns)
-        df = get_pos_features(df, section_columns)
-        df = get_sentiment_scores(df, section_columns)
-    
+    df = load_dept_vars(df, edit_path)
     df = add_postcodes(df, sup_path)
     df = add_url(df)
     df = load_country(df, manual_path)
     df = load_funder(df, manual_path)
-    df = load_scientometric_data(df, dim_path)
-    
-    df = load_dept_vars(df, edit_path)
-    df = load_topic_data(df, manual_path, topic_path)
     df = make_and_load_tags(df, raw_path, edit_path)
     
-    if (len(sys.argv) > 1):
-        if not sys.argv[1].startswith("-"):
-            ## Path provided
-            if ('.csv' not in sys.argv[1]):
-                print("Provide valid .csv path to write final file to")
+    
+    if '-bq' in sys.argv:
+        ## Generate new dimensions data
+        print("Generating new Dimensions data... This will take some time.")
+        
+        if not ((dim_path / 'doi_returns_dimensions.xlsx').exists() and\
+                (dim_path / 'isbns_returns_dimensions.xlsx').exists() and\
+                (dim_path / 'title_returns_dimensions.xlsx').exists()):
+            
+            my_project_id = return_dim_id(project_root / 'assets' /
+                                          'dimensions_project_id.txt')
+            get_dimensions_data(manual_path, dim_path, my_project_id)
+        else:
+            if '-bqf' in sys.argv:
+                get_dimensions_data(manual_path, dim_path, my_project_id)
             else:
-                df.to_csv(sys.argv[1], index=False)
-    elif ('-f' in sys.argv):
-        ## Path not provided but output file already exists
-        print("Force overwriting final output file")
-        df.to_csv(final_path / 'enhanced_ref_data.csv', index=False)
-    else:
-        ## Path not provided and output file does not exist
-        if (final_path / 'enhanced_ref_data.csv').exists():
-            print("Writing final file")
-            df.to_csv(final_path / 'enhanced_ref_data.csv', index=False)
+                print("Dimensions data already found, skipping collection " +
+                    "(use -bqf to force new collection)." +
+                    " Just generating paper level data from the dimensions data.")
+        make_paper_level(dim_path)
+    #TODO: Consider moving the output path for merged_dimensions.xlsx to the data/edit folder?
+    
+    df = load_scientometric_data(df, dim_path)
+    
+    if '-top' in sys.argv:
+        ## Generate new topic model
+        print("Generating new topic model... This will take some time.")
+        bert_script_path = project_root / 'topic_modelling' / 'bert.py'
+        run_args = [
+            edit_path / 'clean_ref_ics_data.xlsx',
+            topic_path]
+        
+        run_command = ["python3", bert_script_path] + run_args
+        subprocess.run(run_command)
+        
+        print("Reducing topic model... This will take some time.")
+        reduce_script_path = project_root / 'topic_modelling' / 'bert_reduce.py'
+        reduce_args = [
+            topic_path,
+            'nn3_threshold0.01']
+        
+        reduce_command = ["python3", bert_script_path] + reduce_args
+        subprocess.run(reduce_command)
+    
+    df = load_topic_data(df, manual_path, topic_path)
+    
+    if '-tm' in sys.argv:
+        print("Generating new text-mining data... This will take some time.")
+        section_columns = [
+            "1. Summary of the impact",
+            "2. Underpinning research",
+            "3. References to the research",
+            "4. Details of the impact",
+            "5. Sources to corroborate the impact"]
+        
+        gen_readability_scores(df, edit_path, section_columns)
+        gen_pos_features(df, edit_path, section_columns)
+        gen_sentiment_scores(df, edit_path, section_columns)
+    
+    df = get_readability_scores(df, edit_path)
+    df = get_pos_features(df, edit_path)
+    df = get_sentiment_scores(df, edit_path)
+    
+    if write:
+        df.to_csv(output_path, index=False)    
+    
