@@ -218,46 +218,41 @@ def get_urls(text):
     return len(urls), urls, len(doi_urls), doi_urls
 
 
-def get_isbns(text):
-    """
-    Extract ISBNs from Markdown-formatted text.
-
-    Args:
-        text (str): Markdown-formatted text.
-
-    Returns:
-        A tuple containing the total number of ISBNs found and a list of all ISBNs found.
-
-    """
-    # Define a regular expression pattern to find ISBNs.
-    pattern = r"ISBN(?:-?1[03])?:\s?([-\d ]+)"
-
-    # Find all ISBNs in the text using the regular expression.
-    isbns = re.findall(pattern, markdown_to_text(text), re.MULTILINE)
-
-    # Return a tuple containing the relevant counts and lists.
-    return len(isbns), isbns
+# No longer used.
+#def get_isbns(text):
+#    """
+#    Extract ISBNs from Markdown-formatted text.
+#    Args:
+#        text (str): Markdown-formatted text.
+#    Returns:
+#        A tuple containing the total number of ISBNs found and a list of all ISBNs found.
+#    """
+#    # Define a regular expression pattern to find ISBNs.
+#    pattern = r"ISBN(?:-?1[03])?:\s?([-\d ]+)"
+#    # Find all ISBNs in the text using the regular expression.
+#    isbns = re.findall(pattern, markdown_to_text(text), re.MULTILINE)
+#    # Return a tuple containing the relevant counts and lists.
+#    return len(isbns), isbns
 
 
-def get_issns(text):
-    """
-    Extract ISSNs from Markdown-formatted text.
-
-    Args:
-        text (str): Markdown-formatted text.
-
-    Returns:
-        A tuple containing the total number of ISSNs found and a list of all ISSNs found.
-
-    """
-    # Define a regular expression pattern to find ISSNs.
-    pattern = r"ISSN:?\s?([-\d ]+)"
-
-    # Find all ISSNs in the text using the regular expression.
-    issns = re.findall(pattern, markdown_to_text(text), re.MULTILINE)
-
-    # Return a tuple containing the relevant counts and lists.
-    return len(issns), issns
+# No longer used.
+#def get_issns(text):
+#    """
+#    Extract ISSNs from Markdown-formatted text.
+#    Args:
+#        text (str): Markdown-formatted text.
+#
+#    Returns:
+#        A tuple containing the total number of ISSNs found and a list of all ISSNs found.
+#    """
+#    # Define a regular expression pattern to find ISSNs.
+#    pattern = r"ISSN:?\s?([-\d ]+)"
+#
+#    # Find all ISSNs in the text using the regular expression.
+#    issns = re.findall(pattern, markdown_to_text(text), re.MULTILINE)
+#
+#    # Return a tuple containing the relevant counts and lists.
+#    return len(issns), issns
 
 
 def prepare_spacy():
@@ -268,7 +263,8 @@ def prepare_spacy():
         None
 
     Notes:
-        This function sets a global variable `nlp` to the loaded spaCy language model, which can be used for further text processing.
+        This function sets a global variable `nlp` to the loaded spaCy
+        language model, which can be used for further text processing.
     """
 #    global nlp
     model_name = "en_core_web_lg"
@@ -385,59 +381,51 @@ def gen_pos_features(df, edit_path, section_columns):
 @log_row_count
 def get_pos_features(df, edit_path):
     file_path = edit_path / 'ics_pos_features.csv'
-    
     print('Loading pos features!')
     pos_features = pd.read_csv(file_path, index_col=None)
-    
     assert len(df) == len(pos_features)
-    assert set(df['REF impact case study identifier']) == set(pos_features['REF impact case study identifier'])
-    
-    return pd.merge(df, pos_features, on = ['REF impact case study identifier'],
-                 how = 'left')
+    key = 'REF impact case study identifier'
+    assert set(df[key]) == set(pos_features[key])
+    return pd.merge(df,
+                    pos_features, on=[key],
+                    how='left')
 
 
 def get_sentiment_score(text):
     """
     Get the sentiment polarity score of a text using TextBlob.
-
     Args:
         text (str): A string of text to analyze.
-
     Returns:
         A float representing the sentiment polarity score of the input text, in the range [-1.0, 1.0].
         A score of -1.0 indicates extremely negative sentiment, a score of 1.0 indicates extremely positive sentiment,
         and a score of 0.0 indicates neutral sentiment.
-
     Raises:
         Nothing.
-
-    Example:
-        N/A
     """
     # Convert the input Markdown text to plain text using the markdown_to_text function.
     plain_text = markdown_to_text(text)
-
     # Create a TextBlob object from the plain text.
     blob = TextBlob(plain_text)
-
     # Get the sentiment polarity score of the TextBlob object.
     sentiment_score = blob.sentiment_assessments.polarity
-
     # Return the sentiment polarity score.
     return sentiment_score
 
 
 def gen_sentiment_scores(df, edit_path, section_columns):
     """
-    Calculate the sentiment score for each section of text in a pandas DataFrame, as well as the overall sentiment score
-    for the entire DataFrame.
+    Calculate the sentiment score for each section of text
+    in a pandas DataFrame, as well as the overall sentiment
+    scorefor the entire DataFrame.
 
     Args:
         df (pandas.DataFrame): A DataFrame containing text data.
 
     Returns:
-        A DataFrame with new columns added for the sentiment score of each section of text, as well as the overall
-        sentiment score of the DataFrame.
+        A DataFrame with new columns added for the sentiment score
+        of each section of text, as well as the overall sentiment
+        score of the DataFrame.
 
     """
     output_path = edit_path / "ics_sentiment_scores.csv"
@@ -445,40 +433,39 @@ def gen_sentiment_scores(df, edit_path, section_columns):
     print('Calculating Sentiment Scores!')
     col_names = []
 
-    # Calculate the sentiment score for each section of text in the DataFrame.
+    # Calculate the sentiment score for each section
+    # of text in the DataFrame.
     for i, s in zip(range(1, 6), section_columns):
         col_names.append(f"s{i}_sentiment_score")
         
         df[f"s{i}_sentiment_score"] = df[s].apply(
             lambda x: get_sentiment_score(x)
         )
-    # Calculate the overall sentiment score for the DataFrame by concatenating the text from each section and applying
+    # Calculate the overall sentiment score for the DataFrame
+    # by concatenating the text from each section and applying
     # the get_sentiment_score function.
     df["sentiment_score"] = df.apply(
         lambda x: get_sentiment_score("\n".join([x[s] for s in section_columns])),
         axis=1,
     )
-    
     col_names.append("sentiment_score")
     col_names.append("REF impact case study identifier")
-    
     print(f"Writing sentiment scores to {output_path}")
-    
     df[col_names].to_csv(output_path, index=False)
 
 
 @log_row_count
 def get_sentiment_scores(df, edit_path):
     file_path = edit_path / 'ics_sentiment_scores.csv'
-    
     print('Loading sentiment scores!')
     sentiment_scores = pd.read_csv(file_path, index_col=None)
-    
     assert len(df) == len(sentiment_scores)
-    assert set(df['REF impact case study identifier']) == set(sentiment_scores['REF impact case study identifier'])
-    
-    return pd.merge(df, sentiment_scores, on = ['REF impact case study identifier'],
-                 how = 'left')
+    key = 'REF impact case study identifier'
+    assert set(df[key]) == set(sentiment_scores[key])
+    return pd.merge(df,
+                    sentiment_scores,
+                    on=[key],
+                    how='left')
 
 
 @log_row_count
@@ -486,14 +473,18 @@ def add_postcodes(df, sup_path):
     print('Add some postcodes!')
     postcodes = pd.read_csv(sup_path / 'ukprn_postcode.csv')
     df = pd.merge(df, postcodes, how='left', on='inst_id')
-    df['inst_postcode_district'] = df['Post Code'].apply(lambda x: x.split(' ')[0])
-    df['inst_postcode_area'] = df['inst_postcode_district'].apply(lambda x: x[0:re.search(r"\d", x).start()])
+    dist = 'inst_postcode_district'
+    area = 'inst_postcode_area'
+    df[dist] = df['Post Code'].apply(lambda x: x.split(' ')[0])
+    df[area] = df[dist].apply(lambda x: x[0:re.search(r"\d", x).start()])
     return df
+
 
 @log_row_count
 def add_url(df):
     field = 'REF impact case study identifier'
-    df['ics_url'] = df[field].apply(lambda x: 'https://results2021.ref.ac.uk/impact/' + x + '?page=1')
+    base = 'https://results2021.ref.ac.uk/impact/'
+    df['ics_url'] = df[field].apply(lambda x: base + x + '?page=1')
     return df
 
 
@@ -532,11 +523,10 @@ def make_countries_file(manual_path):
                                       df['Countries[region]'],
                                       df['suggested_Countries[region]_change'])
     df = df[df['countries_extracted'].notnull()]
-    df = df[['REF impact case study identifier',
-             'countries_extracted',
-             'region_extracted',
-             'union_extracted']]
-    return df
+    return df[['REF impact case study identifier',
+               'countries_extracted',
+               'region_extracted',
+               'union_extracted']]
 
 @log_row_count
 def load_country(df, manual_path):
@@ -569,16 +559,16 @@ def make_funder_file(manual_path):
 def load_funder(df, manual_path):
     print('Loading clean funder data')
     funder = make_funder_file(manual_path)
-    return pd.merge(df, funder, how='left', on='REF impact case study identifier')
+    return pd.merge(df,
+                    funder,
+                    how='left',
+                    on='REF impact case study identifier')
 
 @log_row_count
 def load_dept_vars(df, edit_path):
-
     print('Loading department variables')
-
     dept_vars = pd.read_excel(edit_path / 'clean_ref_dep_data.xlsx',
                               engine='openpyxl')
-
     dept_vars['ICS_GPA'] = (pd.to_numeric(dept_vars['4*_Impact'], errors='coerce')*4 +
                             pd.to_numeric(dept_vars['3*_Impact'], errors='coerce')*3 +
                             pd.to_numeric(dept_vars['2*_Impact'], errors='coerce')*2 +
@@ -606,14 +596,11 @@ def load_dept_vars(df, edit_path):
                            'Environment_GPA',
                            'Output_GPA',
                            'Overall_GPA']]
-    
     ## Removed to avoid double merging
     # dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('A', '')
     # dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('B', '')
     # dept_vars['uoa_id'] = dept_vars['uoa_id'].astype(int)
-    
     # df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
-    
     return pd.merge(df, dept_vars, how='left',
                     left_on=['inst_id', 'uoa_id'],
                     right_on=['inst_id', 'uoa_id'],
@@ -652,6 +639,13 @@ def load_topic_data(df, manual_path, topic_path):
                                 sheet_name='Sheet1',
                                 index_col=None
                                 )
+
+    try:
+        topic_assignment = pd.read_csv(manual_path / 'topic_lookup' / 'topic_reassignment.csv',
+                                   index_col=None)
+    except FileNotFoundError:
+        print(f"{manual_path / 'topic_lookup' / 'topic_reassignment.csv'} not found!")
+        print("WARNING: Not including topic reassignment data.")
     try:
         topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv',
                                    index_col=None)
@@ -661,15 +655,14 @@ def load_topic_data(df, manual_path, topic_path):
         return df
 
     topic_lookup = topic_lookup.rename({'description': 'topic_description',
-                                        'narrative': 'topic_narrative',
-                                        'keywords': 'topic_keywords'}, axis=1)
+                                        'narrative': 'topic_narrative'}, axis=1)
     try:
         assert set(df['REF impact case study identifier']) == set(topic_model['REF impact case study identifier'])
     except AssertionError:
         print("AssertionError: not all ICSs have an associated topic")
-    
     df = pd.merge(df, topic_model, how='left', on='REF impact case study identifier')
-    df = pd.merge(df, topic_lookup, how='left', left_on='BERT_topic', right_on='topic_id')
+    df = pd.merge(df, topic_assignment, how= 'left', on='REF impact case study identifier')
+    df = pd.merge(df, topic_lookup, how='left', left_on='final_topic', right_on='topic_id')
     df['cluster_id'] = df['cluster_id'].astype('int', errors='ignore')
     df['topic_id'] = df['topic_id'].astype('int', errors='ignore')
 
@@ -716,17 +709,17 @@ def make_and_load_tags(df, raw_path, edit_path):
                              reg_tag_value, reg_tag_group]
                             )
     tags = pd.read_csv(edit_path / 'clean_ref_ics_tags_data.csv')
-    df = pd.merge(df, tags, how='left',
-                  left_on='REF impact case study identifier',
-                  right_on='REF case study identifier').drop('REF case study identifier', axis=1)
-    return df
+    return pd.merge(df,
+                    tags,
+                    how='left',
+                    left_on='REF impact case study identifier',
+                    right_on='REF case study identifier').drop('REF case study identifier', axis=1)
+
 
 @log_row_count
 def load_scientometric_data(df, dim_path):
     print("Loading scientometric data")
-    
     file_path = dim_path / 'merged_dimensions.xlsx'
-    
     if not file_path.exists():
         print(f"File not found: {file_path}")
         print("WARNING: Not including scientometric data columns.")
@@ -744,72 +737,29 @@ def load_scientometric_data(df, dim_path):
         for index in ics_df.index:
             paper = 'Research_' + str(counter)
             mydict[paper] = {}
-            try:
-                mydict[paper]['dimensions_id'] = ics_df.at[index, 'id']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['title_preferred'] = ics_df.at[index, 'preferred']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['doi'] = ics_df.at[index, 'doi']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['issn'] = ics_df.at[index, 'issn']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['eissn'] = ics_df.at[index, 'eissn']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['type'] = ics_df.at[index, 'type']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['date'] = ics_df.at[index, 'date_normal']
-            except ValueError:
-                pass
+            for key, value in {'dimensions_id': 'id',
+                               'title_preferred': 'preferred',
+                               'doi':'doi',
+                               'issn': 'issn',
+                               'eissn': 'eissn',
+                               'type': 'type',
+                               'date': 'date_normal',
+                               'Times Cited': 'Times Cited',
+                               'Recent Citations':'Recent Citations',
+                               'Field Citation Ratio': 'Field Citation Ratio',
+                               'Relative Citation Ratio': 'Relative Citation Ratio',
+                               'Altmetric': 'Altmetric',
+                               'Abstract': 'abstract',
+                               'Authors': 'authors',
+                               'Funding': 'funder_orgs',
+                               'Concepts': 'concepts'
+                               }.items():
+                try:
+                    mydict[paper][key] = ics_df.at[index, value]
+                except ValueError:
+                    pass
             try:
                 mydict[paper]['journal'] = ast.literal_eval(ics_df.at[index, 'journal'])['title']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Times Cited'] = ics_df.at[index, 'Times Cited']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Recent Citations'] = ics_df.at[index, 'Recent Citations']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Field Citation Ratio'] = ics_df.at[index, 'Field Citation Ratio']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Relative Citation Ratio'] = ics_df.at[index, 'Relative Citation Ratio']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Altmetric'] = ics_df.at[index, 'Altmetric']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Abstract'] = ics_df.at[index, 'abstract']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Authors'] = ics_df.at[index, 'authors']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Funding'] = ics_df.at[index, 'funder_orgs']
-            except ValueError:
-                pass
-            try:
-                mydict[paper]['Concepts,'] = ics_df.at[index, 'concepts']
             except ValueError:
                 pass
             try:
@@ -878,8 +828,6 @@ if __name__ == "__main__":
                         "Use -f to force overwrite or provide a custom path.\n" +
                         "Only intermittent files will be generated and saved.")
                 write = False
-    
-    
     if not (raw_path / 'raw_ref_environment_data.xlsx').exists():
         get_environmental_data(raw_path)
     if not ((raw_path / 'raw_ref_ics_tags_data.xlsx').exists() and\
@@ -891,7 +839,6 @@ if __name__ == "__main__":
         get_output_data(raw_path)
 
     clean_dep_level(raw_path, edit_path)
-    
     df = clean_ics_level(raw_path, edit_path)
     df = load_dept_vars(df, edit_path)
     df = add_postcodes(df, sup_path)
@@ -899,29 +846,26 @@ if __name__ == "__main__":
     df = load_country(df, manual_path)
     df = load_funder(df, manual_path)
     df = make_and_load_tags(df, raw_path, edit_path)
-    
-    
+
     if '-bq' in sys.argv:
         ## Generate new dimensions data
         print("Generating new Dimensions data... This will take some time.")
-        
+        my_project_id = return_dim_id(project_root / 'assets',
+                                      'dimensions_project_id.txt')
         if not ((dim_path / 'doi_returns_dimensions.xlsx').exists() and\
                 (dim_path / 'isbns_returns_dimensions.xlsx').exists() and\
                 (dim_path / 'title_returns_dimensions.xlsx').exists()):
-            
-            my_project_id = return_dim_id(project_root / 'assets' /
-                                          'dimensions_project_id.txt')
             get_dimensions_data(manual_path, dim_path, my_project_id)
         else:
             if '-bqf' in sys.argv:
                 get_dimensions_data(manual_path, dim_path, my_project_id)
             else:
                 print("Dimensions data already found, skipping collection " +
-                    "(use -bqf to force new collection)." +
-                    " Just generating paper level data from the dimensions data.")
+                      "(use -bqf to force new collection)." +
+                      " Just generating paper level data from the dimensions data.")
         make_paper_level(dim_path)
     #TODO: Consider moving the output path for merged_dimensions.xlsx to the data/edit folder?
-    
+
     df = load_scientometric_data(df, dim_path)
     
     if '-top' in sys.argv:
@@ -964,5 +908,4 @@ if __name__ == "__main__":
     df = get_sentiment_scores(df, edit_path)
     
     if write:
-        df.to_csv(output_path, index=False)    
-    
+        df.to_csv(output_path, index=False)

@@ -1,6 +1,8 @@
 .Rhistory
 .idea
 local/*
+figures/*
+tables/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
