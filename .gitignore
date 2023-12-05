@@ -1,10 +1,6 @@
 .Rhistory
 .idea
 local/*
-data/dimensions_returns
-data/edit
-data/raw
-data/shapefiles
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
