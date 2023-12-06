@@ -752,7 +752,11 @@ def load_scientometric_data(df, dim_path):
                                'Abstract': 'abstract',
                                'Authors': 'authors',
                                'Funding': 'funder_orgs',
-                               'Concepts': 'concepts'
+                               'Open Access': 'open_access_categories_v2',
+#                               'Researcher Orgs': 'research_orgs',
+                               'Researcher Cities': 'research_org_cities',
+                               'Researcher Countries': 'research_org_countries'
+#                               'Concepts': 'concepts'
                                }.items():
                 try:
                     mydict[paper][key] = ics_df.at[index, value]
@@ -846,7 +850,6 @@ if __name__ == "__main__":
     df = load_country(df, manual_path)
     df = load_funder(df, manual_path)
     df = make_and_load_tags(df, raw_path, edit_path)
-
     if '-bq' in sys.argv:
         ## Generate new dimensions data
         print("Generating new Dimensions data... This will take some time.")
@@ -858,6 +861,7 @@ if __name__ == "__main__":
             get_dimensions_data(manual_path, dim_path, my_project_id)
         else:
             if '-bqf' in sys.argv:
+                print('Getting new Dimensions data')
                 get_dimensions_data(manual_path, dim_path, my_project_id)
             else:
                 print("Dimensions data already found, skipping collection " +
