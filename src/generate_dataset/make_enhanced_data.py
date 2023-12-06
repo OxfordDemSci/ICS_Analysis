@@ -742,6 +742,8 @@ def load_scientometric_data(df, dim_path):
                                'doi':'doi',
                                'issn': 'issn',
                                'eissn': 'eissn',
+                               'Field of Research': 'category_for',
+                               'Unit of Assessment': 'category_uoa',
                                'type': 'type',
                                'date': 'date_normal',
                                'Times Cited': 'Times Cited',
