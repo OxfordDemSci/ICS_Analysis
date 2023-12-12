@@ -6,7 +6,7 @@
 [![Generic badge](https://img.shields.io/badge/Python-3.7-red.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/License-CCBY4.0-purple.svg)](https://shields.io/)
 [![Generic badge](https://img.shields.io/badge/Maintained-Yes-brightgreen.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/BuildPassing-No-orange.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/BuildPassing-Yes-orange.svg)](https://shields.io/)
 
 A repository to analyse the Impact Case Studies submitted to the Research Excellence Framework, 2021. A link to the final, published version of the report will be available in due course.
 
