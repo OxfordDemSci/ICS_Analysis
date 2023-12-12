@@ -2,7 +2,6 @@ import re
 import os
 import ast
 import json
-import warnings
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -18,18 +17,15 @@ from helpers.general_helpers import return_paper_level
 from nltk.stem.snowball import SnowballStemmer
 import gender_guesser.detector as gender
 d = gender.Detector()
-from helpers.text_helpers import freq_dist, co_occurrence, set_diag, truncate_colormap
-warnings.filterwarnings('ignore')
-mpl.rc('font', family='Arial')
-csfont = {'fontname': 'Arial'}
-hfont = {'fontname': 'Arial'}
+#from helpers.text_helpers import freq_dist, co_occurrence, set_diag, truncate_colormap
 
 
 def savefigures(plt, filepath, filename):
-    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
+    mpl.use('Agg')
+#    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
     plt.savefig(os.path.join(filepath, filename + '.svg'), bbox_inches='tight')
-    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
-                    dpi=1200, transparent=True, facecolor='white')
+#    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
+#                dpi=1200, transparent=True, facecolor='white')
 
 
 def plot_impact_type_combined(df, figure_path):
@@ -140,18 +136,11 @@ def plot_impact_type_combined(df, figure_path):
               )
     for ax in [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8]:
         ax.set_ylim(0, 100)
-        ax.tick_params(axis='both', which='major', labelsize=14)
+        ax.tick_params(axis='both', which='major', labelsize=18)
+        ax.tick_params(axis='both', which='minor', labelsize=18)
         ylabels = ['{:,.0f}'.format(x) + '%' for x in ax.get_yticks()]
         ax.set_yticklabels(ylabels)
         sns.despine(ax=ax)
-    figure_name = 'impacttype_vs_uoa'
-    savefigures(plt, figure_path, figure_name)
-
-
-
-
-
-
 
     # heatmap thing here
 
@@ -293,6 +282,7 @@ def plot_impact_type_combined(df, figure_path):
 
 
 def plot_funders():
+
     import gender_guesser.detector as gender
     d = gender.Detector()
     funder_level = pd.DataFrame(columns=['Panel', 'UoA', 'ICS_uid', 'pub_uid', 'funder'])
@@ -397,24 +387,99 @@ def plot_funders():
 
 
 
-    colors2 = ['#001c54', '#E89818']
+    colors3 = ['#850101', '#001c54', '#E89818']
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(16, 9))
-    funder_counts_C[0:5].sort_values().plot(kind='barh', ax=ax1, edgecolor='k', color = colors2[0])
-    funder_counts_D[0:5].sort_values().plot(kind='barh', ax=ax2, edgecolor='k', color = colors2[1])
-    funder_counts_4[0:5].sort_values().plot(kind='barh', ax=ax3, edgecolor='k', color = colors2[0])
-    ICS_funder_level_C[0:5].sort_values().plot(kind='barh', ax=ax4, edgecolor='k', color = colors2[1])
-    ICS_funder_level_D[0:5].sort_values().plot(kind='barh', ax=ax5, edgecolor='k', color = colors2[0])
-    ICS_funder_level_4[0:5].sort_values().plot(kind='barh', ax=ax6, edgecolor='k', color = colors2[1])
 
-    ax1.set_title('A.', loc='left', fontsize=17)
-    ax2.set_title('B.', loc='left', fontsize=17)
-    ax3.set_title('C.', loc='left', fontsize=17)
-    ax4.set_title('D.', loc='left', fontsize=17)
-    ax5.set_title('E.', loc='left', fontsize=17)
-    ax6.set_title('F.', loc='left', fontsize=17)
-    ax4.set_xlabel('Instances of Funding', fontsize=16)
-    ax5.set_xlabel('Instances of Funding', fontsize=16)
-    ax6.set_xlabel('Instances of Funding', fontsize=16)
+    bar1 = ax1.barh(funder_counts_4[0:5].sort_values().index,
+                    funder_counts_4[0:5].sort_values(), edgecolor='k', color = colors3[0],
+                    height=0.5, alpha=0.8)
+    bar2 = ax2.barh(funder_counts_C[0:5].sort_values().index,
+                    funder_counts_C[0:5].sort_values(), edgecolor='k', color = colors3[1],
+                    height = 0.5, alpha = 0.8)
+    bar3 = ax3.barh(funder_counts_D[0:5].sort_values().index,
+                    funder_counts_D[0:5].sort_values(), edgecolor='k', color = colors3[2],
+                    height=0.5, alpha=0.8)
+
+    bar4 = ax4.barh(ICS_funder_level_C[0:5].sort_values().index,
+                    ICS_funder_level_C[0:5].sort_values(), edgecolor='k', color=colors3[0],
+                    height=0.5, alpha=0.8)
+    bar5 = ax5.barh(ICS_funder_level_C[0:5].sort_values().index,
+                    ICS_funder_level_C[0:5].sort_values(), edgecolor='k', color=colors3[1],
+                    height=0.5, alpha=0.8)
+    bar6 = ax6.barh(ICS_funder_level_C[0:5].sort_values().index,
+                    ICS_funder_level_C[0:5].sort_values(), edgecolor='k', color=colors3[2],
+                    height=0.5, alpha=0.8)
+
+    ax1.bar_label(bar1, fontsize=16, padding=5)
+    ax2.bar_label(bar2, fontsize=16, padding=5)
+    ax3.bar_label(bar3, fontsize=16, padding=5)
+    ax4.bar_label(bar4, fontsize=16, padding=5)
+    ax5.bar_label(bar5, fontsize=16, padding=5)
+    ax6.bar_label(bar6, fontsize=16, padding=5)
+    for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
+        ax.tick_params(axis='both', which='minor', labelsize=14)
+        ax.tick_params(axis='both', which='major', labelsize=14)
+        ax.grid(which="both", linestyle='--', alpha=0.3)
+
+    ax1.set_title('A.', loc='left', fontsize=20)
+    ax2.set_title('B.', loc='left', fontsize=20)
+    ax3.set_title('C.', loc='left', fontsize=20)
+    ax4.set_title('D.', loc='left', fontsize=20)
+    ax5.set_title('E.', loc='left', fontsize=20)
+    ax6.set_title('F.', loc='left', fontsize=20)
+    ax4.set_xlabel('Instances of Funding', fontsize=18)
+    ax5.set_xlabel('Instances of Funding', fontsize=18)
+    ax6.set_xlabel('Instances of Funding', fontsize=18)
+    ax1.set_ylabel('Paper Funders', fontsize=20)
+    ax4.set_ylabel('ICS Funders', fontsize=20)
+
+
+    legend_elements = [Patch(facecolor=colors3[0], edgecolor='k',
+                             label=r'UoA 4', alpha=0.7)]
+#    ax1.legend(handles=legend_elements,
+#               frameon=True,
+#               fontsize=18, framealpha=1, facecolor='w',
+#               edgecolor=(0, 0, 0, 1), ncol=1,
+#               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
+#               )
+    ax4.legend(handles=legend_elements,
+               frameon=True,
+               fontsize=18, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1), ncol=1,
+               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
+               )
+
+    legend_elements = [Patch(facecolor=colors3[1], edgecolor='k',
+                             label=r'Panel C', alpha=0.7)]
+#    ax2.legend(handles=legend_elements,
+#               frameon=True,
+#               fontsize=18, framealpha=1, facecolor='w',
+#               edgecolor=(0, 0, 0, 1), ncol=1,
+#               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
+#               )
+    ax5.legend(handles=legend_elements,
+               frameon=True,
+               fontsize=18, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1), ncol=1,
+               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
+               )
+
+    legend_elements = [Patch(facecolor=colors3[2], edgecolor='k',
+                             label=r'Panel D', alpha=0.7)]
+#    ax3.legend(handles=legend_elements,
+#              frameon=True,
+#              fontsize=18, framealpha=1, facecolor='w',
+#              edgecolor=(0, 0, 0, 1), ncol=1,
+#              loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
+#              )
+    ax6.legend(handles=legend_elements,
+              frameon=True,
+              fontsize=18, framealpha=1, facecolor='w',
+              edgecolor=(0, 0, 0, 1), ncol=1,
+              loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
+              )
+
+
 
     sns.despine()
     plt.tight_layout()
@@ -538,6 +603,7 @@ def plot_gender(figure_path):
                              label=r'STEM', alpha=0.7),
                        Patch(facecolor=colors2[1], edgecolor='k',
                              label=r'SHAPE', alpha=0.7)]
+    ax1.tick_params(axis='both', which='major', labelsize=18)
     for ax in [ax1]:
         ax.legend(handles=legend_elements,
                   frameon=True,
@@ -700,7 +766,8 @@ def plot_impacttype_vs_uoa(figure_path, df):
 
     for ax in [ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8]:
         ax.set_ylim(0, 100)
-        ax.tick_params(axis='both', which='major', labelsize=13)
+        ax.tick_params(axis='both', which='major', labelsize=18)
+        ax.tick_params(axis='both', which='minor', labelsize=18)
         ylabels = ['{:,.0f}'.format(x) + '%' for x in ax.get_yticks()]
         ax.set_yticklabels(ylabels)
     savefigures(plt, figure_path, figure_name)
@@ -977,8 +1044,8 @@ def make_word_vis(df1, df2, fieldname, figure_path, support_path):
 
 def groupby_plotter(grp, figure_path, filename):
     """ Plot the groupedby aggregate data"""
-    mpl.rcParams['font.family'] = 'Arial'
-    csfont = {'fontname': 'Arial'}
+    mpl.rcParams['font.family'] = 'helvetica'
+    csfont = {'fontname': 'helvetica'}
 
     colors = [(0 / 255, 28 / 255, 84 / 255, 0.5), (232 / 255, 152 / 255, 24 / 255, 0.5)]
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 7), sharey=True)
@@ -1173,7 +1240,7 @@ def make_hist_by_panel(dfe, figure_path, file_name, variable, sum_stats):
     dfeD = dfe[dfe['Main panel'] == 'D']
     fig = plt.figure(figsize=(12, 7.5))
     gs = gridspec.GridSpec(2, 2)
-    mpl.rcParams['font.family'] = 'Arial'
+    mpl.rcParams['font.family'] = 'helvetica'
     colors5 = ['#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#084594']
     colors4 = ['#6baed6', '#4292c6', '#2171b5', '#084594']
 
@@ -1401,7 +1468,7 @@ def make_keyword_figure():
 
     fig = plt.figure(figsize=(15, 8))
     gs = gridspec.GridSpec(2, 2)
-    mpl.rcParams['font.family'] = 'Arial'
+    mpl.rcParams['font.family'] = 'helvetica'
     colors5 = ['#001c54', '#732268', '#c2365b', '#ed7239', '#e8be18']
     colors4 = ['#001c54', '#902467', '#e35b46', '#e8be18']
     colors2 = [colors4[0], colors4[3]]
@@ -1558,10 +1625,92 @@ def make_gpa_vs_environment(figure_path, df):
     savefigures(plt, figure_path, file_name)
 
 
+def make_gpa_vs_environment_SHAPE(figure_path, df):
+    colors3 = ['#850101', '#001c54', '#E89818']
+    subset = ['Institution name', 'Unit of assessment number']
+    scored = df.drop_duplicates(subset = subset)
+    counter = pd.Series(df.groupby(subset).size(),
+                        name='size').reset_index()
+    scored['ICS_GPA'] = (pd.to_numeric(scored['4*_Impact'], errors='coerce')*4 +
+                         pd.to_numeric(scored['3*_Impact'], errors='coerce')*3 +
+                         pd.to_numeric(scored['2*_Impact'], errors='coerce')*2 +
+                         pd.to_numeric(scored['1*_Impact'], errors='coerce')*1)/100
+    scored = pd.merge(scored, counter, left_on = subset, right_on = subset)
+    uoa4_mask = (scored['Unit of assessment number'] == 4)
+    panelc_mask = (scored['Main panel'] == 'C')
+    paneld_mask = (scored['Main panel'] == 'D')
+    scored = df.drop_duplicates(subset = subset)
+    scored = pd.merge(scored, counter, how='inner', left_on = subset, right_on = subset)
+    size = 60
+    colors = [(0 / 255, 28 / 255, 84 / 255, 1), (232 / 255, 152 / 255, 24 / 255, 1)]
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 5.5), sharey=True)
+
+
+    ax1.scatter(y=scored[panelc_mask]['ICS_GPA'],
+                x=scored[panelc_mask]['fte'],
+                color=colors3[1], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax1.scatter(y=scored[paneld_mask]['ICS_GPA'],
+                x=scored[paneld_mask]['fte'],
+                color=colors3[2], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax1.scatter(y=scored[uoa4_mask]['ICS_GPA'],
+                x=scored[uoa4_mask]['fte'],
+                color=colors3[0], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+
+    ax2.scatter(y=scored[panelc_mask]['ICS_GPA'],
+                x=scored[panelc_mask]['tot_income'].div(1000000),
+                color=colors3[1], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax2.scatter(y=scored[paneld_mask]['ICS_GPA'],
+                x=scored[paneld_mask]['tot_income'].div(1000000),
+                color=colors3[2], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax2.scatter(y=scored[uoa4_mask]['ICS_GPA'],
+                x=scored[uoa4_mask]['tot_income'].div(1000000),
+                color=colors3[0], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+
+    ax3.scatter(y=scored[panelc_mask]['ICS_GPA'],
+                x=scored[panelc_mask]['num_doc_degrees_total'],
+                color=colors3[1], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax3.scatter(y=scored[paneld_mask]['ICS_GPA'],
+                x=scored[paneld_mask]['num_doc_degrees_total'],
+                color=colors3[2], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+    ax3.scatter(y=scored[uoa4_mask]['ICS_GPA'],
+                x=scored[uoa4_mask]['num_doc_degrees_total'],
+                color=colors3[0], s=size, edgecolor=(0, 0, 0, 1), linewidth=.5)
+
+    legend_elements1 = [Line2D([], [], marker='o',
+                               markerfacecolor=colors3[0], markeredgecolor='k',
+                               label=r'UoA 4', linewidth=0, markersize=10),
+                        Line2D([], [], marker='o',
+                               markerfacecolor=colors3[1], markeredgecolor='k',
+                               label=r'Panel C', linewidth=0, markersize=10),
+                        Line2D([], [], marker='o',
+                               markerfacecolor=colors3[2], markeredgecolor='k',
+                               label=r'Panel D', linewidth=0, markersize=10)]
+    for ax, title in zip([ax1, ax2, ax3], ['A.', 'B.', 'C.']):
+        ax.yaxis.grid(linestyle='--', alpha=0.3)
+        ax.xaxis.grid(linestyle='--', alpha=0.3)
+        ax.set_title(title, loc='left', fontsize=20)
+        ax.tick_params(axis='both', which='major', labelsize=14)
+    ax3.legend(handles=legend_elements1, loc='lower right', frameon=True,
+               fontsize=14, framealpha=1, facecolor='w',
+               edgecolor=(0, 0, 0, 1),
+               title='Subject Area', title_fontsize=14)
+    ax1.set_ylabel('Departmental GPA', fontsize=14)
+    ax1.set_xlabel('Full Time Employed', fontsize=14)
+    ax2.set_xlabel('Total Income (£bn)', fontsize=14)
+    ax3.set_xlabel('Doctoral Degrees Conferred', fontsize=14)
+    ax1.yaxis.set_major_locator(plt.MaxNLocator(5))
+    xlabels = ['£{:,.0f}'.format(x) + 'm' for x in ax2.get_xticks()]
+    ax2.set_xticklabels(xlabels)
+    plt.tight_layout()
+    sns.despine()
+    file_name = 'gpa_vs_environment_SHAPE'
+    savefigures(plt, figure_path, file_name)
+
+
 def make_simple_scores_figure(df, figure_path, out_path):
-    fig = plt.figure(figsize=(12, 6))
+    fig = plt.figure(figsize=(12, 7))
     gs = gridspec.GridSpec(2, 2)
-    mpl.rcParams['font.family'] = 'Arial'
+    mpl.rcParams['font.family'] = 'helvetica'
     colors5_blue = ['#3a5e8cFF', '#10a53dFF',
                     '#541352FF', '#ffcf20FF', '#2f9aa0FF']
     df['4*_Impact'] = pd.to_numeric(df['4*_Impact'],
@@ -1602,8 +1751,8 @@ def make_simple_scores_figure(df, figure_path, out_path):
     nbins = 18
     letter_fontsize = 24
     label_fontsize = 18
-    mpl.rcParams['font.family'] = 'Arial'
-    csfont = {'fontname': 'Arial'}
+    mpl.rcParams['font.family'] = 'helvetica'
+    csfont = {'fontname': 'helvetica'}
     sns.kdeplot(df_shape['ICS_GPA'],
                 ax=ax1, color= colors[1]
                )
@@ -1669,11 +1818,11 @@ def make_simple_scores_figure(df, figure_path, out_path):
     ax1.tick_params(axis='both', which='major', labelsize=14)
     ax2.tick_params(axis='both', which='major', labelsize=14)
     ax3.tick_params(axis='both', which='major', labelsize=14)
-    ax1.set_title('A.', loc='left', fontsize=letter_fontsize, y=1.035)
-    ax2.set_title('B.', loc='left', fontsize=letter_fontsize, y=1.035)
-    ax3.set_title('C.', loc='left', fontsize=letter_fontsize, y=1.035)
+    ax1.set_title('A.', loc='left', fontsize=letter_fontsize-1, y=1.035)
+    ax2.set_title('B.', loc='left', fontsize=letter_fontsize-1, y=1.035)
+    ax3.set_title('C.', loc='left', fontsize=letter_fontsize-1, y=1.035)
     plt.tight_layout()
-    file_name = 'ics_gpa.pdf'
+    file_name = 'ics_gpa'
     savefigures(plt, figure_path, file_name)
     plt.savefig(os.path.join(figure_path, file_name),
                 bbox_inches='tight')
@@ -1701,21 +1850,21 @@ def draw_brace(ax, xspan, yminn,text):
     ax.autoscale(False)
     ax.plot(x, y, color='black', lw=1)
     ax.text((xmax+xmin)/2., yminn+(yminn/20) +.07*yspan,
-            text, ha='center', va='bottom', fontsize=12)
+            text, ha='center', va='bottom', fontsize=16)
 
 
 def plot_metrics_shape(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, figure_path):
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(17, 9), sharex='all')
 
-    cited_by_uoa = pd.DataFrame(cited_by_uoa)
-    altm_by_uoa = pd.DataFrame(altm_by_uoa)
-    ratio_by_uoa = pd.DataFrame(ratio_by_uoa)
-    cited_by_uoa = cited_by_uoa[(cited_by_uoa.index==4) | (cited_by_uoa.index>13)]
-    altm_by_uoa = altm_by_uoa[(altm_by_uoa.index==4) | (altm_by_uoa.index>13)]
-    ratio_by_uoa = ratio_by_uoa[(ratio_by_uoa.index==4) | (ratio_by_uoa.index>13)]
-    cited_by_uoa.plot(kind='bar', ax=ax1, ec='k', legend=False)
-    altm_by_uoa.plot(kind='bar', ax=ax2, ec='k', legend=False)
-    ratio_by_uoa.plot(kind='bar', ax=ax3, ec='k', legend=False)
+    cited_by_uoa_new  = pd.DataFrame(cited_by_uoa)
+    altm_by_uoa_new  = pd.DataFrame(altm_by_uoa)
+    ratio_by_uoa_new  = pd.DataFrame(ratio_by_uoa)
+    cited_by_uoa_new = cited_by_uoa_new[(cited_by_uoa_new.index==4) | (cited_by_uoa_new.index>13)]
+    altm_by_uoa_new = altm_by_uoa_new [(altm_by_uoa_new.index==4) | (altm_by_uoa_new.index>13)]
+    ratio_by_uoa_new = ratio_by_uoa_new[(ratio_by_uoa_new.index==4) | (ratio_by_uoa_new.index>13)]
+    cited_by_uoa_new.plot(kind='bar', ax=ax1, ec='k', legend=False)
+    altm_by_uoa_new.plot(kind='bar', ax=ax2, ec='k', legend=False)
+    ratio_by_uoa_new.plot(kind='bar', ax=ax3, ec='k', legend=False)
     colors2 = ['#850101', '#001c54', '#E89818']
     plt.tight_layout()
     ax3.set_xticklabels(ax3.get_xticklabels(), rotation=0, fontsize=14)
@@ -1723,6 +1872,9 @@ def plot_metrics_shape(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fi
     for ax in [ax1, ax2, ax3]:
         ax.get_children()[0].set_color(colors2[0])
         ax.get_children()[0].set_edgecolor('k')
+        ax.tick_params(axis='both', which='major', labelsize=18)
+        ax.tick_params(axis='both', which='minor', labelsize=18)
+        ax.grid(which="both", linestyle='--', alpha=0.2)
         counter = 1
         for uoa in [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
                     24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]:
@@ -1738,32 +1890,39 @@ def plot_metrics_shape(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fi
                              label=r'STEM', alpha=0.7),
                        Patch(facecolor=colors2[2], edgecolor='k',
                              label=r'SHAPE', alpha=0.7)]
-    for ax in [ax3]:
+    for ax in [ax1]:
         ax.legend(handles=legend_elements,
                   frameon=True,
                   fontsize=12, framealpha=1, facecolor='w',
                   edgecolor=(0, 0, 0, 1), ncol=1,
-                  loc = 'center right'
+                  loc='center right'
                   )
+
     ax1.set_title('A.', loc='left', fontsize=18)
     ax2.set_title('B.', loc='left', fontsize=18)
     ax3.set_title('C.', loc='left', fontsize=18)
     ax1.set_ylabel('Av. Times Cited', fontsize=17)
     ax2.set_ylabel('Av. Altmetric Score', fontsize=17)
     ax3.set_ylabel('Av. Relative Ratio', fontsize=17)
-    ax1.set_ylim(0, 120)
-    ax2.set_ylim(0, 120)
-    ax3.set_ylim(0, 3.25)
+    ax1.set_ylim(0, 125)
+    ax2.set_ylim(0, 125)
+    ax3.set_ylim(0, 3.3)
     C_cited = paper_panels.at['C', 'Average Times Cited']
     D_cited = paper_panels.at['D', 'Average Times Cited']
     C_altm = paper_panels.at['C', 'Average Altmetric']
     D_altm = paper_panels.at['D', 'Average Altmetric']
     C_ratio = paper_panels.at['C', 'Relative Ratio']
     D_ratio = paper_panels.at['D', 'Relative Ratio']
+
+    draw_brace(ax1, (0, 0), 82.5, 'UoA 4:\n' + str(round(cited_by_uoa[4], 2)))
     draw_brace(ax1, (1, 14), 100, 'Panel C: ' + str(round(C_cited, 2)))
     draw_brace(ax1, (14, 21), 100, 'Panel D: ' + str(round(D_cited, 2)))
+
+    draw_brace(ax2, (0, 0),82.5, 'UoA 4:\n' + str(round(altm_by_uoa[4], 2)))
     draw_brace(ax2, (1, 14), 100, 'Panel C: ' + str(round(C_altm, 2)))
     draw_brace(ax2, (14, 21), 100, 'Panel D: ' + str(round(D_altm, 2)))
+
+    draw_brace(ax3, (0, 0), 2.2, 'UoA 4:\n' + str(round(ratio_by_uoa[4], 2)))
     draw_brace(ax3, (1, 14), 2.5, 'Panel C: ' + str(round(C_ratio, 2)))
     draw_brace(ax3, (14, 21), 2.5, 'Panel D: ' + str(round(D_ratio, 2)))
     plt.tight_layout()
@@ -1794,13 +1953,15 @@ def plot_metrics_all(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fig_
                              label=r'STEM', alpha=0.7),
                        Patch(facecolor=colors2[1], edgecolor='k',
                              label=r'SHAPE', alpha=0.7)]
-    for ax in [ax1, ax2, ax3]:
+    for ax in [ax1]:
         ax.legend(handles=legend_elements,
                   frameon=True,
                   fontsize=15, framealpha=1, facecolor='w',
                   edgecolor=(0, 0, 0, 1), ncol=1,
                   loc='center right'
                   )
+        ax.tick_params(axis='both', labelsize=18, which='major')
+        ax.tick_params(axis='both', labelsize=18, which='minor')
     ax1.set_title('A.', loc='left', fontsize=18)
     ax2.set_title('B.', loc='left', fontsize=18)
     ax3.set_title('C.', loc='left', fontsize=18)
@@ -1836,6 +1997,7 @@ def plot_metrics_all(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fig_
     draw_brace(ax3, (13, 24), 7.5, 'Panel C: ' + str(round(C_ratio, 2)))
     draw_brace(ax3, (25, 35), 7.5, 'Panel D: ' + str(round(D_ratio, 2)))
 
+    ax.tick_params(axis='x', labelsize=20)
     plt.tight_layout()
     sns.despine()
     file_name = 'altmetrics_and_citations'
@@ -1843,10 +2005,10 @@ def plot_metrics_all(cited_by_uoa, altm_by_uoa, ratio_by_uoa, paper_panels, fig_
 
 
 def plot_topic_keywords(figure_path):
-    mpl.rcParams['font.family'] = 'Arial'
-    mpl.rc('font', family='Arial')
-    csfont = {'fontname': 'Arial'}
-    hfont = {'fontname': 'Arial'}
+    mpl.rcParams['font.family'] = 'helvetica'
+    mpl.rc('font', family='helvetica')
+    csfont = {'fontname': 'helvetica'}
+    hfont = {'fontname': 'helvetica'}
     words = pd.read_csv(os.path.join(
         os.getcwd(), '..', '..', 'data',
         'topic_outputs', 'production_model',
