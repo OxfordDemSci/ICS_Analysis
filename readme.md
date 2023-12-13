@@ -1,57 +1,74 @@
-# ICS Analysis
+<img src="./assets/figure_1.png" width="700"/>
 
-A repository to analyse the Impact Case Studies submitted to the Research Excellence Framework, 2021.
+# The SHAPE of Impact
 
-Investigators: Douglas Leasure, Melinda C. Mills, Charles Rahal, Sander Wagner, Mark Verhagen and Bo Zhao
+![coverage](https://img.shields.io/badge/Purpose-Research-yellow)
+[![Generic badge](https://img.shields.io/badge/Python-3.7-red.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/License-CCBY4.0-purple.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/Maintained-Yes-brightgreen.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/BuildPassing-Yes-orange.svg)](https://shields.io/)
 
-Research Support: Hamza Shams, Bradley Smith, Michelle Thorpe.
+A repository to analyse the Impact Case Studies submitted to the Research Excellence Framework, 2021. A link to the final, published version of the report will be available in due course.
 
-### Data pipeline
+**Investigators:** Sander Wagner (Co-I), Charles Rahal (Co-I), Douglas Leasure (Co-I), Mark Verhagen (Co-I), Bo Zhao (Co-I) and Melinda C. Mills (PI).
 
-There are three levels of aggregation at which the data is structured.
-- Submission: the level of the actual evaluated submission
-- ICS: the case studies underlying each submission 
-- Output: the output underlying each ICS
+**Researchers/Research Assistants:** Simon Cooper, Ekaterina Degtiareva, Giordano Epifani, Yifan Liu, Brenda Mccollum, Alice Spiers and Reja Wyss.
 
-The general structure of the data pipeline is as follows:
-1. Collect data from various sources. All tables written into the `data/raw/` folder.
-2. Generate tables for the submission, ICS, and underlying output level that contains identifiers linking the three tables and all relevant variables that reside at the table's level of aggregation. Includes feature extraction. All tables written into the `data/edit/` folder.
-3. Aggregation of tables across levels (e.g. ICS to submission). All tables written into the `data/edit/` folder.
-4. Compiling of a final table for each level of aggregation containing features at the set level of aggregation, as well as summarized features from other levels of aggregation. All tables written into the `data/final/` folder.
+**Research Support:** Hamza Shams, Bradley Smith, Michelle Thorpe.
 
-General data folder structure is as follows:
+**Funders:** British Academy and Academy of Social Sciences.
 
-`data/raw/`: contains data fetched from various sources.
-`data/edit/`: contains wrangled versions of the data contained in `data/raw/`.
-`data/final/`: contains final analysis versions of the data.
+### Data
 
-#### Collect data
+The main source of raw data which powers this analysis is the REF 2021 Database. The five key files relate to:
+1. The raw REF ICS dataset itself.
+2. The 'tags' associated with the raw ICS.
+3. The 'environmental' data associated with submitting departments.
+4. The 'outputs' dataset, which contains information on submitted academic outputs.
+5. The 'results' dataset, which details results across impact, environment, and output.
 
-Data is fetched from various places through the following scripts contained in the `src/get_data/` folder:
+The REF 2021 data is generally available from [https://results2021.ref.ac.uk/](https://results2021.ref.ac.uk/). All REF submissions information, including downloadable submissions data, REF impact case studies, institution environment statements and unit environment statements can be used under the CC BY 4.0 licence. Use is permitted under [these licence conditions](http://creativecommons.org/licenses/by/4.0/legalcode). Shapefiles for the static analysis are provided by Natural Earth: Free vector and raster map data @ [naturalearthdata.com](naturalearthdata.com).
 
-`get_ref_data.py`: fetches data from the REF website.
+For specific parts of the analysis (gender, interdisciplinarity, funding, citations and altmetrics), we use data obtained from [Dimensions](https://dimensions.ai/), and re-share parts of it with explicit agreement from [Digital Science](https://www.digital-science.com/).
 
-`get_output_data.py`: tbd
+For a certain number of our analyses, manual curation is necessary. Our manually curated files can be found at `./data/manual`, and include information on:
 
-`get_3rd_party_data.py`: tbd
+* Funders who power the Impact Case Studies
+* Countries where beneficiaries of the research are located.
+* GRID lookup data.
+* Identifiers of the underpinning research
+* A manually curated list of stopwords.
+* A lookup table which maps ICS documents to Topics and Grand Impact Areas.
 
-#### Generate aggregation level-specific tables
+The final, enhanced, and complete version of our dataset which is made available as part of this project can be found at `./data/final/enhanced_ref_data.csv`, i.e. [here].
 
-Data is wrangled and stored, and features are extracted such that we have complete aggregation level specific tables through the following scripts contained in the `src/clean_data/` folder:
+### Analysis
 
-`split_ref_ics_dept.py`: splits the data fetcehd from `get_ref_data.py` into a table at the submission level and a table at the ICS level including identifiers.
+The majority of the analysis is split into three distinct types/parts.
 
-`models.py`: extracts features at the ICS level.
+1. The first is the BERTopic based large language model. The code which creates this can be found in `./src/topic_modelling.` Thanks to the hard work of [bs-dev](https://github.com/bz-dev) and [lindali97](https://github.com/lindali97) on here!
 
+2. General descriptive code found in `./src/analysis`, which is split into two parts:
 
-#### Summarize tables across levels of aggregation
+* The static analysis, which is found in `./src/analysis/static`, and:
+      a. 'Grand Impact Area' by Grand Impact Area outputs (Figures 3-12), and:
+* Figures 13-18 which provide broad level analysis of:
+    * i. Environment of Impact
+    * ii. The Geography of Impact
+    * iii. The Funding of Impact
+    * iv. The Inter- and Multidisciplinary Nature of Impact	83
+    * v. The Gendered Nature of Underpinning Research
 
-Data is summarized from one level of aggregation to another through the following scripts contained in the `src/agg_data/` folder:
+* The interactive dashboard. This is found in `./src/dashboard`, and is a standalone repository which is linked to this one as a submodule. 
 
-`ics_to_sub.py`: aggregates ICS level data to the submission level.
+### Dashboard
 
-#### Compile final analysis tables
+An online interactive dashboard accompanies this work, found at [https://shape-impact.co.uk](https://shape-impact.co.uk). This dashboard is entirely reproducible, with code which creates it available at `./src/dashboard. We are especially grateful for the help of [GisRede](https://www.gisrede.com/) for their role in it's development.
 
-Data is compiled across aggregation levels into a single, aggregation level specific table containing all relevant features for analysis through the following scripts contained in the `src/merge_data/` folder:
+### Contact
 
-`merge_sub.py`: combines data at the submission level with aggregate data from the ICS and output level.
+For any general queries related to this work, please contact `lcds.office@demography.ox.ac.uk` or for media related enquiries, please contact `lcds.office@demography.ox.ac.uk`. For technical issues related to the programmatic analysis of this work, please raise an Issue, or feel free to open a Pull Request.
+
+### License
+
+This work is made available under CC BY 4.0. See `LICENSE` for details.

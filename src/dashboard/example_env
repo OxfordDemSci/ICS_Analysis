@@ -1,0 +1,8 @@
+POSTGRES_USER=super_user
+POSTGRES_PASSWORD=super_user_password
+POSTGRES_READONLY=readonly_user
+POSTGRES_READONLY_PASSWORD=readonly_password
+POSTGRES_DB=ics
+POSTGRES_DB_TEST=ics_test
+DATABASE_TABLES_DIR=app/data/db-data
+basedir="."
