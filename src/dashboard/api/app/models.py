@@ -51,6 +51,7 @@ class Topics(Base):  # type: ignore
     group_id = Column(Integer)
     topic_group = Column(String)
     topic_name = Column(String)
+    topic_name_long = Column(String)
     description = Column(String)
     narrative = Column(String)
     keywords = Column(String)
