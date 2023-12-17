@@ -1,7 +1,7 @@
 import csv
+import json
 from collections import defaultdict
 from io import StringIO
-import json
 from typing import Any, DefaultDict, Dict, List
 
 from flask import make_response
@@ -80,7 +80,7 @@ def get_website_text():
         "uk_map_colourramp": row.uk_map_colourramp,
         "global_colourramp": row.global_colourramp,
         "funders_bar_colour": row.funders_bar_colour,
-        "uoa_bar_colours": json.loads(row.uoa_bar_colours)
+        "uoa_bar_colours": json.loads(row.uoa_bar_colours),
     }
     return website_text
 
@@ -88,7 +88,7 @@ def get_website_text():
 def get_pdf_data(
     threshold: float,
     topic: str | None = None,
-    postcode_area: str | None = None,
+    postcode_area: list | None = None,
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
@@ -126,7 +126,7 @@ def get_ics_table(ics_ids: list | None = None, limit: int | None = None) -> list
 def download_ics_table(
     threshold: float,
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     country: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
@@ -287,7 +287,7 @@ def get_institution_counts(ics_ids: List | None = None) -> Any:
 def query_dashboard_data(
     threshold: float,
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
@@ -305,14 +305,21 @@ def query_dashboard_data(
 def get_ics_ids(
     threshold: float,
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> List[str]:
     sql = get_ics_sql(topic, postcode, beneficiary, uoa, funder)
     argument_names = ["threshold", "topic", "postcode", "beneficiary", "uoa", "funder"]
-    arguments = [threshold, topic, postcode, beneficiary, uoa, funder]
+    arguments = [
+        threshold,
+        topic,
+        tuple(postcode) if postcode is not None else None,
+        beneficiary,
+        uoa,
+        funder,
+    ]
     params = {
         arg_name: arg_val
         for arg_name, arg_val in zip(argument_names, arguments)
@@ -325,7 +332,7 @@ def get_ics_ids(
 
 def get_ics_sql(
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     beneficiary: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
@@ -342,7 +349,7 @@ def get_ics_sql(
     if topic is not None:
         sql_str += " AND t.topic_name = :topic"
     if postcode is not None:
-        sql_str += " AND i.postcode = :postcode"
+        sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:
         sql_str += " AND c.country = :beneficiary"
     if uoa is not None:

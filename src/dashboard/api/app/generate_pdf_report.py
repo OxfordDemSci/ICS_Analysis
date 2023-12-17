@@ -4,10 +4,9 @@ from pathlib import Path
 
 import matplotlib  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
-from matplotlib.colors import LinearSegmentedColormap
 from flask import make_response, request
-from matplotlib.backends.backend_agg import \
-    FigureCanvasAgg as FigureCanvas  # type: ignore
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas  # type: ignore
+from matplotlib.colors import LinearSegmentedColormap  # type: ignore
 from reportlab.lib import colors  # type: ignore
 from reportlab.lib.pagesizes import letter  # type: ignore
 from reportlab.lib.units import cm  # type: ignore
@@ -144,7 +143,11 @@ def add_funder_info(pdf_data):
     footnote = add_text(footnote_text, footnote=True)
     bar_colour = pdf_data["background_text"]["funders_bar_colour"]
     table_and_graph = create_bar_graph(
-        pdf_data["ics_data"]["funders_counts"], "funder_count", "funder", "Funders", bar_colour
+        pdf_data["ics_data"]["funders_counts"],
+        "funder_count",
+        "funder",
+        "Funders",
+        bar_colour,
     )
     funder_table = Table([[title], [table_and_graph], [footnote]], colWidths=[15 * cm])
     funder_table.setStyle(
@@ -173,7 +176,9 @@ def add_uoa_info(pdf_data):
             f"{pdf_data['topic'][0]['topic_name']} were submitted.</b>"
         )
     footnote = add_text(footnote_text, footnote=True)
-    uoa_table_and_graph = create_uoa_bar_chart(pdf_data["ics_data"]["uoa_counts"], pdf_data["background_text"])
+    uoa_table_and_graph = create_uoa_bar_chart(
+        pdf_data["ics_data"]["uoa_counts"], pdf_data["background_text"]
+    )
     uoa_table = Table([[title], [uoa_table_and_graph], [footnote]], colWidths=[15 * cm])
     uoa_table.setStyle(
         TableStyle(
@@ -222,24 +227,31 @@ def add_institutions_info(pdf_data):
     )
     color_list = pdf_data["background_text"]["uk_map_colourramp"]
     fig, ax = plt.subplots(1, 1, figsize=(30, 25))
-    cmap = LinearSegmentedColormap.from_list('custom_colormap', color_list, N=len(color_list))  # N is the number of bins
+    cmap = LinearSegmentedColormap.from_list(
+        "custom_colormap", color_list, N=len(color_list)
+    )  # N is the number of bins
     pc_gdf.plot(
-        ax=ax, column="counts", scheme="naturalbreaks", cmap=cmap, legend=False, edgecolor="grey", linewidth=0.5
+        ax=ax,
+        column="counts",
+        scheme="naturalbreaks",
+        cmap=cmap,
+        legend=False,
+        edgecolor="grey",
+        linewidth=0.5,
     )
     # Add the colorbar below the map horizontally
     cax = fig.add_axes([0.85, 0.15, 0.02, 0.7])  # [left, bottom, width, height]
     sm = plt.cm.ScalarMappable(
         cmap=cmap,
-        norm=plt.Normalize(
-            vmin=pc_gdf["counts"].min(), vmax=pc_gdf["counts"].max()
-        ),
+        norm=plt.Normalize(vmin=pc_gdf["counts"].min(), vmax=pc_gdf["counts"].max()),
     )
     cbar = plt.colorbar(sm, cax=cax, orientation="vertical")
     cbar.set_label("Counts", labelpad=10)
     cbar.ax.tick_params(labelsize=24)
-    plt.figtext(0.52, 0.01, "Total counts per postcode", fontsize=42, ha="center", va="center")
+    plt.figtext(
+        0.52, 0.01, "Total counts per postcode", fontsize=42, ha="center", va="center"
+    )
     plt.figure(figsize=(20, 8))
-
 
     buffer = io.BytesIO()
     canvas = FigureCanvas(ax.figure)
@@ -334,7 +346,9 @@ def add_beneficiaries_info(pdf_data):
         insert_count, col="iso_a3", counts=country_counts, axis=1
     )
     color_list = pdf_data["background_text"]["global_colourramp"]
-    cmap = LinearSegmentedColormap.from_list('custom_colormap', color_list, N=len(color_list))  # N is the number of bins
+    cmap = LinearSegmentedColormap.from_list(
+        "custom_colormap", color_list, N=len(color_list)
+    )  # N is the number of bins
     fig, ax = plt.subplots(1, 1, figsize=(30, 20))
     ax.set_xticks([])
     ax.set_yticks([])
@@ -446,7 +460,7 @@ def create_bar_graph(data, value, label, chart_title, bar_colour):
     # Extract the labels and values for the top 20 elements
     top_labels = [item[label].strip() for item in sorted_data[:20]]
     top_values = [item[value] for item in sorted_data[:20]]
-    
+
     fig, ax = plt.subplots()
     bars = ax.bar(top_labels, top_values, color=bar_colour, edgecolor="black")
 
@@ -483,7 +497,6 @@ def create_bar_graph(data, value, label, chart_title, bar_colour):
 
     # Add the image to the story list
     img = Image(buffer, width=14 * cm, height=10 * cm)
-    
 
     # If there are more than 20 elements, calculate the sum of the remaining values
     if len(data) > 20:
@@ -554,7 +567,7 @@ def create_uoa_bar_chart(data_list, website_text):
     # Prepare data for stacked bar chart
     names = [item["name"] for item in data_list]
     data = [item["uoa_count"] for item in data_list]
-    #colors_map = {"A": "#f77f00", "B": "#ffcc29", "C": "#008bf8", "D": "#af19ff"}
+    # colors_map = {"A": "#f77f00", "B": "#ffcc29", "C": "#008bf8", "D": "#af19ff"}
     colors_map = website_text["uoa_bar_colours"]
     leg_colors = [colors_map[x["assessment_panel"]] for x in data_list]
 

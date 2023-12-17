@@ -43,19 +43,24 @@ class TopicType:
 
 @dataclass
 class PostCodeAreaType:
-    value: str | None = None  # type: ignore
+    value: list | None = None  # type: ignore
 
     @property  # type: ignore
-    def value(self) -> Union[str, None]:
+    def value(self) -> Union[list, None]:
         return self._value
 
     @value.setter
-    def value(self, new_value: str | None) -> None:
+    def value(self, new_value: list | None) -> None:
         values = db.session.query(ICS.postcode).distinct().all()
-        if new_value is None or new_value in [x[0] for x in values]:
+        values = [x[0] for x in values]
+        if new_value is not None:
+            new_value = [
+                x for x in new_value if x in values
+            ]  # Remove invalid postcodes
+        if new_value is None or all(x in values for x in new_value):
             self._value = new_value
         else:
-            raise ValueError(f"Postcode invalid - {new_value}")
+            raise ValueError(f"Postcodes invalid - {new_value}")
 
 
 @dataclass
