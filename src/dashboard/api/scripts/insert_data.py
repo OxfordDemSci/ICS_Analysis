@@ -55,6 +55,11 @@ TABLE_MAP = {
         "cols_to_convert": ["id", "ics_table_id"],
         "table_name": "countries",
     },
+    "ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv": {
+        "ICS_TO_COUNTRY_LOOKUP_TABLE.csv": {
+        "cols_to_convert": ["id", "ics_table_id"],
+        "table_name": "uk_regions",
+    },
     "ICS_TO_FUNDERS_LOOKUP_TABLE.csv": {
         "cols_to_convert": ["id", "ics_table_id"],
         "table_name": "funder",
