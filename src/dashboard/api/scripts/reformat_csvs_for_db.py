@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 
-from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV
+from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, GLOBAL_ISOS, EU_COUNTRIES
 
 # define "basedir" environment variable in ./.env file
 load_dotenv()

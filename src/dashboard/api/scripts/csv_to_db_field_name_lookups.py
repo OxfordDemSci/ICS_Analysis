@@ -96,3 +96,325 @@ COLUMN_CONVERSION_MAP_FROM_CSV = {
     "s5_sentiment_score": "s5_sentiment_score",
     "sentiment_score": "sentiment_score"
 }
+
+
+GLOBAL_ISOS = [
+    'CUB',
+    'DOM',
+    'NIC',
+    'GTM',
+    'MAF',
+    'SXM',
+    'HTI',
+    'CRI',
+    'SLV',
+    'BLZ',
+    'PAN',
+    'GRL',
+    'HND',
+    'CUW',
+    'ABW',
+    'MEX',
+    'BHS',
+    'CAN',
+    'USA',
+    'SPM',
+    'TTO',
+    'TCA',
+    'GRD',
+    'BRB',
+    'LCA',
+    'VCT',
+    'DMA',
+    'BLM',
+    'MSR',
+    'KNA',
+    'AIA',
+    'VIR',
+    'JAM',
+    'ATG',
+    'PRI',
+    'VGB',
+    'CYM',
+    'BOL',
+    'CHL',
+    'BMU',
+    'GUY',
+    'SUR',
+    'PER',
+    'ARG',
+    'BRA',
+    'ECU',
+    'PRY',
+    'URY',
+    'COL',
+    'FLK',
+    'VEN',
+    'CYP',
+    'IDN',
+    'ISR',
+    'IND',
+    'MYS',
+    'PSE',
+    'CHN',
+    'LBN',
+    'SYR',
+    'PRK',
+    'KOR',
+    'BTN',
+    'OMN',
+    'KAZ',
+    'MNG',
+    'UZB',
+    'VNM',
+    'KHM',
+    'TJK',
+    'AZE',
+    'GEO',
+    'ARE',
+    'LAO',
+    'ARM',
+    'IRQ',
+    'TUR',
+    'KGZ',
+    'QAT',
+    'IRN',
+    'SAU',
+    'TLS',
+    'THA',
+    'KWT',
+    'PAK',
+    'BRN',
+    'MMR',
+    'BGD',
+    'TKM',
+    'JOR',
+    'AFG',
+    'HKG',
+    'NPL',
+    'CYN',
+    'YEM',
+    'KAS',
+    'PHL',
+    'LKA',
+    'AU1',
+    'SGP',
+    'JPN',
+    'BHR',
+    'TWN',
+    'MAC',
+    'SOM',
+    'SSD',
+    'ETH',
+    'KEN',
+    'MWI',
+    'SOL',
+    'MAR',
+    'TZA',
+    'ESH',
+    'COG',
+    'NAM',
+    'ZAF',
+    'TUN',
+    'ZMB',
+    'GIN',
+    'SLE',
+    'COD',
+    'LBR',
+    'CAF',
+    'LBY',
+    'SDN',
+    'DJI',
+    'ERI',
+    'AGO',
+    'SEN',
+    'MLI',
+    'BEN',
+    'NGA',
+    'CIV',
+    'TCD',
+    'DZA',
+    'BWA',
+    'BDI',
+    'MOZ',
+    'RWA',
+    'UGA',
+    'ZWE',
+    'SWZ',
+    'LSO',
+    'GAB',
+    'CMR',
+    'NER',
+    'TGO',
+    'EGY',
+    'GNB',
+    'BFA',
+    'GHA',
+    'MRT',
+    'GNQ',
+    'COM',
+    'STP',
+    'MDG',
+    'GMB',
+    'CPV',
+    'BLR',
+    'FRA',
+    'LTU',
+    'DEU',
+    'EST',
+    'SWE',
+    'LVA',
+    'CZE',
+    'FIN',
+    'NOR',
+    'LUX',
+    'BEL',
+    'MKD',
+    'ALB',
+    'XXK',
+    'ESP',
+    'SVK',
+    'DNK',
+    'HUN',
+    'ROU',
+    'GBR',
+    'POL',
+    'AUT',
+    'IRL',
+    'ITA',
+    'GRC',
+    'CHE',
+    'HRV',
+    'NLD',
+    'LIE',
+    'SRB',
+    'BGR',
+    'SVN',
+    'MCO',
+    'AND',
+    'SMR',
+    'PRT',
+    'BIH',
+    'VAT',
+    'MNE',
+    'MDA',
+    'ISL',
+    'JEY',
+    'GGY',
+    'MLT',
+    'IMN',
+    'FRO',
+    'PNG',
+    'AUS',
+    'FJI',
+    'ALA',
+    'NZL',
+    'NCL',
+    'PCN',
+    'PYF',
+    'COK',
+    'MHL',
+    'NFK',
+    'TON',
+    'KIR',
+    'WSM',
+    'WLF',
+    'SLB',
+    'TUV',
+    'NRU',
+    'FSM',
+    'ASM',
+    'NIU',
+    'PLW',
+    'VUT',
+    'GUM',
+    'ATC',
+    'MNP',
+    'RUS',
+    'UKR',
+    'MDV',
+    'MUS',
+    'SYC']
+
+EU_COUNTRIES = [
+    "AUT",  # Austria
+    "BEL",  # Belgium
+    "BGR",  # Bulgaria
+    "HRV",  # Croatia
+    "CYP",  # Cyprus
+    "CZE",  # Czech Republic
+    "DNK",  # Denmark
+    "EST",  # Estonia
+    "FIN",  # Finland
+    "FRA",  # France
+    "DEU",  # Germany
+    "GRC",  # Greece
+    "HUN",  # Hungary
+    "IRL",  # Ireland
+    "ITA",  # Italy
+    "LVA",  # Latvia
+    "LTU",  # Lithuania
+    "LUX",  # Luxembourg
+    "MLT",  # Malta
+    "NLD",  # Netherlands
+    "POL",  # Poland
+    "PRT",  # Portugal
+    "ROU",  # Romania
+    "SVK",  # Slovakia
+    "SVN",  # Slovenia
+    "ESP",  # Spain
+    "SWE",  # Sweden
+]
+
+ALL_EUROPE_COUNTRIES = [
+    "ALB",  # Albania
+    "AND",  # Andorra
+    "ARM",  # Armenia
+    "AUT",  # Austria
+    "AZE",  # Azerbaijan
+    "BLR",  # Belarus
+    "BEL",  # Belgium
+    "BIH",  # Bosnia and Herzegovina
+    "BGR",  # Bulgaria
+    "HRV",  # Croatia
+    "CYP",  # Cyprus
+    "CZE",  # Czech Republic
+    "DNK",  # Denmark
+    "EST",  # Estonia
+    "FIN",  # Finland
+    "FRA",  # France
+    "GEO",  # Georgia
+    "DEU",  # Germany
+    "GRC",  # Greece
+    "HUN",  # Hungary
+    "ISL",  # Iceland
+    "IRL",  # Ireland
+    "ITA",  # Italy
+    "KAZ",  # Kazakhstan
+    "KOS",  # Kosovo
+    "LVA",  # Latvia
+    "LIE",  # Liechtenstein
+    "LTU",  # Lithuania
+    "LUX",  # Luxembourg
+    "MKD",  # North Macedonia
+    "MLT",  # Malta
+    "MCO",  # Monaco
+    "MNE",  # Montenegro
+    "NLD",  # Netherlands
+    "NOR",  # Norway
+    "POL",  # Poland
+    "PRT",  # Portugal
+    "ROU",  # Romania
+    "RUS",  # Russia
+    "SMR",  # San Marino
+    "SRB",  # Serbia
+    "SVK",  # Slovakia
+    "SVN",  # Slovenia
+    "ESP",  # Spain
+    "SWE",  # Sweden
+    "CHE",  # Switzerland
+    "TUR",  # Turkey
+    "UKR",  # Ukraine
+    "GBR",  # United Kingdom
+    "VAT",  # Vatican City (Holy See)
+]
