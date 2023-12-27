@@ -1,6 +1,7 @@
 import ast
 import csv
 import json
+import pandas as pd
 from pathlib import Path
 
 from app.models import (ICS, UOA, Countries, Funder, Institution, TopicGroups,
@@ -23,19 +24,15 @@ csv_map = {
 
 def insert_test_data(db_session):
     for csv_name, model in csv_map.items():
-        with open(BASE.joinpath(csv_name), "r", encoding="utf-8") as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                if csv_name == "WEBSITE_TEXT.csv":
-                    row["uk_map_colourramp"] = ast.literal_eval(
-                        row["uk_map_colourramp"]
-                    )
-                    row["global_colourramp"] = ast.literal_eval(
-                        row["global_colourramp"]
-                    )
-                    row["uoa_bar_colours"] = json.dumps(row["uoa_bar_colours"])
-                db_row = model(**row)
-                db_session.add(db_row)
+        df = pd.read_csv(BASE.joinpath(csv_name))
+        if csv_name == "WEBSITE_TEXT.csv":
+            df["uk_map_colourramp"] = df["uk_map_colourramp"].apply(ast.literal_eval)
+            df["global_colourramp"] = df["global_colourramp"].apply(ast.literal_eval)
+            df["uoa_bar_colours"] = df["uoa_bar_colours"].apply(json.dumps)
+        data = df.to_dict(orient="records")
+        for row in data:
+            db_row = model(**row)
+            db_session.add(db_row)
     db_session.commit()
 
 
