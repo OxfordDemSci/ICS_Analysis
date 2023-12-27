@@ -138,6 +138,7 @@ class TopicGroups(Base):  # type: ignore
 
     group_id = Column(Integer, primary_key=True)
     topic_group = Column(String)
+    topic_group_long = Column(String)
     description = Column(String)
     narrative = Column(String)
 
