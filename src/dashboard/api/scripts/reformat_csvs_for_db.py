@@ -180,9 +180,9 @@ def make_topics_and_weights(ics_df: pd.DataFrame, scale_weights: str | None = No
             if pd.notna(row.topic_id):
                 df_subset = make_weights_df_binary_per_ics(topic_ids, row)
                 topic_weights_dfs_to_join.append(df_subset.reset_index())
-        df_topic_weights_final = pd.concat(topic_weights_dfs_to_join)
+        df_topic_weights_final = pd.concat(topic_weights_dfs_to_join).reset_index()
         df_topic_weights_final["id"] = df_topic_weights_final.index.copy().astype("int")
-        cols = [x for x in df_topic_weights_final.columns if x != 'id']
+        cols = [x for x in df_topic_weights_final.columns if x not in ['id', 'index']]
         cols.insert(0, 'id')
         df_topic_weights_final = df_topic_weights_final[cols]
         df_topic_weights_final.to_csv(TOPICS_WEIGHTS_OUT, index=False)
