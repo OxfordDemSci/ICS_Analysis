@@ -98,11 +98,29 @@ def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
     df_lookup.to_csv(FUNDERS_LOOKUP_OUT, index=False)
 
 
+def fix_errors(row):
+    if pd.notna(row.countries_iso3):
+        if "global" in row.countries_iso3:
+            return ", ".join(GLOBAL_ISOS)
+        elif ("europe" in row.countries_iso3) and ("global" not in row.countries_iso3):
+            return ", ".join(EU_COUNTRIES)
+        elif "VUTl" in row.countries_iso3:
+            row.countries_iso3 = row.countries_iso3.replace("VUTl", "VUT")
+            return row.countries_iso3
+        elif "USA SWE" in row.countries_iso3:
+            row.countries_iso3 = row.countries_iso3.replace("USA SWE", "USA, SWE")
+            return row.countries_iso3
+        else:
+            return row.countries_iso3
+    else:
+        return row.countries_iso3
+
+
 def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
     df_iso = df_ics[["id", "countries_iso3"]]
     df_iso = df_iso.copy()
-    df_iso["countries_iso3"] = df_iso["countries_iso3"].str.replace(";", ",")
-    #df_iso.loc[:, "country"] = df_iso.countries_iso3.apply(ast.literal_eval)
+    df_iso["countries_iso3"] = df_iso["countries_iso3"].str.replace(";", ",").str.replace(":", ",")
+    df_iso["countries_iso3"] = df_iso.apply(fix_errors, axis=1)
     df_iso.loc[:, "country"] = df_iso.countries_iso3.str.split(",")
     df_iso = df_iso[["id", "country"]]
     df_iso = df_iso.explode("country")
@@ -110,6 +128,8 @@ def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
     df_iso.reset_index(inplace=True)
     df_iso["id"] = df_iso.index.copy().astype(int)
     df_iso = df_iso[["id", "ics_table_id", "country"]]
+    df_iso.country = df_iso.country.str.strip()
+    df_iso.country = df_iso.country.replace('', np.nan)
     df_iso.to_csv(COUNTRIES_LOOKUP_OUT, index=False)
 
 
