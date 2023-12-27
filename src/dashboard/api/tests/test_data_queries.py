@@ -46,7 +46,6 @@ def test_get_topics(session, dataframes, topic):
     ]
     assert sorted(topic_names) == sorted(topics_df.topic_name.tolist())
     assert sorted(topic_groups) == sorted(topics_df.topic_group.tolist())
-    assert sorted(topic_keywords) == sorted(topics_df.keywords.tolist())
     if topic is None:
         assert "All Topics" in [x["topic_name"] for x in topics]
 

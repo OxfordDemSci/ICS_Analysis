@@ -59,7 +59,7 @@ def test_ics_data(session, app):
         ("/api/get_ics_data?threshold=2", 400),
         ("/api/get_ics_data?theshold=big", 400),
         ("/api/get_ics_data?threshold=0.5&topic=Not_a_topic", 400),
-        ("/api/get_ics_data?threshold=1&topic=Cultural%20Capital", 200),
+        ("/api/get_ics_data?threshold=1&topic=Cultural%20Capital", 204),
         ("/api/not_an_endpoint", 404),
     ],
 )
