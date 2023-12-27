@@ -177,7 +177,7 @@ def make_topics_and_weights(ics_df: pd.DataFrame, scale_weights: str | None = No
         #     weights_df.at[i, weights_df.at[i, "BERT_topic"]] = 1
         topic_weights_dfs_to_join = []
         for _, row in ics_df.iterrows():
-            if row.topic_id:
+            if pd.notna(row.topic_id):
                 df_subset = make_weights_df_binary_per_ics(topic_ids, row)
                 topic_weights_dfs_to_join.append(df_subset.reset_index())
         df_topic_weights_final = pd.concat(topic_weights_dfs_to_join)
