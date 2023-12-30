@@ -158,8 +158,9 @@ def make_uk_region_geom_table(region_list) -> None:
     gdf["regions_wkt"] = gdf.apply(lambda x: x.geometry.wkt, axis=1)
     df = pd.DataFrame(gdf[[x for x in gdf.columns if x not in ["geometry", "country", "index"]]])  # Geom not saved as binary in DB
     df["PLACENAME"] = df["PLACENAME"].apply(lambda x: x.lower().title() if pd.notnull(x) else x)
+    df.rename(columns={"PLACENAME": "placename"}, inplace=True)
     try:
-        assert sorted(df.PLACENAME.unique().tolist()) == sorted(region_list)
+        assert sorted(df.placename.unique().tolist()) == sorted(region_list)
     except AssertionError:
         raise ValueError(
             f"{UK_REGIONS_GEOM_TABLE.name} not saved because regions in this table differ from uk_region_tag_values in {UK_REGIONS_LOOKUP_OUT.name}."
