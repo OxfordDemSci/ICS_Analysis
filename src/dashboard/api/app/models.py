@@ -193,7 +193,17 @@ class UKRegions(Base):  # type: ignore
     ics_table_id = Column(Integer)
     uk_region_tag_values = Column(String)
 
-    __table_args__ = (Index("idx_uk_regions_id", "id", unique=True),) 
+    __table_args__ = (Index("idx_uk_regions_id", "id", unique=True),)
+
+
+class RegionsGeometry(Base):  # type: ignore
+    __tablename__ = "regions_geometry"
+
+    id = Column(Integer)
+    placename = Column(String, primary_key=True)
+    regions_wkt = Column(String)
+
+    __table_args__ = (Index("idx_regions_geom_idx", "placename", unique=True),)
 
 
 class WebsiteText(Base):  # type: ignore

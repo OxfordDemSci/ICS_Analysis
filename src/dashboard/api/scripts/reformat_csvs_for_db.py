@@ -159,6 +159,7 @@ def make_uk_region_geom_table(region_list) -> None:
     df = pd.DataFrame(gdf[[x for x in gdf.columns if x not in ["geometry", "country", "index"]]])  # Geom not saved as binary in DB
     df["PLACENAME"] = df["PLACENAME"].apply(lambda x: x.lower().title() if pd.notnull(x) else x)
     df.rename(columns={"PLACENAME": "placename"}, inplace=True)
+    df = df[["id", "placename", "regions_wkt"]]
     try:
         assert sorted(df.placename.unique().tolist()) == sorted(region_list)
     except AssertionError:

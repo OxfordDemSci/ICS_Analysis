@@ -1,16 +1,16 @@
 """initial migration
 
-Revision ID: d5c9acee5f91
+Revision ID: a4ee7481bb73
 Revises: 
-Create Date: 2023-08-02 09:30:00.146021
+Create Date: 2023-12-30 15:18:16.659397
 
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'd5c9acee5f91'
+revision = 'a4ee7481bb73'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,7 +37,7 @@ def upgrade() -> None:
     sa.Column('ukprn', sa.Integer(), nullable=True),
     sa.Column('institution_name', sa.String(), nullable=True),
     sa.Column('main_panel', sa.String(), nullable=True),
-    sa.Column('unit_of_assessment_number', sa.String(), nullable=True),
+    sa.Column('uoa', sa.String(), nullable=True),
     sa.Column('unit_of_assessment_name', sa.String(), nullable=True),
     sa.Column('multiple_submission_letter', sa.String(), nullable=True),
     sa.Column('multiple_submission_name', sa.String(), nullable=True),
@@ -59,12 +59,75 @@ def upgrade() -> None:
     sa.Column('details_of_the_impact', sa.String(), nullable=True),
     sa.Column('sources_to_corroborate_the_impact', sa.String(), nullable=True),
     sa.Column('covid_statement', sa.String(), nullable=True),
-    sa.Column('uoa', sa.Integer(), nullable=True),
-    sa.Column('countries_iso3', sa.String(), nullable=True),
-    sa.Column('inst_postcode', sa.String(), nullable=True),
+    sa.Column('fte', sa.String(), nullable=True),
+    sa.Column('num_doc_degrees_total', sa.String(), nullable=True),
+    sa.Column('av_income', sa.String(), nullable=True),
+    sa.Column('tot_income', sa.String(), nullable=True),
+    sa.Column('tot_inc_kind', sa.String(), nullable=True),
+    sa.Column('ics_gpa', sa.String(), nullable=True),
+    sa.Column('environment_gpa', sa.String(), nullable=True),
+    sa.Column('output_gpa', sa.String(), nullable=True),
+    sa.Column('overall_gpa', sa.String(), nullable=True),
+    sa.Column('post_code', sa.String(), nullable=True),
     sa.Column('inst_postcode_district', sa.String(), nullable=True),
     sa.Column('postcode', sa.String(), nullable=True),
     sa.Column('ics_url', sa.String(), nullable=True),
+    sa.Column('countries_iso3', sa.String(), nullable=True),
+    sa.Column('region_extracted', sa.String(), nullable=True),
+    sa.Column('union_extracted', sa.String(), nullable=True),
+    sa.Column('funders_extracted', sa.String(), nullable=True),
+    sa.Column('underpinning_research_subject_tag_values', sa.String(), nullable=True),
+    sa.Column('underpinning_research_subject_tag_group', sa.String(), nullable=True),
+    sa.Column('uk_region_tag_values', sa.String(), nullable=True),
+    sa.Column('uk_region_tag_group', sa.String(), nullable=True),
+    sa.Column('scientometric_data', sa.String(), nullable=True),
+    sa.Column('bert_topic', sa.String(), nullable=True),
+    sa.Column('bert_prob', sa.String(), nullable=True),
+    sa.Column('bert_topic_terms', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_1', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_2', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_3', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_4', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_5', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_6', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_7', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_8', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_9', sa.String(), nullable=True),
+    sa.Column('bert_topic_term_10', sa.String(), nullable=True),
+    sa.Column('max_prob', sa.String(), nullable=True),
+    sa.Column('reassigned', sa.String(), nullable=True),
+    sa.Column('reassignment', sa.String(), nullable=True),
+    sa.Column('final_topic', sa.String(), nullable=True),
+    sa.Column('reassignment_notes', sa.String(), nullable=True),
+    sa.Column('topic_id', sa.String(), nullable=True),
+    sa.Column('cluster_id', sa.String(), nullable=True),
+    sa.Column('topic_name', sa.String(), nullable=True),
+    sa.Column('topic_name_short', sa.String(), nullable=True),
+    sa.Column('cluster_name', sa.String(), nullable=True),
+    sa.Column('cluster_name_short', sa.String(), nullable=True),
+    sa.Column('topic_description', sa.String(), nullable=True),
+    sa.Column('s1_flesch_score', sa.String(), nullable=True),
+    sa.Column('s2_flesch_score', sa.String(), nullable=True),
+    sa.Column('s3_flesch_score', sa.String(), nullable=True),
+    sa.Column('s4_flesch_score', sa.String(), nullable=True),
+    sa.Column('s5_flesch_score', sa.String(), nullable=True),
+    sa.Column('flesch_score', sa.String(), nullable=True),
+    sa.Column('s1_np_count', sa.String(), nullable=True),
+    sa.Column('s1_vp_count', sa.String(), nullable=True),
+    sa.Column('s2_np_count', sa.String(), nullable=True),
+    sa.Column('s2_vp_count', sa.String(), nullable=True),
+    sa.Column('s3_np_count', sa.String(), nullable=True),
+    sa.Column('s3_vp_count', sa.String(), nullable=True),
+    sa.Column('s4_np_count', sa.String(), nullable=True),
+    sa.Column('s4_vp_count', sa.String(), nullable=True),
+    sa.Column('s5_np_count', sa.String(), nullable=True),
+    sa.Column('s5_vp_count', sa.String(), nullable=True),
+    sa.Column('s1_sentiment_score', sa.String(), nullable=True),
+    sa.Column('s2_sentiment_score', sa.String(), nullable=True),
+    sa.Column('s3_sentiment_score', sa.String(), nullable=True),
+    sa.Column('s4_sentiment_score', sa.String(), nullable=True),
+    sa.Column('s5_sentiment_score', sa.String(), nullable=True),
+    sa.Column('sentiment_score', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index('idx_ics_id', 'ics', ['id', 'ics_id'], unique=False)
@@ -74,6 +137,21 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('postcode', sa.String(length=8), nullable=True),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('regions_geometry',
+    sa.Column('id', sa.Integer(), nullable=True),
+    sa.Column('placename', sa.String(), nullable=False),
+    sa.Column('regions_wkt', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('placename')
+    )
+    op.create_index('idx_regions_geom_idx', 'regions_geometry', ['placename'], unique=True)
+    op.create_table('topic_groups',
+    sa.Column('group_id', sa.Integer(), nullable=False),
+    sa.Column('topic_group', sa.String(), nullable=True),
+    sa.Column('topic_group_long', sa.String(), nullable=True),
+    sa.Column('description', sa.String(), nullable=True),
+    sa.Column('narrative', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('group_id')
     )
     op.create_table('topic_weights',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -88,18 +166,20 @@ def upgrade() -> None:
     sa.Column('group_id', sa.Integer(), nullable=True),
     sa.Column('topic_group', sa.String(), nullable=True),
     sa.Column('topic_name', sa.String(), nullable=True),
+    sa.Column('topic_name_long', sa.String(), nullable=True),
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('narrative', sa.String(), nullable=True),
     sa.Column('keywords', sa.String(), nullable=True),
-    sa.Column('charlie_suggested', sa.String(), nullable=True),
-    sa.Column('topic_name_long', sa.String(), nullable=True),
-    sa.Column('hierarchical_grouping', sa.String(), nullable=True),
-    sa.Column('cluster_name', sa.String(), nullable=True),
-    sa.Column('cluster', sa.String(), nullable=True),
-    sa.Column('topic_notes', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('topic_id')
     )
     op.create_index('idx_topics_id', 'topics', ['topic_id'], unique=True)
+    op.create_table('uk_regions',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('ics_table_id', sa.Integer(), nullable=True),
+    sa.Column('uk_region_tag_values', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index('idx_uk_regions_id', 'uk_regions', ['id'], unique=True)
     op.create_table('uoa',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('uoa_id', sa.Integer(), nullable=False),
@@ -121,6 +201,10 @@ def upgrade() -> None:
     sa.Column('label_bottom_left_box', sa.String(), nullable=True),
     sa.Column('label_top_right_box', sa.String(), nullable=True),
     sa.Column('label_bottom_right_box', sa.String(), nullable=True),
+    sa.Column('uk_map_colourramp', sa.ARRAY(sa.String()), nullable=True),
+    sa.Column('global_colourramp', sa.ARRAY(sa.String()), nullable=True),
+    sa.Column('funders_bar_colour', sa.String(), nullable=True),
+    sa.Column('uoa_bar_colours', postgresql.JSON(astext_type=sa.Text()), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
@@ -131,10 +215,15 @@ def downgrade() -> None:
     op.drop_table('websitetext')
     op.drop_index('idx_uoa_id', table_name='uoa')
     op.drop_table('uoa')
+    op.drop_index('idx_uk_regions_id', table_name='uk_regions')
+    op.drop_table('uk_regions')
     op.drop_index('idx_topics_id', table_name='topics')
     op.drop_table('topics')
     op.drop_index('idx_topic_weights_id', table_name='topic_weights')
     op.drop_table('topic_weights')
+    op.drop_table('topic_groups')
+    op.drop_index('idx_regions_geom_idx', table_name='regions_geometry')
+    op.drop_table('regions_geometry')
     op.drop_table('institution')
     op.drop_index('idx_ics_id', table_name='ics')
     op.drop_table('ics')
