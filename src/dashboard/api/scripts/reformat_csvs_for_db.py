@@ -5,6 +5,7 @@ import shutil
 
 import numpy as np
 import pandas as pd
+import geopandas as gpd
 from dotenv import load_dotenv
 
 from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, GLOBAL_ISOS, EU_COUNTRIES
@@ -28,6 +29,7 @@ TOPICS_DIR = BASE.joinpath("data/dashboard")
 TOPICS_TABLE = TOPICS_DIR.joinpath("topics.csv")
 TOPIC_NARRATIVES = TOPICS_DIR.joinpath('topic_narrative.csv')
 TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath("topics_groups.csv")
+REGIONS_GPKG = TOPICS_DIR.joinpath("UK_REGIONS.gpkg")
 TOPICS_OUT = BASE_APP.joinpath("db-data/TOPICS_TABLE.csv")
 TOPICS_WEIGHTS_OUT = BASE_APP.joinpath("db-data/TOPIC_WEIGHTS_TABLE.csv")
 TOPICS_GROUPS_OUT = BASE_APP.joinpath("db-data/TOPIC_GROUPS_TABLE.csv")
@@ -36,6 +38,7 @@ FUNDERS_IN = TOPICS_DIR.joinpath("funders.csv")
 FUNDERS_LOOKUP_OUT = BASE_APP.joinpath("db-data/ICS_TO_FUNDERS_LOOKUP_TABLE.csv")
 COUNTRIES_LOOKUP_OUT = BASE_APP.joinpath("db-data/ICS_TO_COUNTRY_LOOKUP_TABLE.csv")
 UK_REGIONS_LOOKUP_OUT = BASE_APP.joinpath("db-data/ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv")
+UK_REGIONS_GEOM_TABLE = BASE_APP.joinpath("db-data/REGIONS_GEOMETRY_TABLE.csv")
 
 BASE_CSVS = BASE_APP.joinpath("db-data")
 BASE_TEST = BASE_APP.parent.parent.joinpath("tests/test_data")
@@ -133,19 +136,36 @@ def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
     df_iso.to_csv(COUNTRIES_LOOKUP_OUT, index=False)
 
 
-def make_uk_region_tag_lookup_table(df_ics: pd.DataFrame) -> None:
+def make_uk_region_tag_lookup_table(df_ics: pd.DataFrame) -> list:
     df_iso = df_ics[["id", "uk_region_tag_values"]]
     df_iso = df_iso.copy()
-    #df_iso["countries_iso3"] = df_iso["countries_iso3"].str.replace(";", ",")
     df_iso.loc[:, "uk_region_tag_values"] = df_iso.uk_region_tag_values.apply(ast.literal_eval)
-    #df_iso.loc[:, "country"] = df_iso.countries_iso3.str.split(",")
     df_iso = df_iso[["id", "uk_region_tag_values"]]
     df_iso = df_iso.explode("uk_region_tag_values")
     df_iso = df_iso.rename(columns={"id": "ics_table_id"})
     df_iso.reset_index(inplace=True)
+    df_iso["uk_region_tag_values"] = df_iso["uk_region_tag_values"].apply(
+        lambda x: x.lower().title() if pd.notnull(x) else x
+    )
     df_iso["id"] = df_iso.index.copy().astype(int)
     df_iso = df_iso[["id", "ics_table_id", "uk_region_tag_values"]]
     df_iso.to_csv(UK_REGIONS_LOOKUP_OUT, index=False)
+    return [x for x in df_iso.uk_region_tag_values.unique().tolist() if pd.notnull(x)]
+
+
+def make_uk_region_geom_table(region_list) -> None:
+    gdf = gpd.read_file(REGIONS_GPKG)
+    gdf["regions_wkt"] = gdf.apply(lambda x: x.geometry.wkt, axis=1)
+    df = pd.DataFrame(gdf[[x for x in gdf.columns if x not in ["geometry", "country", "index"]]])  # Geom not saved as binary in DB
+    df["PLACENAME"] = df["PLACENAME"].apply(lambda x: x.lower().title() if pd.notnull(x) else x)
+    try:
+        assert sorted(df.PLACENAME.unique().tolist()) == sorted(region_list)
+    except AssertionError:
+        raise ValueError(
+            f"{UK_REGIONS_GEOM_TABLE.name} not saved because regions in this table differ from uk_region_tag_values in {UK_REGIONS_LOOKUP_OUT.name}."
+            f"Please fix this mismatch before running this script again"
+            )
+    df.to_csv(UK_REGIONS_GEOM_TABLE, index=False)
 
 
 def make_weights_df_binary_per_ics(topic_ids: pd.DataFrame, row: pd.Series) -> pd.DataFrame:
@@ -259,6 +279,12 @@ def making_test_data():
         BASE_TEST.joinpath("ICS_TO_COUNTRY_LOOKUP_TABLE.csv"), index=False
     )
 
+    df_regions_lookup = pd.read_csv(BASE_CSVS.joinpath("ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv"))
+    df_regions_lookup = df_regions_lookup[df_regions_lookup.ics_table_id.isin(ids)]
+    df_regions_lookup.to_csv(
+        BASE_TEST.joinpath("ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv")
+    )
+
     df_funders = pd.read_csv(BASE_CSVS.joinpath("ICS_TO_FUNDERS_LOOKUP_TABLE.csv"))
     df_funders = df_funders[df_funders.ics_table_id.isin(ids)]
     df_funders.to_csv(
@@ -285,6 +311,9 @@ def making_test_data():
     df_websitetext = pd.read_csv(BASE_CSVS.joinpath("WEBSITE_TEXT.csv"))
     df_websitetext.to_csv(BASE_TEST.joinpath("WEBSITE_TEXT.csv"), index=False)
 
+    df_regions = pd.read_csv(BASE_CSVS.joinpath("REGIONS_GEOMETRY_TABLE.csv"))
+    df_regions.to_csv(BASE_TEST.joinpath("REGIONS_GEOMETRY_TABLE.csv"), index=False)
+
 
 if __name__ == "__main__":
     print("Making ICS table")
@@ -298,7 +327,8 @@ if __name__ == "__main__":
     print("Making countries lookup table")
     make_countries_lookup_table(ics_df)
     print("Making UK regions lookup table")
-    make_uk_region_tag_lookup_table(ics_df)
+    region_list = make_uk_region_tag_lookup_table(ics_df)
+    make_uk_region_geom_table(region_list)
     for table in ["WEBSITE_TEXT.csv", "INSTITUTES.csv", "UOA_TABLE.csv"]:
         dst = BASE_CSVS.joinpath(table)
         src = TOPICS_DIR.joinpath('backup_tables_DO_NOT_DELETE', table)

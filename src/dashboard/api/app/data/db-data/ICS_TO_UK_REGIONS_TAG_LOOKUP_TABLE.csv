@@ -13,7 +13,7 @@ id,ics_table_id,uk_region_tag_values
 11,9,Hereford
 12,9,Leeds
 13,9,London
-14,9,Newcastle upon Tyne
+14,9,Newcastle Upon Tyne
 15,9,Worcester
 16,10,London
 17,11,Glasgow
@@ -71,7 +71,7 @@ id,ics_table_id,uk_region_tag_values
 69,45,
 70,46,Edinburgh
 71,46,Glasgow
-72,47,Newcastle upon Tyne
+72,47,Newcastle Upon Tyne
 73,48,London
 74,49,Nottingham
 75,50,
@@ -101,7 +101,7 @@ id,ics_table_id,uk_region_tag_values
 99,67,Huddersfield
 100,67,London
 101,67,Manchester
-102,67,Newcastle upon Tyne
+102,67,Newcastle Upon Tyne
 103,67,Ormskirk
 104,67,Oxford
 105,67,York
@@ -134,7 +134,7 @@ id,ics_table_id,uk_region_tag_values
 132,88,
 133,89,London
 134,90,
-135,91,Newcastle upon Tyne
+135,91,Newcastle Upon Tyne
 136,92,
 137,93,
 138,94,
@@ -170,7 +170,7 @@ id,ics_table_id,uk_region_tag_values
 168,118,
 169,119,
 170,120,
-171,121,Newcastle upon Tyne
+171,121,Newcastle Upon Tyne
 172,122,Halifax
 173,123,London
 174,124,
@@ -305,8 +305,8 @@ id,ics_table_id,uk_region_tag_values
 303,230,
 304,231,Dundee
 305,231,Glasgow
-306,232,Newcastle upon Tyne
-307,232,Stoke-on-Trent
+306,232,Newcastle Upon Tyne
+307,232,Stoke-On-Trent
 308,233,Edinburgh
 309,233,Liverpool
 310,233,Sheffield
@@ -374,7 +374,7 @@ id,ics_table_id,uk_region_tag_values
 372,290,
 373,291,
 374,292,Mansfield
-375,292,Newcastle upon Tyne
+375,292,Newcastle Upon Tyne
 376,292,Nottingham
 377,292,Richmond
 378,293,
@@ -424,7 +424,7 @@ id,ics_table_id,uk_region_tag_values
 422,321,Bradford
 423,321,Bristol
 424,321,London
-425,321,Newcastle upon Tyne
+425,321,Newcastle Upon Tyne
 426,321,Preston
 427,322,
 428,323,
@@ -454,7 +454,7 @@ id,ics_table_id,uk_region_tag_values
 452,338,London
 453,339,Leeds
 454,339,Manchester
-455,339,Stoke-on-Trent
+455,339,Stoke-On-Trent
 456,340,
 457,341,Leeds
 458,341,London
@@ -481,7 +481,7 @@ id,ics_table_id,uk_region_tag_values
 479,360,Birmingham
 480,360,London
 481,361,Southwick
-482,362,Newcastle upon Tyne
+482,362,Newcastle Upon Tyne
 483,363,
 484,364,
 485,365,London
@@ -489,7 +489,7 @@ id,ics_table_id,uk_region_tag_values
 487,367,Cambridge
 488,368,Carlisle
 489,368,Middlesbrough
-490,368,Newcastle upon Tyne
+490,368,Newcastle Upon Tyne
 491,369,
 492,370,Dumfries
 493,371,Glasgow
@@ -595,7 +595,7 @@ id,ics_table_id,uk_region_tag_values
 593,456,
 594,457,Cambridge
 595,457,London
-596,458,Newcastle upon Tyne
+596,458,Newcastle Upon Tyne
 597,459,
 598,460,
 599,461,Dumfries
@@ -615,7 +615,7 @@ id,ics_table_id,uk_region_tag_values
 613,474,
 614,475,Bristol
 615,475,Manchester
-616,475,Newcastle upon Tyne
+616,475,Newcastle Upon Tyne
 617,475,Oxford
 618,476,
 619,477,
@@ -625,7 +625,7 @@ id,ics_table_id,uk_region_tag_values
 623,481,London
 624,482,Harrogate
 625,483,Middlesbrough
-626,483,Newcastle upon Tyne
+626,483,Newcastle Upon Tyne
 627,484,
 628,485,London
 629,486,Edinburgh
@@ -694,7 +694,7 @@ id,ics_table_id,uk_region_tag_values
 692,536,Leeds
 693,536,London
 694,536,Morecambe
-695,536,Newcastle upon Tyne
+695,536,Newcastle Upon Tyne
 696,537,
 697,538,
 698,539,Flint
@@ -932,12 +932,12 @@ id,ics_table_id,uk_region_tag_values
 930,703,Portsmouth
 931,703,Selsey
 932,704,Crawley
-933,705,Stoke-on-Trent
+933,705,Stoke-On-Trent
 934,706,Bradford
 935,707,
 936,708,Brighton
 937,708,London
-938,708,Stratford-upon-Avon
+938,708,Stratford-Upon-Avon
 939,709,
 940,710,Edinburgh
 941,711,Edinburgh
@@ -985,7 +985,7 @@ id,ics_table_id,uk_region_tag_values
 983,736,
 984,737,
 985,738,High Wycombe
-986,738,Newcastle upon Tyne
+986,738,Newcastle Upon Tyne
 987,738,South Shields
 988,739,Canterbury
 989,739,London
@@ -993,7 +993,7 @@ id,ics_table_id,uk_region_tag_values
 991,741,Oxford
 992,742,
 993,743,Leicester
-994,743,Newcastle upon Tyne
+994,743,Newcastle Upon Tyne
 995,743,Portsmouth
 996,743,York
 997,744,
@@ -1036,7 +1036,7 @@ id,ics_table_id,uk_region_tag_values
 1034,773,Oxford
 1035,773,Swindon
 1036,774,Beccles
-1037,775,Stratford-upon-Avon
+1037,775,Stratford-Upon-Avon
 1038,776,
 1039,777,
 1040,778,
@@ -1050,7 +1050,7 @@ id,ics_table_id,uk_region_tag_values
 1048,785,
 1049,786,
 1050,787,Longbenton
-1051,787,Newcastle upon Tyne
+1051,787,Newcastle Upon Tyne
 1052,787,Nottingham
 1053,788,London
 1054,789,
@@ -1308,9 +1308,9 @@ id,ics_table_id,uk_region_tag_values
 1306,962,London
 1307,963,
 1308,964,
-1309,965,Newcastle upon Tyne
+1309,965,Newcastle Upon Tyne
 1310,966,Cambridge
-1311,966,Newcastle upon Tyne
+1311,966,Newcastle Upon Tyne
 1312,967,Manchester
 1313,967,Middleton
 1314,967,Oldham
@@ -1336,7 +1336,7 @@ id,ics_table_id,uk_region_tag_values
 1334,984,
 1335,985,Southampton
 1336,986,Edinburgh
-1337,986,Newcastle upon Tyne
+1337,986,Newcastle Upon Tyne
 1338,987,
 1339,988,Cambridge
 1340,989,
@@ -1424,7 +1424,7 @@ id,ics_table_id,uk_region_tag_values
 1422,1058,
 1423,1059,
 1424,1060,Leeds
-1425,1060,Newcastle upon Tyne
+1425,1060,Newcastle Upon Tyne
 1426,1061,Manchester
 1427,1062,Edinburgh
 1428,1062,Glasgow
@@ -1435,7 +1435,7 @@ id,ics_table_id,uk_region_tag_values
 1433,1066,
 1434,1067,Crawley
 1435,1068,Bristol
-1436,1068,Newcastle upon Tyne
+1436,1068,Newcastle Upon Tyne
 1437,1069,
 1438,1070,Cardiff
 1439,1070,London
@@ -1524,9 +1524,9 @@ id,ics_table_id,uk_region_tag_values
 1522,1115,Carlisle
 1523,1115,Leeds
 1524,1115,London
-1525,1115,Newcastle upon Tyne
+1525,1115,Newcastle Upon Tyne
 1526,1115,Oxford
-1527,1115,Stratford-upon-Avon
+1527,1115,Stratford-Upon-Avon
 1528,1115,Walsall
 1529,1116,Ashford
 1530,1116,Canterbury
@@ -1565,7 +1565,7 @@ id,ics_table_id,uk_region_tag_values
 1563,1135,Blackburn
 1564,1135,Liverpool
 1565,1136,
-1566,1137,Stoke-on-Trent
+1566,1137,Stoke-On-Trent
 1567,1138,
 1568,1139,London
 1569,1140,Cardiff
@@ -1688,7 +1688,7 @@ id,ics_table_id,uk_region_tag_values
 1686,1218,Portsmouth
 1687,1218,Swansea
 1688,1219,Cambridge
-1689,1219,Newcastle upon Tyne
+1689,1219,Newcastle Upon Tyne
 1690,1219,Oxford
 1691,1219,Plymouth
 1692,1220,Spilsby
@@ -1700,7 +1700,7 @@ id,ics_table_id,uk_region_tag_values
 1698,1225,Edinburgh
 1699,1226,
 1700,1227,
-1701,1228,Chester-le-Street
+1701,1228,Chester-Le-Street
 1702,1228,Darlington
 1703,1228,Edinburgh
 1704,1229,
@@ -1717,7 +1717,7 @@ id,ics_table_id,uk_region_tag_values
 1715,1239,London
 1716,1240,
 1717,1241,Edinburgh
-1718,1241,Newcastle upon Tyne
+1718,1241,Newcastle Upon Tyne
 1719,1242,Biggar
 1720,1242,London
 1721,1243,London
@@ -1801,7 +1801,7 @@ id,ics_table_id,uk_region_tag_values
 1799,1302,Wolverhampton
 1800,1303,London
 1801,1304,Gateshead
-1802,1304,Newcastle upon Tyne
+1802,1304,Newcastle Upon Tyne
 1803,1304,Sunderland
 1804,1305,
 1805,1306,London
@@ -1878,7 +1878,7 @@ id,ics_table_id,uk_region_tag_values
 1876,1350,
 1877,1351,
 1878,1352,Leeds
-1879,1352,Newcastle upon Tyne
+1879,1352,Newcastle Upon Tyne
 1880,1353,Brighton
 1881,1354,Cardiff
 1882,1354,Southampton
@@ -1974,7 +1974,7 @@ id,ics_table_id,uk_region_tag_values
 1972,1435,Glasgow
 1973,1436,London
 1974,1436,Manchester
-1975,1436,Stratford-upon-Avon
+1975,1436,Stratford-Upon-Avon
 1976,1437,Amersham
 1977,1437,Cardiff
 1978,1437,Warwick
@@ -2098,7 +2098,7 @@ id,ics_table_id,uk_region_tag_values
 2096,1531,London
 2097,1531,Preston
 2098,1531,Sheffield
-2099,1531,Stoke-on-Trent
+2099,1531,Stoke-On-Trent
 2100,1532,Edinburgh
 2101,1533,
 2102,1534,Edinburgh
@@ -2146,7 +2146,7 @@ id,ics_table_id,uk_region_tag_values
 2144,1564,Birmingham
 2145,1564,Bristol
 2146,1564,London
-2147,1564,Newcastle upon Tyne
+2147,1564,Newcastle Upon Tyne
 2148,1564,Sheffield
 2149,1565,
 2150,1566,
@@ -2190,7 +2190,7 @@ id,ics_table_id,uk_region_tag_values
 2188,1601,Leicester
 2189,1602,
 2190,1603,
-2191,1604,Newcastle upon Tyne
+2191,1604,Newcastle Upon Tyne
 2192,1605,
 2193,1606,
 2194,1607,
@@ -2237,8 +2237,8 @@ id,ics_table_id,uk_region_tag_values
 2235,1642,
 2236,1643,Sheffield
 2237,1644,Birmingham
-2238,1644,Newcastle upon Tyne
-2239,1644,Stoke-on-Trent
+2238,1644,Newcastle Upon Tyne
+2239,1644,Stoke-On-Trent
 2240,1645,
 2241,1646,Colchester
 2242,1646,London
@@ -2248,11 +2248,11 @@ id,ics_table_id,uk_region_tag_values
 2246,1649,
 2247,1650,
 2248,1651,Bradford
-2249,1651,Newcastle upon Tyne
+2249,1651,Newcastle Upon Tyne
 2250,1651,Swindon
 2251,1652,Edinburgh
 2252,1652,Sheffield
-2253,1652,Stoke-on-Trent
+2253,1652,Stoke-On-Trent
 2254,1653,
 2255,1654,
 2256,1655,Birmingham
@@ -2265,7 +2265,7 @@ id,ics_table_id,uk_region_tag_values
 2263,1659,Halifax
 2264,1660,Leeds
 2265,1660,Liverpool
-2266,1660,Newcastle upon Tyne
+2266,1660,Newcastle Upon Tyne
 2267,1661,London
 2268,1662,Birmingham
 2269,1663,
@@ -2547,7 +2547,7 @@ id,ics_table_id,uk_region_tag_values
 2545,1872,Manchester
 2546,1872,Sheffield
 2547,1873,Chichester
-2548,1873,Hay-on-Wye
+2548,1873,Hay-On-Wye
 2549,1874,
 2550,1875,
 2551,1876,
@@ -2745,7 +2745,7 @@ id,ics_table_id,uk_region_tag_values
 2743,2038,London
 2744,2039,London
 2745,2040,London
-2746,2040,Newcastle upon Tyne
+2746,2040,Newcastle Upon Tyne
 2747,2040,Whitley Bay
 2748,2041,Cardiff
 2749,2042,Leeds
@@ -2876,7 +2876,7 @@ id,ics_table_id,uk_region_tag_values
 2874,2119,
 2875,2120,Coventry
 2876,2120,Sheffield
-2877,2121,Newcastle upon Tyne
+2877,2121,Newcastle Upon Tyne
 2878,2122,Plymouth
 2879,2122,Stevenage
 2880,2123,
@@ -2885,7 +2885,7 @@ id,ics_table_id,uk_region_tag_values
 2883,2124,Liverpool
 2884,2124,London
 2885,2124,Manchester
-2886,2124,Newcastle upon Tyne
+2886,2124,Newcastle Upon Tyne
 2887,2125,Glasgow
 2888,2126,Blackpool
 2889,2126,Leeds
@@ -2989,7 +2989,7 @@ id,ics_table_id,uk_region_tag_values
 2987,2188,
 2988,2189,Belfast
 2989,2189,Manchester
-2990,2189,Newcastle upon Tyne
+2990,2189,Newcastle Upon Tyne
 2991,2189,Rochdale
 2992,2190,
 2993,2191,
@@ -3039,7 +3039,7 @@ id,ics_table_id,uk_region_tag_values
 3037,2222,London
 3038,2223,London
 3039,2223,Manchester
-3040,2223,Newcastle upon Tyne
+3040,2223,Newcastle Upon Tyne
 3041,2223,Sunderland
 3042,2224,
 3043,2225,
@@ -3305,7 +3305,7 @@ id,ics_table_id,uk_region_tag_values
 3303,2413,Birmingham
 3304,2413,Bristol
 3305,2413,Manchester
-3306,2413,Newcastle upon Tyne
+3306,2413,Newcastle Upon Tyne
 3307,2413,Nottingham
 3308,2414,
 3309,2415,
@@ -3469,7 +3469,7 @@ id,ics_table_id,uk_region_tag_values
 3467,2540,Ormskirk
 3468,2540,Southport
 3469,2540,Southwell
-3470,2540,Sutton in Ashfield
+3470,2540,Sutton In Ashfield
 3471,2540,Warrington
 3472,2540,Wolverhampton
 3473,2541,
@@ -3651,7 +3651,7 @@ id,ics_table_id,uk_region_tag_values
 3649,2677,
 3650,2678,Glasgow
 3651,2679,London
-3652,2680,Newcastle upon Tyne
+3652,2680,Newcastle Upon Tyne
 3653,2681,London
 3654,2682,
 3655,2683,
@@ -3825,7 +3825,7 @@ id,ics_table_id,uk_region_tag_values
 3823,2823,
 3824,2824,
 3825,2825,Stafford
-3826,2825,Stoke-on-Trent
+3826,2825,Stoke-On-Trent
 3827,2826,Exeter
 3828,2826,London
 3829,2827,Luton
@@ -3892,7 +3892,7 @@ id,ics_table_id,uk_region_tag_values
 3890,2879,
 3891,2880,
 3892,2881,Gateshead
-3893,2881,Newcastle upon Tyne
+3893,2881,Newcastle Upon Tyne
 3894,2881,Sunderland
 3895,2882,
 3896,2883,Salford
@@ -3932,7 +3932,7 @@ id,ics_table_id,uk_region_tag_values
 3930,2900,London
 3931,2901,
 3932,2902,Middlesbrough
-3933,2902,Newcastle upon Tyne
+3933,2902,Newcastle Upon Tyne
 3934,2903,London
 3935,2904,
 3936,2905,Salford
@@ -4125,7 +4125,7 @@ id,ics_table_id,uk_region_tag_values
 4123,3054,London
 4124,3055,
 4125,3056,
-4126,3057,Newcastle upon Tyne
+4126,3057,Newcastle Upon Tyne
 4127,3058,
 4128,3059,Sheffield
 4129,3060,Edinburgh
@@ -4255,7 +4255,7 @@ id,ics_table_id,uk_region_tag_values
 4253,3152,Exeter
 4254,3152,Frimley
 4255,3152,Leicester
-4256,3152,Newcastle upon Tyne
+4256,3152,Newcastle Upon Tyne
 4257,3152,Norwich
 4258,3152,Nottingham
 4259,3152,Oxford
@@ -4278,7 +4278,7 @@ id,ics_table_id,uk_region_tag_values
 4276,3165,
 4277,3166,London
 4278,3166,Tilbury
-4279,3167,Clacton-on-Sea
+4279,3167,Clacton-On-Sea
 4280,3167,Harrogate
 4281,3167,London
 4282,3168,
@@ -4449,7 +4449,7 @@ id,ics_table_id,uk_region_tag_values
 4447,3290,Preston
 4448,3291,
 4449,3292,Olney
-4450,3292,Stratford-upon-Avon
+4450,3292,Stratford-Upon-Avon
 4451,3293,
 4452,3294,
 4453,3295,
@@ -4558,7 +4558,7 @@ id,ics_table_id,uk_region_tag_values
 4556,3380,London
 4557,3380,Norwich
 4558,3381,
-4559,3382,Stratford-upon-Avon
+4559,3382,Stratford-Upon-Avon
 4560,3383,London
 4561,3384,
 4562,3385,
@@ -4646,7 +4646,7 @@ id,ics_table_id,uk_region_tag_values
 4644,3436,Darlington
 4645,3436,Gateshead
 4646,3436,Hartlepool
-4647,3436,Newcastle upon Tyne
+4647,3436,Newcastle Upon Tyne
 4648,3436,Sunderland
 4649,3437,
 4650,3438,
@@ -4659,7 +4659,7 @@ id,ics_table_id,uk_region_tag_values
 4657,3442,Harrogate
 4658,3442,Leeds
 4659,3442,London
-4660,3442,Newcastle upon Tyne
+4660,3442,Newcastle Upon Tyne
 4661,3442,Oxford
 4662,3442,Scarborough
 4663,3442,Truro
@@ -4731,7 +4731,7 @@ id,ics_table_id,uk_region_tag_values
 4729,3499,Cheltenham
 4730,3499,London
 4731,3499,Manchester
-4732,3499,Newcastle upon Tyne
+4732,3499,Newcastle Upon Tyne
 4733,3500,
 4734,3501,Liverpool
 4735,3501,London
@@ -4744,11 +4744,11 @@ id,ics_table_id,uk_region_tag_values
 4742,3507,Bristol
 4743,3508,
 4744,3509,Manchester
-4745,3509,Newcastle upon Tyne
+4745,3509,Newcastle Upon Tyne
 4746,3510,
 4747,3511,Gateshead
 4748,3511,London
-4749,3511,Newcastle upon Tyne
+4749,3511,Newcastle Upon Tyne
 4750,3511,Stockport
 4751,3512,
 4752,3513,
@@ -4758,7 +4758,7 @@ id,ics_table_id,uk_region_tag_values
 4756,3517,Bristol
 4757,3517,Leicester
 4758,3517,London
-4759,3517,Newcastle upon Tyne
+4759,3517,Newcastle Upon Tyne
 4760,3518,London
 4761,3519,
 4762,3520,
@@ -4813,7 +4813,7 @@ id,ics_table_id,uk_region_tag_values
 4811,3553,
 4812,3554,
 4813,3555,Blackburn
-4814,3555,Newcastle upon Tyne
+4814,3555,Newcastle Upon Tyne
 4815,3556,Eyemouth
 4816,3557,
 4817,3558,
@@ -4856,7 +4856,7 @@ id,ics_table_id,uk_region_tag_values
 4854,3590,London
 4855,3590,Peterborough
 4856,3591,London
-4857,3591,Newcastle upon Tyne
+4857,3591,Newcastle Upon Tyne
 4858,3592,Oxford
 4859,3592,Spennymoor
 4860,3593,Cardiff
@@ -4935,7 +4935,7 @@ id,ics_table_id,uk_region_tag_values
 4933,3647,London
 4934,3648,
 4935,3649,Cambridge
-4936,3649,Newcastle upon Tyne
+4936,3649,Newcastle Upon Tyne
 4937,3649,Oxford
 4938,3649,Warwick
 4939,3650,Gateshead
@@ -5012,7 +5012,7 @@ id,ics_table_id,uk_region_tag_values
 5010,3700,London
 5011,3701,Glasgow
 5012,3702,London
-5013,3702,Newcastle upon Tyne
+5013,3702,Newcastle Upon Tyne
 5014,3703,Derby
 5015,3703,Portsmouth
 5016,3704,
@@ -5127,7 +5127,7 @@ id,ics_table_id,uk_region_tag_values
 5125,3787,Manchester
 5126,3788,Alnwick
 5127,3788,Blyth
-5128,3788,Newcastle upon Tyne
+5128,3788,Newcastle Upon Tyne
 5129,3788,Sunderland
 5130,3789,Canterbury
 5131,3789,Grantham
@@ -5175,7 +5175,7 @@ id,ics_table_id,uk_region_tag_values
 5173,3822,Bishop Auckland
 5174,3822,Darlington
 5175,3822,London
-5176,3822,Newcastle upon Tyne
+5176,3822,Newcastle Upon Tyne
 5177,3823,Newbury
 5178,3824,Brighton
 5179,3824,Leeds
@@ -5264,7 +5264,7 @@ id,ics_table_id,uk_region_tag_values
 5262,3888,Huntingdon
 5263,3888,Peterborough
 5264,3889,London
-5265,3889,Newcastle upon Tyne
+5265,3889,Newcastle Upon Tyne
 5266,3890,
 5267,3891,
 5268,3892,
@@ -5273,7 +5273,7 @@ id,ics_table_id,uk_region_tag_values
 5271,3895,
 5272,3896,
 5273,3897,Edinburgh
-5274,3898,Newcastle upon Tyne
+5274,3898,Newcastle Upon Tyne
 5275,3899,
 5276,3900,
 5277,3901,
@@ -5320,7 +5320,7 @@ id,ics_table_id,uk_region_tag_values
 5318,3934,Gateshead
 5319,3934,London
 5320,3935,
-5321,3936,Newcastle upon Tyne
+5321,3936,Newcastle Upon Tyne
 5322,3936,Wallsend
 5323,3937,
 5324,3938,
@@ -5337,7 +5337,7 @@ id,ics_table_id,uk_region_tag_values
 5335,3946,Exeter
 5336,3946,Leicester
 5337,3946,Liverpool
-5338,3946,Newcastle upon Tyne
+5338,3946,Newcastle Upon Tyne
 5339,3947,
 5340,3948,Ipswich
 5341,3948,Leicester
@@ -5354,14 +5354,14 @@ id,ics_table_id,uk_region_tag_values
 5352,3954,Cambridge
 5353,3954,Glasgow
 5354,3954,London
-5355,3954,Newcastle upon Tyne
+5355,3954,Newcastle Upon Tyne
 5356,3954,Whitehaven
 5357,3954,York
 5358,3955,Birmingham
 5359,3955,Cambridge
 5360,3955,Edinburgh
 5361,3955,Leeds
-5362,3955,Newcastle upon Tyne
+5362,3955,Newcastle Upon Tyne
 5363,3956,
 5364,3957,Belfast
 5365,3957,Durham
@@ -5504,7 +5504,7 @@ id,ics_table_id,uk_region_tag_values
 5502,4053,Cambridge
 5503,4053,Edinburgh
 5504,4053,Leeds
-5505,4053,Newcastle upon Tyne
+5505,4053,Newcastle Upon Tyne
 5506,4054,Cardiff
 5507,4054,Oxford
 5508,4055,
@@ -5688,7 +5688,7 @@ id,ics_table_id,uk_region_tag_values
 5686,4181,
 5687,4182,Derby
 5688,4182,Glasgow
-5689,4182,Newcastle upon Tyne
+5689,4182,Newcastle Upon Tyne
 5690,4182,Paisley
 5691,4183,
 5692,4184,St Helens
@@ -5721,7 +5721,7 @@ id,ics_table_id,uk_region_tag_values
 5719,4202,Swansea
 5720,4203,London
 5721,4204,London
-5722,4204,Newcastle upon Tyne
+5722,4204,Newcastle Upon Tyne
 5723,4205,
 5724,4206,
 5725,4207,London
@@ -6053,7 +6053,7 @@ id,ics_table_id,uk_region_tag_values
 6051,4464,Leicester
 6052,4465,
 6053,4466,
-6054,4467,Newcastle upon Tyne
+6054,4467,Newcastle Upon Tyne
 6055,4468,
 6056,4469,Birmingham
 6057,4469,Glasgow
@@ -6065,7 +6065,7 @@ id,ics_table_id,uk_region_tag_values
 6063,4474,Billingham
 6064,4474,Birmingham
 6065,4474,London
-6066,4475,Stoke-on-Trent
+6066,4475,Stoke-On-Trent
 6067,4476,London
 6068,4477,Brighton
 6069,4477,Sheffield
@@ -6091,13 +6091,13 @@ id,ics_table_id,uk_region_tag_values
 6089,4493,Colchester
 6090,4494,Crewe
 6091,4495,London
-6092,4495,Stratford-upon-Avon
+6092,4495,Stratford-Upon-Avon
 6093,4496,Carlisle
 6094,4497,Barnsley
 6095,4498,
 6096,4499,Oxford
 6097,4500,Hamilton
-6098,4500,Newcastle upon Tyne
+6098,4500,Newcastle Upon Tyne
 6099,4501,
 6100,4502,
 6101,4503,
@@ -6136,11 +6136,11 @@ id,ics_table_id,uk_region_tag_values
 6134,4530,
 6135,4531,
 6136,4532,Bristol
-6137,4532,Newcastle upon Tyne
+6137,4532,Newcastle Upon Tyne
 6138,4532,Norwich
 6139,4532,Nottingham
 6140,4533,Bristol
-6141,4533,Newcastle upon Tyne
+6141,4533,Newcastle Upon Tyne
 6142,4533,Norwich
 6143,4533,Nottingham
 6144,4534,
@@ -6194,7 +6194,7 @@ id,ics_table_id,uk_region_tag_values
 6192,4579,Birmingham
 6193,4579,Durham
 6194,4579,Leeds
-6195,4579,Newcastle upon Tyne
+6195,4579,Newcastle Upon Tyne
 6196,4579,Nottingham
 6197,4580,
 6198,4581,Southampton
@@ -6221,7 +6221,7 @@ id,ics_table_id,uk_region_tag_values
 6219,4597,
 6220,4598,
 6221,4599,Gateshead
-6222,4599,Newcastle upon Tyne
+6222,4599,Newcastle Upon Tyne
 6223,4599,Northallerton
 6224,4599,Prudhoe
 6225,4599,Tynemouth
@@ -6287,12 +6287,12 @@ id,ics_table_id,uk_region_tag_values
 6285,4649,
 6286,4650,
 6287,4651,
-6288,4652,Newcastle upon Tyne
+6288,4652,Newcastle Upon Tyne
 6289,4652,Rochdale
 6290,4653,Cardiff
 6291,4653,Llandudno
 6292,4653,Rotherham
-6293,4653,Stoke-on-Trent
+6293,4653,Stoke-On-Trent
 6294,4654,
 6295,4655,
 6296,4656,
@@ -6460,7 +6460,7 @@ id,ics_table_id,uk_region_tag_values
 6458,4766,Exeter
 6459,4767,Glasgow
 6460,4767,London
-6461,4767,Newcastle upon Tyne
+6461,4767,Newcastle Upon Tyne
 6462,4768,
 6463,4769,Birmingham
 6464,4769,Bristol
@@ -6514,7 +6514,7 @@ id,ics_table_id,uk_region_tag_values
 6512,4802,Bristol
 6513,4802,Cambridge
 6514,4802,Manchester
-6515,4802,Newcastle upon Tyne
+6515,4802,Newcastle Upon Tyne
 6516,4802,Oxford
 6517,4802,Shrewsbury
 6518,4803,
@@ -6617,7 +6617,7 @@ id,ics_table_id,uk_region_tag_values
 6615,4877,
 6616,4878,
 6617,4879,
-6618,4880,Stratford-upon-Avon
+6618,4880,Stratford-Upon-Avon
 6619,4881,
 6620,4882,
 6621,4883,London
@@ -6634,7 +6634,7 @@ id,ics_table_id,uk_region_tag_values
 6632,4891,
 6633,4892,
 6634,4893,Manchester
-6635,4893,Newcastle upon Tyne
+6635,4893,Newcastle Upon Tyne
 6636,4893,Perth
 6637,4894,Chichester
 6638,4894,Truro
@@ -6677,7 +6677,7 @@ id,ics_table_id,uk_region_tag_values
 6675,4924,London
 6676,4925,
 6677,4926,
-6678,4927,Stratford-upon-Avon
+6678,4927,Stratford-Upon-Avon
 6679,4928,
 6680,4929,
 6681,4930,
@@ -6762,7 +6762,7 @@ id,ics_table_id,uk_region_tag_values
 6760,4995,
 6761,4996,
 6762,4997,Belfast
-6763,4998,Stoke-on-Trent
+6763,4998,Stoke-On-Trent
 6764,4999,Warwick
 6765,5000,London
 6766,5001,
@@ -6859,7 +6859,7 @@ id,ics_table_id,uk_region_tag_values
 6857,5066,
 6858,5067,Alnwick
 6859,5068,
-6860,5069,Newcastle upon Tyne
+6860,5069,Newcastle Upon Tyne
 6861,5070,
 6862,5071,Cardiff
 6863,5071,Edinburgh
@@ -6914,7 +6914,7 @@ id,ics_table_id,uk_region_tag_values
 6912,5108,
 6913,5109,Birmingham
 6914,5109,Leeds
-6915,5109,Newcastle upon Tyne
+6915,5109,Newcastle Upon Tyne
 6916,5110,
 6917,5111,Cambridge
 6918,5112,
@@ -6923,7 +6923,7 @@ id,ics_table_id,uk_region_tag_values
 6921,5115,
 6922,5116,Huddersfield
 6923,5116,Salford
-6924,5116,Stoke-on-Trent
+6924,5116,Stoke-On-Trent
 6925,5117,Bristol
 6926,5117,Oxford
 6927,5118,Cockermouth
@@ -6938,7 +6938,7 @@ id,ics_table_id,uk_region_tag_values
 6936,5119,Norwich
 6937,5119,Preston
 6938,5119,Salford
-6939,5119,Stoke-on-Trent
+6939,5119,Stoke-On-Trent
 6940,5119,Weymouth
 6941,5119,Yarmouth
 6942,5120,Leeds
@@ -6989,7 +6989,7 @@ id,ics_table_id,uk_region_tag_values
 6987,5158,Coventry
 6988,5158,Liverpool
 6989,5158,London
-6990,5158,Newcastle upon Tyne
+6990,5158,Newcastle Upon Tyne
 6991,5159,
 6992,5160,Oxford
 6993,5161,Livingston
@@ -7161,7 +7161,7 @@ id,ics_table_id,uk_region_tag_values
 7159,5304,
 7160,5305,
 7161,5306,
-7162,5307,Newcastle upon Tyne
+7162,5307,Newcastle Upon Tyne
 7163,5307,Plymouth
 7164,5307,Sunderland
 7165,5308,Hull
@@ -7184,7 +7184,7 @@ id,ics_table_id,uk_region_tag_values
 7182,5316,
 7183,5317,
 7184,5318,Gateshead
-7185,5318,Newcastle upon Tyne
+7185,5318,Newcastle Upon Tyne
 7186,5319,
 7187,5320,
 7188,5321,
@@ -7213,13 +7213,13 @@ id,ics_table_id,uk_region_tag_values
 7211,5342,London
 7212,5343,Leeds
 7213,5343,Sheffield
-7214,5343,Stoke-on-Trent
+7214,5343,Stoke-On-Trent
 7215,5344,
 7216,5345,
 7217,5346,
 7218,5347,
 7219,5348,
-7220,5349,Newcastle upon Tyne
+7220,5349,Newcastle Upon Tyne
 7221,5350,
 7222,5351,Bristol
 7223,5351,Leicester
@@ -7265,7 +7265,7 @@ id,ics_table_id,uk_region_tag_values
 7263,5374,Edinburgh
 7264,5374,Haywards Heath
 7265,5374,Manchester
-7266,5374,Newcastle upon Tyne
+7266,5374,Newcastle Upon Tyne
 7267,5374,Oxford
 7268,5374,Redhill
 7269,5375,
@@ -7320,7 +7320,7 @@ id,ics_table_id,uk_region_tag_values
 7318,5411,Brighton
 7319,5411,London
 7320,5411,Manchester
-7321,5411,Newcastle upon Tyne
+7321,5411,Newcastle Upon Tyne
 7322,5412,Doncaster
 7323,5412,London
 7324,5412,Nottingham
@@ -7412,12 +7412,12 @@ id,ics_table_id,uk_region_tag_values
 7410,5468,Edinburgh
 7411,5468,Glasgow
 7412,5468,London
-7413,5468,Newcastle upon Tyne
+7413,5468,Newcastle Upon Tyne
 7414,5469,
 7415,5470,
 7416,5471,
 7417,5472,
-7418,5473,Newcastle upon Tyne
+7418,5473,Newcastle Upon Tyne
 7419,5473,Nottingham
 7420,5474,London
 7421,5475,Bristol
@@ -7468,7 +7468,7 @@ id,ics_table_id,uk_region_tag_values
 7466,5507,Cardiff
 7467,5507,Edinburgh
 7468,5507,London
-7469,5507,Newcastle upon Tyne
+7469,5507,Newcastle Upon Tyne
 7470,5508,
 7471,5509,Edinburgh
 7472,5510,London
@@ -7589,7 +7589,7 @@ id,ics_table_id,uk_region_tag_values
 7587,5584,London
 7588,5585,Blackpool
 7589,5585,Cramlington
-7590,5585,Newcastle upon Tyne
+7590,5585,Newcastle Upon Tyne
 7591,5586,Cambridge
 7592,5586,Glasgow
 7593,5586,Manchester
@@ -7607,7 +7607,7 @@ id,ics_table_id,uk_region_tag_values
 7605,5591,London
 7606,5592,Cambridge
 7607,5592,Manchester
-7608,5592,Newcastle upon Tyne
+7608,5592,Newcastle Upon Tyne
 7609,5592,Oxford
 7610,5593,
 7611,5594,Manchester
@@ -7623,12 +7623,12 @@ id,ics_table_id,uk_region_tag_values
 7621,5600,Lincoln
 7622,5600,London
 7623,5600,Maidstone
-7624,5600,Newcastle upon Tyne
+7624,5600,Newcastle Upon Tyne
 7625,5600,Salisbury
 7626,5601,
 7627,5602,
 7628,5603,London
-7629,5604,City of London
+7629,5604,City Of London
 7630,5604,London
 7631,5605,
 7632,5606,
@@ -7676,7 +7676,7 @@ id,ics_table_id,uk_region_tag_values
 7674,5638,Lancaster
 7675,5639,
 7676,5640,Bristol
-7677,5640,Newcastle upon Tyne
+7677,5640,Newcastle Upon Tyne
 7678,5641,Brighton
 7679,5641,London
 7680,5642,Belfast
@@ -7690,7 +7690,7 @@ id,ics_table_id,uk_region_tag_values
 7688,5646,Bradford
 7689,5646,Ely
 7690,5646,Exeter
-7691,5646,Newcastle upon Tyne
+7691,5646,Newcastle Upon Tyne
 7692,5646,Swindon
 7693,5647,
 7694,5648,Leeds
@@ -7703,7 +7703,7 @@ id,ics_table_id,uk_region_tag_values
 7701,5653,Bristol
 7702,5653,London
 7703,5653,Manchester
-7704,5653,Newcastle upon Tyne
+7704,5653,Newcastle Upon Tyne
 7705,5653,Preston
 7706,5654,
 7707,5655,
@@ -7742,7 +7742,7 @@ id,ics_table_id,uk_region_tag_values
 7740,5676,Leeds
 7741,5676,Liverpool
 7742,5676,Luton
-7743,5676,Newcastle upon Tyne
+7743,5676,Newcastle Upon Tyne
 7744,5676,Northampton
 7745,5676,Nottingham
 7746,5676,Portsmouth
@@ -7760,7 +7760,7 @@ id,ics_table_id,uk_region_tag_values
 7758,5684,Leicester
 7759,5684,London
 7760,5684,Nottingham
-7761,5684,Stratford-upon-Avon
+7761,5684,Stratford-Upon-Avon
 7762,5685,
 7763,5686,Bristol
 7764,5686,Edinburgh
@@ -7786,7 +7786,7 @@ id,ics_table_id,uk_region_tag_values
 7784,5691,Edinburgh
 7785,5692,Birmingham
 7786,5692,London
-7787,5692,Stoke-on-Trent
+7787,5692,Stoke-On-Trent
 7788,5692,Walsall
 7789,5693,
 7790,5694,
@@ -7805,7 +7805,7 @@ id,ics_table_id,uk_region_tag_values
 7803,5706,Eastbourne
 7804,5706,Edinburgh
 7805,5706,London
-7806,5706,Newcastle upon Tyne
+7806,5706,Newcastle Upon Tyne
 7807,5706,Oxford
 7808,5707,
 7809,5708,
@@ -7918,7 +7918,7 @@ id,ics_table_id,uk_region_tag_values
 7916,5790,Rotherham
 7917,5791,Nottingham
 7918,5792,Solihull
-7919,5792,Stratford-upon-Avon
+7919,5792,Stratford-Upon-Avon
 7920,5793,Worcester
 7921,5794,
 7922,5795,
@@ -8105,7 +8105,7 @@ id,ics_table_id,uk_region_tag_values
 8103,5919,
 8104,5920,
 8105,5921,Gateshead
-8106,5921,Newcastle upon Tyne
+8106,5921,Newcastle Upon Tyne
 8107,5922,
 8108,5923,Stirling
 8109,5924,
@@ -8133,7 +8133,7 @@ id,ics_table_id,uk_region_tag_values
 8131,5934,Liverpool
 8132,5934,London
 8133,5934,Manchester
-8134,5934,Newcastle upon Tyne
+8134,5934,Newcastle Upon Tyne
 8135,5934,Rotherham
 8136,5935,Lees
 8137,5935,London
@@ -8297,7 +8297,7 @@ id,ics_table_id,uk_region_tag_values
 8295,6041,Bradford
 8296,6041,Bristol
 8297,6041,Leicester
-8298,6041,Newcastle upon Tyne
+8298,6041,Newcastle Upon Tyne
 8299,6041,Oxford
 8300,6041,Portsmouth
 8301,6041,Sheffield
@@ -8425,9 +8425,9 @@ id,ics_table_id,uk_region_tag_values
 8423,6135,Bristol
 8424,6135,Gosport
 8425,6135,Leicester
-8426,6135,Newcastle upon Tyne
+8426,6135,Newcastle Upon Tyne
 8427,6136,Canterbury
-8428,6136,Newcastle upon Tyne
+8428,6136,Newcastle Upon Tyne
 8429,6137,
 8430,6138,
 8431,6139,
@@ -8484,7 +8484,7 @@ id,ics_table_id,uk_region_tag_values
 8482,6181,Solihull
 8483,6182,Solihull
 8484,6183,
-8485,6184,Stoke-on-Trent
+8485,6184,Stoke-On-Trent
 8486,6185,
 8487,6186,
 8488,6187,Exeter
@@ -8494,7 +8494,7 @@ id,ics_table_id,uk_region_tag_values
 8492,6190,
 8493,6191,
 8494,6192,Barnstaple
-8495,6193,Newcastle upon Tyne
+8495,6193,Newcastle Upon Tyne
 8496,6194,
 8497,6195,
 8498,6196,
@@ -8504,7 +8504,7 @@ id,ics_table_id,uk_region_tag_values
 8502,6198,Leeds
 8503,6198,Leyburn
 8504,6198,Manchester
-8505,6198,Newcastle upon Tyne
+8505,6198,Newcastle Upon Tyne
 8506,6198,Richmond
 8507,6198,Salford
 8508,6198,Sheffield
@@ -8566,7 +8566,7 @@ id,ics_table_id,uk_region_tag_values
 8564,6239,Bristol
 8565,6239,Solihull
 8566,6240,Gateshead
-8567,6240,Newcastle upon Tyne
+8567,6240,Newcastle Upon Tyne
 8568,6241,Nottingham
 8569,6242,Birmingham
 8570,6243,
@@ -8659,7 +8659,7 @@ id,ics_table_id,uk_region_tag_values
 8657,6302,
 8658,6303,
 8659,6304,Inverness
-8660,6304,Newcastle upon Tyne
+8660,6304,Newcastle Upon Tyne
 8661,6305,
 8662,6306,Dumfries
 8663,6306,Edinburgh
@@ -8710,7 +8710,7 @@ id,ics_table_id,uk_region_tag_values
 8708,6330,Brighton
 8709,6330,Liverpool
 8710,6330,Manchester
-8711,6330,Newcastle upon Tyne
+8711,6330,Newcastle Upon Tyne
 8712,6330,Nottingham
 8713,6330,Oxford
 8714,6330,Sheffield
@@ -8735,7 +8735,7 @@ id,ics_table_id,uk_region_tag_values
 8733,6345,London
 8734,6345,Manchester
 8735,6345,Oldham
-8736,6346,Newcastle upon Tyne
+8736,6346,Newcastle Upon Tyne
 8737,6347,Birmingham
 8738,6347,Dudley
 8739,6347,London
