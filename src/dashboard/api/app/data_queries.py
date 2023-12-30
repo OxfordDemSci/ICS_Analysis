@@ -6,6 +6,8 @@ from typing import Any, DefaultDict, Dict, List
 
 from flask import make_response
 from flask.wrappers import Response
+from shapely.wkt import loads
+from shapely import to_geojson
 from sqlalchemy import text
 from sqlalchemy.sql.elements import TextClause
 
@@ -201,6 +203,50 @@ def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     return countries
 
 
+def get_regions_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
+    if ics_ids is None:
+        sql = text(
+            """
+            SELECT u.uk_region_tag_values as region, count(*) as region_count, g.regions_wkt as geom from uk_regions u 
+            JOIN regions_geometry g
+            ON u.uk_region_tag_values = g.placename
+            where u.uk_region_tag_values
+            is not NULL GROUP BY u.uk_region_tag_values, g.regions_wkt order by region_count desc
+        """
+        )
+        query = db.session.execute(sql)
+    else:
+        sql = text(
+            """
+            SELECT u.uk_region_tag_values as region, count(*) as region_count, g.regions_wkt as geom
+            FROM uk_regions u
+            JOIN regions_geometry g ON u.uk_region_tag_values = g.placename
+            JOIN ics i ON c.ics_table_id = i.id
+            WHERE i.ics_id = ANY(:ics_ids)
+            AND u.uk_region_tag_values is not NULL
+            GROUP BY u.uk_region_tag_values, g.regions_wkt ORDER BY region_count DESC
+        """
+        )
+        query = db.session.execute(sql, {"ics_ids": ics_ids})
+    regions = [{
+        "name": row.region,
+        "count": row.region_count,
+        "geometry": loads(row.geom).buffer(0.00083 * row.region_count)
+        } for row in query]
+    collection =  {"type": "FeatureCollection", "features": []}
+    for region in regions:
+        collection["features"].append(
+            {
+                "type": "Feature",
+                "geometry": to_geojson(region["geometry"]),
+                "properties": {
+                    "name": region["name"],
+                    "count": region["count"]},
+                })
+    return collection
+    
+
+
 def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     if ics_ids is None:
         sql = text(
@@ -295,6 +341,7 @@ def query_dashboard_data(
     data = {}
     ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uoa, funder)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
+    data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
