@@ -75,6 +75,10 @@ TABLE_MAP = {
         "cols_to_convert": ["group_id"],
         "table_name": "topic_groups",
     },
+    "REGIONS_GEOMETRY_TABLE.csv": {
+        "cols_to_convert": ["id"],
+        "table_name": "regions_geometry"
+    }
 }
 
 
