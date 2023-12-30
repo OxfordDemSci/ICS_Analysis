@@ -221,7 +221,7 @@ def get_regions_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
             SELECT u.uk_region_tag_values as region, count(*) as region_count, g.regions_wkt as geom
             FROM uk_regions u
             JOIN regions_geometry g ON u.uk_region_tag_values = g.placename
-            JOIN ics i ON c.ics_table_id = i.id
+            JOIN ics i ON u.ics_table_id = i.id
             WHERE i.ics_id = ANY(:ics_ids)
             AND u.uk_region_tag_values is not NULL
             GROUP BY u.uk_region_tag_values, g.regions_wkt ORDER BY region_count DESC
@@ -238,7 +238,7 @@ def get_regions_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
         collection["features"].append(
             {
                 "type": "Feature",
-                "geometry": to_geojson(region["geometry"]),
+                "geometry": json.loads(to_geojson(region["geometry"])),
                 "properties": {
                     "name": region["name"],
                     "count": region["count"]},
@@ -272,7 +272,7 @@ def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
             SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as
             assessment_group, COUNT(*) AS uoa_count
             FROM ics ics
-            JOIN uoa uoa ON ics.uoa = uoa.uoa_id
+            JOIN uoa uoa ON CAST(ics.uoa as INTEGER) = uoa.uoa_id
             WHERE ics.ics_id = ANY(:ics_ids)
             GROUP BY ics.uoa, uoa.name, uoa.assessment_panel, uoa.assessment_group
             ORDER BY uoa_count DESC;
@@ -388,7 +388,7 @@ def get_ics_sql(
         SELECT DISTINCT(tw.ics_id) FROM topic_weights tw
         JOIN topics t ON tw.topic_id = t.topic_id
         JOIN ics i ON tw.ics_id = i.ics_id
-        JOIN uoa u ON u.uoa_id = i.uoa
+        JOIN uoa u ON u.uoa_id = CAST(i.uoa AS INTEGER)
         JOIN funder f ON f.ics_table_id = i.id
         JOIN countries c ON c.ics_table_id = i.id
         WHERE tw.probability >= :threshold
