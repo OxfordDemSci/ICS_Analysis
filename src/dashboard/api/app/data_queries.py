@@ -203,7 +203,9 @@ def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     return countries
 
 
-def get_regions_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
+def get_regions_counts(ics_ids: list | None = None, return_buffers: bool = False) -> List[Dict[str, str]]:
+    import math
+    scale_factor = 0.001
     if ics_ids is None:
         sql = text(
             """
@@ -231,7 +233,7 @@ def get_regions_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     regions = [{
         "name": row.region,
         "count": row.region_count,
-        "geometry": loads(row.geom).buffer(0.00083 * row.region_count)
+        "geometry": loads(row.geom).buffer(math.log(row.region_count) * 0.03) if return_buffers else loads(row.geom)
         } for row in query]
     collection =  {"type": "FeatureCollection", "features": []}
     for region in regions:
@@ -252,7 +254,7 @@ def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
         sql = text(
             """
             SELECT ics.uoa as uoa, uoa.name as name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as
-                assessment_group, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON ics.uoa = uoa.uoa_id GROUP BY ics.uoa,
+                assessment_group, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON CAST(ics.uoa) = uoa.uoa_id GROUP BY ics.uoa,
                 uoa.name, uoa.assessment_panel, uoa.assessment_group ORDER BY uoa_count desc;
         """
         )
