@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import shutil
 
+import json
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -257,6 +258,9 @@ def make_topics_and_weights(ics_df: pd.DataFrame, scale_weights: str | None = No
         return nar_str
     topics_df['narrative'] = topics_df.apply(make_narrative_html, axis=1)
     topics_df.to_csv(TOPICS_OUT, index=False)
+    topics_dict = {topic: False for topic in topics_df.topic_name.unique().tolist()}
+    with open(BASE_APP.parent.joinpath("topic_map.json"), "w") as f:
+        json.dump(topics_dict, f, indent=4)
 
 
 def make_topics_groups_table():
