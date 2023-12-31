@@ -1,3 +1,4 @@
+import json
 import logging
 import socket
 from pathlib import Path
@@ -12,6 +13,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app.config import app_config
 
+BASE = Path(__file__).resolve().parent
 BASE_GEODATA = Path(__file__).resolve().parent.joinpath("data")
 postcode_gdf = gpd.read_file(
     BASE_GEODATA.joinpath("geodata.gpkg"), layer="postcode_areas"
@@ -41,6 +43,14 @@ limiter = Limiter(
     storage_options={},
     default_limits_exempt_when=is_exempt,
 )
+
+try:
+    assert BASE.joinpath("topic_map.json").exists()
+except AssertionError:
+    raise FileNotFoundError("No topic_map found. You need to run ../scripts/reformat_csvs_for_db.py")
+with open(BASE.joinpath("topic_map.json"), 'r') as f:
+    TOPICS_BOOL_MAP = json.load(f)
+
 
 
 def create_app(config_name: str) -> Flask:

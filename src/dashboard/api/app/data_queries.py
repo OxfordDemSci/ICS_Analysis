@@ -1,3 +1,4 @@
+import copy
 import csv
 import json
 from collections import defaultdict
@@ -11,7 +12,7 @@ from shapely import to_geojson
 from sqlalchemy import text
 from sqlalchemy.sql.elements import TextClause
 
-from app import db
+from app import db, TOPICS_BOOL_MAP
 from app.models import ICS, TopicGroups, WebsiteText
 
 
@@ -334,6 +335,30 @@ def get_institution_counts(ics_ids: List | None = None) -> Any:
     return institutions
 
 
+def get_available_topics(ics_ids: List | None = None):
+    topics_available = copy.deepcopy(TOPICS_BOOL_MAP)
+    if ics_ids is None:
+        sql = text(
+            """
+            SELECT DISTINCT(topic_name_short) from ics WHERE topic_name_short IS NOT NULL
+            """
+        )
+        query = db.session.execute(sql)
+    else:
+        sql = text(
+            """
+            SELECT DISTINCT(topic_name_short) from ics
+            WHERE topic_name_short IS NOT NULL
+            AND ics_id = ANY(:ics_ids)
+            """
+        )
+        query = db.session.execute(sql, {"ics_ids": ics_ids})
+    topics = [row.topic_name_short for row in query]
+    for topic in topics:
+        topics_available[topic] = True
+    return topics_available
+
+
 def query_dashboard_data(
     threshold: float,
     topic: str | None = None,
@@ -345,6 +370,7 @@ def query_dashboard_data(
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
     ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, funder)
+    data["topics_available"] = get_available_topics(ics_ids=ics_ids)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
     data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
