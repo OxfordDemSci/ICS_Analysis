@@ -92,6 +92,7 @@ def get_pdf_data(
     topic: str | None = None,
     postcode_area: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, dict]:
@@ -99,7 +100,7 @@ def get_pdf_data(
     pdf_data["topic"] = get_topics(topic)
     pdf_data["background_text"] = get_website_text()
     pdf_data["ics_data"] = query_dashboard_data(
-        threshold, topic, postcode_area, beneficiary, uoa, funder
+        threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
     )
     return pdf_data
 

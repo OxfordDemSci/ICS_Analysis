@@ -23,7 +23,7 @@ matplotlib.use("agg")  # Set the backend to 'agg' for non-GUI use
 # https://www.blog.pythonlibrary.org/2010/03/08/a-simple-step-by-step-reportlab-tutorial/
 
 
-def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder):
+def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
         buffer,
@@ -94,7 +94,7 @@ def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uoa, fund
 
     story.append(
         add_final_footnote(
-            pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder
+            pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
         )
     )
 
@@ -441,7 +441,7 @@ def add_beneficiaries_info(pdf_data):
 
 
 def add_final_footnote(
-    pdf_data, threshold, topic, postcode_area, beneficiary, uoa, funder
+    pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
 ):
     base_url = request.base_url.rstrip("download_pdf")
     request_url = request.url
