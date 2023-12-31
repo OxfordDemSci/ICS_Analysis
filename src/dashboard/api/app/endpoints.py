@@ -49,17 +49,18 @@ def download_ics_as_csv(
     topic: str | None = None,
     postcode_area: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> Response:
     try:
-        threshold, topic, postcode_area, beneficiary, uoa, funder = validate_params(
-            threshold, topic, postcode_area, beneficiary, uoa, funder
+        threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder = validate_params(
+            threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
         )
 
     except ValueError as e:
         abort(400, str(e))
-    data = download_ics_table(threshold, topic, postcode_area, beneficiary, uoa, funder)
+    data = download_ics_table(threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder)
     return data
 
 

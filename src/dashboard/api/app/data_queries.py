@@ -130,11 +130,12 @@ def download_ics_table(
     topic: str | None = None,
     postcode: list | None = None,
     country: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
     limit: int | None = None,
 ) -> Response:
-    ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
+    ics_ids = get_ics_ids(threshold, topic, postcode, country, uk_region, uoa, funder)
     rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
     csv_data = StringIO()
     writer = csv.writer(csv_data)
