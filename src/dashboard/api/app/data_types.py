@@ -6,7 +6,7 @@ from reportlab.lib.styles import (ParagraphStyle,  # type: ignore
                                   getSampleStyleSheet)
 
 from app import db
-from app.models import ICS, UOA, Countries, Funder, Topics
+from app.models import ICS, UOA, Countries, Funder, Topics, UKRegions
 
 
 @dataclass
@@ -78,6 +78,23 @@ class BeneficiaryType:
             self._value = new_value
         else:
             raise ValueError(f"Beneficiary invalid - {new_value}")
+        
+
+@dataclass
+class UKRegionType:
+    value: str | None = None  # type: ignore
+
+    @property  # type: ignore
+    def value(self) -> Union[str, None]:
+        return self._value
+
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(UKRegions.uk_region_tag_values).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"UK Region invalid - {new_value}")
 
 
 @dataclass

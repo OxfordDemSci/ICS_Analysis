@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple, Union
 from .data_queries import (get_topic_groups, get_topics, get_website_text,
                            query_dashboard_data)
 from .data_types import (BeneficiaryType, FunderType, PostCodeAreaType,
-                         ThresholdType, TopicType, UOAType)
+                         ThresholdType, TopicType, UKRegionType, UOAType)
 
 
 def validate_params(
@@ -11,6 +11,7 @@ def validate_params(
     topic: str | None = None,
     postcode_area: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> Tuple[
@@ -26,10 +27,11 @@ def validate_params(
     postcode_area = (
         None if postcode_area == "null" else PostCodeAreaType(postcode_area).value
     )
-    beneficiary = None if beneficiary == "null" else BeneficiaryType(beneficiary).value
+    beneficiary = None if beneficiary == "null" or uk_region is not None else BeneficiaryType(beneficiary).value
+    uk_region = None if uk_region == "null" else UKRegionType(uk_region).value
     uoa = None if uoa == "null" else UOAType(uoa).value
     funder = None if funder == "null" else FunderType(funder).value
-    return threshold, topic, postcode_area, beneficiary, uoa, funder
+    return threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
 
 
 def get_init() -> Dict[str, Union[dict, float]]:
@@ -50,8 +52,9 @@ def get_data(
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, List[Dict[str, str]]]:
-    data = query_dashboard_data(threshold, topic, postcode, beneficiary, uoa, funder)
+    data = query_dashboard_data(threshold, topic, postcode, beneficiary, uk_region, uoa, funder)
     return data

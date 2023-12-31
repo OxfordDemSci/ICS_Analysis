@@ -337,11 +337,12 @@ def query_dashboard_data(
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
-    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uoa, funder)
+    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, funder)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
     data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
@@ -356,16 +357,18 @@ def get_ics_ids(
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> List[str]:
-    sql = get_ics_sql(topic, postcode, beneficiary, uoa, funder)
-    argument_names = ["threshold", "topic", "postcode", "beneficiary", "uoa", "funder"]
+    sql = get_ics_sql(topic, postcode, beneficiary, uk_region, uoa, funder)
+    argument_names = ["threshold", "topic", "postcode", "beneficiary", "uk_region", "uoa", "funder"]
     arguments = [
         threshold,
         topic,
         tuple(postcode) if postcode is not None else None,
         beneficiary,
+        uk_region,
         uoa,
         funder,
     ]
@@ -383,6 +386,7 @@ def get_ics_sql(
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
     funder: str | None = None,
 ) -> TextClause:
@@ -393,6 +397,7 @@ def get_ics_sql(
         JOIN uoa u ON u.uoa_id = CAST(i.uoa AS INTEGER)
         JOIN funder f ON f.ics_table_id = i.id
         JOIN countries c ON c.ics_table_id = i.id
+        JOIN uk_regions r ON r.ics_table_id = i.id
         WHERE tw.probability >= :threshold
     """
     if topic is not None:
@@ -401,6 +406,8 @@ def get_ics_sql(
         sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:
         sql_str += " AND c.country = :beneficiary"
+    if uk_region is not None:
+        sql_str += " AND r.uk_region_tag_values = :uk_region"
     if uoa is not None:
         if uoa in ["A", "B", "C", "D"]:
             sql_str += " AND u.assessment_panel = :uoa"
