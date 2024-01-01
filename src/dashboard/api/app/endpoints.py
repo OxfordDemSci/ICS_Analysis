@@ -29,16 +29,17 @@ def get_ics_data(
     beneficiary: str | None = None,
     uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Union[Dict[str, List[Dict[str, str]]], Response]:
     try:
-        threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder = validate_params(
-            threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
+        threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder = validate_params(
+            threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
         )
 
     except ValueError as e:
         abort(400, str(e))
-    data = get_data(threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder)
+    data = get_data(threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder)
     if all(not value for value in data.values()):
         return make_response("", 204)
     return data

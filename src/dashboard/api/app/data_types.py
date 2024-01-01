@@ -117,6 +117,23 @@ class UOAType:
             self._value = new_value
         else:
             raise ValueError(f"UOA invalid - {new_value}")
+        
+
+@dataclass
+class UOANameType:
+    value: str | None = None  # type: ignore
+
+    @property  # type: ignore
+    def value(self) -> Union[str, None]:
+        return self._value
+
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(UOA.name).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"UOA Name invalid - {new_value}")
 
 
 @dataclass

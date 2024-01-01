@@ -366,10 +366,11 @@ def query_dashboard_data(
     beneficiary: str | None = None,
     uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
-    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, funder)
+    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
     data["topics_available"] = get_available_topics(ics_ids=ics_ids)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
     data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
@@ -387,10 +388,11 @@ def get_ics_ids(
     beneficiary: str | None = None,
     uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> List[str]:
-    sql = get_ics_sql(topic, postcode, beneficiary, uk_region, uoa, funder)
-    argument_names = ["threshold", "topic", "postcode", "beneficiary", "uk_region", "uoa", "funder"]
+    sql = get_ics_sql(topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
+    argument_names = ["threshold", "topic", "postcode", "beneficiary", "uk_region", "uoa", "uoa_name", "funder"]
     arguments = [
         threshold,
         topic,
@@ -398,6 +400,7 @@ def get_ics_ids(
         beneficiary,
         uk_region,
         uoa,
+        uoa_name,
         funder,
     ]
     params = {
@@ -416,6 +419,7 @@ def get_ics_sql(
     beneficiary: str | None = None,
     uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> TextClause:
     sql_str = """
@@ -441,6 +445,8 @@ def get_ics_sql(
             sql_str += " AND u.assessment_panel = :uoa"
         elif uoa in ["STEM", "SHAPE"]:
             sql_str += " AND u.assessment_group = :uoa"
+    if uoa_name is not None:
+        sql_str += " AND u.name = :uoa_name"
     if funder is not None:
         sql_str += " AND f.funder = :funder"
     sql = text(sql_str)
