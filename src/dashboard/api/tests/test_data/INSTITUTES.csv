@@ -1,11 +1,13 @@
 id,ukprn,name,postcode
-1,10007774,University of Oxford,OX1 2JD
-4,10007814,Cardiff University,CF10 3AT
-9,10007162,"University of the Arts, London",WC1V 7EY
-10,10007804,University of Stirling,FK9 4LA
+2,10007768,University of Lancaster,LA1 4YW
+5,10007158,University of Southampton,SO17 1BJ
+7,10007851,University of Derby,DE22 1GB
+12,10007160,University of Surrey,GU2 7XH
 13,10007791,University of Essex,CO4 3SQ
 15,10007802,University of Reading,RG6 6UR
 16,10007806,University of Sussex,BN1 9RH
+18,10007150,University of Kent,CT2 7NZ
+19,10007832,Newman University College,B32 3NT
 20,10007788,University of Cambridge,CB2 1TN
 21,10001883,De Montfort University,LE1 9BH
 22,10007790,University of Edinburgh,EH1 1HT
@@ -13,46 +15,51 @@ id,ukprn,name,postcode
 25,10005343,The Queen's University of Belfast,BT7 1NN
 26,10003861,Leeds Metropolitan University,LS1 3HE
 27,10007772,Edinburgh Napier University,EH11 4BN
+28,10007854,Cardiff Metropolitan University,CF5 2SG
 30,10007164,"University of the West of England, Bristol",BS16 1QY
+32,10000961,Brunel University,UB8 3PH
 34,10004180,The Manchester Metropolitan University,M15 6BH
-37,10003678,Kingston University,KT1 1LQ
 39,10001478,The City University,EC1V 0HB
 46,10007775,"Queen Mary and Westfield College, University of London",E1 4NS
-54,10007140,Birmingham City University,B42 2SU
-57,10001726,Coventry University,CV1 5FB
-58,10007155,University of Portsmouth,PO1 2UP
+48,10002718,Goldsmiths' College,SE14 6NW
+52,10006299,Staffordshire University,ST4 2DE
 62,10007856,Prifysgol Aberystwyth,SY23 2AX
+64,10007801,University of Plymouth,PL4 8AA
 65,10007789,University of East Anglia,NR4 7TJ
 66,10007786,University of Bristol,BS8 1TH
 67,10007803,University of St Andrews,KY16 9AJ
+68,10006841,The University of Bolton,BL3 5AB
+69,10005337,"Queen Margaret University, Edinburgh",EH21 6UU
+70,10007807,University of Ulster,BT52 1SA
 71,10007163,University of Warwick,CV4 7AL
 72,10007138,The University of Northampton,NN2 5PH
 76,10007165,The University of Westminster,W1B 2HW
 82,10007156,University of Salford,M5 4WT
-85,10004351,Middlesex University,NW4 4BT
-86,10007773,Open University(The),MK7 6AA
-89,10007167,University of York,YO10 5DD
-90,10007151,University of Lincoln,LN6 7TS
+84,10004063,London School of Economics & Political Science,WC2A 2AE
+88,10000975,Buckinghamshire New University,HP11 2JZ
 91,10007784,University College London,WC1E 6BT
-96,10003956,Liverpool Hope University,L16 9JD
-97,10007147,University of Hertfordshire,AL10 9AB
+93,10004113,Loughborough University,LE11 3TU
 98,10007157,University of Sheffield,S10 2TN
 99,10007143,University of Durham,DH1 3LE
 100,10004797,Nottingham Trent University,NG1 4BU
-101,10007805,University of Strathclyde,G1 1XQ
-102,10007137,The University of Chichester,PO19 6PE
 105,10006840,University of Birmingham,B15 2TT
+107,10007792,University of Exeter,EX4 4PY
+108,10005790,Sheffield Hallam University,S1 1WB
 109,10007852,University of Dundee,DD1 4HN
+113,10000291,Anglia Ruskin University,CM1 1SQ
+115,10007855,Swansea University,SA2 8PP
+118,10007822,Cranfield University,MK43 0AL
+119,10007767,University of Keele,ST5 5BG
 121,10003645,King's College London,WC2R 2LS
+124,10003854,Leeds College of Art,LS2 9AQ
+126,10007848,University of Chester,CH1 4BJ
 128,10007798,The University of Manchester,M13 9PL
-130,10007154,University of Nottingham,NG7 2RD
 132,10007799,University of Newcastle Upon Tyne,NE1 7RU
-133,10007857,Bangor University,LL57 2DG
 137,10007793,University of Glamorgan / Prifysgol Morgannwg,CF37 1DL
-138,10007835,Royal Academy of Music,NW1 5HT
-143,10007760,Birkbeck College,WC1E 7HX
+141,10001143,Canterbury Christ Church University,CT1 1UT
 144,10006842,University of Liverpool,L69 3BX
-145,10003324,Institute of Cancer Research: Royal Cancer Hospital (The),SW7 3RP
+146,10007146,University of Greenwich,SE10 9LS
+151,10007785,University of Bradford,BD7 1DP
 156,10007850,University of Bath (The),BA2 7AY
-159,10004930,Oxford Brookes University,OX3 0BP
 162,10007141,University of Central Lancashire,PR1 2HE
+163,10003270,"Imperial College of Science, Technology and Medicine",SW7 2AZ

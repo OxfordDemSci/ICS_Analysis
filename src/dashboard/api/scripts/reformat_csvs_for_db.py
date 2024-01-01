@@ -288,7 +288,8 @@ def making_test_data():
     df_regions_lookup = pd.read_csv(BASE_CSVS.joinpath("ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv"))
     df_regions_lookup = df_regions_lookup[df_regions_lookup.ics_table_id.isin(ids)]
     df_regions_lookup.to_csv(
-        BASE_TEST.joinpath("ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv")
+        BASE_TEST.joinpath("ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv"),
+        index=False
     )
 
     df_funders = pd.read_csv(BASE_CSVS.joinpath("ICS_TO_FUNDERS_LOOKUP_TABLE.csv"))
