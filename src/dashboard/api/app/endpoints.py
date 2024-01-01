@@ -73,17 +73,18 @@ def download_ics_report_as_pdf(
     beneficiary: str | None = None,
     uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, dict]:
     try:
-        threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder = validate_params(
-            threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
+        threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder = validate_params(
+            threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
         )
 
     except ValueError as e:
         abort(400, str(e))
-    pdf_data = get_pdf_data(threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder)
+    pdf_data = get_pdf_data(threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder)
     data = pdf_report(
-        pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, funder
+        pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
     )
     return data
