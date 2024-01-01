@@ -134,6 +134,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: uoa_name
+          in: query
+          description: Assessment panel name to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null; Choice of [A, B, C, D, STEM, SHAPE] - see https://www.ref.ac.uk/about/uoa/). This will take precedence over uoa if both are defined.
+          required: false
+          schema:
+            type: string
         - name: funder
           in: query
           description: Funder to use as filter in addition to topic, threshold and other input parameters (Defaults to All if null)
