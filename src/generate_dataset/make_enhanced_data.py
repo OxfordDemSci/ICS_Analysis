@@ -198,7 +198,9 @@ def clean_ics_level(raw_path, edit_path):
     """
     print('Cleaning ICS Level Data!')
     raw_ics = pd.read_excel(raw_path / 'raw_ref_ics_data.xlsx')
-    raw_ics['Title'] = raw_ics['Title'].apply(lambda val: unicodedata.normalize('NFKD', str(val)).encode('ascii', 'ignore').decode())
+    raw_ics['Title'] = raw_ics['Title'].apply(lambda val: unicodedata. \
+                                              normalize('NFKD', str(val)). \
+                                              encode('ascii', 'ignore').decode())
     raw_ics = format_ids(raw_ics)
     raw_ics.to_excel(edit_path / 'clean_ref_ics_data.xlsx')
     return raw_ics
@@ -224,11 +226,15 @@ def clean_dep_level(raw_path, edit_path):
     # Process results data
     raw_results = pd.read_excel(raw_path / 'raw_ref_results_data.xlsx', skiprows=6)
     raw_results = format_ids(raw_results)
-    raw_results = raw_results.rename(columns={'FTE of submitted staff': 'fte', '% of eligible staff submitted': 'fte_pc'})
+    raw_results = raw_results.rename(
+        columns={'FTE of submitted staff': 'fte',
+                 '% of eligible staff submitted': 'fte_pc'})
 
-    # Process scorecard
-    score_types = ['4*', '3*', '2*', '1*', 'Unclassified']
-    wide_score_card = pd.pivot_table(raw_results[['inst_id', 'uoa_id', 'Profile'] + score_types], index=['inst_id', 'uoa_id'], columns=['Profile'], values=score_types)
+    ## Make wide score card by institution and uoa_id
+    score_types = ['4*', '3*', '2*', '1*', 'Unclassified'] # types of scores
+    wide_score_card = pd.pivot(
+        raw_results[['inst_id', 'uoa_id', 'Profile'] + score_types],
+        index=['inst_id', 'uoa_id'], columns=['Profile'], values=score_types)
     wide_score_card.columns = wide_score_card.columns.map('_'.join)
     wide_score_card = wide_score_card.reset_index()
 
@@ -243,20 +249,28 @@ def clean_dep_level(raw_path, edit_path):
     # Research income data
     raw_env_income = pd.read_excel(raw_env_path, sheet_name="ResearchIncome", skiprows=4)
     raw_env_income = format_ids(raw_env_income)
-    raw_env_income = raw_env_income.rename(columns={'Average income for academic years 2013-14 to 2019-20': 'av_income', 'Total income for academic years 2013-14 to 2019-20': 'tot_income'})
+    raw_env_income = raw_env_income.\
+        rename(columns = {'Average income for academic years 2013-14 to 2019-20': 'av_income',
+                          'Total income for academic years 2013-14 to 2019-20': 'tot_income'})
     tot_inc = raw_env_income[raw_env_income['Income source'] == 'Total income']
 
     # Research income in-kind data
     raw_env_income_inkind = pd.read_excel(raw_env_path, sheet_name="ResearchIncomeInKind", skiprows=4)
     raw_env_income_inkind = format_ids(raw_env_income_inkind)
-    raw_env_income_inkind = raw_env_income_inkind.rename(columns={'Total income for academic years 2013-14 to 2019-20': 'tot_inc_kind'})
-    tot_inc_kind = raw_env_income_inkind[raw_env_income_inkind['Income source'] == 'Total income-in-kind']
+    raw_env_income_inkind = raw_env_income_inkind.rename(
+        columns={'Total income for academic years 2013-14 to 2019-20': 'tot_inc_kind'})
 
-    # Merge all department level data
-    raw_dep = merge_ins_uoa(raw_results[['inst_id', 'uoa_id', 'fte', 'fte_pc']].drop_duplicates(), wide_score_card)
-    raw_dep = merge_ins_uoa(raw_dep, raw_env_doctoral[['inst_id', 'uoa_id', 'num_doc_degrees_total']])
-    raw_dep = merge_ins_uoa(raw_dep, tot_inc[['inst_id', 'uoa_id', 'av_income', 'tot_income']])
-    raw_dep = merge_ins_uoa(raw_dep, tot_inc_kind[['inst_id', 'uoa_id', 'tot_inc_kind']])
+    tot_inc_kind = raw_env_income_inkind.loc[raw_env_income_inkind['Income source']=='Total income-in-kind']    
+
+    ## Merge all dept level data together
+    raw_dep = merge_ins_uoa(raw_results[['inst_id', 'uoa_id', 'fte', 'fte_pc']].drop_duplicates(),
+                             wide_score_card)
+    raw_dep = merge_ins_uoa(raw_dep,
+                             raw_env_doctoral[['inst_id', 'uoa_id', 'num_doc_degrees_total']])
+    raw_dep = merge_ins_uoa(raw_dep,
+                             tot_inc[['inst_id', 'uoa_id', 'av_income', 'tot_income']])
+    raw_dep = merge_ins_uoa(raw_dep,
+                             tot_inc_kind[['inst_id', 'uoa_id', 'tot_inc_kind']])
     raw_dep.to_excel(edit_path / 'clean_ref_dep_data.xlsx')
 
 
@@ -660,10 +674,15 @@ def make_countries_file(manual_path):
                    REF impact case study identifier, countries extracted, region extracted,
                    and union extracted.
     """
-    df = pd.read_excel(os.path.join(manual_path, 'funder_countries', 'funders_countries_lookup.xlsx'),
-                       sheet_name='funders_countries_lookup', engine='openpyxl')
-
-    for var in ['suggested_Countries[alpha-3]_change', 'suggested_Countries[union]_change', 'suggested_Countries[region]_change']:
+    df = pd.read_excel(os.path.join(manual_path,
+                                    'funder_countries',
+                                    'funders_countries_lookup.xlsx'),
+                       sheet_name='funders_countries_lookup',
+                       engine='openpyxl'
+                       )
+    for var in ['suggested_Countries[alpha-3]_change',
+                'suggested_Countries[union]_change',
+                'suggested_Countries[region]_change']:
         df[var] = df[var].str.strip()
 
     df['countries_extracted'] = np.where(df['suggested_Countries[alpha-3]_change'].isnull(),
@@ -676,7 +695,10 @@ def make_countries_file(manual_path):
                                       df['Countries[region]'],
                                       df['suggested_Countries[region]_change'])
     df = df[df['countries_extracted'].notnull()]
-    return df[['REF impact case study identifier', 'countries_extracted', 'region_extracted', 'union_extracted']]
+    return df[['REF impact case study identifier',
+               'countries_extracted',
+               'region_extracted',
+               'union_extracted']]
 
 
 @log_row_count
@@ -850,6 +872,12 @@ def load_topic_data(df, manual_path, topic_path):
         return df
 
     topic_lookup = topic_lookup.rename({'description': 'topic_description', 'narrative': 'topic_narrative'}, axis=1)
+    
+    try:
+        assert set(df['REF impact case study identifier']) == set(topic_model['REF impact case study identifier'])
+    except AssertionError:
+        print("AssertionError: not all ICSs have an associated topic")
+        
     df = pd.merge(df, topic_model, how='left', on='REF impact case study identifier')
     df = pd.merge(df, topic_assignment, how='left', on='REF impact case study identifier')
     df = pd.merge(df, topic_lookup, how='left', left_on='final_topic', right_on='topic_id')
@@ -876,7 +904,15 @@ def make_and_load_tags(df, raw_path, edit_path):
         DataFrame: The original DataFrame merged with processed tag data.
     """
     print('Loading and merging tags!')
-    tags = pd.read_excel(raw_path / 'raw_ref_ics_tags_data.xlsx', sheet_name='Sheet1', skiprows=4, usecols=['REF case study identifier', 'Tag type', 'Tag identifier', 'Tag value', 'Tag group'])
+    tags = pd.read_excel(raw_path / 'raw_ref_ics_tags_data.xlsx',
+                         sheet_name='Sheet1',
+                         skiprows=4,
+                         usecols=['REF case study identifier',
+                                  'Tag type',
+                                  'Tag identifier',
+                                  'Tag value',
+                                  'Tag group']
+                         )
     tags = tags[tags['REF case study identifier'].notnull()]
 
     # Process tags into a CSV file
