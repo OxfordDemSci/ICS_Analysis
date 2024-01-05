@@ -107,11 +107,9 @@ def get_pdf_data(
     return pdf_data
 
 
-def get_ics_table(ics_ids: list, page: int, limit: int) -> list:
+def get_ics_table(ics_ids: list, page: int, limit: int) -> tuple:
     offset = (page - 1) * limit
     rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).order_by(ICS.id).paginate(page=page, per_page=limit)
-    print(rows.pages)
-    print(rows.total)
     ics_table = []
     for row in rows:
         ics_table.append(
@@ -126,8 +124,7 @@ def get_ics_table(ics_ids: list, page: int, limit: int) -> list:
         "has_next": rows.has_next,
         "has_prev": rows.has_prev,
     }
-    print(meta)
-    return ics_table
+    return ics_table, meta
 
 
 def download_ics_table(
@@ -377,7 +374,7 @@ def query_dashboard_data(
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
-    data["ics_table"] = get_ics_table(ics_ids=ics_ids, page=table_page, limit=items_per_page)
+    data["ics_table"], data["table_pagination_meta"] = get_ics_table(ics_ids=ics_ids, page=table_page, limit=items_per_page)
     return data
 
 
