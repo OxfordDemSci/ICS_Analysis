@@ -337,25 +337,18 @@ def get_institution_counts(ics_ids: List | None = None) -> Any:
     return institutions
 
 
-def get_available_topics(ics_ids: List | None = None):
+def get_available_topics(ics_ids: List[str]):
     topics_available = copy.deepcopy(TOPICS_BOOL_MAP)
-    if ics_ids is None:
-        sql = text(
-            """
-            SELECT DISTINCT(topic_name_short) from ics WHERE topic_name_short IS NOT NULL
-            """
-        )
-        query = db.session.execute(sql)
-    else:
-        sql = text(
-            """
-            SELECT DISTINCT(topic_name_short) from ics
-            WHERE topic_name_short IS NOT NULL
-            AND ics_id = ANY(:ics_ids)
-            """
-        )
-        query = db.session.execute(sql, {"ics_ids": ics_ids})
-    topics = [row.topic_name_short for row in query]
+    sql = text(
+        """
+        SELECT DISTINCT(t.topic_name) from topics t
+        JOIN topic_weights w ON
+        w.topic_id = t.topic_id
+        WHERE w.ics_id = ANY(:ics_ids);
+        """
+    )
+    query = db.session.execute(sql, {"ics_ids": ics_ids})
+    topics = [row.topic_name for row in query]
     for topic in topics:
         topics_available[topic] = True
     return topics_available
