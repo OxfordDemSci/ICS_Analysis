@@ -51,6 +51,8 @@ def get_ics_database_topics(topic: str | None = None) -> Dict[str, dict]:
 
 def get_data(
     threshold: float,
+    table_page: int, 
+    items_per_page: int,
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
@@ -59,5 +61,5 @@ def get_data(
     uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, List[Dict[str, str]]]:
-    data = query_dashboard_data(threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
+    data = query_dashboard_data(threshold, table_page, items_per_page, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
     return data

@@ -37,6 +37,20 @@ paths:
           schema:
             type: number
             format: float
+        - name: table_page
+          in: query
+          description: Page number of table
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: items_per_page
+          in: query
+          description: Number of rows per table page
+          schema:
+            type: integer
+            format: int32
+            default: 500
         - name: topic
           in: query
           description: Topic to query

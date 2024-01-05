@@ -107,24 +107,26 @@ def get_pdf_data(
     return pdf_data
 
 
-def get_ics_table(ics_ids: list | None = None, limit: int | None = None) -> list:
-    if ics_ids is None:
-        if limit is None:
-            rows = db.session.query(ICS).all()
-        else:
-            rows = db.session.query(ICS).limit(limit).all()
-    else:
-        if limit is None:
-            rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
-        else:
-            rows = (
-                db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).limit(limit).all()
-            )
+def get_ics_table(ics_ids: list, page: int, limit: int) -> list:
+    offset = (page - 1) * limit
+    rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).order_by(ICS.id).paginate(page=page, per_page=limit)
+    print(rows.pages)
+    print(rows.total)
     ics_table = []
     for row in rows:
         ics_table.append(
             {column.name: getattr(row, column.name) for column in ICS.__table__.columns}
         )
+    meta = {
+        "page": rows.page,
+        "pages": rows.pages,
+        "total_rows": rows.total,
+        "prev_page": rows.prev_num,
+        "next_page": rows.next_num,
+        "has_next": rows.has_next,
+        "has_prev": rows.has_prev,
+    }
+    print(meta)
     return ics_table
 
 
@@ -344,7 +346,8 @@ def get_available_topics(ics_ids: List[str]):
         SELECT DISTINCT(t.topic_name) from topics t
         JOIN topic_weights w ON
         w.topic_id = t.topic_id
-        WHERE w.ics_id = ANY(:ics_ids);
+        WHERE w.ics_id = ANY(:ics_ids)
+        AND w.probability > 0;
         """
     )
     query = db.session.execute(sql, {"ics_ids": ics_ids})
@@ -356,6 +359,8 @@ def get_available_topics(ics_ids: List[str]):
 
 def query_dashboard_data(
     threshold: float,
+    table_page: int, 
+    items_per_page: int,
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
@@ -372,7 +377,7 @@ def query_dashboard_data(
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
-    data["ics_table"] = get_ics_table(ics_ids=ics_ids, limit=500)
+    data["ics_table"] = get_ics_table(ics_ids=ics_ids, page=table_page, limit=items_per_page)
     return data
 
 
