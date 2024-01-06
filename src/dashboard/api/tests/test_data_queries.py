@@ -1,11 +1,9 @@
-import json
 from pathlib import Path
 
 import pandas as pd  # type: ignore
 import pytest
 
-from app.data_queries import (get_ics_ids, get_topic_groups, get_topics,
-                              get_website_text, query_dashboard_data)
+from app.data_queries import get_ics_ids, get_topic_groups, get_topics, get_website_text
 
 from .make_test_data import make_query_table
 
@@ -41,9 +39,6 @@ def test_get_topics(session, dataframes, topic):
     topic_groups = [
         x["topic_group"] for x in topics if not x["topic_name"] == "All Topics"
     ]
-    topic_keywords = [
-        x["keywords"] for x in topics if not x["topic_name"] == "All Topics"
-    ]
     assert sorted(topic_names) == sorted(topics_df.topic_name.tolist())
     assert sorted(topic_groups) == sorted(topics_df.topic_group.tolist())
     if topic is None:
@@ -78,7 +73,9 @@ def test_get_ics_ids_with_threshold_only(
 ):
     df_weights = dataframes["TOPIC_WEIGHTS_TABLE"]
     df_weights = df_weights[df_weights.probability >= threshold]
-    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, funder)
+    ics_ids = get_ics_ids(
+        threshold, topic, postcode, beneficiary, uk_region, uoa, funder
+    )
     assert sorted(ics_ids) == sorted(df_weights.ics_id.unique().tolist())
 
 
@@ -169,7 +166,6 @@ def test_get_ics_ids_with_different_parameters(session, dataframes, threshold, t
     ],
 )
 def test_query_dashboard_data(session, dataframes, threshold):
-    data = query_dashboard_data(threshold)
     ics_ids = get_ics_ids(threshold)
     filtered_df = make_query_table(dataframes, threshold)
     filtered_df = filtered_df[filtered_df.ics_id.isin(ics_ids)].drop_duplicates(

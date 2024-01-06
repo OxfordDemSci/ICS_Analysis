@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from typing import Union
 
 from reportlab.lib.enums import TA_CENTER, TA_LEFT  # type: ignore
-from reportlab.lib.styles import (ParagraphStyle,  # type: ignore
-                                  getSampleStyleSheet)
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet  # type: ignore
 
 from app import db
 from app.models import ICS, UOA, Countries, Funder, Topics, UKRegions
@@ -78,7 +77,7 @@ class BeneficiaryType:
             self._value = new_value
         else:
             raise ValueError(f"Beneficiary invalid - {new_value}")
-        
+
 
 @dataclass
 class UKRegionType:
@@ -117,7 +116,7 @@ class UOAType:
             self._value = new_value
         else:
             raise ValueError(f"UOA invalid - {new_value}")
-        
+
 
 @dataclass
 class UOANameType:

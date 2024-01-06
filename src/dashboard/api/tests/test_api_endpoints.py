@@ -40,7 +40,7 @@ def test_ics_data(session, app):
         assert response.status_code == 200
         assert "uoa_counts" in data.keys()
         assert sorted(data.keys()) == sorted(
-            [   
+            [
                 "topics_available",
                 "countries_counts",
                 "uk_region_counts",

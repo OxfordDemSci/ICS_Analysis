@@ -98,5 +98,5 @@ COLUMN_CONVERSION_MAP_FROM_DATABASE = {
     "countries_iso3": "countries_extracted",
     "ukprn": "inst_id",
     "uoa": "Unit of assessment number",
-    "postcode": "inst_postcode_area"
+    "postcode": "inst_postcode_area",
 }

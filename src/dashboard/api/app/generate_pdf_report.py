@@ -5,7 +5,9 @@ from pathlib import Path
 import matplotlib  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 from flask import make_response, request
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas  # type: ignore
+from matplotlib.backends.backend_agg import (  # type: ignore
+    FigureCanvasAgg as FigureCanvas,
+)  # type: ignore
 from matplotlib.colors import LinearSegmentedColormap  # type: ignore
 from reportlab.lib import colors  # type: ignore
 from reportlab.lib.pagesizes import letter  # type: ignore
@@ -23,7 +25,17 @@ matplotlib.use("agg")  # Set the backend to 'agg' for non-GUI use
 # https://www.blog.pythonlibrary.org/2010/03/08/a-simple-step-by-step-reportlab-tutorial/
 
 
-def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder):
+def pdf_report(
+    pdf_data,
+    threshold,
+    topic,
+    postcode_area,
+    beneficiary,
+    uk_region,
+    uoa,
+    uoa_name,
+    funder,
+):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
         buffer,
@@ -94,7 +106,15 @@ def pdf_report(pdf_data, threshold, topic, postcode_area, beneficiary, uk_region
 
     story.append(
         add_final_footnote(
-            pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
+            pdf_data,
+            threshold,
+            topic,
+            postcode_area,
+            beneficiary,
+            uk_region,
+            uoa,
+            uoa_name,
+            funder,
         )
     )
 
@@ -441,7 +461,15 @@ def add_beneficiaries_info(pdf_data):
 
 
 def add_final_footnote(
-    pdf_data, threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
+    pdf_data,
+    threshold,
+    topic,
+    postcode_area,
+    beneficiary,
+    uk_region,
+    uoa,
+    uoa_name,
+    funder,
 ):
     base_url = request.base_url.rstrip("download_pdf")
     request_url = request.url

@@ -47,10 +47,11 @@ limiter = Limiter(
 try:
     assert BASE.joinpath("topic_map.json").exists()
 except AssertionError:
-    raise FileNotFoundError("No topic_map found. You need to run ../scripts/reformat_csvs_for_db.py")
-with open(BASE.joinpath("topic_map.json"), 'r') as f:
+    raise FileNotFoundError(
+        "No topic_map found. You need to run ../scripts/reformat_csvs_for_db.py"
+    )
+with open(BASE.joinpath("topic_map.json"), "r") as f:
     TOPICS_BOOL_MAP = json.load(f)
-
 
 
 def create_app(config_name: str) -> Flask:

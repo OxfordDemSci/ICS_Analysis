@@ -1,11 +1,22 @@
 import ast
-import csv
 import json
-import pandas as pd
 from pathlib import Path
 
-from app.models import (ICS, UOA, Countries, Funder, Institution, TopicGroups,
-                        Topics, TopicWeights, UKRegions, RegionsGeometry, WebsiteText)
+import pandas as pd
+
+from app.models import (
+    ICS,
+    UOA,
+    Countries,
+    Funder,
+    Institution,
+    RegionsGeometry,
+    TopicGroups,
+    Topics,
+    TopicWeights,
+    UKRegions,
+    WebsiteText,
+)
 
 BASE = Path(__file__).resolve().parent.joinpath("test_data")
 

@@ -1,18 +1,19 @@
 import copy
 import csv
 import json
+import math
 from collections import defaultdict
 from io import StringIO
-from typing import Any, DefaultDict, Dict, List
+from typing import Any, DefaultDict, Dict, List, Sequence
 
 from flask import make_response
 from flask.wrappers import Response
-from shapely.wkt import loads
-from shapely import to_geojson
+from shapely import to_geojson  # type: ignore
+from shapely.wkt import loads  # type: ignore
 from sqlalchemy import text
 from sqlalchemy.sql.elements import TextClause
 
-from app import db, TOPICS_BOOL_MAP
+from app import TOPICS_BOOL_MAP, db
 from app.models import ICS, TopicGroups, WebsiteText
 
 
@@ -56,7 +57,7 @@ def get_topics(topic: str | None = None):
     return topics
 
 
-def get_topic_groups():
+def get_topic_groups():  # type: ignore
     topic_groups = db.session.query(TopicGroups).all()
 
     # Unpack the response into a dictionary
@@ -98,18 +99,24 @@ def get_pdf_data(
     uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, dict]:
+    # FIXME This functionality is deprecated as an endpoint - Will need to be updated
+    # when/if it is used.
     pdf_data = {}
     pdf_data["topic"] = get_topics(topic)
     pdf_data["background_text"] = get_website_text()
     pdf_data["ics_data"] = query_dashboard_data(
-        threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
+        threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder  # type: ignore
     )
     return pdf_data
 
 
 def get_ics_table(ics_ids: list, page: int, limit: int) -> tuple:
-    offset = (page - 1) * limit
-    rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).order_by(ICS.id).paginate(page=page, per_page=limit)
+    rows = (
+        db.session.query(ICS)  # type: ignore
+        .filter(ICS.ics_id.in_(ics_ids))
+        .order_by(ICS.id)
+        .paginate(page=page, per_page=limit)
+    )
     ics_table = []
     for row in rows:
         ics_table.append(
@@ -138,7 +145,9 @@ def download_ics_table(
     funder: str | None = None,
     limit: int | None = None,
 ) -> Response:
-    ics_ids = get_ics_ids(threshold, topic, postcode, country, uk_region, uoa, uoa_name, funder)
+    ics_ids = get_ics_ids(
+        threshold, topic, postcode, country, uk_region, uoa, uoa_name, funder
+    )
     rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
     csv_data = StringIO()
     writer = csv.writer(csv_data)
@@ -207,13 +216,14 @@ def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     return countries
 
 
-def get_regions_counts(ics_ids: list | None = None, return_buffers: bool = False) -> List[Dict[str, str]]:
-    import math
-    scale_factor = 0.001
+def get_regions_counts(
+    ics_ids: list | None = None, return_buffers: bool = False
+) -> Dict[str, Sequence[str]]:
+    scale_factor = 0.03
     if ics_ids is None:
         sql = text(
             """
-            SELECT u.uk_region_tag_values as region, count(*) as region_count, g.regions_wkt as geom from uk_regions u 
+            SELECT u.uk_region_tag_values as region, count(*) as region_count, g.regions_wkt as geom from uk_regions u
             JOIN regions_geometry g
             ON u.uk_region_tag_values = g.placename
             where u.uk_region_tag_values
@@ -234,23 +244,28 @@ def get_regions_counts(ics_ids: list | None = None, return_buffers: bool = False
         """
         )
         query = db.session.execute(sql, {"ics_ids": ics_ids})
-    regions = [{
-        "name": row.region,
-        "count": row.region_count,
-        "geometry": loads(row.geom).buffer(math.log(row.region_count) * 0.03) if return_buffers else loads(row.geom)
-        } for row in query]
-    collection =  {"type": "FeatureCollection", "features": []}
+    regions = [
+        {
+            "name": row.region,
+            "count": row.region_count,
+            "geometry": loads(row.geom).buffer(
+                math.log(row.region_count) * scale_factor
+            )
+            if return_buffers
+            else loads(row.geom),
+        }
+        for row in query
+    ]
+    collection = {"type": "FeatureCollection", "features": []}
     for region in regions:
-        collection["features"].append(
+        collection["features"].append(  # type: ignore
             {
                 "type": "Feature",
                 "geometry": json.loads(to_geojson(region["geometry"])),
-                "properties": {
-                    "name": region["name"],
-                    "count": region["count"]},
-                })
+                "properties": {"name": region["name"], "count": region["count"]},
+            }
+        )
     return collection
-    
 
 
 def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
@@ -258,8 +273,8 @@ def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
         sql = text(
             """
             SELECT ics.uoa as uoa, uoa.name as name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as
-                assessment_group, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON CAST(ics.uoa) = uoa.uoa_id GROUP BY ics.uoa,
-                uoa.name, uoa.assessment_panel, uoa.assessment_group ORDER BY uoa_count desc;
+                assessment_group, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON CAST(ics.uoa) = uoa.uoa_id GROUP BY
+                ics.uoa, uoa.name, uoa.assessment_panel, uoa.assessment_group ORDER BY uoa_count desc;
         """
         )
         query = db.session.execute(sql)
@@ -356,7 +371,7 @@ def get_available_topics(ics_ids: List[str]):
 
 def query_dashboard_data(
     threshold: float,
-    table_page: int, 
+    table_page: int,
     items_per_page: int,
     topic: str | None = None,
     postcode: list | None = None,
@@ -367,19 +382,24 @@ def query_dashboard_data(
     funder: str | None = None,
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
-    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
+    ics_ids = get_ics_ids(
+        threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder
+    )
     data["topics_available"] = get_available_topics(ics_ids=ics_ids)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
     data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
-    data["ics_table"], data["table_pagination_meta"] = get_ics_table(ics_ids=ics_ids, page=table_page, limit=items_per_page)
+    data["ics_table"], data["table_pagination_meta"] = get_ics_table(
+        ics_ids=ics_ids, page=table_page, limit=items_per_page
+    )
     return data
+
 
 def get_paginated_table(
     threshold: float,
-    table_page: int, 
+    table_page: int,
     items_per_page: int,
     topic: str | None = None,
     postcode: list | None = None,
@@ -387,13 +407,16 @@ def get_paginated_table(
     uk_region: str | None = None,
     uoa: str | None = None,
     uoa_name: str | None = None,
-    funder: str | None = None,    
+    funder: str | None = None,
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
-    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
-    data["ics_table"], data["table_pagination_meta"] = get_ics_table(ics_ids=ics_ids, page=table_page, limit=items_per_page)
+    ics_ids = get_ics_ids(
+        threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder
+    )
+    data["ics_table"], data["table_pagination_meta"] = get_ics_table(
+        ics_ids=ics_ids, page=table_page, limit=items_per_page
+    )
     return data
-
 
 
 def get_ics_ids(
@@ -407,7 +430,16 @@ def get_ics_ids(
     funder: str | None = None,
 ) -> List[str]:
     sql = get_ics_sql(topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
-    argument_names = ["threshold", "topic", "postcode", "beneficiary", "uk_region", "uoa", "uoa_name", "funder"]
+    argument_names = [
+        "threshold",
+        "topic",
+        "postcode",
+        "beneficiary",
+        "uk_region",
+        "uoa",
+        "uoa_name",
+        "funder",
+    ]
     arguments = [
         threshold,
         topic,
