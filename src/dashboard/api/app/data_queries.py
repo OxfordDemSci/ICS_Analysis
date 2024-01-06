@@ -377,6 +377,24 @@ def query_dashboard_data(
     data["ics_table"], data["table_pagination_meta"] = get_ics_table(ics_ids=ics_ids, page=table_page, limit=items_per_page)
     return data
 
+def get_paginated_table(
+    threshold: float,
+    table_page: int, 
+    items_per_page: int,
+    topic: str | None = None,
+    postcode: list | None = None,
+    beneficiary: str | None = None,
+    uk_region: str | None = None,
+    uoa: str | None = None,
+    uoa_name: str | None = None,
+    funder: str | None = None,    
+) -> Dict[str, List[Dict[str, str]]]:
+    data = {}
+    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
+    data["ics_table"], data["table_pagination_meta"] = get_ics_table(ics_ids=ics_ids, page=table_page, limit=items_per_page)
+    return data
+
+
 
 def get_ics_ids(
     threshold: float,
