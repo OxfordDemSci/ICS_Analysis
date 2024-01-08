@@ -469,7 +469,8 @@ export function updateInfoBox(d) {
 
         } else {
 
-            let description_final = "<h6>" + active_topic + "</h6><p>" + found.description + "</p><p>Keywords: " + found.keywords + "</p>"
+            // let description_final = "<h6>" + active_topic + "</h6><p>" + found.description + "</p><p>Keywords: " + found.keywords + "</p>"
+            let description_final = "<h6>" + active_topic + "</h6><p>" + found.description + "</p>"
             $("#info_box_topic_description").html(description_final);
             $("#info_box_topic_example").html(found.narrative);
             $("#info_box_topic_keywords").html(found.keywords);
