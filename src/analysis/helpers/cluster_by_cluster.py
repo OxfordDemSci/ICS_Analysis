@@ -1,21 +1,21 @@
 import os
 import re
+import matplotlib.colors
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import geopandas as gpd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import gender_guesser.detector as gender
 import matplotlib.gridspec as gridspec
-import matplotlib.colors
 from PIL import Image
 from .figure_helpers import savefigures
 from mne_connectivity.viz import plot_connectivity_circle
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 d = gender.Detector()
-import matplotlib as mpl
 mpl.rcParams['font.family'] = 'Graphik'
 plt.rcParams["font.family"] = 'Graphik'
 plt.rcParams["axes.labelweight"] = "light"
@@ -636,7 +636,7 @@ def make_uoa_ax(df, ax, letter):
     ax.legend(handles=legend_elements, loc='lower right', frameon=True,
               bbox_to_anchor=[1, 0.125],
               fontsize=12, framealpha=1, facecolor='w',
-              title = 'Discipline',
+              title='Discipline',
               edgecolor='k', handletextpad=0.25)
 
     ax.set_title(letter, loc='left', x=-0.125, fontsize=18, y=1.015, fontweight='bold')

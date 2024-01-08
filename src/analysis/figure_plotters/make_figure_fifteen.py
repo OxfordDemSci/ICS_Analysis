@@ -105,7 +105,12 @@ def make_figure_fifteen():
                                   'data',
                                   'final',
                                   'enhanced_ref_data.csv'),
-                     index_col=0)
+#                     index_col=0
+                     usecols=['countries_extracted',
+                              'region_extracted',
+                              'Main panel',
+                              'Unit of assessment number']
+                     )
     df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
     fig = plt.figure(figsize=(24, 21))
     spec = gridspec.GridSpec(ncols=36, nrows=30, figure=fig)

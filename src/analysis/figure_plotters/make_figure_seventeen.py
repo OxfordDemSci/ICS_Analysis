@@ -147,7 +147,10 @@ def make_figure_seventeen():
                                   'data',
                                   'final',
                                   'enhanced_ref_data.csv'
-                                  )
+                                  ),
+                     usecols=['Main panel',
+                              'Unit of assessment number',
+                              'REF impact case study identifier']
                      )
     df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
     paper_level = pd.read_excel(os.path.join(dim_out,

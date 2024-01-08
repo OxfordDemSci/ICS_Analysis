@@ -35,8 +35,11 @@ def make_figure_sixteen():
                                   '..',
                                   'data',
                                   'final',
-                                  'enhanced_ref_data.csv')
-                     )
+                                  'enhanced_ref_data.csv'),
+                     usecols=['Main panel',
+                              'Unit of assessment number',
+                              'REF impact case study identifier',
+                              'funders_extracted'])
     df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
     grid_lookup = pd.read_csv(os.path.join(os.getcwd(),
                                            '..',
@@ -155,8 +158,6 @@ def make_figure_sixteen():
     for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
         ax.tick_params(axis='both', which='minor', labelsize=14)
         ax.tick_params(axis='both', which='major', labelsize=14)
-    #        ax.grid(which="both", linestyle='--', alpha=0.3)
-
     ax1.set_title('a.', loc='left', fontsize=21, fontweight='bold', y=0.98)
     ax2.set_title('b.', loc='left', fontsize=21, fontweight='bold', y=0.98)
     ax3.set_title('c.', loc='left', fontsize=21, fontweight='bold', y=0.98)

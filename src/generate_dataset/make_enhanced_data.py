@@ -859,13 +859,17 @@ def load_topic_data(df, manual_path, topic_path):
 
     # Attempt to load additional topic data
     try:
-        topic_assignment = pd.read_csv(manual_path / 'topic_lookup' / 'topic_reassignment.csv', index_col=None)
+        topic_assignment = pd.read_csv(manual_path / 'topic_lookup' / 'topic_reassignment.csv',
+                                       index_col=None)
     except FileNotFoundError:
         print(f"{manual_path / 'topic_lookup' / 'topic_reassignment.csv'} not found!")
         print("WARNING: Not including topic reassignment data.")
 
     try:
-        topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv', index_col=None)
+        topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv',
+                                   index_col=None,
+                                   encoding='cp1252'
+                                   )
     except FileNotFoundError:
         print(f"{manual_path / 'topic_lookup' / 'topic_lookup.csv'} not found!")
         print("WARNING: Not including topic lookup data.")

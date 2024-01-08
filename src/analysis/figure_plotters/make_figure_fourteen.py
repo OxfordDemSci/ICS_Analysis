@@ -37,7 +37,15 @@ def make_figure_fourteen():
                                   'data',
                                   'final',
                                   'enhanced_ref_data.csv'),
-                     index_col=0)
+#                     index_col=0,
+                     usecols=['Institution name',
+                              'Main panel',
+                              'Unit of assessment number',
+                              'ICS_GPA',
+                              'num_doc_degrees_total',
+                              'fte',
+                              'tot_income']
+                     )
     df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
     figure_path = os.path.join(os.getcwd(), '..', '..', 'figures')
     colors = ba_rgb2

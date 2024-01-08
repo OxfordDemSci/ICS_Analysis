@@ -273,7 +273,10 @@ def make_figure_eighteen():
                                   '..',
                                   'data',
                                   'final',
-                                  'enhanced_ref_data.csv')
+                                  'enhanced_ref_data.csv'),
+                     usecols=['REF impact case study identifier',
+                              'Main panel',
+                              'Unit of assessment number']
                      )
     df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
     paper_level = pd.read_excel(os.path.join(dim_out,
