@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
-    <link href="css/styles_custom.css?version=1.1" rel="stylesheet"/>
+    <link href="css/styles_custom.css?version=1.4" rel="stylesheet"/>
+    
+    <link href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
+    <link href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
 
 </head>
 <body class="sb-nav-fixed">
@@ -76,7 +79,7 @@
                     <!-- TOPICS SELECTOR -->
                     <div class="sb-sidenav-menu-heading" style="padding-top: 1rem; padding-bottom: 0.1rem;">TOPICS</div>
                     <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper"
-                         style="height: calc(100vh - 480px)">
+                         style="height: calc(100vh - 500px)">
                         <div class="">
                             <ul class="list-group list-group-flush" id="idTopics" style="font-size: 0.8rem">
                                 <li class="list-group-item">1</li>
@@ -92,12 +95,20 @@
                     <div class="sb-sidenav-menu-heading pb-0" style="padding-top: 0.5rem; margin-top: 10px">SELECTED FILTERS
                         <span class="badge bg-primary rounded-pill"
                               id="reload_selected_options"
-                              style="visibility: hidden; cursor: pointer; float:right"
+                              style="visibility: hidden; cursor: pointer; float:right;"
                               data-bs-toggle="tooltip"
                               data-bs-placement="top"
                               data-bs-title="Reset filters">
                             <i class="fa-solid fa-arrows-rotate"></i>
                         </span>
+<!--                        <span class="badge bg-warning rounded-pill"
+                              id="reload_some_selected_options"
+                              style="visibility: visible; cursor: pointer; float:right;margin-right: 6px"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-title="Reset some filters" >
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </span>                        -->
                     </div>
                     <div class="m-2">
                         <ul class="list-group pb-0 mb-0" style="font-size: 0.8rem">
@@ -133,6 +144,11 @@
                                     id="label_selected_Assessment" data-bs-toggle="tooltip" data-bs-placement="right"
                                     data-bs-title="All"> All</label>
                             </li>
+                            <li class="list-group-item pb-0 pt-0">
+                                <label class="text-muted pr-4" id="label_selectedBox_UOA">UOA:</label>&nbsp;<label
+                                    id="label_selected_UOA" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    data-bs-title="All"> All</label>
+                            </li>                            
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4"
                                        id="label_selectedBox_Funder">Funder:</label>&nbsp;<label
@@ -288,7 +304,11 @@
                                 <div class="col-md-6">
                                     <div class="card mb-2" id="chart_cardbox_top_left" style="min-width: 300px">
                                         <div class="card-header">
-                                            <div id="label_Funders" class="d-flex">Top Funders</div>
+<!--                                            <div id="label_Funders" class="d-flex">Top Funders</div>-->
+                                            <label id="label_Funders">Top Funders</label>
+                                            <label id="label_Funders_question">
+                                                <i class="fas fa-question-circle" style="padding-left: 0.3rem;  font-size: 0.8rem"></i>
+                                            </label>                                                 
                                         </div>
                                         <div class="card-body d-flex justify-content-center"
                                              style=" padding: 0px;margin: 0px">
@@ -304,9 +324,31 @@
                                 <div class="col-md-6">
                                     <div class="card mb-2" id="map_cardbox_top_right" style="min-width: 300px">
                                         <div class="card-header">
-                                            <div>
+<!--                                            <div>
                                                 <label id="label_Institutions">UK Institutions</label>
-                                                <!--                                                        <span class="badge bg-secondary" id="Institutions_count">0</span>-->
+                                                
+                                            </div>-->
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label id="label_Institutions">UK Institutions</label>
+                                                    <label id="label_Institutions_question">
+                                                        <i class="fas fa-question-circle" style="padding-left: 0.3rem;  font-size: 0.8rem"></i>
+                                                    </label>                                                      
+                                                </div>
+                                                <div class="col-md-6 d-flex justify-content-end">
+
+                                                    <div class="d-inline-flex  col-form-label text-right"
+                                                         style="padding-top: 0rem;padding-bottom: 0rem;">
+
+                                                       <select id="Options_of_Country_Names"
+                                                                class="form-select form-select-sm"
+                                                                style="padding-top: 0rem;padding-bottom: 0rem;">
+                                                            <option value="All" selected>All</option>
+                                                            <option value="UK">UK</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="card-body d-flex justify-content-center"
@@ -328,7 +370,7 @@
                                         <div class="card-header" style="">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <div class="d-flex" id="label_UOA">Units of Assessment</div>
+                                                    <div class="d-flex" id="label_UOA">Units of Assessment (UOA)</div>
                                                 </div>
                                                 <div class="col-md-6 d-flex justify-content-end">
 
@@ -378,9 +420,27 @@
                                 <div class="col-md-6">
                                     <div class="card mb-2" id="map_cardbox_bottom_right">
                                         <div class="card-header">
-                                            <div>
-                                                <label id="label_Beneficiaries">Impact Beneficiaries</label>
-                                                <!--                                                        <span class="badge bg-secondary" id="Beneficiaries_count">0</span>-->
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label id="label_Beneficiaries">Impact Beneficiaries</label>
+                                                    <label id="label_Beneficiaries_question">
+                                                            <i class="fas fa-question-circle" style="padding-left: 0.3rem;  font-size: 0.8rem"></i>
+                                                    </label>                                                    
+                                                </div>
+                                                <div class="col-md-6 d-flex justify-content-end">
+
+                                                    <div class="d-inline-flex  col-form-label text-right"
+                                                         style="padding-top: 0rem;padding-bottom: 0rem;">
+
+                                                       <select id="Options_of_Impact_Beneficiariest"
+                                                                class="form-select form-select-sm"
+                                                                style="padding-top: 0rem;padding-bottom: 0rem;">
+                                                            <option value="Global" selected>Global</option>
+                                                            <option value="UK">UK</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="card-body d-flex justify-content-center"
@@ -440,7 +500,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btnDownlaodICSTable">Download</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" id="btnCloseICSTable" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -554,7 +614,8 @@
 
                     </div>
 
-                    <div class="row">
+<!--  Threshold option  -->
+<!--                <div class="row">
                         <div class="col-sm-12">
                             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
                         </div>
@@ -587,7 +648,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
+<!-- End of Threshold option  -->
                 </div>
             </div>
 
@@ -733,6 +795,79 @@
 </div>
 <!-- end  modals label_Assessment Question -->
 
+<!--  modals label_Funders_question Question -->
+<div class="modal fade " data-backdrop="false" id="idMdFundersQuestion" tabindex="-1"
+     aria-labelledby="ModalFundersQuestion" style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog" role="document" id="idMdFundersQuestion-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="mt-2">
+                                    Some text
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals label_Funders_question Question -->
+
+<!--  modals label_Institutions_question Question -->
+<div class="modal fade " data-backdrop="false" id="idMdInstitutionsQuestion" tabindex="-1"
+     aria-labelledby="ModalInstitutionsQuestion" style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog" role="document" id="idMdInstitutionsQuestion-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="mt-2">
+                                    Some text
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals label_Institutions_question Question -->
+
+<!--  modals label_Beneficiaries_question Question -->
+<div class="modal fade " data-backdrop="false" id="idMdBeneficiariesQuestion" tabindex="-1"
+     aria-labelledby="ModalBeneficiariesQuestion" style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog" role="document" id="idMdBeneficiariesQuestion-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="mt-2">
+                                    Some text
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals label_Beneficiaries_question Question -->
+
+
 
 <!--  modals Help -->
 <div class="modal fade " data-backdrop="false" id="idMdHelp" tabindex="-1" aria-labelledby="ModalHelp"
@@ -855,10 +990,12 @@
 
 <script src="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.js"></script>
 <script src="js/DataTables/dataRender/ellipsis.min.js"></script>
+
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 </body>
 </html>
 
-<script src="./js/main.js?version=7.5" type="module"></script>
+<script src="./js/main.js?version=8.1" type="module"></script>
 
 <script type="text/javascript">
 
@@ -877,7 +1014,7 @@
 
         document.getElementById('label_Funders').innerHTML = "Top Funders";
         document.getElementById('label_Institutions').innerHTML = "UK Institutions";
-        document.getElementById('label_UOA').innerHTML = "Units of Assessment";
+        document.getElementById('label_UOA').innerHTML = "Units of Assessment (UOA)";
         document.getElementById('label_Beneficiaries').innerHTML = "Impact Beneficiaries";
 
 

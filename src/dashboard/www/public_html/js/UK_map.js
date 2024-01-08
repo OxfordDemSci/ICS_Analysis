@@ -347,12 +347,12 @@ export function selectFeatureUKMap(e, _infoBox, _map) {
         
         $('#popover_Institutions').popover('dispose'); 
         // add institutest to label popover in selected option box
-        const popover_InstitutionsEl = document.getElementById('popover_Institutions')
-        const popover_Institutions = new bootstrap.Popover(popover_InstitutionsEl,{html: true});
-    
-        popover_Institutions._config.content = popover_text;
-        popover_Institutions.setContent();   
-        popover_Institutions.enable();        
+//        const popover_InstitutionsEl = document.getElementById('popover_Institutions')
+//        const popover_Institutions = new bootstrap.Popover(popover_InstitutionsEl,{html: true});
+//    
+//        popover_Institutions._config.content = popover_text;
+//        popover_Institutions.setContent();   
+//        popover_Institutions.enable();        
         
        }
     }      

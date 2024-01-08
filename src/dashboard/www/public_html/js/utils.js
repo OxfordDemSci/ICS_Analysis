@@ -172,10 +172,10 @@ export function LoadCurrentICSTable(oResults, _columns_ntitles, _max_txt_lenght)
                     }
 
                 },
+                "defaultContent": "",
                 targets: "_all"
             },
             {"width": "200px", targets: [0, 1, 2, 3, 26]}],
-
         "data": oResults,
         "columns": columns_ntitles
     });
@@ -239,7 +239,7 @@ export function setHightBoxs() {
 
 }
 
-export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Funder) {
+export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Funder, UAO_name) {
 
     let ActiveAssessment = getActiveAssessment();
 
@@ -267,13 +267,18 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
         ch_Beneficiaries = false;
     }
 
+    let ch_UAO_name = true;
+
+    if (typeof UAO_name === 'undefined' || UAO_name === null) {
+        ch_UAO_name = false;
+    }
 
     var eUOA = document.getElementById("Options_of_Assessment");
     var valueUOA = eUOA.options[eUOA.selectedIndex].value;
 
 
 // 
-    if (ch_Institutions || ch_Beneficiaries || ch_Funder || ch_ActiveAssessment) {
+    if (ch_Institutions || ch_Beneficiaries || ch_Funder || ch_ActiveAssessment || ch_UAO_name) {
         document.getElementById("reload_selected_options").style.visibility = "visible";
     }
 
@@ -289,9 +294,9 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
     }
 
     if (ch_Institutions) {
-        document.getElementById('label_selected_Institutions').innerHTML = Institutions;
+        document.getElementById('label_selected_Institutions').innerHTML = (Institutions != null && Institutions.length > 8) ? Institutions.substr(0, 8) + " ..." : Institutions == null ? "" : Institutions
         let link_popover_Institutions = document.getElementById('popover_Institutions');
-        document.getElementById('label_selected_Institutions').style.textDecoration = "underline";
+        document.getElementById('label_selected_Institutions').style.textDecoration = "none";
         document.getElementById('label_selected_Institutions').style.cursor = "pointer";
         const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Institutions);
         tooltipInstance.setContent({'.tooltip-inner': Institutions});
@@ -304,14 +309,28 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
         tooltipInstance.setContent({'.tooltip-inner': 'All'});
     }
 
-    if (ch_Beneficiaries) {
-        let Beneficiaries_name = _country_code_lookup.searchCountryNamebyISO3("iso3", Beneficiaries);
-        document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name.country.length > 7) ? Beneficiaries_name.country.substr(0, 10)+" ..." : Beneficiaries_name.country;
-        const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
-        tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name.country});
+    let Impact_Beneficiariest_selected = $('#Options_of_Impact_Beneficiariest').children("option:selected").val();
+        
+    if (Impact_Beneficiariest_selected === "UK") {
+            document.getElementById('label_selected_Beneficiaries').innerHTML = "UK";
+            const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
+            tooltipInstance.setContent({'.tooltip-inner': "UK"});
     } else {
-        document.getElementById('label_selected_Beneficiaries').innerHTML = 'Global';
+        
+        if (ch_Beneficiaries) {
+            let Beneficiaries_name = _country_code_lookup.searchCountryNamebyISO3("iso3", Beneficiaries);
+            document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name.country.length > 7) ? Beneficiaries_name.country.substr(0, 10)+" ..." : Beneficiaries_name.country;
+            const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
+            tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name.country});     
+        } else {
+            document.getElementById('label_selected_Beneficiaries').innerHTML = 'Global';
+        }  
+        
     }
+
+
+
+
 
     document.getElementById('label_selected_Assessment').innerHTML = valueUOA;
 
@@ -319,6 +338,16 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
     document.getElementById('label_selected_Topics').innerHTML = (active_topic.length > 13) ? active_topic.substr(0, 16) + " ..." : active_topic;
     const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Topics);
     tooltipInstance.setContent({'.tooltip-inner': active_topic});
+    
+    
+    if (UAO_name === null) {
+        document.getElementById('label_selected_UOA').innerHTML = "All";
+    }else{
+        document.getElementById('label_selected_UOA').innerHTML = (UAO_name.length > 16) ? UAO_name.substr(0, 16) + " ..." : UAO_name;
+
+        const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_UOA);
+        tooltipInstance.setContent({'.tooltip-inner': UAO_name});
+    }
 
 }
 
@@ -634,4 +663,73 @@ export function updateTopicsMenu(d, t) {
 
         resolve(true);
     });
+}
+
+
+  
+export function updateTopicsMenuAvailable(d, b) {
+    
+        var active_topic = document.querySelector("#idTopics li.active").getAttribute("data-alias");
+        if (active_topic !== "All Topics") return(true);
+        
+        let topics_available=true;
+        let g = d.topic_groups;
+        const groups = document.getElementById('idGroups');
+
+        groups.innerHTML = "";
+        groups.innerHTML = groups.innerHTML +
+                '<option value="0">All Clusters</option>';
+        for (var i = 0; i < g.length; i++) {
+
+            groups.innerHTML = groups.innerHTML +
+                    '<option value="' + g[i]['group_id'] + '" >' + g[i]['topic_group'] + '</option>';
+
+        }
+
+        let t = d.topics;
+
+        t.sort(function (a, b) {
+            return a.topic_name < b.topic_name ? -1 : a.topic_name > b.topic_name ? 1 : 0;
+        });
+
+        t.forEach(function (item, i) {
+            if (item.topic_name === "All Topics") {
+                t.splice(i, 1);
+                t.unshift(item);
+            }
+        });
+
+        const list = document.getElementById('idTopics');
+        list.innerHTML = "";
+        for (var i = 0; i < t.length; i++) {
+
+            let topic_name = t[i]['topic_name'];
+            
+            // searching for the topic in array "b" to check if 
+            // topic available or not 
+            if (typeof b[topic_name] === 'undefined'){
+                topics_available=true;
+            }else{
+                topics_available=b[topic_name];
+            }
+
+            
+
+            if (i === 0) {
+                list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item active" data-alias="' + t[i]['topic_name'] + '" >' + t[i]['topic_name'] + '</li>';
+            } else {
+                
+                if (topics_available){
+                    list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item"  data-alias="' + t[i]['topic_name'] + '">' + t[i]['topic_name'] + '</li>';
+                }else{
+                    list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item disabled"  data-alias="' + t[i]['topic_name'] + '">' + t[i]['topic_name'] + '</li>';
+                }
+                
+                
+            }
+        }
+
 }

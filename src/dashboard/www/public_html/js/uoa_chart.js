@@ -376,6 +376,8 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
                     type: 'pie',
                     radius: ['40%', '70%'],
                     center: ['50%', '50%'],
+            selectedMode: 'single',
+            selectedOffset: 30,
                     itemStyle: {
                         borderRadius: 10,
                         borderColor: '#fff',
