@@ -1,24 +1,273 @@
-import os
 import re
+import os
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.ticker as mtick
 import matplotlib as mpl
-import seaborn as sns
-from matplotlib.patches import Patch
+import matplotlib.pyplot as plt
 from helpers.figure_helpers import savefigures
+from mne_connectivity.viz import plot_connectivity_circle
+
 mpl.rcParams['font.family'] = 'Graphik'
-import gender_guesser.detector as gender
-d = gender.Detector()
+plt.rcParams["axes.labelweight"] = "light"
+plt.rcParams["font.weight"] = "light"
+
+cmap = mpl.colors.LinearSegmentedColormap.from_list("",
+                                                    ['white', '#41558c', '#E89818', '#CF202A']
+                                                     )
+
+def make_inter_ax(df_for, ax, letter):
+    plot_connectivity_circle(df_for.replace(0, np.nan).to_numpy(),
+                             list(df_for.index), padding=5,
+                             facecolor='white', node_width=12,
+                             textcolor='black', node_linewidth=1,
+                             linewidth=5, colormap=cmap, vmin=None,
+                             vmax=None, colorbar=True,
+                             title=letter,
+                             fontsize_title=20,
+                             node_colors=['w'], colorbar_size=0.75,
+                             colorbar_pos=(.4, 0.5),# ax=ax,
+                             fontsize_names=14, fontsize_colorbar=13)
+    ax.set_xticks([])
+    ax.set_xticklabels([])
+#    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.025)
+    ax.set_yticks([])
+    ax.set_yticklabels([])
+    #    ax.set_title(letter, loc='left', x=-0.0, fontsize=100, y=1.0)
+    return ax
 
 
-def get_gender():
-    dim_out = os.path.join(os.getcwd(),
-                           '..',
-                           '..',
-                           'data',
-                           'dimensions_returns')
+def make_tagged(tagged_res):
+    tagged_res_l2 = pd.DataFrame(0,
+                                 index=tagged_res['Tag group'].unique(),
+                                 columns=tagged_res['Tag group'].unique())
+    for ICS in tagged_res['REF case study identifier'].unique():
+        temp = tagged_res[tagged_res['REF case study identifier'] == ICS]
+        counter = 0
+        for group1 in temp['Tag group']:
+            for group2 in temp['Tag group']:
+                if group1 != group2:
+                    tagged_res_l2.at[group1, group2] += 1
+    tagged_res_l2 = tagged_res_l2.rename({'Information And Computing Sciences': 'IT'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Information And Computing Sciences': 'IT'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Built Environment And Design': 'Urban'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Built Environment And Design': 'Urban'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Biological Sciences': 'Biology'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Biological Sciences': 'Biology'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Medical And Health Sciences': 'Health'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Medical And Health Sciences': 'Health'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Language, Communication And Culture': 'Language'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Language, Communication And Culture': 'Language'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Earth Sciences': 'Earth'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Earth Sciences': 'Earth'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Physical Sciences': 'Physics'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Physical Sciences': 'Physics'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Chemical Sciences': 'Chem'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Chemical Sciences': 'Chem'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Biological Sciences': 'Biology'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Biological Sciences': 'Biology'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Agricultural And Veterinary Sciences': 'Agriculture'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Agricultural And Veterinary Sciences': 'Agriculture'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'History And Archaeology': 'History'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'History And Archaeology': 'History'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Law And Legal Studies': 'Law'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Law And Legal Studies': 'Law'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Environmental Sciences': 'Environmental'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Environmental Sciences': 'Environmental'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Law And Legal Studies': 'Law'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Law And Legal Studies': 'Law'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Studies In Creative Arts And Writing': 'Creative'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Studies In Creative Arts And Writing': 'Creative'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Commerce, Management, Tourism And Services': 'Tourism'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Commerce, Management, Tourism And Services': 'Tourism'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Mathematical Sciences': 'Mathematics'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Mathematical Sciences': 'Mathematics'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Philosophy And Religious Studies': 'Religion'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Philosophy And Religious Studies': 'Religion'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Studies In Human Society': 'Society'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Studies In Human Society': 'Society'}, axis=1)
+    tagged_res_l2 = tagged_res_l2.rename({'Psychology And Cognitive Sciences': 'Psychology'}, axis=0)
+    tagged_res_l2 = tagged_res_l2.rename({'Psychology And Cognitive Sciences': 'Psychology'}, axis=1)
+    return tagged_res_l2
+
+def make_and_clean_for(paper_level):
+    for_set = set()
+    for index, row in paper_level.iterrows():
+        paper_fors = row['category_for']
+        if paper_fors is not np.nan:
+            first_level = paper_fors.split('second_level')[0]
+            for_set = for_set.union(set(re.findall(r"'name': '(.*?)'", first_level)))
+    df_for = pd.DataFrame(0, columns=list(for_set), index=list(for_set))
+    for_list = []
+    for index, row in paper_level.iterrows():
+        paper_fors = row['category_for']
+        if paper_fors is not np.nan:
+            first_level = paper_fors.split('second_level')[0]
+            for_set_row = set(re.findall(r"'name': '(.*?)'", first_level))
+            for_set = for_set.union(for_set_row)
+            if len(for_set_row) > 1:
+                for field1 in for_set_row:
+                    for field2 in for_set_row:
+                        if field1 != field2:
+                            df_for.at[field1, field2] += 1
+                            for_list.append(str(field1) + '; ' + str(field2))
+    df_for = df_for.rename({'Information and Computing Sciences': 'IT'}, axis=0)
+    df_for = df_for.rename({'Information and Computing Sciences': 'IT'}, axis=1)
+    df_for = df_for.rename({'Built Environment and Design': 'Urban'}, axis=0)
+    df_for = df_for.rename({'Built Environment and Design': 'Urban'}, axis=1)
+    df_for = df_for.rename({'Biological Sciences': 'Biology'}, axis=0)
+    df_for = df_for.rename({'Biological Sciences': 'Biology'}, axis=1)
+    df_for = df_for.rename({'Health Sciences': 'Health'}, axis=0)
+    df_for = df_for.rename({'Health Sciences': 'Health'}, axis=1)
+    df_for = df_for.rename({'Language, Communication and Culture': 'Language'}, axis=0)
+    df_for = df_for.rename({'Language, Communication and Culture': 'Language'}, axis=1)
+    df_for = df_for.rename({'Earth Sciences': 'Earth'}, axis=0)
+    df_for = df_for.rename({'Earth Sciences': 'Earth'}, axis=1)
+    df_for = df_for.rename({'Physical Sciences': 'Physics'}, axis=0)
+    df_for = df_for.rename({'Physical Sciences': 'Physics'}, axis=1)
+    df_for = df_for.rename({'Chemical Sciences': 'Chem'}, axis=0)
+    df_for = df_for.rename({'Chemical Sciences': 'Chem'}, axis=1)
+    df_for = df_for.rename({'Economics': 'Econ'}, axis=1)
+    df_for = df_for.rename({'Economics': 'Econ'}, axis=1)
+    df_for = df_for.rename({'Biomedical and Clinical Sciences': 'Biolomedical'}, axis=0)
+    df_for = df_for.rename({'Biomedical and Clinical Sciences': 'Biolomedical'}, axis=1)
+    df_for = df_for.rename({'Agricultural, Veterinary and Food Sciences': 'Agriculture'}, axis=0)
+    df_for = df_for.rename({'Agricultural, Veterinary and Food Sciences': 'Agriculture'}, axis=1)
+    df_for = df_for.rename({'History, Heritage and Archaeology': 'History'}, axis=0)
+    df_for = df_for.rename({'History, Heritage and Archaeology': 'History'}, axis=1)
+    df_for = df_for.rename({'Law and Legal Studies': 'Law'}, axis=0)
+    df_for = df_for.rename({'Law and Legal Studies': 'Law'}, axis=1)
+    df_for = df_for.rename({'Environmental Sciences': 'Environmental'}, axis=0)
+    df_for = df_for.rename({'Environmental Sciences': 'Environmental'}, axis=1)
+    df_for = df_for.rename({'Creative Arts and Writing': 'Creative'}, axis=0)
+    df_for = df_for.rename({'Creative Arts and Writing': 'Creative'}, axis=1)
+    df_for = df_for.rename({'Commerce, Management, Tourism and Services': 'Tourism'}, axis=0)
+    df_for = df_for.rename({'Commerce, Management, Tourism and Services': 'Tourism'}, axis=1)
+    df_for = df_for.rename({'Mathematical Sciences': 'Mathematics'}, axis=0)
+    df_for = df_for.rename({'Mathematical Sciences': 'Mathematics'}, axis=1)
+    df_for = df_for.rename({'Philosophy and Religious Studies': 'Religion'}, axis=0)
+    df_for = df_for.rename({'Philosophy and Religious Studies': 'Religion'}, axis=1)
+    df_for = df_for.rename({'Human Society': 'Society'}, axis=0)
+    df_for = df_for.rename({'Human Society': 'Society'}, axis=1)
+    return df_for, pd.DataFrame(for_list).value_counts()
+
+
+def make_L1(df_for, data_type):
+    L1_for = pd.DataFrame(0, index=['Humanities', 'Social Sciences',
+                                        'Natural Sciences', 'Medical Sciences',
+                                     'Physical Sciences'],
+                             columns=['Humanities', 'Social Sciences',
+                                      'Natural Sciences', 'Medical Sciences',
+                                      'Physical Sciences'])
+    if data_type == 'papers':
+        L1_1 = ['Creative', 'Language', 'History', 'Religion']
+        L1_2 = ['Urban', 'Education', 'Economics', 'Tourism', 'Society', 'Law']
+        L1_3 = ['Physics', 'Chem', 'Earth', 'Environmental', 'Biology', 'Agriculture']
+        L1_4 = ['Health', 'Biolomedical', 'Psychology']
+        L1_5 = ['Mathematics', 'Engineering', 'IT']
+    elif data_type == 'ref_tags':
+        L1_1 = ['Creative', 'Language', 'History', 'Religion']
+        L1_2 = ['Urban', 'Education', 'Economics', 'Tourism', 'Society', 'Law']
+        L1_3 = ['Physics', 'Chem', 'Earth', 'Environmental', 'Biology', 'Agriculture']
+        L1_4 = ['Health', 'Biolomedical', 'Psychology']
+        L1_5 = ['Mathematics', 'Engineering', 'IT']
+
+    for row in df_for.index:
+        for column in df_for.columns:
+            if (row in L1_1) and (column in L1_1):
+                L1_for.at['Humanities', 'Humanities'] += df_for.at[row, column]
+            if row in L1_1 and column in L1_2:
+                L1_for.at['Humanities', 'Social Sciences'] += df_for.at[row, column]
+            if row in L1_1 and column in L1_3:
+                L1_for.at['Humanities', 'Natural Sciences'] += df_for.at[row, column]
+            if row in L1_1 and column in L1_4:
+                L1_for.at['Humanities', 'Medical Sciences'] += df_for.at[row, column]
+            if row in L1_1 and column in L1_5:
+                L1_for.at['Humanities', 'Physical Sciences'] += df_for.at[row, column]
+
+            if (row in L1_2) and (column in L1_1):
+                L1_for.at['Social Sciences', 'Humanities'] += df_for.at[row, column]
+            if row in L1_2 and column in L1_2:
+                L1_for.at['Social Sciences', 'Social Sciences'] += df_for.at[row, column]
+            if row in L1_2 and column in L1_3:
+                L1_for.at['Social Sciences', 'Natural Sciences'] += df_for.at[row, column]
+            if row in L1_2 and column in L1_4:
+                L1_for.at['Social Sciences', 'Medical Sciences'] += df_for.at[row, column]
+            if row in L1_2 and column in L1_5:
+                L1_for.at['Social Sciences', 'Physical Sciences'] += df_for.at[row, column]
+
+
+            if (row in L1_3) and (column in L1_1):
+                L1_for.at['Natural Sciences', 'Humanities'] += df_for.at[row, column]
+            if row in L1_3 and column in L1_2:
+                L1_for.at['Natural Sciences', 'Social Sciences'] += df_for.at[row, column]
+            if row in L1_3 and column in L1_3:
+                L1_for.at['Natural Sciences', 'Natural Sciences'] += df_for.at[row, column]
+            if row in L1_3 and column in L1_4:
+                L1_for.at['Natural Sciences', 'Medical Sciences'] += df_for.at[row, column]
+            if row in L1_3 and column in L1_5:
+                L1_for.at['Natural Sciences', 'Physical Sciences'] += df_for.at[row, column]
+
+            if (row in L1_4) and (column in L1_1):
+                L1_for.at['Medical Sciences', 'Humanities'] += df_for.at[row, column]
+            if row in L1_4 and column in L1_2:
+                L1_for.at['Medical Sciences', 'Social Sciences'] += df_for.at[row, column]
+            if row in L1_4 and column in L1_3:
+                L1_for.at['Medical Sciences', 'Natural Sciences'] += df_for.at[row, column]
+            if row in L1_4 and column in L1_4:
+                L1_for.at['Medical Sciences', 'Medical Sciences'] += df_for.at[row, column]
+            if row in L1_4 and column in L1_5:
+                L1_for.at['Medical Sciences', 'Physical Sciences'] += df_for.at[row, column]
+
+
+            if (row in L1_5) and (column in L1_1):
+                L1_for.at['Physical Sciences', 'Humanities'] += df_for.at[row, column]
+            if row in L1_5 and column in L1_2:
+                L1_for.at['Physical Sciences', 'Social Sciences'] += df_for.at[row, column]
+            if row in L1_5 and column in L1_3:
+                L1_for.at['Physical Sciences', 'Natural Sciences'] += df_for.at[row, column]
+            if row in L1_5 and column in L1_4:
+                L1_for.at['Physical Sciences', 'Medical Sciences'] += df_for.at[row, column]
+            if row in L1_5 and column in L1_5:
+                L1_for.at['Physical Sciences', 'Physical Sciences'] += df_for.at[row, column]
+    return L1_for
+
+
+def plot_circle(df, title, figure_path, filename):
+    fig, ax1 = plt.subplots(1, 1, figsize=(9, 9),
+                            subplot_kw=dict(polar=True))
+    plot_connectivity_circle(df.replace(0, np.nan).to_numpy(),
+                             list(df.index),
+                             padding=5,
+                             facecolor='white',
+                             node_width=12,
+                             textcolor='black',
+                             node_linewidth=1,
+                             linewidth=3,
+                             colormap=cmap, vmin=None,
+                             vmax=None,
+                             colorbar=True,
+                             title=title,
+                             ax=ax1,
+                             fontsize_title=20,
+                             node_colors=['w'],
+                             colorbar_size=0.75,
+                             colorbar_pos=(.4, 0.5),
+                             fontsize_names=14,
+                             fontsize_colorbar=13)
+    savefigures(plt, figure_path, filename)
+
+
+
+def make_figure_eighteen():
+    print('\n*****************************************************')
+    print('***************** Making Figure 18! *******************')
+    print('*******************************************************')
+    mpl.rcParams['font.family'] = 'Graphik'
+    plt.rcParams["axes.labelweight"] = "light"
+    plt.rcParams["font.weight"] = "light"
+
+    dim_out = os.path.join(os.getcwd(), '..', '..',
+                           'data', 'dimensions_returns')
     df = pd.read_csv(os.path.join(os.getcwd(),
                                   '..',
                                   '..',
@@ -35,136 +284,42 @@ def get_gender():
                                'REF impact case study identifier']],
                            how='left',
                            left_on='Key',
-                           right_on='REF impact case study identifier')
-    author_level = pd.DataFrame(columns=['Panel',
-                                         'UoA',
-                                         'ICS_uid',
-                                         'pub_uid',
-                                         'first_name',
-                                         'gender']
-                                )
-    counter = 0
+                           right_on='REF impact case study identifier'
+                           )
 
-    for index, row in paper_level.iterrows():
-        paper_authors = row['authors']
-        if paper_authors != np.nan:
-            name_list = re.findall(r"'first_name': '(.*?)', 'last_name'", paper_authors)
-            for name in name_list:
-                author_level.at[counter, 'Panel'] = row['Main panel']
-                author_level.at[counter, 'UoA'] = int(row['Unit of assessment number'])
-                author_level.at[counter, 'ICS_uid'] = row['Key']
-                author_level.at[counter, 'pub_uid'] = row['id']
-                author_level.at[counter, 'first_name'] = name
-                author_level.at[counter, 'gender'] = d.get_gender(name)
-                counter += 1
-    author_level['female'] = np.where(author_level['gender'] == 'female', 1, 0)
-    author_level['female'] = np.where(author_level['gender'] == 'mostly_female', 1, author_level['female'])
-    author_level = author_level[author_level['gender'] != 'unknown']
-    author_level = author_level[author_level['gender'] != 'andy']
-    paper_panels = author_level.groupby(['Panel'])['female'].mean()
-    uoa_fem = pd.DataFrame(author_level.groupby(['UoA'])['female'].mean())
-    return author_level, uoa_fem, paper_panels
+    df_for_SOCSCI, for_list_SOCSCI = make_and_clean_for(paper_level[(paper_level['Main panel'] == 'C') |
+                                                                    (paper_level['Unit of assessment number'] == 4)])
+    df_for_HUM, for_list_HUM = make_and_clean_for(paper_level[(paper_level['Main panel'] == 'D')])
 
+    tagged_res = pd.read_excel(os.path.join(os.getcwd(),
+                                            '..',
+                                            '..',
+                                            'data',
+                                            'raw',
+                                            'raw_ref_ics_tags_data.xlsx'),
+                               sheet_name='Sheet1',
+                               skiprows=4,
+                               usecols=['REF case study identifier',
+                                        'Main panel',
+                                        'Unit of assessment number',
+                                        'Tag type',
+                                        'Tag identifier',
+                                        'Tag value',
+                                        'Tag group']
+                               )
 
-def plot_gender(uoa_fem, paper_panels, figure_path):
-    fig, (ax1) = plt.subplots(1, 1, figsize=(14, 7))
-    uoa_fem.plot(kind='bar', ax=ax1, ec='k', alpha=0.8)
-    mpl.rcParams['font.family'] = 'Graphik'
-    colors2 = ['#00A0DF', '#FFB600']
-    plt.tight_layout()
-    ax1.set_xticklabels(ax1.get_xticklabels(), rotation=0, fontsize=14)
-    ax1.set_xlabel('Unit of Assessment Number', fontsize=20)
-    for ax in [ax1]:
-        for uoa in range(0, 13):
-            ax.get_children()[uoa].set_color(colors2[0])
-            ax.get_children()[uoa].set_edgecolor('k')
-            ax.get_children()[3].set_color(colors2[1])
-            ax.get_children()[3].set_edgecolor('k')
-        for uoa in range(13, 34):
-            ax.get_children()[uoa].set_color(colors2[1])
-            ax.get_children()[uoa].set_edgecolor('k')
-    legend_elements = [Patch(facecolor=colors2[0], edgecolor='k',
-                             label=r'STEM', alpha=0.7),
-                       Patch(facecolor=colors2[1], edgecolor='k',
-                             label=r'SHAPE', alpha=0.7)]
-    ax1.tick_params(axis='both', which='major', labelsize=16)
-    for ax in [ax1]:
-        ax.legend(handles=legend_elements,
-                  frameon=True,
-                  fontsize=15, framealpha=1, facecolor='w',
-                  edgecolor=(0, 0, 0, 1), ncol=1,
-                  loc='upper right', bbox_to_anchor=(1.01, 0.92)
-                  )
-    ax1.set_title('A.', loc='left', fontsize=24, x=-.025, y=1.025)
-    ax1.set_ylabel('Percent Female', fontsize=18)
-    ax1.set_ylim(0, 65)
-    A_cited = pd.DataFrame(paper_panels).at['A', 'female']
-    B_cited = pd.DataFrame(paper_panels).at['B', 'female']
-    C_cited = pd.DataFrame(paper_panels).at['C', 'female']
-    D_cited = pd.DataFrame(paper_panels).at['D', 'female']
-    draw_brace(ax1, (0, 6), 60, 'Panel A: ' + str(round(A_cited, 2)))
-    draw_brace(ax1, (7, 12), 60, 'Panel B: ' + str(round(B_cited, 2)))
-    draw_brace(ax1, (13, 24), 60, 'Panel C: ' + str(round(C_cited, 2)))
-    draw_brace(ax1, (25, 33), 60, 'Panel D: ' + str(round(D_cited, 2)))
-    ax1.yaxis.set_major_formatter(mtick.PercentFormatter())
-    plt.tight_layout()
-    sns.despine(offset=5, trim=True)
-    filename = 'figure_18'
-    savefigures(plt, figure_path, filename)
+    tagged_res = tagged_res[tagged_res['Tag type'] == 'Underpinning research subject']
+    tagged_res_l2_C4 = make_tagged(tagged_res[(tagged_res['Main panel'] == 'C') |
+                                              (tagged_res['Unit of assessment number'] == 4)])
+    tagged_res_l2_D = make_tagged(tagged_res[(tagged_res['Main panel'] == 'D')])
 
+    L1_for_papers_SOCSCI = make_L1(df_for_SOCSCI, 'papers')
+    L1_for_papers_HUM = make_L1(df_for_HUM, 'papers')
+    L1_for_tags_SOCSCI = make_L1(tagged_res_l2_C4, 'ref_tags')
+    L1_for_tags_HUM = make_L1(tagged_res_l2_D, 'ref_tags')
+    figure_path = os.path.join(os.getcwd(), '..', '..', 'figures')
 
-def draw_brace(ax, xspan, yminn, text):
-    """Draws an annotated brace on the axes."""
-    xmin, xmax = xspan
-    xspan = xmax - xmin
-    ax_xmin, ax_xmax = ax.get_xlim()
-    xax_span = ax_xmax - ax_xmin
-    ymin, ymax = ax.get_ylim()
-    yspan = ymax - ymin
-    resolution = int(xspan / xax_span * 100) * 2 + 1
-    beta = 300. / xax_span
-    x = np.linspace(xmin, xmax, resolution)
-    x_half = x[:resolution // 2 + 1]
-    y_half_brace = (1 / (1. + np.exp(-beta * (x_half - x_half[0])))
-                    + 1 / (1. + np.exp(-beta * (x_half - x_half[-1]))))
-    y = np.concatenate((y_half_brace, y_half_brace[-2::-1]))
-    y = yminn + (.05 * y - .01) * yspan
-    ax.autoscale(False)
-    ax.plot(x, y, color='black', lw=1)
-    ax.text((xmax + xmin) / 2., yminn + (yminn / 40) + .065 * yspan,
-            text + '%', ha='center', va='bottom', fontsize=16)
-
-
-
-def make_figure_eighteen():
-    print('\n******************************************************')
-    print('***************** Making Figure 18! ********************')
-    print('********************************************************')
-    figure_path = os.path.join(os.getcwd(),
-                               '..',
-                               '..',
-                               'figures')
-    author_level, uoa_fem, paper_panels = get_gender()
-    paper_panels = paper_panels * 100
-    uoa_fem = uoa_fem * 100
-    mpl.rcParams['font.family'] = 'Graphik'
-
-    author_level_SHAPE = author_level[(author_level['Panel'] == 'C') |
-                                      (author_level['Panel'] == 'D') |
-                                      (author_level['UoA'] == 4)]
-    author_level_STEM = author_level[((author_level['Panel'] == 'A') |
-                                      (author_level['Panel'] == 'B')) &
-                                     (author_level['UoA'] != 4)]
-    author_level_PanelC = author_level[author_level['Panel'] == 'C']
-    author_level_PanelD = author_level[author_level['Panel'] == 'D']
-    print('************ ALL data ************')
-    print(author_level['first_name'].value_counts()[0:20])
-    print('************ STEM data ************')
-    print(author_level_STEM['first_name'].value_counts()[0:20])
-    print('************ SHAPE data ************')
-    print(author_level_SHAPE['first_name'].value_counts()[0:20])
-    print('************ Panel C ************')
-    print(author_level_PanelC['first_name'].value_counts()[0:20])
-    print('************ Panel D ************')
-    print(author_level_PanelD['first_name'].value_counts()[0:20])
-    plot_gender(uoa_fem, paper_panels, figure_path)
+    plot_circle(L1_for_papers_SOCSCI, 'a.', figure_path, 'figure_18a')
+    plot_circle(L1_for_papers_HUM, 'b.', figure_path, 'figure_18b')
+    plot_circle(L1_for_tags_SOCSCI, 'c.', figure_path, 'figure_18c')
+    plot_circle(L1_for_tags_HUM, 'd.', figure_path, 'figure_18d')
