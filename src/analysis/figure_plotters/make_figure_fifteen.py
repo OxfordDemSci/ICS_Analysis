@@ -128,35 +128,35 @@ def make_figure_fifteen():
     print('UoA4 countries listed: ',
           len(UoA4[UoA4['Count'] > 0]))
     UoA4 = UoA4.sort_values(by='Count',
-                            ascending=False)[0:10].sort_values(ascending=True,
-                                                               by='Count')
+                            ascending=False).sort_values(ascending=True,
+                                                         by='Count')
     PanelC = make_geo_ax(df[df['Main panel'] == 'C'],
                          ax2, 'c.',
                          'Mentioned as Beneficiary\n            (Panel C)       ')
     print('PanelC countries listed: ',
           len(PanelC[PanelC['Count'] > 0]))
-    PanelC = PanelC.sort_values(by='Count', ascending=False)[0:10].sort_values(ascending=True,
+    PanelC = PanelC.sort_values(by='Count', ascending=False).sort_values(ascending=True,
                                                                                by='Count')
     PanelD = make_geo_ax(df[df['Main panel'] == 'D'],
                          ax3, 'e.',
                          'Mentioned as Beneficiary\n            (Panel D)        ')
     print('PanelD countries listed: ',
           len(PanelD[PanelD['Count'] > 0]))
-    PanelD = PanelD.sort_values(by='Count',
-                                ascending=False)[0:10].sort_values(ascending=True,
-                                                                   by='Count')
+
     UoA4['Count'] = (UoA4['Count'] / UoA4['Count'].sum()) * 100
-    norm = plt.Normalize(0, UoA4['Count'].max())
-    colors = cmap(norm(UoA4['Count']))
-    bar_container_uoa4 = ax4.barh(y=UoA4['Country'],
-                                  width=UoA4['Count'],
+    UoA4 = UoA4.sort_values(by='Count',
+                            ascending=False)[0:10].sort_values(ascending=True,
+                                                               by='Count')
+    bar_container_uoa4 = ax4.barh(y=UoA4['Country'][0:10],
+                                  width=UoA4['Count'][0:10],
                                   color= ba_rgb2[0],
                                   edgecolor='k',
                                   alpha=1)
 
     PanelC['Count'] = (PanelC['Count'] / PanelC['Count'].sum()) * 100
-    norm = plt.Normalize(0, PanelC['Count'].max())
-    colors = cmap(norm(PanelC['Count']))
+    PanelC = PanelC.sort_values(by='Count',
+                                ascending=False)[0:10].sort_values(ascending=True,
+                                                                   by='Count')
     bar_container_panelc = ax5.barh(y=PanelC['Country'],
                                     width=PanelC['Count'],
                                     color= ba_rgb2[0],
@@ -164,9 +164,11 @@ def make_figure_fifteen():
                                     alpha=1)
 
     PanelD['Count'] = (PanelD['Count'] / PanelD['Count'].sum()) * 100
+    PanelD = PanelD.sort_values(by='Count',
+                                ascending=False)[0:10].sort_values(ascending=True,
+                                                                   by='Count')
     norm = plt.Normalize(0,
                          PanelD['Count'].max())
-    colors = cmap(norm(PanelD['Count']))
     bar_container_paneld = ax6.barh(y=PanelD['Country'],
                                     width=PanelD['Count'],
                                     color= ba_rgb2[0],

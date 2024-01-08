@@ -95,10 +95,10 @@ def make_figure_two():
 
     df_ref = df_ref[df_ref['topic_name_short'].notnull()]
     df = pd.DataFrame(0,
-                      columns=df_lookup['topic_name_short'].unique(),
+                      columns=df_lookup['topic_name_short'].str.strip().unique(),
                       index=df_ref['Unit of assessment number'].sort_values(ascending=True).unique())
     for index, row in df_ref.iterrows():
-        df.at[row['Unit of assessment number'], row['topic_name_short']] += 1
+        df.at[row['Unit of assessment number'], row['topic_name_short'].strip()] += 1
 
     topic_order = df_lookup.drop_duplicates().sort_values(ascending=True,
                                                           by='cluster_id')['topic_name_short'].to_list()
