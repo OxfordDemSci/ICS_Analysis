@@ -21,8 +21,20 @@ export function downloadURI(api_uri,
                             postcode_area,
                             beneficiary,
                             uoa,
+                            uoa_name,
                             funder) {
-    let uri = api_uri + "download_csv?threshold=" + threshold + "&topic=" + topic + "&postcode_area=" + postcode_area + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&funder=" + funder;
+                                
+    let uri = api_uri + "download_csv?threshold=" + threshold + "&topic=" + topic + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&uoa_name=" + uoa_name+ "&funder=" + funder;
+    if (postcode_area !== null) {
+        if (Array.isArray(postcode_area)){
+             for (var i = 0; i < postcode_area.length; i++) {
+                 uri = uri + "&postcode_area=" + postcode_area[i];
+             }
+        }else{
+            uri = uri + "&postcode_area=" + postcode_area;
+        }
+    }
+
     var link = document.createElement("a");
     link.setAttribute('download', name);
     link.href = uri;
@@ -38,8 +50,20 @@ export function GenerateReport(api_uri,
                                postcode_area,
                                beneficiary,
                                uoa,
+                               uoa_name,
                                funder) {
-    let uri = api_uri + "download_pdf?threshold=" + threshold + "&topic=" + topic + "&postcode_area=" + postcode_area + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&funder=" + funder;
+    let uri = api_uri + "download_pdf?threshold=" + threshold + "&topic=" + topic + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&uoa_name=" + uoa_name+ "&funder=" + funder;
+
+    if (postcode_area !== null) {
+        if (Array.isArray(postcode_area)){
+             for (var i = 0; i < postcode_area.length; i++) {
+                 uri = uri + "&postcode_area=" + postcode_area[i];
+             }
+        }else{
+            uri = uri + "&postcode_area=" + postcode_area;
+        }
+    }    
+    
     var link = document.createElement("a");
     link.setAttribute('download', name);
     link.href = uri;
@@ -247,30 +271,40 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
 
     if (ActiveAssessment === "All") {
         ch_ActiveAssessment = false;
+    }else{
+        document.getElementById("btn_reset_UOA").style.visibility = "visible";
     }
 
     let ch_Institutions = true;
 
     if (typeof Institutions === 'undefined' || Institutions === null) {
         ch_Institutions = false;
+    }else{
+        document.getElementById("btn_reset_Institutions").style.visibility = "visible";
     }
 
     let ch_Funder = true;
 
     if (typeof Funder === 'undefined' || Funder === null) {
         ch_Funder = false;
+    }else{
+        document.getElementById("btn_reset_Funders").style.visibility = "visible";
     }
 
     let ch_Beneficiaries = true;
 
     if (typeof Beneficiaries === 'undefined' || Beneficiaries === null) {
         ch_Beneficiaries = false;
+    }else{
+        document.getElementById("btn_reset_Beneficiaries").style.visibility = "visible";
     }
 
     let ch_UAO_name = true;
 
     if (typeof UAO_name === 'undefined' || UAO_name === null) {
         ch_UAO_name = false;
+    }else{
+        document.getElementById("btn_reset_UOA").style.visibility = "visible";
     }
 
     var eUOA = document.getElementById("Options_of_Assessment");
