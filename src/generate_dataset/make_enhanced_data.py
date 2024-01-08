@@ -17,9 +17,21 @@ from markdown import markdown
 from bs4 import BeautifulSoup
 from get_dimensions_data import get_dimensions_data, make_paper_level
 
+from pathlib import Path
+import requests
 
 def log_row_count(func):
-    """Decorator to log the number of rows in a DataFrame after applying a function."""
+    """
+    Decorator to log the number of rows in a DataFrame after applying a function.
+
+    Args:
+        func (function): A function that takes a DataFrame as its first argument 
+                         and returns a DataFrame.
+
+    Returns:
+        function: A wrapper function that logs the row count of the DataFrame 
+                  returned by the input function.
+    """
     def wrapper(df, *args, **kwargs):
         # Apply the function
         result = func(df, *args, **kwargs)
@@ -30,7 +42,17 @@ def log_row_count(func):
 
 
 def get_impact_data(raw_path):
-    """ A function to get the raw ICS data"""
+    """
+    Downloads the raw ICS data from a specified URL and saves it to a given path.
+
+    Args:
+        raw_path (Path): The directory path where the downloaded data should be saved.
+
+    The function downloads two sets of data related to ICS:
+    1. General ICS data.
+    2. ICS tags data.
+    Both datasets are saved as Excel files in the specified raw_path directory.
+    """
     print('Getting ICS Data!')
 
     url = "https://results2021.ref.ac.uk/impact/export-all"
@@ -43,7 +65,15 @@ def get_impact_data(raw_path):
 
 
 def get_environmental_data(raw_path):
-    """ A function to get the raw environmental data"""
+    """
+    Downloads the raw environmental data from a specified URL and saves it to a given path.
+
+    Args:
+        raw_path (Path): The directory path where the downloaded data should be saved.
+
+    The function downloads environmental data related to REF 2021 and saves it 
+    as an Excel file in the specified raw_path directory.
+    """
     print('Getting Environmental Data!')
 
     url = "https://results2021.ref.ac.uk/environment/export-all"
@@ -52,16 +82,31 @@ def get_environmental_data(raw_path):
 
 
 def get_all_results(raw_path):
-    """ A function to get the raw results data"""
-    print('Getting Results Data!')
+    """
+    Downloads the raw results data from a specified URL and saves it to a given path.
 
+    Args:
+        raw_path (Path): The directory path where the downloaded data should be saved.
+
+    This function downloads the REF 2021 profiles data and saves it as an Excel 
+    file in the specified raw_path directory.
+    """
+    print('Getting Results Data!')
     url = "https://results2021.ref.ac.uk/profiles/export-all"
     r = requests.get(url, allow_redirects=True)
     open(raw_path / 'raw_ref_results_data.xlsx', 'wb').write(r.content)
 
 
 def get_output_data(raw_path):
-    """ A function to get the raw output data"""
+    """
+    Downloads the raw output data from a specified URL and saves it to a given path.
+
+    Args:
+        raw_path (Path): The directory path where the downloaded data should be saved.
+
+    This function downloads the REF 2021 outputs data and saves it as an Excel 
+    file in the specified raw_path directory.
+    """
     print('Getting Outputs Data!')
     url = "https://results2021.ref.ac.uk/outputs/export-all"
     r = requests.get(url, allow_redirects=True)
@@ -69,11 +114,20 @@ def get_output_data(raw_path):
 
 
 def check_id_overlap(a, b):
+    """
+    Prints the overlap statistics between two lists of IDs.
+
+    Args:
+        a (list): The first list of IDs.
+        b (list): The second list of IDs.
+
+    This function calculates and prints the percentage of overlap between the two 
+    lists, and lists the IDs present in one list but missing in the other.
+    """
     print('Checking ID Overlap!')
-    ###Convenience function to check overlap of two lists of ids"""
-    print("{} of element in B present in A".format(
+    print("{} of elements in B present in A".format(
         np.mean([i in a for i in b])))
-    print("{} of element in A present in B".format(
+    print("{} of elements in A present in B".format(
         np.mean([i in b for i in a])))
     print("{} missing in A but present in B".format(
         [i for i in a if i not in b]))
@@ -82,53 +136,100 @@ def check_id_overlap(a, b):
 
 
 def format_ids(df):
+    """
+    Formats the institution IDs within a DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing institution ID columns.
+
+    Returns:
+        DataFrame: The DataFrame with formatted institution IDs.
+
+    The function renames institution ID columns for consistency, removes rows with 
+    missing IDs, and formats the IDs as integers. It also combines 'Unit of 
+    assessment number' and 'Multiple submission letter' into a single 'uoa_id'.
+    """
     if 'Institution UKPRN code' in df.columns:
-        df = df.rename(
-            columns={'Institution UKPRN code': 'inst_id'})
+        df = df.rename(columns={'Institution UKPRN code': 'inst_id'})
     if 'Institution code (UKPRN)' in df.columns:
-        df = df.rename(
-            columns={'Institution code (UKPRN)': 'inst_id'})
-    df = df.copy()[df['inst_id'] != ' ']
+        df = df.rename(columns={'Institution code (UKPRN)': 'inst_id'})
+    df = df[df['inst_id'] != ' ']
     df = df.astype({'inst_id': 'int'})
     df['uoa_id'] = df['Unit of assessment number'].astype(int).astype(
         str) + df['Multiple submission letter'].fillna('').astype(str)
-    return (df)
+    return df
 
 
-def merge_ins_uoa(df1, df2):
-    """Function to merge df2 left on df1 based on inst_id and uoa_id"""
+def merge_ins_uoa(df1, df2, id1='inst_id', id2='uoa_id'):
+    """
+    Merges two DataFrames based on institution and unit of assessment IDs.
 
-    ## [TODO] Add further unit tests on the merge here ##
-    assert all(df1['inst_id'].isin(df2['inst_id']))
-    assert all(df1['uoa_id'].isin(df2['uoa_id']))
+    Args:
+        df1 (pd.DataFrame): The first DataFrame to merge.
+        df2 (pd.DataFrame): The second DataFrame to merge.
 
-    return (df1.merge(df2, how='left', left_on=['inst_id', 'uoa_id'],
-                      right_on=['inst_id', 'uoa_id']))
+    Returns:
+        DataFrame: The merged DataFrame.
+
+    The function performs a left merge of df2 on df1 based on 'inst_id' and 
+    'uoa_id'. It asserts that 'inst_id' and 'uoa_id' in df1 are present in df2.
+    """
+    assert all(df1[id1].isin(df2[id1]))
+    assert all(df1[id2].isin(df2[id2]))
+
+    return df1.merge(df2, how='left', on=[id1, id2])
+
 
 @log_row_count
 def clean_ics_level(raw_path, edit_path):
-    ## Add stars to ICS level
+    """
+    Cleans ICS level data and saves the cleaned data to a specified path.
+
+    This function reads the raw ICS data, normalizes the text in the 'Title' column
+    to ASCII, formats the IDs using the 'format_ids' function, and saves the cleaned
+    data as an Excel file.
+
+    Args:
+        raw_path (Path): Path to the directory containing the raw ICS data file.
+        edit_path (Path): Path to the directory where the cleaned data file will be saved.
+
+    Returns:
+        DataFrame: The cleaned ICS data.
+    """
     print('Cleaning ICS Level Data!')
-    raw_ics = pd.read_excel(
-        raw_path / 'raw_ref_ics_data.xlsx')
+    raw_ics = pd.read_excel(raw_path / 'raw_ref_ics_data.xlsx')
     raw_ics['Title'] = raw_ics['Title'].apply(lambda val: unicodedata. \
                                               normalize('NFKD', str(val)). \
                                               encode('ascii', 'ignore').decode())
     raw_ics = format_ids(raw_ics)
-    raw_ics.to_excel(edit_path /'clean_ref_ics_data.xlsx')
+    raw_ics.to_excel(edit_path / 'clean_ref_ics_data.xlsx')
     return raw_ics
 
+
 def clean_dep_level(raw_path, edit_path):
-    
-    ## Generate wide score card at department level
-    raw_results = pd.read_excel(raw_path / 'raw_ref_results_data.xlsx',
-                                skiprows=6)
-    [n_results, k_results] = raw_results.shape
+    """
+    Generates a wide scorecard at the department level and merges it with other relevant 
+    department level data, saving the result to a specified path.
+
+    The function processes raw results, environment doctoral data, research income, and 
+    in-kind income data. It renames columns, formats IDs, calculates total doctoral degrees, 
+    and merges all data into a single DataFrame.
+
+    Args:
+        raw_path (Path): Path to the directory containing the raw data files.
+        edit_path (Path): Path to the directory where the cleaned data file will be saved.
+
+    The function saves the merged department level data as an Excel file in the specified
+    edit_path directory.
+    """
+    print('Cleaning Department Level Data!')
+    # Process results data
+    raw_results = pd.read_excel(raw_path / 'raw_ref_results_data.xlsx', skiprows=6)
     raw_results = format_ids(raw_results)
     raw_results = raw_results.rename(
         columns={'FTE of submitted staff': 'fte',
                  '% of eligible staff submitted': 'fte_pc'})
-    
+
     ## Make wide score card by institution and uoa_id
     score_types = ['4*', '3*', '2*', '1*', 'Unclassified'] # types of scores
     wide_score_card = pd.pivot(
@@ -136,30 +237,25 @@ def clean_dep_level(raw_path, edit_path):
         index=['inst_id', 'uoa_id'], columns=['Profile'], values=score_types)
     wide_score_card.columns = wide_score_card.columns.map('_'.join)
     wide_score_card = wide_score_card.reset_index()
-    
-    ## Obtain relevant environment data
-    raw_env_path = raw_path /'raw_ref_environment_data.xlsx'
-    raw_env_doctoral = pd.read_excel(
-        raw_env_path,
-        sheet_name="ResearchDoctoralDegreesAwarded", skiprows=4)
+
+    # Process environmental data
+    raw_env_path = raw_path / 'raw_ref_environment_data.xlsx'
+    # Doctoral data
+    raw_env_doctoral = pd.read_excel(raw_env_path, sheet_name="ResearchDoctoralDegreesAwarded", skiprows=4)
     raw_env_doctoral = format_ids(raw_env_doctoral)
     number_cols = [col for col in raw_env_doctoral.columns if 'Number of doctoral' in col]
     raw_env_doctoral['num_doc_degrees_total'] = raw_env_doctoral[number_cols].sum(axis=1)
 
-    # 3.2. Sheet Two: Research income
-    raw_env_income = pd.read_excel(
-        raw_env_path,
-        sheet_name="ResearchIncome", skiprows=4)
+    # Research income data
+    raw_env_income = pd.read_excel(raw_env_path, sheet_name="ResearchIncome", skiprows=4)
     raw_env_income = format_ids(raw_env_income)
     raw_env_income = raw_env_income.\
         rename(columns = {'Average income for academic years 2013-14 to 2019-20': 'av_income',
                           'Total income for academic years 2013-14 to 2019-20': 'tot_income'})
     tot_inc = raw_env_income[raw_env_income['Income source'] == 'Total income']
 
-    # 3.3. Research Income In-Kind
-    raw_env_income_inkind = pd.read_excel(
-        raw_env_path,
-        sheet_name="ResearchIncomeInKind", skiprows=4)
+    # Research income in-kind data
+    raw_env_income_inkind = pd.read_excel(raw_env_path, sheet_name="ResearchIncomeInKind", skiprows=4)
     raw_env_income_inkind = format_ids(raw_env_income_inkind)
     raw_env_income_inkind = raw_env_income_inkind.rename(
         columns={'Total income for academic years 2013-14 to 2019-20': 'tot_inc_kind'})
@@ -266,7 +362,7 @@ def prepare_spacy():
         This function sets a global variable `nlp` to the loaded spaCy
         language model, which can be used for further text processing.
     """
-#    global nlp
+    # global nlp
     model_name = "en_core_web_lg"
     # Check if the spaCy language model is installed, and download it if necessary.
     if not spacy.util.is_package(model_name):
@@ -337,6 +433,16 @@ def gen_readability_scores(df, edit_path, section_columns):
 
 @log_row_count
 def get_readability_scores(df, edit_path):
+    """
+    Load readability scores that have been intermittently saved.
+
+    Args:
+        df (pandas.DataFrame): ICS-level DataFrame to which readability scores are merged.
+        edit_path (Path): Path where previously generated readability scores are stored.
+
+    Returns:
+        pandas.DataFrame: Amended versions of df with readability scores.
+    """
     file_path = edit_path / 'ics_readability.csv'
     
     print('Loading Readability Scores!')
@@ -380,6 +486,16 @@ def gen_pos_features(df, edit_path, section_columns):
 
 @log_row_count
 def get_pos_features(df, edit_path):
+    """
+    Load pos features that have been intermittently saved.
+
+    Args:
+        df (pandas.DataFrame): ICS-level DataFrame to which pos features are merged.
+        edit_path (Path): Path where previously generated pos features are stored.
+
+    Returns:
+        pandas.DataFrame: Amended versions of df with pos features.
+    """
     file_path = edit_path / 'ics_pos_features.csv'
     print('Loading pos features!')
     pos_features = pd.read_csv(file_path, index_col=None)
@@ -456,6 +572,16 @@ def gen_sentiment_scores(df, edit_path, section_columns):
 
 @log_row_count
 def get_sentiment_scores(df, edit_path):
+    """
+    Load sentiment scores that have been intermittently saved.
+
+    Args:
+        df (pandas.DataFrame): ICS-level DataFrame to which sentiment scores are merged.
+        edit_path (Path): Path where previously generated sentiment scores are stored.
+
+    Returns:
+        pandas.DataFrame: Amended versions of df with sentiment scores.
+    """
     file_path = edit_path / 'ics_sentiment_scores.csv'
     print('Loading sentiment scores!')
     sentiment_scores = pd.read_csv(file_path, index_col=None)
@@ -470,6 +596,19 @@ def get_sentiment_scores(df, edit_path):
 
 @log_row_count
 def add_postcodes(df, sup_path):
+    """
+    Adds postcode information to the DataFrame.
+
+    This function merges the given DataFrame with postcode data based on the 'inst_id' column.
+    It also extracts and adds postcode district and area to the DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to which postcode information will be added.
+        sup_path (Path): Path to the directory containing the supplementary data file.
+
+    Returns:
+        DataFrame: The DataFrame with added postcode information.
+    """
     print('Add some postcodes!')
     postcodes = pd.read_csv(sup_path / 'ukprn_postcode.csv')
     df = pd.merge(df, postcodes, how='left', on='inst_id')
@@ -482,6 +621,15 @@ def add_postcodes(df, sup_path):
 
 @log_row_count
 def add_url(df):
+    """
+    Adds URLs to the DataFrame based on REF impact case study identifiers.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to which URLs will be added.
+
+    Returns:
+        DataFrame: The DataFrame with added URLs.
+    """
     field = 'REF impact case study identifier'
     base = 'https://results2021.ref.ac.uk/impact/'
     df['ics_url'] = df[field].apply(lambda x: base + x + '?page=1')
@@ -489,6 +637,16 @@ def add_url(df):
 
 
 def get_paths(data_path):
+    """
+    Generates paths for various data categories based on a base data path.
+
+    Args:
+        data_path (str): The base path for data storage.
+
+    Returns:
+        tuple: Paths for raw, edit, supplementary, manual, final, topic model,
+               and dimensions return data.
+    """
     data_path = Path(data_path)
     raw_path = data_path / 'raw'
     edit_path = data_path / 'edit'
@@ -502,6 +660,20 @@ def get_paths(data_path):
 
 
 def make_countries_file(manual_path):
+    """
+    Creates a DataFrame with countries data from an Excel file.
+
+    This function reads an Excel file containing funder countries data, processes
+    various columns to extract or replace values, and selects specific columns for output.
+
+    Args:
+        manual_path (Path): Path to the manual data directory containing the Excel file.
+
+    Returns:
+        DataFrame: A DataFrame containing processed countries data with columns for
+                   REF impact case study identifier, countries extracted, region extracted,
+                   and union extracted.
+    """
     df = pd.read_excel(os.path.join(manual_path,
                                     'funder_countries',
                                     'funders_countries_lookup.xlsx'),
@@ -528,23 +700,44 @@ def make_countries_file(manual_path):
                'region_extracted',
                'union_extracted']]
 
+
 @log_row_count
 def load_country(df, manual_path):
+    """
+    Loads and merges country data with a given DataFrame.
+
+    Args:
+        df (DataFrame): The DataFrame to be merged with country data.
+        manual_path (Path): Path to the manual data directory.
+
+    Returns:
+        DataFrame: The original DataFrame merged with country data on
+                   'REF impact case study identifier'.
+    """
     print('Loading clean country data')
     country = make_countries_file(manual_path)
     return pd.merge(df, country, how='left', on='REF impact case study identifier')
 
 
 def make_funder_file(manual_path):
-    df = pd.read_excel(os.path.join(manual_path,
-                                    'funder_countries',
-                                    'funders_countries_lookup.xlsx'),
-                       sheet_name='funders_countries_lookup',
-                       engine='openpyxl'
-                       )
+    """
+    Creates a DataFrame with funder data from an Excel file.
+
+    This function reads an Excel file containing funder data, cleans and processes
+    specific columns, and selects columns for output.
+
+    Args:
+        manual_path (Path): Path to the manual data directory containing the Excel file.
+
+    Returns:
+        DataFrame: A DataFrame containing processed funder data with columns for
+                   REF impact case study identifier and funders extracted.
+    """
+    df = pd.read_excel(os.path.join(manual_path, 'funder_countries', 'funders_countries_lookup.xlsx'),
+                       sheet_name='funders_countries_lookup', engine='openpyxl')
+
     var = 'suggested_CountriesFunders[full name]_change'
-    df = df[['REF impact case study identifier',
-             var]]
+    df = df[['REF impact case study identifier', var]]
     df[var] = df[var].str.strip()
     df[var] = np.where(df[var].str.len() < 2 | df[var].isnull(), np.nan, df[var])
     df = df[df[var].notnull()]
@@ -555,70 +748,97 @@ def make_funder_file(manual_path):
     df['funders_extracted'] = df['funders_extracted'].str.replace('WCT', 'WT')
     return df[['REF impact case study identifier', 'funders_extracted']]
 
+
 @log_row_count
 def load_funder(df, manual_path):
+    """
+    Loads and merges funder data with a given DataFrame.
+
+    This function fetches funder data using the 'make_funder_file' function and merges
+    it with the provided DataFrame on the 'REF impact case study identifier'.
+
+    Args:
+        df (DataFrame): The DataFrame to be merged with funder data.
+        manual_path (Path): Path to the manual data directory.
+
+    Returns:
+        DataFrame: The original DataFrame merged with funder data.
+    """
     print('Loading clean funder data')
     funder = make_funder_file(manual_path)
-    return pd.merge(df,
-                    funder,
-                    how='left',
-                    on='REF impact case study identifier')
+    return pd.merge(df, funder, how='left', on='REF impact case study identifier')
+
 
 @log_row_count
 def load_dept_vars(df, edit_path):
+    """
+    Loads and merges departmental variables with a given DataFrame.
+
+    This function reads departmental data from an Excel file and calculates various GPA
+    metrics. It then merges these metrics with the provided DataFrame based on institution
+    and unit of assessment IDs.
+
+    Args:
+        df (DataFrame): The DataFrame to be enriched with departmental variables.
+        edit_path (Path): Path to the directory containing the cleaned departmental data file.
+
+    Returns:
+        DataFrame: The original DataFrame merged with departmental variables.
+    """
     print('Loading department variables')
-    dept_vars = pd.read_excel(edit_path / 'clean_ref_dep_data.xlsx',
-                              engine='openpyxl')
-    dept_vars['ICS_GPA'] = (pd.to_numeric(dept_vars['4*_Impact'], errors='coerce')*4 +
-                            pd.to_numeric(dept_vars['3*_Impact'], errors='coerce')*3 +
-                            pd.to_numeric(dept_vars['2*_Impact'], errors='coerce')*2 +
-                            pd.to_numeric(dept_vars['1*_Impact'], errors='coerce'))/100
-    dept_vars['Environment_GPA'] = (pd.to_numeric(dept_vars['4*_Environment'], errors='coerce')*4 +
-                                    pd.to_numeric(dept_vars['4*_Environment'], errors='coerce')*3 +
-                                    pd.to_numeric(dept_vars['4*_Environment'], errors='coerce')*2 +
-                                    pd.to_numeric(dept_vars['4*_Environment'], errors='coerce'))/100
-    dept_vars['Output_GPA'] = (pd.to_numeric(dept_vars['4*_Outputs'], errors='coerce')*4 +
-                               pd.to_numeric(dept_vars['3*_Outputs'], errors='coerce')*3 +
-                               pd.to_numeric(dept_vars['2*_Outputs'], errors='coerce')*2 +
-                               pd.to_numeric(dept_vars['1*_Outputs'], errors='coerce'))/100
-    dept_vars['Overall_GPA'] = (pd.to_numeric(dept_vars['2*_Overall'], errors='coerce')*4 +
-                                pd.to_numeric(dept_vars['2*_Overall'], errors='coerce')*3 +
-                                pd.to_numeric(dept_vars['2*_Overall'], errors='coerce')*2 +
-                                pd.to_numeric(dept_vars['2*_Overall'], errors='coerce'))/100
-    dept_vars = dept_vars[['inst_id',
-                           'uoa_id',
-                           'fte',
-                           'num_doc_degrees_total',
-                           'av_income',
-                           'tot_income',
-                           'tot_inc_kind',
-                           'ICS_GPA',
-                           'Environment_GPA',
-                           'Output_GPA',
-                           'Overall_GPA']]
-    ## Removed to avoid double merging
-    # dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('A', '')
-    # dept_vars['uoa_id'] = dept_vars['uoa_id'].str.replace('B', '')
-    # dept_vars['uoa_id'] = dept_vars['uoa_id'].astype(int)
-    # df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
-    return pd.merge(df, dept_vars, how='left',
-                    left_on=['inst_id', 'uoa_id'],
-                    right_on=['inst_id', 'uoa_id'],
-                    ).drop('uoa_id', axis=1)
+    dept_vars = pd.read_excel(edit_path / 'clean_ref_dep_data.xlsx', engine='openpyxl')
+
+    # Calculate GPA metrics
+    dept_vars['ICS_GPA'] = (pd.to_numeric(dept_vars['4*_Impact'], errors='coerce') * 4 +
+                            pd.to_numeric(dept_vars['3*_Impact'], errors='coerce') * 3 +
+                            pd.to_numeric(dept_vars['2*_Impact'], errors='coerce') * 2 +
+                            pd.to_numeric(dept_vars['1*_Impact'], errors='coerce')) / 100
+    dept_vars['Environment_GPA'] = (pd.to_numeric(dept_vars['4*_Environment'], errors='coerce') * 4 +
+                                    pd.to_numeric(dept_vars['3*_Environment'], errors='coerce') * 3 +
+                                    pd.to_numeric(dept_vars['2*_Environment'], errors='coerce') * 2 +
+                                    pd.to_numeric(dept_vars['1*_Environment'], errors='coerce')) / 100
+    dept_vars['Output_GPA'] = (pd.to_numeric(dept_vars['4*_Outputs'], errors='coerce') * 4 +
+                               pd.to_numeric(dept_vars['3*_Outputs'], errors='coerce') * 3 +
+                               pd.to_numeric(dept_vars['2*_Outputs'], errors='coerce') * 2 +
+                               pd.to_numeric(dept_vars['1*_Outputs'], errors='coerce')) / 100
+    dept_vars['Overall_GPA'] = (pd.to_numeric(dept_vars['2*_Overall'], errors='coerce') * 4 +
+                                pd.to_numeric(dept_vars['2*_Overall'], errors='coerce') * 3 +
+                                pd.to_numeric(dept_vars['2*_Overall'], errors='coerce') * 2 +
+                                pd.to_numeric(dept_vars['1*_Overall'], errors='coerce')) / 100
+
+    # Select required columns
+    dept_vars = dept_vars[['inst_id', 'uoa_id', 'fte', 'num_doc_degrees_total', 'av_income', 'tot_income',
+                           'tot_inc_kind', 'ICS_GPA', 'Environment_GPA', 'Output_GPA', 'Overall_GPA']]
+
+    return pd.merge(df, dept_vars, how='left', left_on=['inst_id', 'uoa_id'], right_on=['inst_id', 'uoa_id']).drop('uoa_id', axis=1)
 
 
 @log_row_count
 def load_topic_data(df, manual_path, topic_path):
+    """
+    Loads and merges topic modeling data with a given DataFrame.
+
+    This function reads topic modeling data from an Excel file and merges it with the
+    provided DataFrame. It also merges topic reassignment and lookup data if available.
+
+    Args:
+        df (DataFrame): The DataFrame to be enriched with topic modeling data.
+        manual_path (Path): Path to the directory containing manual topic data.
+        topic_path (Path): Path to the directory containing the topic model data file.
+
+    Returns:
+        DataFrame: The original DataFrame merged with topic modeling data.
+    """
     print('Loading topic data')
-    
     topic_model_path = topic_path / 'nn3_threshold0.01_reduced.xlsx'
-    
+
     if not topic_model_path.exists():
         print(f"File not found: {topic_model_path}")
         print("WARNING: Not including topic model data columns.")
         print("Returning original file")
         return df
-    
+
+        
     vars = ['REF impact case study identifier',
             'BERT_topic',
             'BERT_prob',
@@ -634,42 +854,55 @@ def load_topic_data(df, manual_path, topic_path):
             'BERT_topic_term_9',
             'BERT_topic_term_10',
             'max_prob']
-    topic_model = pd.read_excel(topic_model_path,
-                                usecols=vars,
-                                sheet_name='Sheet1',
-                                index_col=None
-                                )
 
+    topic_model = pd.read_excel(topic_model_path, usecols=vars, sheet_name='Sheet1', index_col=None)
+
+    # Attempt to load additional topic data
     try:
-        topic_assignment = pd.read_csv(manual_path / 'topic_lookup' / 'topic_reassignment.csv',
-                                   index_col=None)
+        topic_assignment = pd.read_csv(manual_path / 'topic_lookup' / 'topic_reassignment.csv', index_col=None)
     except FileNotFoundError:
         print(f"{manual_path / 'topic_lookup' / 'topic_reassignment.csv'} not found!")
         print("WARNING: Not including topic reassignment data.")
+
     try:
-        topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv',
-                                   index_col=None)
+        topic_lookup = pd.read_csv(manual_path / 'topic_lookup' / 'topic_lookup.csv', index_col=None)
     except FileNotFoundError:
         print(f"{manual_path / 'topic_lookup' / 'topic_lookup.csv'} not found!")
-        print("WARNING: Not including topic model data columns.")
+        print("WARNING: Not including topic lookup data.")
         return df
 
-    topic_lookup = topic_lookup.rename({'description': 'topic_description',
-                                        'narrative': 'topic_narrative'}, axis=1)
+    topic_lookup = topic_lookup.rename({'description': 'topic_description', 'narrative': 'topic_narrative'}, axis=1)
+    
     try:
         assert set(df['REF impact case study identifier']) == set(topic_model['REF impact case study identifier'])
     except AssertionError:
         print("AssertionError: not all ICSs have an associated topic")
+        
     df = pd.merge(df, topic_model, how='left', on='REF impact case study identifier')
-    df = pd.merge(df, topic_assignment, how= 'left', on='REF impact case study identifier')
+    df = pd.merge(df, topic_assignment, how='left', on='REF impact case study identifier')
     df = pd.merge(df, topic_lookup, how='left', left_on='final_topic', right_on='topic_id')
     df['cluster_id'] = df['cluster_id'].astype('int', errors='ignore')
     df['topic_id'] = df['topic_id'].astype('int', errors='ignore')
 
     return df
 
+
 @log_row_count
 def make_and_load_tags(df, raw_path, edit_path):
+    """
+    Loads, processes, and merges tag data with a given DataFrame.
+
+    This function reads tag data from an Excel file, processes it into a CSV file,
+    and then merges it with the provided DataFrame.
+
+    Args:
+        df (DataFrame): The DataFrame to be enriched with tag data.
+        raw_path (Path): Path to the directory containing the raw tag data file.
+        edit_path (Path): Path to the directory where the processed tag data will be saved.
+
+    Returns:
+        DataFrame: The original DataFrame merged with processed tag data.
+    """
     print('Loading and merging tags!')
     tags = pd.read_excel(raw_path / 'raw_ref_ics_tags_data.xlsx',
                          sheet_name='Sheet1',
@@ -681,6 +914,8 @@ def make_and_load_tags(df, raw_path, edit_path):
                                   'Tag group']
                          )
     tags = tags[tags['REF case study identifier'].notnull()]
+
+    # Process tags into a CSV file
     with open(edit_path / 'clean_ref_ics_tags_data.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['REF case study identifier',
@@ -688,6 +923,8 @@ def make_and_load_tags(df, raw_path, edit_path):
                          'Underpinning research subject tag group',
                          'UK Region tag values',
                          'UK Region tag group'])
+        
+        # Tag processing logic
         for ics in tags['REF case study identifier'].unique():
             temp = tags[tags['REF case study identifier'] == ics]
             research = temp[temp['Tag type'] == 'Underpinning research subject']
@@ -708,6 +945,7 @@ def make_and_load_tags(df, raw_path, edit_path):
                              res_tag_value, res_tag_group,
                              reg_tag_value, reg_tag_group]
                             )
+
     tags = pd.read_csv(edit_path / 'clean_ref_ics_tags_data.csv')
     return pd.merge(df,
                     tags,
@@ -718,6 +956,19 @@ def make_and_load_tags(df, raw_path, edit_path):
 
 @log_row_count
 def load_scientometric_data(df, dim_path):
+    """
+    Loads, processes, and merges scientometric data with a given DataFrame.
+
+    This function reads tag data from an Excel file, processes it into a CSV file,
+    and then merges it with the provided DataFrame.
+
+    Args:
+        df (DataFrame): The DataFrame to be enriched with tag data.
+        dim_path (Path): Path to the directory containing the dimensions data.
+
+    Returns:
+        DataFrame: The original DataFrame merged with processed dimensions data.
+    """
     print("Loading scientometric data")
     file_path = dim_path / 'merged_dimensions.xlsx'
     if not file_path.exists():
@@ -755,10 +1006,8 @@ def load_scientometric_data(df, dim_path):
                                'Authors': 'authors',
                                'Funding': 'funder_orgs',
                                'Open Access': 'open_access_categories_v2',
-#                               'Researcher Orgs': 'research_orgs',
                                'Researcher Cities': 'research_org_cities',
                                'Researcher Countries': 'research_org_countries'
-#                               'Concepts': 'concepts'
                                }.items():
                 try:
                     mydict[paper][key] = ics_df.at[index, value]
@@ -795,6 +1044,16 @@ def load_scientometric_data(df, dim_path):
 
 
 def return_dim_id(path, filename):
+    """
+    Loads and returns the project ID from a file
+
+    Args:
+        path (Path): Path to the directory containing the file.
+        filename (str): Name of file to read.
+
+    Returns:
+        str: Stripped first line.
+    """
     with open(path / filename, "r") as file:
         return file.readline().strip()
 
@@ -870,7 +1129,6 @@ if __name__ == "__main__":
                       "(use -bqf to force new collection)." +
                       " Just generating paper level data from the dimensions data.")
         make_paper_level(dim_path)
-    #TODO: Consider moving the output path for merged_dimensions.xlsx to the data/edit folder?
 
     df = load_scientometric_data(df, dim_path)
     
