@@ -72,14 +72,14 @@
                     <div class="sb-sidenav-menu-heading" style="padding-bottom:0.1rem">TOPIC CLUSTERS</div>
                     <div class="m-2">
                         <select id="idGroups" class="form-select form-select-sm"
-                                style="padding-top: 0.1rem; padding-bottom: 0.5rem;">
+                                style="padding-top: 0.1rem; padding-bottom: 0.2rem;">
                         </select>
                     </div>
 
                     <!-- TOPICS SELECTOR -->
-                    <div class="sb-sidenav-menu-heading" style="padding-top: 1rem; padding-bottom: 0.1rem;">TOPICS</div>
+                    <div class="sb-sidenav-menu-heading" style="padding-top: 0.5rem; padding-bottom: 0.1rem;">TOPICS</div>
                     <div class="d-flex flex-column align-items-stretch flex-shrink-0 mt-1 scrollarea TopicsWrapper"
-                         style="height: calc(100vh - 500px)">
+                         style="height: calc(100vh - 540px)">
                         <div class="">
                             <ul class="list-group list-group-flush" id="idTopics" style="font-size: 0.8rem">
                                 <li class="list-group-item">1</li>
@@ -92,7 +92,7 @@
                     </div>
 
                     <!-- SELECTED FILTERS INFO -->
-                    <div class="sb-sidenav-menu-heading pb-0" style="padding-top: 0.5rem; margin-top: 10px">SELECTED FILTERS
+                    <div class="sb-sidenav-menu-heading pb-0" style="padding-top: 0.3rem; margin-top: 10px">SELECTED FILTERS
                         <span class="badge bg-primary rounded-pill"
                               id="reload_selected_options"
                               style="visibility: hidden; cursor: pointer; float:right;"
@@ -159,13 +159,20 @@
                     </div>
 
                     <!-- VIEW AND DOWNLOAD DATA BUTTOM -->
-                    <div class="sb-sidenav-menu-heading" style="padding-top:0.5rem; padding-bottom:0rem"><label
+                    <div class="sb-sidenav-menu-heading" style="padding-top:0.2rem; padding-bottom:0rem"><label
                             id="label_Addons"></label></div>
-                    <a class="nav-link" id="ics_table_all_btn" href="#" style="color:white; padding-top:0.5rem">
+                    <a class="nav-link" id="ics_table_all_btn" href="#" style="color:white; padding-top:0.4rem;padding-bottom: 0.4rem">
                         <div class="sb-nav-link-icon" style="color: white"><i class="fas fa-table"></i></div>
                         <label id="label_sub_addons_Impact_Case_Studies"
                                style="cursor:pointer; font-size:0.9rem"></label>
                     </a>
+                    
+                    <div class="sb-sidenav-menu-heading" style="padding-top:0.2rem; padding-bottom:0rem">
+                        <label id="label_Addonsaa">total impact case studies </label>
+                    </div>
+                    <div class="sb-nav-link-icon text-center" style="color: white;font-weight:400;font-size:1.4rem">
+                        <label id="label_total_impact_case_studies"></label>
+                    </div>
                 </div>
             </div>
 
@@ -416,12 +423,12 @@
                                                         <select id="Options_of_Assessment"
                                                                 class="form-select form-select-sm"
                                                                 style="padding-top: 0rem;padding-bottom: 0rem;">
-                                                            <option value="All" selected>All Disciplines</option>
-                                                            <option value="SHAPE">All SHAPE Disciplines</option>
+                                                            <option value="SHAPE" selected>All SHAPE Disciplines</option>
                                                             <!--                                                                    <option value="A">Panel A, UoA 4: Pyschology, Psychiatry, & Neuroscience</option>-->
                                                             <!--                                                                    <option value="B">Physical Sciences, Engineering, Mathematics (Panel B)</option>-->
                                                             <option value="C">Panel C: Social Sciences</option>
                                                             <option value="D">Panel D: Arts and Humanities</option>
+                                                            <option value="All">All Disciplines</option>
                                                             <!--                                                                    <option value="STEM">STEM</option>-->
 
                                                         </select>
@@ -531,7 +538,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnDownlaodICSTable">Download</button>
+                <a href="https://github.com/OxfordDemSci/ICS_Analysis/blob/main/data/final/enhanced_ref_data_codebook.csv" target="_blank" class="btn btn-light" role="button">Data Codebook</a>
+                <button type="button" class="btn btn-primary" id="btnDownlaodICSTable">Download ICS</button>
                 <button type="button" class="btn btn-secondary" id="btnCloseICSTable" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

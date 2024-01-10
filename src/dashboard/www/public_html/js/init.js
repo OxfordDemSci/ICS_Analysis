@@ -87,8 +87,18 @@ export function setTopicsMenu2(t) {
 }
 
 
-export function setUK_Country_names_menu(d) {
+export function setUK_Country_names_menu(b) {
 
+    const ordered = Object.keys(b).sort().reduce(
+            (obj, key) => {
+        obj[key] = b[key];
+        return obj;
+        },
+            {}
+    );
+    
+    let d=ordered;
+    
     const m = document.getElementById('Options_of_Country_Names');
     m.innerHTML = "";
     m.innerHTML = m.innerHTML +
@@ -99,8 +109,5 @@ export function setUK_Country_names_menu(d) {
                 '<option value="' + key + '" >' + key + '</option>';
 
     }
-
-
-
 
 }

@@ -1,5 +1,11 @@
 import * as _country_code_lookup from './country_code_lookup.js?version=1.0'
 
+export function updateTotalImpactCaseStudies(t) {
+
+ document.getElementById('label_total_impact_case_studies').innerHTML = t;
+ 
+}
+
 export function removeSelectedLayer(_map, fname) {
 
     if (_map) {
@@ -269,7 +275,7 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
 
     let ch_ActiveAssessment = true;
 
-    if (ActiveAssessment === "All") {
+    if (ActiveAssessment === "SHAPE") {
         ch_ActiveAssessment = false;
     }else{
         document.getElementById("btn_reset_UOA").style.visibility = "visible";
@@ -601,16 +607,43 @@ export function progressMenuOff() {
 }
 
 
-export function updateAssessmentSelection(d) {
+export function updateAssessmentSelection(data, n = 20) {
+    
+    var values_category_assessment = [];
+    var nmax = data.length;
+    let nuse;
+
+    if (nmax < n) {
+        nuse = nmax;
+    } else {
+        nuse = n;
+    }    
+    
+    for (var i = 0; i < nuse; i++) {
+
+        values_category_assessment.push(
+            {
+                name: data[i]['name'],
+                assessment_panel: data[i]['assessment_panel'],
+                uoa_count: data[i]['uoa_count']
+            }
+        );
+
+    }    
+
+    const d = values_category_assessment
+        .map((item) => item.assessment_panel)
+        .filter((value, index, self) => self.indexOf(value) === index);
 
     const Assessment_labels_lookup = [
-        {name: "All", label: "SHAPE by Panel"},
+        {name: "SHAPE", label: "SHAPE by UoA"},
         {name: "A", label: "Panel A: Medicine, Health, and Life Sciences"},
         {name: "B", label: "Panel B: Physical Sciences, Engineering, and Mathematics"},
         {name: "C", label: "Panel C: Social Sciences"},
         {name: "D", label: "Panel D: Arts and Humanities"},
         {name: "STEM", label: "All STEM Disciplines"},
-        {name: "SHAPE", label: "SHAPE by UoA"}
+        {name: "All", label: "SHAPE by Panel"}
+        
     ];
 
     const list = document.getElementById('Options_of_Assessment');
@@ -618,12 +651,10 @@ export function updateAssessmentSelection(d) {
     list.innerHTML = "";
 
     d.sort();
-
+    
     list.innerHTML = list.innerHTML +
-        '<option value="All">' + Assessment_labels_lookup.find(({name}) => name === "All").label + '</option>';
+        '<option value="SHAPE">' + Assessment_labels_lookup.find(({name}) => name === "SHAPE").label + '</option>';    
 
-    list.innerHTML = list.innerHTML +
-        '<option value="SHAPE">' + Assessment_labels_lookup.find(({name}) => name === "SHAPE").label + '</option>';
 
     // if (d.includes("C") && d.includes("D")){
     //     list.innerHTML = list.innerHTML +
@@ -638,6 +669,10 @@ export function updateAssessmentSelection(d) {
             '<option value="' + d[i] + '">' + Assessment_labels_lookup.find(({name}) => name === d[i]).label + '</option>';
 
     }
+    
+        list.innerHTML = list.innerHTML +
+        '<option value="All">' + Assessment_labels_lookup.find(({name}) => name === "All").label + '</option>';
+
 
     // if (d.includes("A") && d.includes("B")){
     //     list.innerHTML = list.innerHTML +
