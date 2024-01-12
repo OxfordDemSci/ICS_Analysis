@@ -26,7 +26,7 @@ export function highlightFeatureGlobalImactMap(e, _infoBox, _map) {
         
         _infoBox.addTo(_map);
         
-        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 4px;"><b>'+e.target.feature.properties.country + '</b><br/>Beneficiaries: '+e.target.feature.properties.countriy_count+'</p>';
+        let  html = '<p style="margin-top: 2px;margin-bottom: 2px;padding: 4px;"><b>'+e.target.feature.properties.country + '</b><br/>Impact Case Studies: '+e.target.feature.properties.countriy_count+'</p>';
         document.getElementById('infoBoxMapGlobal_info').innerHTML = html;
     }
 
