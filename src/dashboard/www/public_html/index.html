@@ -51,6 +51,7 @@
                 <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
                 <li><a class="dropdown-item" id="btnTeam" href="#">Team</a></li>
                 <li><a class="dropdown-item" id="btnSettings" href="#">Settings</a></li>
+                <li><a class="dropdown-item" id="btnPrivacy" href="#">Privacy</a></li>
                 <!--                <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>-->
                 <li>
                     <hr class="dropdown-divider"/>
@@ -762,7 +763,6 @@
         </div>
     </div>
 </div>
-
 <!-- end  modals About -->
 
 <!--  modals Team -->
@@ -798,6 +798,55 @@
 </div>
 <!-- end  modals Team -->
 
+<!--  modals Privacy -->
+<div class="modal fade " data-backdrop="false" id="idMdPrivacy" tabindex="-1" aria-labelledby="ModalPrivacy"
+     style="opacity: 0.95;z-index: 2200">
+    <div class="modal-dialog shadow-lg modal-lg" style="overflow-y: initial !important" role="document"
+         id="idModalPrivacy-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 0.5rem;cursor: move;">
+                <h5 class="modal-title" id="ModalPrivacyLabel">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto">
+                <div class="container">
+
+                    <div id="contentPrivacy">
+
+                        <h4>SHAPE of Impact Privacy Policy</h4>
+
+                        14 January 2024 <br><br>
+
+                        <p>
+                            <strong>
+                                We do not collect any personal information from you through the SHAPE of Impact
+                                dashboard using website analytics, cookies, or other means.
+                            </strong>
+                        </p>
+                        <p>
+                            The data displayed in the dashboard were
+                            compiled from publicly-available sources that do not contain personally identifiable
+                            information other than impact case study author ORCID IDs which are intended to publicly
+                            link authors with their research outputs.
+                        </p>
+
+                    </div>
+
+                    <div class="mw-100">
+                        <div class="form-group col-12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm mr-2" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end  modals Privacy -->
 
 <!--  modals label_Assessment Question -->
 <div class="modal fade " data-backdrop="false" id="idMdAssessmentQuestion" tabindex="-1"

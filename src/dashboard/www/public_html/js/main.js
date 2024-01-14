@@ -791,6 +791,10 @@ $( "#btnTeam" ).on( "click", function() {
     $('#idMdTeam').modal('show');
 });
 
+$( "#btnPrivacy" ).on( "click", function() {
+    $('#idMdPrivacy').modal('show');
+});
+
 $( "#btnHelp" ).on( "click", function() {
     $('#idMdHelp').modal('show');
 });
