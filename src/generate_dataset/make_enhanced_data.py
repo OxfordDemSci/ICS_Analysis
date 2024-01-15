@@ -25,11 +25,11 @@ def log_row_count(func):
     Decorator to log the number of rows in a DataFrame after applying a function.
 
     Args:
-        func (function): A function that takes a DataFrame as its first argument 
+        func (function): A function that takes a DataFrame as its first argument
                          and returns a DataFrame.
 
     Returns:
-        function: A wrapper function that logs the row count of the DataFrame 
+        function: A wrapper function that logs the row count of the DataFrame
                   returned by the input function.
     """
     def wrapper(df, *args, **kwargs):
@@ -71,7 +71,7 @@ def get_environmental_data(raw_path):
     Args:
         raw_path (Path): The directory path where the downloaded data should be saved.
 
-    The function downloads environmental data related to REF 2021 and saves it 
+    The function downloads environmental data related to REF 2021 and saves it
     as an Excel file in the specified raw_path directory.
     """
     print('Getting Environmental Data!')
@@ -88,7 +88,7 @@ def get_all_results(raw_path):
     Args:
         raw_path (Path): The directory path where the downloaded data should be saved.
 
-    This function downloads the REF 2021 profiles data and saves it as an Excel 
+    This function downloads the REF 2021 profiles data and saves it as an Excel
     file in the specified raw_path directory.
     """
     print('Getting Results Data!')
@@ -104,7 +104,7 @@ def get_output_data(raw_path):
     Args:
         raw_path (Path): The directory path where the downloaded data should be saved.
 
-    This function downloads the REF 2021 outputs data and saves it as an Excel 
+    This function downloads the REF 2021 outputs data and saves it as an Excel
     file in the specified raw_path directory.
     """
     print('Getting Outputs Data!')
@@ -121,7 +121,7 @@ def check_id_overlap(a, b):
         a (list): The first list of IDs.
         b (list): The second list of IDs.
 
-    This function calculates and prints the percentage of overlap between the two 
+    This function calculates and prints the percentage of overlap between the two
     lists, and lists the IDs present in one list but missing in the other.
     """
     print('Checking ID Overlap!')
@@ -145,8 +145,8 @@ def format_ids(df):
     Returns:
         DataFrame: The DataFrame with formatted institution IDs.
 
-    The function renames institution ID columns for consistency, removes rows with 
-    missing IDs, and formats the IDs as integers. It also combines 'Unit of 
+    The function renames institution ID columns for consistency, removes rows with
+    missing IDs, and formats the IDs as integers. It also combines 'Unit of
     assessment number' and 'Multiple submission letter' into a single 'uoa_id'.
     """
     if 'Institution UKPRN code' in df.columns:
@@ -171,7 +171,7 @@ def merge_ins_uoa(df1, df2, id1='inst_id', id2='uoa_id'):
     Returns:
         DataFrame: The merged DataFrame.
 
-    The function performs a left merge of df2 on df1 based on 'inst_id' and 
+    The function performs a left merge of df2 on df1 based on 'inst_id' and
     'uoa_id'. It asserts that 'inst_id' and 'uoa_id' in df1 are present in df2.
     """
     assert all(df1[id1].isin(df2[id1]))
@@ -208,11 +208,11 @@ def clean_ics_level(raw_path, edit_path):
 
 def clean_dep_level(raw_path, edit_path):
     """
-    Generates a wide scorecard at the department level and merges it with other relevant 
+    Generates a wide scorecard at the department level and merges it with other relevant
     department level data, saving the result to a specified path.
 
-    The function processes raw results, environment doctoral data, research income, and 
-    in-kind income data. It renames columns, formats IDs, calculates total doctoral degrees, 
+    The function processes raw results, environment doctoral data, research income, and
+    in-kind income data. It renames columns, formats IDs, calculates total doctoral degrees,
     and merges all data into a single DataFrame.
 
     Args:
@@ -260,7 +260,7 @@ def clean_dep_level(raw_path, edit_path):
     raw_env_income_inkind = raw_env_income_inkind.rename(
         columns={'Total income for academic years 2013-14 to 2019-20': 'tot_inc_kind'})
 
-    tot_inc_kind = raw_env_income_inkind.loc[raw_env_income_inkind['Income source']=='Total income-in-kind']    
+    tot_inc_kind = raw_env_income_inkind.loc[raw_env_income_inkind['Income source']=='Total income-in-kind']
 
     ## Merge all dept level data together
     raw_dep = merge_ins_uoa(raw_results[['inst_id', 'uoa_id', 'fte', 'fte_pc']].drop_duplicates(),
@@ -406,7 +406,7 @@ def gen_readability_scores(df, edit_path, section_columns):
 
     """
     output_path = edit_path / 'ics_readability.csv'
-    
+
     print('Calculating Readability Scores!')
     col_names = []
     for i, s in zip(range(1, 6), section_columns):
@@ -425,9 +425,9 @@ def gen_readability_scores(df, edit_path, section_columns):
     )
     col_names.append('flesch_score')
     col_names.append('REF impact case study identifier')
-    
+
     print(f"Writing readability scores to {output_path}")
-    
+
     df[col_names].to_csv(output_path, index=False)
 
 
@@ -444,13 +444,13 @@ def get_readability_scores(df, edit_path):
         pandas.DataFrame: Amended versions of df with readability scores.
     """
     file_path = edit_path / 'ics_readability.csv'
-    
+
     print('Loading Readability Scores!')
     readability = pd.read_csv(file_path, index_col=None)
-    
+
     assert len(df) == len(readability)
     assert set(df['REF impact case study identifier']) == set(readability['REF impact case study identifier'])
-    
+
     return pd.merge(df, readability, on = ['REF impact case study identifier'],
                  how = 'left')
 
@@ -466,7 +466,7 @@ def gen_pos_features(df, edit_path, section_columns):
         A DataFrame with new columns added for the number of noun phrases and verb phrases in each section of text.
     """
     output_path = edit_path / "ics_pos_features.csv"
-    
+
     print('Calculating POS Features')
     col_names = []
     for i, s in zip(range(1, 6), section_columns):
@@ -476,11 +476,11 @@ def gen_pos_features(df, edit_path, section_columns):
         df[[f"s{i}_np_count", f"s{i}_vp_count"]] = df[s].apply(
             lambda x: pd.Series(count_noun_verb_phrases(x))
         )
-    
+
     col_names.append('REF impact case study identifier')
-    
+
     print(f"Writing pos features to {output_path}")
-    
+
     df[col_names].to_csv(output_path, index=False)
 
 
@@ -545,7 +545,7 @@ def gen_sentiment_scores(df, edit_path, section_columns):
 
     """
     output_path = edit_path / "ics_sentiment_scores.csv"
-    
+
     print('Calculating Sentiment Scores!')
     col_names = []
 
@@ -553,7 +553,7 @@ def gen_sentiment_scores(df, edit_path, section_columns):
     # of text in the DataFrame.
     for i, s in zip(range(1, 6), section_columns):
         col_names.append(f"s{i}_sentiment_score")
-        
+
         df[f"s{i}_sentiment_score"] = df[s].apply(
             lambda x: get_sentiment_score(x)
         )
@@ -801,8 +801,8 @@ def load_dept_vars(df, edit_path):
                                pd.to_numeric(dept_vars['3*_Outputs'], errors='coerce') * 3 +
                                pd.to_numeric(dept_vars['2*_Outputs'], errors='coerce') * 2 +
                                pd.to_numeric(dept_vars['1*_Outputs'], errors='coerce')) / 100
-    dept_vars['Overall_GPA'] = (pd.to_numeric(dept_vars['2*_Overall'], errors='coerce') * 4 +
-                                pd.to_numeric(dept_vars['2*_Overall'], errors='coerce') * 3 +
+    dept_vars['Overall_GPA'] = (pd.to_numeric(dept_vars['4*_Overall'], errors='coerce') * 4 +
+                                pd.to_numeric(dept_vars['3*_Overall'], errors='coerce') * 3 +
                                 pd.to_numeric(dept_vars['2*_Overall'], errors='coerce') * 2 +
                                 pd.to_numeric(dept_vars['1*_Overall'], errors='coerce')) / 100
 
@@ -838,7 +838,7 @@ def load_topic_data(df, manual_path, topic_path):
         print("Returning original file")
         return df
 
-        
+
     vars = ['REF impact case study identifier',
             'BERT_topic',
             'BERT_prob',
@@ -876,12 +876,12 @@ def load_topic_data(df, manual_path, topic_path):
         return df
 
     topic_lookup = topic_lookup.rename({'description': 'topic_description', 'narrative': 'topic_narrative'}, axis=1)
-    
+
     try:
         assert set(df['REF impact case study identifier']) == set(topic_model['REF impact case study identifier'])
     except AssertionError:
         print("AssertionError: not all ICSs have an associated topic")
-        
+
     df = pd.merge(df, topic_model, how='left', on='REF impact case study identifier')
     df = pd.merge(df, topic_assignment, how='left', on='REF impact case study identifier')
     df = pd.merge(df, topic_lookup, how='left', left_on='final_topic', right_on='topic_id')
@@ -927,7 +927,7 @@ def make_and_load_tags(df, raw_path, edit_path):
                          'Underpinning research subject tag group',
                          'UK Region tag values',
                          'UK Region tag group'])
-        
+
         # Tag processing logic
         for ics in tags['REF case study identifier'].unique():
             temp = tags[tags['REF case study identifier'] == ics]
@@ -1068,15 +1068,15 @@ if __name__ == "__main__":
     project_root = current_file.parent
     while not (project_root / '.git').exists():
         project_root = project_root.parent
-    
+
     data_path = project_root / 'data'
 
     (raw_path, edit_path, sup_path,
      manual_path, final_path, topic_path,
      dim_path) = get_paths(data_path)
-    
+
     csv_out = [arg for arg in sys.argv if '.csv' in arg]
-    
+
     if csv_out:
         output_path = csv_out[0]
         print(f"Will write final dataset to provided path: {output_path}")
@@ -1135,7 +1135,7 @@ if __name__ == "__main__":
         make_paper_level(dim_path)
 
     df = load_scientometric_data(df, dim_path)
-    
+
     if '-top' in sys.argv:
         ## Generate new topic model
         print("Generating new topic model... This will take some time.")
@@ -1143,21 +1143,21 @@ if __name__ == "__main__":
         run_args = [
             edit_path / 'clean_ref_ics_data.xlsx',
             topic_path]
-        
+
         run_command = ["python3", bert_script_path] + run_args
         subprocess.run(run_command)
-        
+
         print("Reducing topic model... This will take some time.")
         reduce_script_path = project_root / 'topic_modelling' / 'bert_reduce.py'
         reduce_args = [
             topic_path,
             'nn3_threshold0.01']
-        
+
         reduce_command = ["python3", bert_script_path] + reduce_args
         subprocess.run(reduce_command)
-    
+
     df = load_topic_data(df, manual_path, topic_path)
-    
+
     if '-tm' in sys.argv:
         print("Generating new text-mining data... This will take some time.")
         section_columns = [
@@ -1166,14 +1166,14 @@ if __name__ == "__main__":
             "3. References to the research",
             "4. Details of the impact",
             "5. Sources to corroborate the impact"]
-        
+
         gen_readability_scores(df, edit_path, section_columns)
         gen_pos_features(df, edit_path, section_columns)
         gen_sentiment_scores(df, edit_path, section_columns)
-    
+
     df = get_readability_scores(df, edit_path)
     df = get_pos_features(df, edit_path)
     df = get_sentiment_scores(df, edit_path)
-    
+
     if write:
         df.to_csv(output_path, index=False)
