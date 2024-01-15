@@ -1,214 +1,286 @@
-import re
-import os
-import warnings
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-import gender_guesser.detector as gender
+import matplotlib as mpl
+import numpy as np
+import geopandas as gpd
+import pandas as pd
+import os
+import matplotlib.gridspec as gridspec
+import seaborn as sns
+import matplotlib.colors
+import matplotlib.ticker as mtick
 from helpers.figure_helpers import savefigures
-d = gender.Detector()
-warnings.filterwarnings('ignore')
 mpl.rcParams['font.family'] = 'Graphik'
+plt.rcParams["axes.labelweight"] = "light"
+plt.rcParams["font.weight"] = "light"
+ba_rgb2 = ['#41558c', '#E89818', '#CF202A']
+
+
+def make_geo_ax(df, ax, letter, leg_lab):
+    country_list = []
+    for index, row in df.iterrows():
+        countries = row['countries_extracted']
+        if countries is not np.nan:
+            countries = countries.split(';')
+            for country in countries:
+                if ((country != 'TWN')
+                        and (country != 'ESH')
+                        and (country != 'GRL')
+                        and (country != 'FLK')):
+                    country_list.append(country.strip())
+    df = pd.DataFrame(country_list)[0].value_counts()
+    df = df.sort_values(ascending=False)
+    df = df.reset_index()
+    df = pd.DataFrame(df).rename({0: 'Country',
+                                  'count': 'Count'},
+                                 axis=1)
+    SHAPEFILE_head = 'ne_110'
+    SHAPEFILE_base = 'm_admin_0_countries_lakes.shp'
+    geo_df = gpd.read_file(os.path.join(os.getcwd(),
+                                        '..',
+                                        '..',
+                                        'assets',
+                                        'shapefiles',
+                                        SHAPEFILE_head,
+                                        SHAPEFILE_head + SHAPEFILE_base))
+    geo_df = geo_df[['ADMIN', 'ADM0_A3', 'geometry']]
+    geo_df.columns = ['country', 'country_code', 'geometry']
+    geo_df = geo_df[geo_df['country'] != 'Taiwan']
+    geo_df = geo_df[geo_df['country'] != 'Greenland']
+    geo_df = geo_df[geo_df['country'] != 'Falkland Islands']
+    geo_df = geo_df[geo_df['country'] != 'Puerto Rico']
+    geo_df = geo_df.drop(geo_df.loc[geo_df['country'] == 'Antarctica'].index)
+    geo_df = pd.merge(left=geo_df,
+                      right=df,
+                      how='left',
+                      left_on='country_code',
+                      right_on='Country')
+    geo_df = geo_df[geo_df['Count'].notnull()]
+    col = 'Count'
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list("", [(63 / 255, 57 / 255, 95 / 255, 0.9),
+                                                                                (69 / 255, 172 / 255, 52 / 255, 0.9),
+                                                                                (255 / 255, 182 / 255, 0 / 255, 0.9)
+                                                                    ])
+    geo_df.plot(column=col,
+                ax=ax,
+                edgecolor='k',
+                linewidth=0.25,
+                cmap=cmap,
+                scheme="natural_breaks",
+                k=8,
+                legend=True,
+                legend_kwds={"loc": "lower left",
+                             "frameon": True,
+                             "edgecolor": 'k',
+                             "ncols": 2,
+                             "bbox_to_anchor": (0.05, 0.05),
+                             "fmt": "{:.0f}",
+                             "fontsize": 11,
+                             "interval": True}
+                )
+    leg1 = ax.get_legend()
+    leg1.set_title(leg_lab, prop={'size': 14})
+    ax.set_xticks([])
+    ax.set_xticklabels([])
+    ax.set_yticks([])
+    ax.set_yticklabels([])
+    ax.set_title(letter, loc='left', x=0.025, fontsize=22, y=0.96)
+#   @TODO this gets depricated in recent MPL versions
+    for legend_handle in ax.get_legend().legend_handles:
+        legend_handle.set_markeredgewidth(1)
+        legend_handle.set_markeredgecolor("black")
+    sns.despine(left=True, top=True, bottom=True, right=True)
+    return geo_df
 
 
 def make_figure_fifteen():
     print('\n******************************************************')
     print('***************** Making Figure 15! ********************')
     print('********************************************************')
-    import gender_guesser.detector as gender
-    d = gender.Detector()
-    funder_level = pd.DataFrame(columns=['Panel',
-                                         'UoA',
-                                         'ICS_uid',
-                                         'pub_uid',
-                                         'funder'])
-    dim_out = os.path.join(os.getcwd(), '..', '..',
-                           'data', 'dimensions_returns')
-    paper_level = pd.read_excel(os.path.join(dim_out, 'merged_dimensions.xlsx'))
-
+    colors = [(63 / 255, 57 / 255, 95 / 255, 0.9),
+              (69 / 255, 172 / 255, 52 / 255, 0.9),
+              (255 / 255, 182 / 255, 0 / 255, 0.9)]
     df = pd.read_csv(os.path.join(os.getcwd(),
                                   '..',
                                   '..',
                                   'data',
                                   'final',
-                                  'enhanced_ref_data.csv')
+                                  'enhanced_ref_data.csv'),
+#                     index_col=0
+                     usecols=['countries_extracted',
+                              'region_extracted',
+                              'Main panel',
+                              'Unit of assessment number']
                      )
     df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
-    grid_lookup = pd.read_csv(os.path.join(os.getcwd(),
-                                           '..',
-                                           '..',
-                                           'data',
-                                           'manual',
-                                           'grid',
-                                           'grid_lookup.csv')
-                              )
-    paper_level = pd.merge(paper_level,
-                           df[['Main panel',
-                               'Unit of assessment number',
-                               'REF impact case study identifier']],
-                           how='left',
-                           left_on='Key',
-                           right_on='REF impact case study identifier')
-    counter = 0
-    for index, row in paper_level.iterrows():
-        funder_raw = row['funder_orgs']
-        funder_list = re.findall("'(.*?)'", funder_raw)  # .split(' ')
-        for funder in funder_list:
-            funder_level.at[counter, 'Panel'] = row['Main panel']
-            funder_level.at[counter, 'UoA'] = int(row['Unit of assessment number'])
-            funder_level.at[counter, 'ICS_uid'] = row['Key']
-            funder_level.at[counter, 'pub_uid'] = row['id']
-            funder_level.at[counter, 'funder'] = funder
-            counter += 1
-    funder_level = pd.merge(funder_level,
-                            grid_lookup,
-                            how='left',
-                            left_on='funder',
-                            right_on='grid')
-    d = gender.Detector()
-    funder_level_C = funder_level[funder_level['Panel'] == 'C']
-    funder_counts_C = funder_level_C['name'].value_counts()
-    funder_counts_C = funder_counts_C[funder_counts_C.index.str.len() > 0]
-    funder_level_D = funder_level[funder_level['Panel'] == 'D']
-    funder_counts_D = funder_level_D['name'].value_counts()
-    funder_counts_D = funder_counts_D[funder_counts_D.index.str.len() > 0]
-    funder_level_4 = funder_level[funder_level['UoA'] == 4]
-    funder_counts_4 = funder_level_4['name'].value_counts()
-    funder_counts_4 = funder_counts_4[funder_counts_4.index.str.len() > 0]
+    fig = plt.figure(figsize=(24, 21))
+    spec = gridspec.GridSpec(ncols=36, nrows=30, figure=fig)
+    ax1 = fig.add_subplot(spec[0:10, 0:30])
+    ax2 = fig.add_subplot(spec[10:20, 0:30])
+    ax3 = fig.add_subplot(spec[20:30, 0:30])
+    ax4 = fig.add_subplot(spec[0:9, 29:36])
+    ax5 = fig.add_subplot(spec[10:19, 29:36])
+    ax6 = fig.add_subplot(spec[20:29, 30:36])
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list("", colors)
+    UoA4 = make_geo_ax(df[df['Unit of assessment number'] == 4.0],
+                       ax1, 'a.',
+                       'Mentioned as Beneficiary\n           (UoA 4)        ')
+    mpl.rcParams['font.family'] = 'Graphik'
+    print('UoA4 countries listed: ',
+          len(UoA4[UoA4['Count'] > 0]))
+    UoA4 = UoA4.sort_values(by='Count',
+                            ascending=False).sort_values(ascending=True,
+                                                         by='Count')
+    PanelC = make_geo_ax(df[df['Main panel'] == 'C'],
+                         ax2, 'c.',
+                         'Mentioned as Beneficiary\n            (Panel C)       ')
+    print('PanelC countries listed: ',
+          len(PanelC[PanelC['Count'] > 0]))
+    PanelC = PanelC.sort_values(by='Count', ascending=False).sort_values(ascending=True,
+                                                                               by='Count')
+    PanelD = make_geo_ax(df[df['Main panel'] == 'D'],
+                         ax3, 'e.',
+                         'Mentioned as Beneficiary\n            (Panel D)        ')
+    print('PanelD countries listed: ',
+          len(PanelD[PanelD['Count'] > 0]))
 
-    counter = 0
+    UoA4['Count'] = (UoA4['Count'] / UoA4['Count'].sum()) * 100
+    UoA4 = UoA4.sort_values(by='Count',
+                            ascending=False)[0:10].sort_values(ascending=True,
+                                                               by='Count')
+    bar_container_uoa4 = ax4.barh(y=UoA4['Country'][0:10],
+                                  width=UoA4['Count'][0:10],
+                                  color= ba_rgb2[0],
+                                  edgecolor='k',
+                                  alpha=1)
 
-    ICS_funder_level = pd.DataFrame(columns=['REF impact case study identifier', 'funder'])
-    pattern = r'\[[^\]]*\]'
+    PanelC['Count'] = (PanelC['Count'] / PanelC['Count'].sum()) * 100
+    PanelC = PanelC.sort_values(by='Count',
+                                ascending=False)[0:10].sort_values(ascending=True,
+                                                                   by='Count')
+    bar_container_panelc = ax5.barh(y=PanelC['Country'],
+                                    width=PanelC['Count'],
+                                    color= ba_rgb2[0],
+                                    edgecolor='k',
+                                    alpha=1)
+
+    PanelD['Count'] = (PanelD['Count'] / PanelD['Count'].sum()) * 100
+    PanelD = PanelD.sort_values(by='Count',
+                                ascending=False)[0:10].sort_values(ascending=True,
+                                                                   by='Count')
+    norm = plt.Normalize(0,
+                         PanelD['Count'].max())
+    bar_container_paneld = ax6.barh(y=PanelD['Country'],
+                                    width=PanelD['Count'],
+                                    color= ba_rgb2[0],
+                                    edgecolor='k',
+                                    alpha=1)
+    fmt = '%.0f%%'
+    xticks = mtick.FormatStrFormatter(fmt)
+    ax4.xaxis.set_major_formatter(xticks)
+    ax5.xaxis.set_major_formatter(xticks)
+    ax6.xaxis.set_major_formatter(xticks)
+
+    fmt = '%.2f%%'
+    ax4.bar_label(bar_container_uoa4,
+                  fmt=fmt,
+                  padding=5,
+                  fontsize=15)
+    ax5.bar_label(bar_container_panelc,
+                  fmt=fmt,
+                  padding=5,
+                  fontsize=15)
+    ax6.bar_label(bar_container_paneld,
+                  fmt=fmt,
+                  padding=5,
+                  fontsize=15)
+    sns.despine(ax=ax4,
+                offset=5,
+                trim=True)
+    sns.despine(ax=ax5,
+                offset=5,
+                trim=True)
+    sns.despine(ax=ax6,
+                offset=5,
+                trim=True)
+    sns.despine(left=True, top=True, bottom=True, right=True, ax=ax1)
+    sns.despine(left=True, top=True, bottom=True, right=True, ax=ax2)
+    sns.despine(left=True, top=True, bottom=True, right=True, ax=ax3)
+    sns.despine(left=True, top=True, bottom=True, right=True, ax=ax4)
+    fig.subplots_adjust(hspace=2)
+    fig.subplots_adjust(wspace=-.1)
+    ax4.set_xlabel('Unit of Assessment 4', fontsize=16)
+    ax5.set_xlabel('Panel C', fontsize=16)
+    ax6.set_xlabel('Panel D', fontsize=16)
+    for ax in [ax4, ax5, ax6]:
+        ax.set_ylabel('', fontsize=16)
+        ax.tick_params(axis='both', which='major', labelsize=15)
+    ax4.set_title('b.', loc='left', x=-0.05, fontsize=22, y=0.96)
+    ax5.set_title('d.', loc='left', x=-0.05, fontsize=22, y=0.96)
+    ax6.set_title('f.', loc='left', x=-0.05, fontsize=22, y=0.96)
+    file_name = 'figure_15'
+    figure_path = os.path.join(os.getcwd(), '..', '..', 'figures')
+    savefigures(plt, figure_path, file_name)
+
+    df_global = df[df['region_extracted'].str.contains('global', na=False)]
+    print('The number of global in UoA 4:',
+          len(df_global[df_global['Unit of assessment number'] == 4.0]))
+    print('The number of global in Panel C:',
+          len(df_global[df_global['Main panel'] == 'C']))
+    print('The number of global in Panel D:',
+          len(df_global[df_global['Main panel'] == 'D']))
+
+    print('The percent of global in UoA 4:',
+          len(df_global[df_global['Unit of assessment number'] == 4.0]) /
+          len(df[df['Unit of assessment number'] == 4.0])*100)
+    print('The percent of global in Panel C:',
+          len(df_global[df_global['Main panel'] == 'C']) /
+          len(df[df['Main panel'] == 'C'])*100)
+    print('The percent of global in Panel D:',
+          len(df_global[df_global['Main panel'] == 'D']) /
+          len(df[df['Main panel'] == 'D'])*100)
+
+    # make the 'percebt if times a conuntry is included' table.
+    df = pd.read_csv(os.path.join(os.getcwd(),
+                                  '..',
+                                  '..',
+                                  'data',
+                                  'final',
+                                  'enhanced_ref_data.csv'),
+                     index_col=0)
+
+    country_list=[]
     for index, row in df.iterrows():
-        if row['funders_extracted'] is not np.nan:
-            funders = re.sub(pattern, '', row['funders_extracted'])
-            funder_row = funders.split(';')
-            for funder in funder_row:
-                funder = re.sub(r'\[.*?\]', '',
-                                funder).strip()
-                ICS_funder_level.at[counter,
-                'REF impact case study identifier'] = row[
-                    'REF impact case study identifier']
-                ICS_funder_level.at[counter, 'funder'] = funder
-                counter += 1
-    ICS_funder_level = ICS_funder_level.drop_duplicates(subset=['funder',
-                                                                'REF impact case study identifier'],
-                                                        keep='first')
-    ICS_funder_level['funder'] = ICS_funder_level['funder'].str.replace('European Commission', 'EC')
-    ICS_funder_level['funder'] = ICS_funder_level['funder'].str.replace('British Academy', 'BA')
-    ICS_funder_level['funder'] = ICS_funder_level['funder'].str.replace('Wellcome Trust', 'WT')
-    ICS_funder_level['funder'] = ICS_funder_level['funder'].str.replace('Leverhulme Trust', 'LT')
-    ICS_funder_level['funder'] = ICS_funder_level['funder'].str.replace('Arts Council England', 'ACE')
-    ICS_funder_level['funder'] = ICS_funder_level['funder'].str.replace(
-        'Biotechnology and Biological Sciences Research Council', 'BBSRC')
-    ICS_funder_level['funder'] = ICS_funder_level['funder'].str.replace('Natural Environment Research Council', 'NERC')
-
-    df = df[['Main panel', 'Unit of assessment number',
-             'REF impact case study identifier']]
-    ICS_funder_level = pd.merge(ICS_funder_level, df[['Main panel',
-                                                      'Unit of assessment number',
-                                                      'REF impact case study identifier']],
-                                how='left', on='REF impact case study identifier')
-    ICS_funder_level_C = ICS_funder_level[ICS_funder_level['Main panel'] == 'C']
-    ICS_funder_level_D = ICS_funder_level[ICS_funder_level['Main panel'] == 'D']
-    ICS_funder_level_4 = ICS_funder_level[ICS_funder_level['Unit of assessment number'] == 4.0]
-
-    ICS_funder_level_C = ICS_funder_level_C['funder'].value_counts()
-    ICS_funder_level_C = ICS_funder_level_C[ICS_funder_level_C.index.str.len() > 1]
-    ICS_funder_level_D = ICS_funder_level_D['funder'].value_counts()
-    ICS_funder_level_D = ICS_funder_level_D[ICS_funder_level_D.index.str.len() > 1]
-    ICS_funder_level_4 = ICS_funder_level_4['funder'].value_counts()
-    ICS_funder_level_4 = ICS_funder_level_4[ICS_funder_level_4.index.str.len() > 1]
-
-    colors3 = ['#00A0DF', '#A5907E', (255 / 255, 182 / 255, 0 / 255, 1)]
-    fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(16, 12))
-    bar1 = ax1.barh(funder_counts_4[0:5].sort_values().index,
-                    funder_counts_4[0:5].sort_values(), edgecolor='k', color=colors3[0],
-                    height=0.5, alpha=1)
-    bar2 = ax2.barh(funder_counts_C[0:5].sort_values().index,
-                    funder_counts_C[0:5].sort_values(), edgecolor='k', color=colors3[1],
-                    height=0.5, alpha=1)
-    bar3 = ax3.barh(funder_counts_D[0:5].sort_values().index,
-                    funder_counts_D[0:5].sort_values(), edgecolor='k', color=colors3[2],
-                    height=0.5, alpha=0.65)
-
-    bar4 = ax4.barh(ICS_funder_level_4[0:5].sort_values().index,
-                    ICS_funder_level_4[0:5].sort_values(), edgecolor='k', color=colors3[0],
-                    height=0.5, alpha=1)
-    bar5 = ax5.barh(ICS_funder_level_C[0:5].sort_values().index,
-                    ICS_funder_level_C[0:5].sort_values(), edgecolor='k', color=colors3[1],
-                    height=0.5, alpha=1)
-    bar6 = ax6.barh(ICS_funder_level_D[0:5].sort_values().index,
-                    ICS_funder_level_D[0:5].sort_values(), edgecolor='k', color=colors3[2],
-                    height=0.5, alpha=0.65)
-
-    ax1.bar_label(bar1, fontsize=16, padding=5)
-    ax2.bar_label(bar2, fontsize=16, padding=5)
-    ax3.bar_label(bar3, fontsize=16, padding=5)
-    ax4.bar_label(bar4, fontsize=16, padding=5)
-    ax5.bar_label(bar5, fontsize=16, padding=5)
-    ax6.bar_label(bar6, fontsize=16, padding=5)
-    for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
-        ax.tick_params(axis='both', which='minor', labelsize=14)
-        ax.tick_params(axis='both', which='major', labelsize=14)
-    #        ax.grid(which="both", linestyle='--', alpha=0.3)
-
-    ax1.set_title('A.', loc='left', fontsize=21)
-    ax2.set_title('B.', loc='left', fontsize=21)
-    ax3.set_title('C.', loc='left', fontsize=21)
-    ax4.set_title('D.', loc='left', fontsize=21)
-    ax5.set_title('E.', loc='left', fontsize=21)
-    ax6.set_title('F.', loc='left', fontsize=21)
-    ax4.set_xlabel('Instances of Funding\n       (UoA 4)      ', fontsize=18)
-    ax5.set_xlabel('Instances of Funding\n      (Panel C)     ', fontsize=18)
-    ax6.set_xlabel('Instances of Funding \n      (Panel D)     ', fontsize=18)
-    ax1.set_ylabel('Paper Funders', fontsize=20)
-    ax4.set_ylabel('ICS Funders', fontsize=20)
-    sns.despine(offset=10, trim=True)
-    plt.tight_layout()
-    fig_path = os.path.join(os.getcwd(), '..', '..', 'figures')
-    filename = 'figure_15'
-    savefigures(plt, fig_path, filename)
-
-    print('ALl Data: ', ICS_funder_level['funder'].value_counts()[0:10])
-    ICS_funder_level = ICS_funder_level[ICS_funder_level['funder'].notnull()]
-    ALL = ICS_funder_level['funder'].value_counts() / len(ICS_funder_level) * 100
-
-    UOA4 = ICS_funder_level[ICS_funder_level['Unit of assessment number'] == 4]['funder'].value_counts() / len(
-        ICS_funder_level[ICS_funder_level['Unit of assessment number'] == 4.0]) * 100
-
-    PANELA = ICS_funder_level[ICS_funder_level['Main panel'] == 'A']['funder'].value_counts() / len(
-        ICS_funder_level[ICS_funder_level['Main panel'] == 'A']) * 100
-
-    PANELB = ICS_funder_level[ICS_funder_level['Main panel'] == 'B']['funder'].value_counts() / len(
-        ICS_funder_level[ICS_funder_level['Main panel'] == 'B']) * 100
-
-    PANELC = ICS_funder_level[ICS_funder_level['Main panel'] == 'C']['funder'].value_counts() / len(
-        ICS_funder_level[ICS_funder_level['Main panel'] == 'C']) * 100
-
-    PANELD = ICS_funder_level[ICS_funder_level['Main panel'] == 'D']['funder'].value_counts() / len(
-        ICS_funder_level[ICS_funder_level['Main panel'] == 'D']) * 100
-    comb = pd.concat([ALL, PANELA, PANELB, UOA4, PANELC, PANELD], axis=1)
-    comb.columns=['All', 'Panel A', 'Panel B', 'UoA4', 'Panel C', 'Panel D']
-    comb = comb.sort_values(by='All', ascending=False)
-    comb = comb.round(2)
-    all_funder_path = os.path.join('..','..','tables', 'UKRI_funders.csv')
-    print('Saving all funder data to: ', all_funder_path)
-    comb.to_csv(all_funder_path)
-
-    UKRI = pd.DataFrame()
-    UKRI = UKRI.append(comb.loc['ESRC', :])
-    UKRI = UKRI.append(comb.loc['EPSRC', :])
-    UKRI = UKRI.append(comb.loc['AHRC', :])
-    UKRI = UKRI.append(comb.loc['MRC', :])
-    UKRI = UKRI.append(comb.loc['Innovate UK', :])
-    UKRI = UKRI.append(comb.loc['NERC', :])
-    UKRI = UKRI.append(comb.loc['BBSRC', :])
-    UKRI_funder_path = os.path.join('..','..','tables', 'UKRI_funders_only.csv')
-    print('Percent of acknowledgements to UKRI organisations: \n', UKRI.sum())
-    print('Percent of each UKRI org for each field: \n', UKRI / UKRI.sum() * 100)
-    print('Saving URKI funder table to: ', UKRI_funder_path)
-    UKRI.to_csv(UKRI_funder_path)
+        countries = row['countries_extracted']
+        if countries is not np.nan:
+            countries = countries.split(';')
+            for country in countries:
+                if ((country != 'TWN')
+                        and (country != 'ESH')
+                        and (country != 'GRL')
+                        and (country != 'FLK')):
+                    country_list.append(country.strip())
+    df1 = pd.DataFrame(country_list)[0].value_counts()
+    df1 = df1.sort_values(ascending=False)
+    iso_list = df1[0:10].index.to_list()
+    df['countries_extracted'] = df['countries_extracted'].fillna('')
+    df2 = pd.DataFrame(index=iso_list,
+                       columns = ['Panel A', 'UoA 4', 'Panel B', 'Panel C', 'Panel D'])
+    for iso in iso_list:
+        df2.at[iso, 'Panel A'] = (len(df[(df['Main panel'] == 'A') &
+                                          (df['countries_extracted'].str.contains(iso))])/
+                                  len(df[(df['Main panel'] == 'A')]))
+        df2.at[iso, 'Panel B'] = (len(df[(df['Main panel'] == 'B') &
+                                          (df['countries_extracted'].str.contains(iso))])/
+                                  len(df[(df['Main panel'] == 'B')]))
+        df2.at[iso, 'Panel C'] = (len(df[(df['Main panel'] == 'C') &
+                                          (df['countries_extracted'].str.contains(iso))])/
+                                  len(df[(df['Main panel'] == 'C')]))
+        df2.at[iso, 'Panel D'] = (len(df[(df['Main panel'] == 'D') &
+                                          (df['countries_extracted'].str.contains(iso))])/
+                                  len(df[(df['Main panel'] == 'D')]))
+        df2.at[iso, 'UoA 4'] = (len(df[(df['Unit of assessment number'] == 4.0) &
+                                          (df['countries_extracted'].str.contains(iso))])/
+                                len(df[(df['Unit of assessment number'] == 4.0)]))
+    df2 = df2.astype(float).round(4)*100
+    df2.to_csv(os.path.join(os.getcwd(), '..', '..', 'tables', 'country_beneficiaries_table.csv'))
+    print(df2)

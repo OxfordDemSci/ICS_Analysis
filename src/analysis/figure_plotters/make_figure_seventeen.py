@@ -2,43 +2,25 @@ import re
 import os
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.colors
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 from helpers.figure_helpers import savefigures
-from mne_connectivity.viz import plot_connectivity_circle
 
-cmap = mpl.colors.LinearSegmentedColormap.from_list("",
-                                                    ['white',
-                                                            '#FFB600',
-                                                            '#00A9DF'
-                                                     ])
-
-def make_inter_ax(df_for, ax, letter):
-    print('letter: ', letter)
-    plot_connectivity_circle(df_for.replace(0, np.nan).to_numpy(),
-                             list(df_for.index), padding=5,
-                             facecolor='white', node_width=12,
-                             textcolor='black', node_linewidth=1,
-                             linewidth=5, colormap=cmap, vmin=None,
-                             vmax=None, colorbar=True,
-                             title=letter,
-                             fontsize_title=20,
-                             node_colors=['w'], colorbar_size=0.75,
-                             colorbar_pos=(.4, 0.5),# ax=ax,
-                             fontsize_names=14, fontsize_colorbar=13)
-    ax.set_xticks([])
-    ax.set_xticklabels([])
-#    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.025)
-    ax.set_yticks([])
-    ax.set_yticklabels([])
-    #    ax.set_title(letter, loc='left', x=-0.0, fontsize=100, y=1.0)
-    return ax
+mpl.rcParams['font.family'] = 'Graphik'
+plt.rcParams["axes.labelweight"] = "light"
+plt.rcParams["font.weight"] = "light"
+dim_out = os.path.join(os.getcwd(), '..', '..',
+                       'data', 'dimensions_returns')
 
 
 def make_tagged(tagged_res):
     tagged_res_l2 = pd.DataFrame(0,
                                  index=tagged_res['Tag group'].unique(),
                                  columns=tagged_res['Tag group'].unique())
+    for_list = []
     for ICS in tagged_res['REF case study identifier'].unique():
         temp = tagged_res[tagged_res['REF case study identifier'] == ICS]
         counter = 0
@@ -46,6 +28,7 @@ def make_tagged(tagged_res):
             for group2 in temp['Tag group']:
                 if group1 != group2:
                     tagged_res_l2.at[group1, group2] += 1
+                    for_list.append(str(group1) + '; ' + str(group2))
     tagged_res_l2 = tagged_res_l2.rename({'Information And Computing Sciences': 'IT'}, axis=0)
     tagged_res_l2 = tagged_res_l2.rename({'Information And Computing Sciences': 'IT'}, axis=1)
     tagged_res_l2 = tagged_res_l2.rename({'Built Environment And Design': 'Urban'}, axis=0)
@@ -86,7 +69,7 @@ def make_tagged(tagged_res):
     tagged_res_l2 = tagged_res_l2.rename({'Studies In Human Society': 'Society'}, axis=1)
     tagged_res_l2 = tagged_res_l2.rename({'Psychology And Cognitive Sciences': 'Psychology'}, axis=0)
     tagged_res_l2 = tagged_res_l2.rename({'Psychology And Cognitive Sciences': 'Psychology'}, axis=1)
-    return tagged_res_l2
+    return tagged_res_l2, pd.DataFrame(for_list).value_counts()
 
 def make_and_clean_for(paper_level):
     for_set = set()
@@ -150,118 +133,24 @@ def make_and_clean_for(paper_level):
     return df_for, pd.DataFrame(for_list).value_counts()
 
 
-def make_L1(df_for, data_type):
-    L1_for = pd.DataFrame(0, index=['Humanities', 'Social Sciences',
-                                        'Natural Sciences', 'Medical Sciences',
-                                     'Physical Sciences'],
-                             columns=['Humanities', 'Social Sciences',
-                                      'Natural Sciences', 'Medical Sciences',
-                                      'Physical Sciences'])
-    if data_type == 'papers':
-        L1_1 = ['Creative', 'Language', 'History', 'Religion']
-        L1_2 = ['Urban', 'Education', 'Economics', 'Tourism', 'Society', 'Law']
-        L1_3 = ['Physics', 'Chem', 'Earth', 'Environmental', 'Biology', 'Agriculture']
-        L1_4 = ['Health', 'Biolomedical', 'Psychology']
-        L1_5 = ['Mathematics', 'Engineering', 'IT']
-    elif data_type == 'ref_tags':
-        L1_1 = ['Creative', 'Language', 'History', 'Religion']
-        L1_2 = ['Urban', 'Education', 'Economics', 'Tourism', 'Society', 'Law']
-        L1_3 = ['Physics', 'Chem', 'Earth', 'Environmental', 'Biology', 'Agriculture']
-        L1_4 = ['Health', 'Biolomedical', 'Psychology']
-        L1_5 = ['Mathematics', 'Engineering', 'IT']
-
-    for row in df_for.index:
-        for column in df_for.columns:
-            if (row in L1_1) and (column in L1_1):
-                L1_for.at['Humanities', 'Humanities'] += df_for.at[row, column]
-            if row in L1_1 and column in L1_2:
-                L1_for.at['Humanities', 'Social Sciences'] += df_for.at[row, column]
-            if row in L1_1 and column in L1_3:
-                L1_for.at['Humanities', 'Natural Sciences'] += df_for.at[row, column]
-            if row in L1_1 and column in L1_4:
-                L1_for.at['Humanities', 'Medical Sciences'] += df_for.at[row, column]
-            if row in L1_1 and column in L1_5:
-                L1_for.at['Humanities', 'Physical Sciences'] += df_for.at[row, column]
-
-            if (row in L1_2) and (column in L1_1):
-                L1_for.at['Social Sciences', 'Humanities'] += df_for.at[row, column]
-            if row in L1_2 and column in L1_2:
-                L1_for.at['Social Sciences', 'Social Sciences'] += df_for.at[row, column]
-            if row in L1_2 and column in L1_3:
-                L1_for.at['Social Sciences', 'Natural Sciences'] += df_for.at[row, column]
-            if row in L1_2 and column in L1_4:
-                L1_for.at['Social Sciences', 'Medical Sciences'] += df_for.at[row, column]
-            if row in L1_2 and column in L1_5:
-                L1_for.at['Social Sciences', 'Physical Sciences'] += df_for.at[row, column]
-
-
-            if (row in L1_3) and (column in L1_1):
-                L1_for.at['Natural Sciences', 'Humanities'] += df_for.at[row, column]
-            if row in L1_3 and column in L1_2:
-                L1_for.at['Natural Sciences', 'Social Sciences'] += df_for.at[row, column]
-            if row in L1_3 and column in L1_3:
-                L1_for.at['Natural Sciences', 'Natural Sciences'] += df_for.at[row, column]
-            if row in L1_3 and column in L1_4:
-                L1_for.at['Natural Sciences', 'Medical Sciences'] += df_for.at[row, column]
-            if row in L1_3 and column in L1_5:
-                L1_for.at['Natural Sciences', 'Physical Sciences'] += df_for.at[row, column]
-
-            if (row in L1_4) and (column in L1_1):
-                L1_for.at['Medical Sciences', 'Humanities'] += df_for.at[row, column]
-            if row in L1_4 and column in L1_2:
-                L1_for.at['Medical Sciences', 'Social Sciences'] += df_for.at[row, column]
-            if row in L1_4 and column in L1_3:
-                L1_for.at['Medical Sciences', 'Natural Sciences'] += df_for.at[row, column]
-            if row in L1_4 and column in L1_4:
-                L1_for.at['Medical Sciences', 'Medical Sciences'] += df_for.at[row, column]
-            if row in L1_4 and column in L1_5:
-                L1_for.at['Medical Sciences', 'Physical Sciences'] += df_for.at[row, column]
-
-
-            if (row in L1_5) and (column in L1_1):
-                L1_for.at['Physical Sciences', 'Humanities'] += df_for.at[row, column]
-            if row in L1_5 and column in L1_2:
-                L1_for.at['Physical Sciences', 'Social Sciences'] += df_for.at[row, column]
-            if row in L1_5 and column in L1_3:
-                L1_for.at['Physical Sciences', 'Natural Sciences'] += df_for.at[row, column]
-            if row in L1_5 and column in L1_4:
-                L1_for.at['Physical Sciences', 'Medical Sciences'] += df_for.at[row, column]
-            if row in L1_5 and column in L1_5:
-                L1_for.at['Physical Sciences', 'Physical Sciences'] += df_for.at[row, column]
-    return L1_for
-
-
-def plot_circle(df, title, figure_path, filename):
-    fig, ax1 = plt.subplots(1, 1, figsize=(9, 9),
-                            subplot_kw=dict(polar=True))
-    plot_connectivity_circle(df.replace(0, np.nan).to_numpy(),
-                             list(df.index), padding=5,
-                             facecolor='white', node_width=12,
-                             textcolor='black', node_linewidth=1,
-                             linewidth=3, colormap=cmap, vmin=None,
-                             vmax=None, colorbar=True,
-                             title=title, ax=ax1,
-                             fontsize_title=20,
-                             node_colors=['w'], colorbar_size=0.75,
-                             colorbar_pos=(.4, 0.5),
-                             fontsize_names=14, fontsize_colorbar=13)
-    savefigures(plt, figure_path, filename)
-
-
-
 def make_figure_seventeen():
-    print('\n*****************************************************')
-    print('***************** Making Figure 17! *******************')
-    print('*******************************************************')
-    mpl.rcParams['font.family'] = 'Graphik'
-    dim_out = os.path.join(os.getcwd(), '..', '..',
-                           'data', 'dimensions_returns')
+    print('\n******************************************************')
+    print('***************** Making Figure 17! ********************')
+    print('********************************************************')
+    figure_path = os.path.join(os.getcwd(),
+                               '..',
+                               '..',
+                               'figures')
     df = pd.read_csv(os.path.join(os.getcwd(),
                                   '..',
                                   '..',
                                   'data',
                                   'final',
-                                  'enhanced_ref_data.csv')
+                                  'enhanced_ref_data.csv'
+                                  ),
+                     usecols=['Main panel',
+                              'Unit of assessment number',
+                              'REF impact case study identifier']
                      )
     df['Unit of assessment number'] = df['Unit of assessment number'].astype(int)
     paper_level = pd.read_excel(os.path.join(dim_out,
@@ -275,9 +164,32 @@ def make_figure_seventeen():
                            right_on='REF impact case study identifier'
                            )
 
-    df_for_SOCSCI, for_list_SOCSCI = make_and_clean_for(paper_level[(paper_level['Main panel'] == 'C') |
-                                                                    (paper_level['Unit of assessment number'] == 4)])
-    df_for_HUM, for_list_HUM = make_and_clean_for(paper_level[(paper_level['Main panel'] == 'D')])
+    df_for_SOCSCI, for_list_SOCSCI = make_and_clean_for(
+        paper_level[(paper_level['Main panel'] =='C') |
+                    (paper_level['Unit of assessment number'] == 4)])
+
+    print('The five most common multi-disciplinarity areas in the '
+          'Social Sciences from Underpinning Research at the article level are: ' +
+          # Note the skip-indexing because a & b = b & a due to symmetry
+          str(for_list_SOCSCI.index[0][0]) + ' (' + str(for_list_SOCSCI[0]) + '), ' +
+          str(for_list_SOCSCI.index[2][0]) + ' (' + str(for_list_SOCSCI[2]) + '), ' +
+          str(for_list_SOCSCI.index[4][0]) + ' (' + str(for_list_SOCSCI[4]) + '), ' +
+          str(for_list_SOCSCI.index[6][0]) + ' (' + str(for_list_SOCSCI[6]) + '), ' +
+          str(for_list_SOCSCI.index[8][0]) + ' (' + str(for_list_SOCSCI[8]) + ').')
+
+    df_for_HUM, for_list_HUM = make_and_clean_for(
+        paper_level[
+            (paper_level['Main panel'] == 'D')]
+    )
+
+    print('The five most common multi-disciplinarity areas in the '
+          'Humanities from Underpinning Research at the article level are: ' +
+          # Note the skip-indexing because a & b = b & a due to symmetry
+          str(for_list_HUM.index[0][0]) + ' (' + str(for_list_HUM[0]) + '), ' +
+          str(for_list_HUM.index[2][0]) + ' (' + str(for_list_HUM[2]) + '), ' +
+          str(for_list_HUM.index[4][0]) + ' (' + str(for_list_HUM[4]) + '), ' +
+          str(for_list_HUM.index[6][0]) + ' (' + str(for_list_HUM[6]) + '), ' +
+          str(for_list_HUM.index[8][0]) + ' (' + str(for_list_HUM[8]) + ').')
 
     tagged_res = pd.read_excel(os.path.join(os.getcwd(),
                                             '..',
@@ -294,20 +206,157 @@ def make_figure_seventeen():
                                         'Tag identifier',
                                         'Tag value',
                                         'Tag group']
-                               )
+                              )
 
-    tagged_res = tagged_res[tagged_res['Tag type'] == 'Underpinning research subject']
-    tagged_res_l2_C4 = make_tagged(tagged_res[(tagged_res['Main panel'] == 'C') |
-                                              (tagged_res['Unit of assessment number'] == 4)])
-    tagged_res_l2_D = make_tagged(tagged_res[(tagged_res['Main panel'] == 'D')])
+    tagged_res = tagged_res[tagged_res['Tag type']=='Underpinning research subject']
+    tagged_res_l2_C4, tagged_list_C4 = make_tagged(tagged_res[(tagged_res['Main panel'] == 'C') |
+                                                              (tagged_res['Unit of assessment number'] == 4.0)])
+    print('The five most common multi-disciplinarity areas in the '
+          'Social Sciences from REF tags are: ' +
+          # Note the skip-indexing because a & b = b & a due to symmetry
+          str(tagged_list_C4.index[0][0]) + ' (' + str(tagged_list_C4[0]) + '), ' +
+          str(tagged_list_C4.index[2][0]) + ' (' + str(tagged_list_C4[2]) + '), ' +
+          str(tagged_list_C4.index[4][0]) + ' (' + str(tagged_list_C4[4]) + '), ' +
+          str(tagged_list_C4.index[6][0]) + ' (' + str(tagged_list_C4[6]) + '), ' +
+          str(tagged_list_C4.index[8][0]) + ' (' + str(tagged_list_C4[8]) + ').')
 
-    L1_for_papers_SOCSCI = make_L1(df_for_SOCSCI, 'papers')
-    L1_for_papers_HUM = make_L1(df_for_HUM, 'papers')
-    L1_for_tags_SOCSCI = make_L1(tagged_res_l2_C4, 'ref_tags')
-    L1_for_tags_HUM = make_L1(tagged_res_l2_D, 'ref_tags')
-    figure_path = os.path.join(os.getcwd(), '..', '..', 'figures')
 
-    plot_circle(L1_for_papers_SOCSCI, 'A.', figure_path, 'figure_17a')
-    plot_circle(L1_for_papers_HUM, 'B.', figure_path, 'figure_17b')
-    plot_circle(L1_for_tags_SOCSCI, 'C.', figure_path, 'figure_17c')
-    plot_circle(L1_for_tags_HUM, 'D.', figure_path, 'figure_17d')
+    tagged_res_l2_D, tagged_list_D = make_tagged(tagged_res[(tagged_res['Main panel'] == 'D')])
+    print('The five most common multi-disciplinarity areas in the '
+          'Humanities from REF tags are: ' +
+          # Note the skip-indexing because a & b = b & a due to symmetry
+          str(tagged_list_D.index[0][0]) + ' (' + str(tagged_list_D[0]) + '), ' +
+          str(tagged_list_D.index[2][0]) + ' (' + str(tagged_list_D[2]) + '), ' +
+          str(tagged_list_D.index[4][0]) + ' (' + str(tagged_list_D[4]) + '), ' +
+          str(tagged_list_D.index[6][0]) + ' (' + str(tagged_list_D[6]) + '), ' +
+          str(tagged_list_D.index[8][0]) + ' (' + str(tagged_list_D[8]) + ').')
+
+    ba_rgb2 = ['white', '#41558c', '#E89818', '#CF202A']
+    cmap = matplotlib.colors.LinearSegmentedColormap.from_list("",
+                                                               ba_rgb2
+#                                                               ['white', #FFB600', '#00A9DF']
+                                                               )
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(14, 12))
+    fig.subplots_adjust(hspace=.5, wspace=0.45)
+
+    df_for_SOCSCI = df_for_SOCSCI.sort_index(axis=1)
+    df_for_SOCSCI = df_for_SOCSCI.sort_index(axis=0)
+    ax1.set_title('a.', loc='left', fontsize=20, y=1.025, x=-.075, fontweight='bold')
+    sns.heatmap(df_for_SOCSCI,
+                cmap=cmap,
+                linewidths=.5,
+                linecolor='w',
+                ax=ax1,
+                cbar=False
+                )
+    fig.colorbar(ax1.collections[0], ax=ax1, location="right", use_gridspec=False, pad=0.035,
+                 shrink=1, anchor = (0, 0))
+    sns.heatmap(df_for_SOCSCI,
+                cmap=cmap,
+                norm=LogNorm(),
+                linewidths=.5,
+                linecolor='w',
+                ax=ax1,
+                cbar=False
+                )
+
+    cbar_ax = fig.axes[-1]
+    cbar_ax.set_title('Number of Pieces of Research', y=.15, x=4.5, rotation=270, fontsize=14)
+    cbar_solids = cbar_ax.collections[0]
+    cbar_solids.set_edgecolor("black")
+    cbar_solids.set_linewidth(1)  # Adjust the linewidth if necessary
+    cbar_ax.tick_params(axis='both', which='major', labelsize=12)
+    ax2.set_title('b.', loc='left', fontsize=20, y=1.025, x=-.075, fontweight='bold')
+    df_for_HUM = df_for_HUM.sort_index(axis=1)
+    df_for_HUM = df_for_HUM.sort_index(axis=0)
+    sns.heatmap(df_for_HUM,
+                cmap=cmap,
+                linewidths=.5,
+                linecolor='w',
+                ax=ax2,
+                cbar=False
+                )
+    fig.colorbar(ax2.collections[0], ax=ax2, location="right", use_gridspec=False, pad=0.035,
+                 shrink=1, anchor = (0, 0))
+    sns.heatmap(df_for_HUM,
+                cmap=cmap,
+                norm=LogNorm(),
+                linewidths=.5,
+                linecolor='w',
+                ax=ax2,
+                cbar=False
+                )
+    mpl.rcParams['font.family'] = 'Graphik'
+    plt.rcParams["axes.labelweight"] = "light"
+    plt.rcParams["font.weight"] = "light"
+    cbar_ax = fig.axes[-1]
+    cbar_solids = cbar_ax.collections[0]
+    cbar_solids.set_edgecolor("black")
+    cbar_solids.set_linewidth(1)  # Adjust the linewidth if necessary
+    cbar_ax.tick_params(axis='both', which='major', labelsize=12)
+    cbar_ax.set_title('Number of Pieces of Research', y=.15, x=4.5, rotation=270, fontsize=14)
+    tagged_res_l2_C4 = tagged_res_l2_C4.sort_index(axis=1)
+    tagged_res_l2_C4 = tagged_res_l2_C4.sort_index(axis=0)
+    mask = np.triu(np.ones_like(df_for_HUM))
+    ax3.set_title('c.', loc='left', fontsize=20, y=1.025, x=-.075, fontweight='bold')
+    sns.heatmap(tagged_res_l2_C4,
+                cmap=cmap,
+                linewidths=.5,
+                linecolor='w',
+                ax=ax3,
+                cbar=False
+                )
+    fig.colorbar(ax3.collections[0], ax=ax3, location="right", use_gridspec=False, pad=0.035,
+                 shrink=1, anchor = (0, 0))
+    sns.heatmap(tagged_res_l2_C4,
+                cmap=cmap,
+                norm=LogNorm(),
+                linewidths=.5,
+                linecolor='w',
+                ax=ax3,
+                cbar=False
+                )
+    cbar_ax = fig.axes[-1]
+    cbar_ax.set_title('REF ICS Tags', y=.325, x=4.5, rotation=270, fontsize=14)
+    cbar_solids = cbar_ax.collections[0]
+    cbar_solids.set_edgecolor("black")
+    cbar_solids.set_linewidth(1)
+    cbar_ax.tick_params(axis='both', which='major', labelsize=12)
+
+    tagged_res_l2_D = tagged_res_l2_D.sort_index(axis=1)
+    tagged_res_l2_D = tagged_res_l2_D.sort_index(axis=0)
+    ax4.set_title('d.', loc='left', fontsize=20, y=1.025, x=-.075, fontweight='bold')
+    sns.heatmap(tagged_res_l2_D,
+                cmap=cmap,
+                linewidths=.5,
+                linecolor='w',
+                ax=ax4,
+                cbar=False
+                )
+    fig.colorbar(ax4.collections[0], ax=ax4, location="right", use_gridspec=False, pad=0.035,
+                 shrink=1, anchor = (0, 0))
+    sns.heatmap(tagged_res_l2_D,
+                cmap=cmap,
+                norm=LogNorm(),
+                linewidths=.5,
+                linecolor='w',
+                ax=ax4,
+                cbar=False
+                )
+    cbar_ax = fig.axes[-1]
+    cbar_ax.set_title('REF ICS Tags', y=.325, x=4.5, rotation=270, fontsize=14)
+    cbar_solids = cbar_ax.collections[0]
+    cbar_solids.set_edgecolor("black")
+    cbar_solids.set_linewidth(1)  # Adjust the linewidth if necessary
+    cbar_ax.tick_params(axis='both', which='major', labelsize=12)
+
+    sns.despine(offset=10, trim=True, ax=ax1, top=False, right=True)
+    sns.despine(offset=10, trim=True, ax=ax2, top=False, right=True)
+    sns.despine(offset=10, trim=True, ax=ax3, top=False, right=True)
+    sns.despine(offset=10, trim=True, ax=ax4, top=False, right=True)
+    ax1.set_xticklabels(ax1.get_xticklabels(), rotation=90, ha='right')
+    ax2.set_xticklabels(ax2.get_xticklabels(), rotation=90, ha='right')
+    ax3.set_xticklabels(ax2.get_xticklabels(), rotation=90, ha='right')
+    ax4.set_xticklabels(ax2.get_xticklabels(), rotation=90, ha='right')
+    filename = 'figure_17'
+    savefigures(plt, figure_path, filename)

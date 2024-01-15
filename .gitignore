@@ -134,12 +134,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /notes
-/src/analysis/helpers/old/topic_by_topic.py
-/src/analysis/helpers/old/text_helpers.py
-/src/analysis/helpers/old/table_helpers.py
-/src/analysis/old/figure_2.ipynb
-/src/analysis/old/Cluster_by_Cluster.ipynb
-/src/analysis/old/figure_13.ipynb
-/src/analysis/old/figure_16_and_17.ipynb
-/desktop.ini
+/src/analysis/helpers/old/*
+/src/analysis/old/*
+/data/raw/*
+/data/edit/*
+/data/dimensions_returns/*
 /assets/dimensions_project_id.txt
+/data/final/enhanced_ref_data.csv
+/desktop.ini

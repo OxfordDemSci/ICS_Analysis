@@ -1,46 +1,47 @@
 # make_enhanced_data.py
 
-This script is designed to generate a dataframe containing all relevant covariates for the ICS project.
+`make_enhanced_data.py` is a Python script for generating a comprehensive dataframe with all necessary covariates for the ICS project.
 
 ## Prerequisites
 
-Before running the script, ensure you have the following installed:
+Ensure the following are installed before running the script:
 
-- Python
-- `./src/requirements.txt`
+- Python 3.x
+- Dependencies listed in `./src/requirements.txt`
 
-## How to Run the Script
+## Installation
 
-To run the script, use the following command:
+Install required packages:
 
 ```bash
-python make_enhanced_data.py
+pip install -r ./src/requirements.txt
 ```
 
-### Options/Flags
-The script supports the following flags:
+## Usage
+### Running the Script
 
--f: Force overwrite of existing files.
--tom: Rerun topic modeling analysis.
--tm: Rerun text-mining processes.
--bq: Rerun analysis of collected dimensions data (do not re-collect data if already present)
--bqf: Rerun analysis of collected dimensions data (do re-collect data if already present)
+```bash
+python make_enhanced_data.py [options]
+```
 
-### Basic usage
+### Options
+-`f`: Force overwrite of existing files.
+-`tom`: Rerun topic modeling analysis.
+-`tm`: Rerun text-mining processes.
+-`bq`: Rerun analysis of collected dimensions data (without re-collecting data).
+-`bqf`: Rerun analysis and re-collect dimensions data (requires a Big Query API token).
 
-In principle, the script assumes the following files to be present, these cannot be generated within the script and the script can *not* be succesfully compiled without them:
+### Input Files
 
 
-- `./data/manual/funders_countries/funders_countries_lookup.xlsx` - a file describing funders' geographic locations.
-- `./data/manual/topic_lookup/topic_lookup.csv` - a file describing topics.
+The script expects certain files to be present. Unless specified by the flags `-tom`, `-tm`, and `-bq`, these files are not auto-generated:
 
-The below files are expected to be present unless the `-tom` and `-tm` flags are used, in which case they are generated and force overwritten:
-- `./data/edit/ics_pos_features.csv` - number of verbs and nouns per ICS
-- `./data/edit/ics_readability.csv` - readability score per ICS
-- `./data/edit/ics_sentiment_scores.csv` - sentiment score per ICS
-
-The below files are expected to be present unless the `-bq` flag is used, in which case they are generated:
-- `./data/dimensions_returns/merged_dimensions.xlsx`
+- `./data/manual/funders_countries/funders_countries_lookup.xlsx` - Funders' geographic locations.
+- `./data/manual/topic_lookup/topic_lookup.csv` - Topics descriptions.
+- `./data/edit/ics_pos_features.csv` - Verbs and nouns count per ICS. (unless `-tm` flag is used)
+- `./data/edit/ics_readability.csv` - Readability score per ICS. (unless `-tm` flag is used)
+- `./data/edit/ics_sentiment_scores.csv` - Sentiment score per ICS. (unless `-tm` flag is used)
+- `./data/dimensions_returns/merged_dimensions.xlsx` - Dimensions data. (unless `-bq` flag is used)
 
 Use `-bqf` if you want to force re-collection of the data as well, this likely requires a Big Query API token.
 

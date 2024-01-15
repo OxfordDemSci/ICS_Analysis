@@ -1,26 +1,29 @@
 import os
 import re
+import matplotlib.colors
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import geopandas as gpd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import gender_guesser.detector as gender
 import matplotlib.gridspec as gridspec
-import matplotlib.colors
 from PIL import Image
 from .figure_helpers import savefigures
 from mne_connectivity.viz import plot_connectivity_circle
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 d = gender.Detector()
-import matplotlib as mpl
 mpl.rcParams['font.family'] = 'Graphik'
 plt.rcParams["font.family"] = 'Graphik'
+plt.rcParams["axes.labelweight"] = "light"
+plt.rcParams["font.weight"] = "light"
+#matplotlib.use('Agg')
 
 # @TODO this is not a good colour 3.
-ba_rgb2 = ["#00A9DF", (255/255, 182/255, 0/255, 1), "#A59072"]
+ba_rgb2 = ['#41558c', '#E89818', '#CF202A']
 
 #ba_rgb2 = [(0 / 255, 160 / 255, 223 / 255, 0.65),
 #           (255 / 255, 182 / 255, 0 / 255, 0.65),
@@ -33,7 +36,7 @@ ba_rgb2 = ["#00A9DF", (255/255, 182/255, 0/255, 1), "#A59072"]
 
 def make_descriptives(df, paper_level, cluster):
     print('\n*****************************************************')
-    print('******* Descriptives for Cluster {} *****************'.format(str(cluster)))
+    print('******* Descriptives for Grand Impact Theme {} *****************'.format(str(cluster)))
     print('*****************************************************\n')
     paper_level = filter_cluster(paper_level, cluster)
     df = filter_cluster(df, cluster)
@@ -73,10 +76,10 @@ def make_descriptives(df, paper_level, cluster):
     country_count = pd.DataFrame(country_list)[0].value_counts()
     country_count = country_count.sort_values(ascending=False)
     country_count = country_count.reset_index()
-    country_count = pd.DataFrame(country_count).rename({0: 'Count',
-                                                        'index': 'Country'},
-                                                       axis=1)
-
+    country_count = pd.DataFrame(country_count)
+    country_count = country_count.rename({0: 'Country'}, axis=1)
+    country_count = country_count.rename({'count': 'Count'}, axis=1)
+    print(country_count)
     print('The most frequent country beneficiary is : ' + str(country_count['Country'][0]) +
           '('+str(country_count['Count'][0]) + '). The second most is: ' +
            str(country_count['Country'][1]) + '('+str(country_count['Count'][1]) + ').' +
@@ -177,7 +180,7 @@ def make_descriptives(df, paper_level, cluster):
     print('The underpinning research with the highest Altmetric score:')
     print('Title: {}'.format(paper_level.loc[paper_level['Altmetric'].idxmax()]['preferred']))
     print('DOI: {}'.format(paper_level.loc[paper_level['Altmetric'].idxmax()]['doi']))
-    print('Altmetric: {}'.format(paper_level.loc[paper_level['Altmetric'].idxmax()]['doi']))
+    print('Altmetric: {}'.format(paper_level.loc[paper_level['Altmetric'].idxmax()]['Altmetric']))
 
     print('The underpinning research with the highest number of citations:')
     print('Title: {}'.format(paper_level.loc[paper_level['Times Cited'].idxmax()]['preferred']))
@@ -238,12 +241,17 @@ def make_geo_ax(country_count, ax, letter):
                                                        axis=1)
     SHAPEFILE_head = 'ne_110'
     SHAPEFILE_base = 'm_admin_0_countries_lakes.shp'
-    geo_df = gpd.read_file(os.path.join(os.getcwd(), '..', '..',
-                                        'data', 'shapefiles',
+    geo_df = gpd.read_file(os.path.join(os.getcwd(),
+                                        '..',
+                                        '..',
+                                        'assets',
+                                        'shapefiles',
                                         SHAPEFILE_head,
                                         SHAPEFILE_head + SHAPEFILE_base))
     geo_df = geo_df[['ADMIN', 'ADM0_A3', 'geometry']]
     geo_df.columns = ['country', 'country_code', 'geometry']
+    country_count = country_count.rename({'Count': 'Country'}, axis=1)
+    country_count = country_count.rename({'count': 'Count'}, axis=1)
     country_count = country_count[country_count['Country'] != 'TWN']
     country_count = country_count[country_count['Country'] != 'ESH']
     geo_df = geo_df.drop(geo_df.loc[geo_df['country'] == 'Antarctica'].index)
@@ -262,28 +270,28 @@ def make_geo_ax(country_count, ax, letter):
                                                                     ])
     geo_df.plot(column=col, ax=ax, edgecolor='k', linewidth=0.25,
                 cmap=cmap, scheme="natural_breaks",
-                k=8, legend=True,
+                k=5, legend=True,
                 legend_kwds={"loc": "lower left",
                              "frameon": True,
                              "edgecolor": 'k',
-                             "ncols": 2,
-                             "bbox_to_anchor": (0.015, 0.05),
+                             "ncols": 1,
+                             #"bbox_to_anchor": (-0.04, 0.1),
                              "fmt": "{:.0f}",
-                             "fontsize": 10,
+                             "fontsize": 11,
                              "interval": True}
                 )
     leg1 = ax.get_legend()
-    leg1.set_title("Mentioned as Beneficiary", prop={'size': 13})
+    leg1.set_title("Beneficiaries", prop={'size': 12})
     ax.set_xticks([])
     ax.set_xticklabels([])
     ax.set_yticks([])
     ax.set_yticklabels([])
-    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.025)
+    ax.set_title(letter, loc='left', x=-0.015, fontsize=18, y=0.965, fontweight='bold')
 
-#   @TODO deprecated in this version of MPL, come back to this.
-#    for legend_handle in ax.get_legend().legend_handles:
-#        legend_handle.set_markeredgewidth(1)
-#    legend_handle.set_markeredgecolor("black")
+    for legend_handle in ax.get_legend().legend_handles:
+        legend_handle.set_markeredgecolor('black')
+        legend_handle.set_markeredgewidth(0.75)
+
     sns.despine(ax=ax, left=True, bottom=True)
     return ax
 
@@ -333,25 +341,25 @@ def make_wc_ax(paper_level, ax, letter):
     ax.set_xticklabels([])
     ax.set_yticks([])
     ax.set_yticklabels([])
-    ax.set_title(letter, loc='left', x=0.125, fontsize=18, y=1.025)
+    ax.set_title(letter, loc='left', x=0.075, fontsize=18, y=1.0125, fontweight='bold')
     sns.despine(ax=ax, left=True, bottom=True)
 
 
 def make_inter_ax(df_for, ax, letter):
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list("",
-                                                               ['white',
-                                                                '#FFB600',
-                                                                '#00A9DF'])
+                                                               ['white', '#41558c', '#E89818', '#CF202A']
+                                                               )
     plot_connectivity_circle(df_for.replace(0, np.nan).to_numpy(),
                              list(df_for.index), padding=5,
                              facecolor='white', node_width=12,
                              textcolor='black', node_linewidth=1,
                              linewidth=5, colormap=cmap, vmin=None,
-                             vmax=None, colorbar=True,
+                             vmax=None, colorbar=False,
                              title=letter,
                              fontsize_title=20,
-                             node_colors=['w'], colorbar_size=0.75,
-                             colorbar_pos=(.4, 0.5), ax=ax,
+                             node_colors=['#E89818'], colorbar_size=0.75,
+                             #colorbar_pos=(.4, 0.5),
+                             ax=ax,
                              fontsize_names=14, fontsize_colorbar=13)
     ax.set_xticks([])
     ax.set_xticklabels([])
@@ -385,21 +393,21 @@ def make_funder_ax(df, df1, ax, cluster, letter, letter2):
     ax.set_yticks([])
     ax.set_yticklabels([])
     sns.despine(ax=ax, left=True, bottom=True)
-    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.025)
+    ax.set_title(letter, loc='left', x=-0.065, fontsize=18, y=1.025, fontweight='bold')
     axin2 = inset_axes(ax, width="100%", height="100%", loc='lower right',
-                       bbox_to_anchor=(0.715, 0, .315, .335),
+                       bbox_to_anchor=(0.825, 0.02, .3, .3),
                        bbox_transform=ax.transAxes)
     fem = df1['female'].sum() / len(df1['female']) * 100
     men = 100 - fem
     bar_container = axin2.bar(x=['Female', 'Male'], height=[fem, men],
                               color=[ba_rgb2[1], ba_rgb2[0]],
                               width=0.8, edgecolor='k')
-    axin2.set_title(letter2, loc='left', x=-0.1, fontsize=18, y=1.025)
+    axin2.set_title(letter2, loc='left', x=-0.15, fontsize=18, y=1.075, fontweight='bold')
     axin2.tick_params(axis='both', which='major', labelsize=14)
     sns.despine(ax=axin2)
-    axin2.set_ylabel('Gender of Authors', fontsize=14)
+    axin2.set_ylabel('Gender of\nAuthors', fontsize=16)
     axin2.bar_label(bar_container,
-                    fmt='%.2f%%', padding=0.05, fontsize=14)
+                    fmt='%.2f%%', padding=0.05, fontsize=12)
     fmt = '%.0f%%'
     yticks = mtick.FormatStrFormatter(fmt)
     axin2.yaxis.set_major_formatter(yticks)
@@ -408,11 +416,11 @@ def make_funder_ax(df, df1, ax, cluster, letter, letter2):
 
 def unpack_funder(funder):
     if funder == 'Department for Business, Energy and Industrial Strategy': funder = 'DBEIS'
-    if funder == 'ESRC': funder = 'Economic and Social Research Council'
+    #if funder == 'ESRC': funder = 'Economic and Social Research Council'
     if funder == 'NHS': funder = 'National Health Service'
     if funder == 'WCT': funder = 'Wellcome Trust'
     if funder == 'WGOV': funder = 'Welsh Government'
-    if funder == 'AHRC': funder = 'Arts and Humanities Research Council'
+#    if funder == 'AHRC': funder = 'Arts and Humanities Research Council'
     if funder == 'ACE': funder = 'Arts Council England'
     if funder == 'SGOV': funder = 'Scottish Government'
     if funder == 'UKGOV': funder = 'UK Government'
@@ -436,8 +444,11 @@ def unpack_funder(funder):
     if funder == 'RENG': funder = 'Research England'
     if funder == 'PHE': funder = 'Public Health England'
     if funder == 'NUFF': funder = 'Nuffield Foundation'
+    if funder == 'Department for International Development': funder = 'Dept. for Int. Dev.'
+    if funder == 'Department for Work and Pensions': funder = 'DWP'
+    if funder == 'Education Endowment Foundation': funder = 'Educ. Endow. Found.'
     if funder == 'NERC': funder = 'Natural Environment Research Council'
-    if funder == 'NLHF': funder = 'National Lottery Heritage Fund'
+    if funder == 'NLHF': funder = 'National Lot. (Heritage)'
     if funder == 'BBSRC': funder = 'Biotechnology and Biological Sciences Research Council'
     if funder == 'WHO': funder = 'World Health Organization'
     if funder == 'EC': funder = 'European Commission'
@@ -581,33 +592,56 @@ def make_uoa_ax(df, ax, letter):
             col.append(ba_rgb2[0])
         else:
             col.append(ba_rgb2[1])
-    df_counts.plot(kind='bar', ax=ax, edgecolor='k', color=col)
-    ax.set_ylabel('Percentage of ICS', fontsize=15)
-    ax.set_xlabel('Unit of Assessment', fontsize=15)
+    df_counts.plot(kind='bar', ax=ax, edgecolor='k', color=col, legend=True)
+    ax.set_ylabel('Percentage of ICS', fontsize=16)
+    ax.set_xlabel('Unit of Assessment', fontsize=16)
     size = 0.3
     axin2 = inset_axes(ax, width="100%", height="100%", loc='upper left',
-                       bbox_to_anchor=(0.275, .35, .75, .75),
+                       bbox_to_anchor=(0.5, .5, .6, .6),
                        bbox_transform=ax.transAxes)
     wedges, texts = axin2.pie(outer, radius=1,
-                              colors=[ba_rgb2[0], ba_rgb2[1], ba_rgb2[2]],
-                              wedgeprops=dict(width=size, edgecolor='k', linewidth=0.5))
+                              colors=[ba_rgb2[0], ba_rgb2[1], ba_rgb2[2]], rotatelabels =True, startangle=360,
+                              wedgeprops=dict(width=size, edgecolor='k', linewidth=0.5),
+                              explode = [0.15, 0.15, 0.15])
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-    kw = dict(arrowprops=dict(arrowstyle="-"),
-              bbox=bbox_props, zorder=0, va="center")
+#    kw = dict(arrowprops=dict(arrowstyle="-"),
+#              bbox=bbox_props,
+#              zorder=0, va="center")
     recipe = ['Panel C', 'Panel D', 'UoA 4']
-    for i, p in enumerate(wedges):
-        ang = (p.theta2 - p.theta1) / 2. + p.theta1
-        y = np.sin(np.deg2rad(ang))
-        x = np.cos(np.deg2rad(ang))
-        horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-        connectionstyle = f"angle,angleA=0,angleB={ang}"
-        kw["arrowprops"].update({"connectionstyle": connectionstyle,
-                                 "color": "k"})
-        axin2.annotate(recipe[i], xy=(x, y), xytext=(1.35 * np.sign(x), 1.4 * y),
-                       horizontalalignment=horizontalalignment, fontsize=14,
-                       **kw)
-    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.025)
-    ax.tick_params(axis='both', which='major', labelsize=14)
+#    for i, p in enumerate(wedges):
+#
+#        ang = (p.theta2 - p.theta1) / 2 + p.theta1
+#        y = np.sin(np.deg2rad(ang))
+#        x = np.cos(np.deg2rad(ang))
+#        horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+#        connectionstyle = f"angle,angleA=0,angleB={ang}"
+#        kw["arrowprops"].update({"connectionstyle": connectionstyle,
+#                                 "color": "k"})
+#        shifter_out_x = 1.15
+#        if recipe[i] == 'UoA 4':
+#            shifter_out_y = 1.9
+#        else:
+#            shifter_out_y = 1.6
+#        axin2.annotate(recipe[i], xy=(x, y), xytext=(shifter_out_x * np.sign(x), shifter_out_y * y),
+#                       horizontalalignment=horizontalalignment, fontsize=13,
+#                       **kw)
+    from matplotlib.patches import Patch
+    legend_elements = [Patch(edgecolor=(0,0,0,1),lw=0.75,
+                             facecolor=ba_rgb2[2], label='UoA 4', linestyle='-'),
+                       Patch(edgecolor=(0,0,0,1),lw=0.75,
+                             facecolor=ba_rgb2[0], label=r'Panel C', linestyle='-'),
+                       Patch(edgecolor=(0,0,0,1),lw=0.75,
+                             facecolor=ba_rgb2[1], label=r'Panel D', linestyle='-'),
+                       ]
+    ax.legend(handles=legend_elements, loc='lower right', frameon=True,
+              bbox_to_anchor=[1, 0.125],
+              fontsize=12, framealpha=1, facecolor='w',
+              title='Discipline',
+              edgecolor='k', handletextpad=0.25)
+
+    ax.set_title(letter, loc='left', x=-0.125, fontsize=18, y=1.015, fontweight='bold')
+    ax.tick_params(axis='y', which='major', labelsize=14)
+    ax.tick_params(axis='x', which='major', labelsize=12)
     fmt = '%.0f%%'
     yticks = mtick.FormatStrFormatter(fmt)
     ax.yaxis.set_major_formatter(yticks)
@@ -625,9 +659,9 @@ def make_topic_value_counts(df, ax, letter):
     hbars = ax.barh(y, x, color=ba_rgb2[0], edgecolor='k')
     ax.set_yticks(y_pos)
     ax.set_yticklabels(y)
-    ax.bar_label(hbars, fmt='%.0f', padding=6, fontsize=16)
+    ax.bar_label(hbars, fmt='%.0f', padding=6, fontsize=17)
     ax.tick_params(axis='both', which='major', labelsize=14)
-    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.025)
+    ax.set_title(letter, loc='left', x=-0.1, fontsize=18, y=0.985, fontweight='bold')
     sns.despine(ax=ax, left=True, right=False, top=True, bottom=True)
     ax.set_xticklabels([])
     ax.set_xticks([])
@@ -640,6 +674,7 @@ def make_topic_value_counts(df, ax, letter):
 
 
 def make_ts_ax(paper_level, ax, letter):
+    import matplotlib.dates as mdates
     paper_level['date_normal'] = pd.to_datetime(paper_level['date_normal'])
     paper_level = paper_level[(paper_level['date_normal'] > '2000-01-01') &
                               (paper_level['date_normal'] < '2024-01-01')]
@@ -647,33 +682,38 @@ def make_ts_ax(paper_level, ax, letter):
     index = to_plot.index.tolist()
     vals = to_plot.tolist()
     ax.plot(index, vals, color=ba_rgb2[1])
-    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.025)
+    ax.set_title(letter, loc='left', x=-0.05, fontsize=18, y=1.03, fontweight='bold')
     ax.tick_params(axis='both', which='major', labelsize=14)
     ax.yaxis.tick_right()
     ax.yaxis.set_ticks_position('both')
-    ax.set_ylabel("Research\nCount", fontsize=15)
+    ax.set_ylabel("Research\nCount", fontsize=16)
     ax.yaxis.set_label_position("right")
+    formatter = mdates.DateFormatter("%Y")  ### formatter of the date
+    locator = mdates.YearLocator()
+    ax.xaxis.set_major_formatter(formatter)  ## calling the formatter for the x-axis
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_locator(plt.MaxNLocator(3))
     sns.despine(ax=ax, left=True, right=False, top=True, bottom=False)
     return ax
 
 
 def make_cluster_figure(df, paper_level, cluster):
     print('\n******************************************************')
-    print('***************** Making Figure {}! ********************'.format(str(cluster+2)))
+    print('***************** Making Figure {}! ********************'.format(str(cluster+3)))
     print('********************************************************')
     paper_level = filter_cluster(paper_level, cluster)
     df = filter_cluster(df, cluster)
     df_for, for_list = make_and_clean_for(paper_level)
     author_level = make_author_level(paper_level)
-    fig = plt.figure(figsize=(19, 19), constrained_layout=True)
-    spec = gridspec.GridSpec(ncols=34, nrows=16, figure=fig)
-    ax1 = fig.add_subplot(spec[0:4, 0:11])
-    ax2 = fig.add_subplot(spec[0:4, 13:24])
-    ax3 = fig.add_subplot(spec[0:2, 25:34])
-    ax4 = fig.add_subplot(spec[3:11, 0:24])
-    ax5 = fig.add_subplot(spec[3:9, 25:30])
-    ax6 = fig.add_subplot(spec[10:16, 0:17])
-    ax7 = fig.add_subplot(spec[10:16, 18:34], polar=True)
+    fig = plt.figure(figsize=(13, 20), tight_layout=True)
+    spec = gridspec.GridSpec(nrows=34, ncols=34, figure=fig)
+    ax1 = fig.add_subplot(spec[0:9, 0:12])
+    ax2 = fig.add_subplot(spec[0:10, 14:25])
+    ax3 = fig.add_subplot(spec[0:4, 26:34])
+    ax4 = fig.add_subplot(spec[2:27, 0:27])
+    ax5 = fig.add_subplot(spec[6:18, 28:31])
+    ax6 = fig.add_subplot(spec[20:32, 0:16])
+    ax7 = fig.add_subplot(spec[20:32, 19:34], polar=True)
     make_uoa_ax(df, ax1, 'a.')
     make_wc_ax(paper_level, ax2, 'b.')
     make_ts_ax(paper_level, ax3, 'c.')
@@ -682,4 +722,4 @@ def make_cluster_figure(df, paper_level, cluster):
     make_funder_ax(df, author_level, ax6, cluster, 'f.', 'g.')
     make_inter_ax(df_for, ax7, 'h.')
     filepath = os.path.join(os.getcwd(), '..', '..', 'figures')
-    savefigures(fig, filepath, 'figure_'+str(cluster+2))
+    savefigures(fig, filepath, 'figure_'+str(cluster+3))

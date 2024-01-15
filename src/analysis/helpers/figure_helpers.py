@@ -21,7 +21,6 @@ d = gender.Detector()
 
 
 def savefigures(plt, filepath, filename):
-    mpl.use('Agg')
 #    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
     plt.savefig(os.path.join(filepath, filename + '.svg'), bbox_inches='tight')
 #    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
