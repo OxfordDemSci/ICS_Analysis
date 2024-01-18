@@ -12,6 +12,11 @@ from helpers.figure_helpers import savefigures
 mpl.rcParams['font.family'] = 'Graphik'
 plt.rcParams["axes.labelweight"] = "light"
 plt.rcParams["font.weight"] = "light"
+mpl.rcParams['font.family'] = 'Graphik'
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 dim_out = os.path.join(os.getcwd(), '..', '..',
                        'data', 'dimensions_returns')
 
@@ -289,6 +294,10 @@ def make_figure_seventeen():
     mpl.rcParams['font.family'] = 'Graphik'
     plt.rcParams["axes.labelweight"] = "light"
     plt.rcParams["font.weight"] = "light"
+    new_rc_params = {'text.usetex': False,
+                     "svg.fonttype": 'none'
+                     }
+    mpl.rcParams.update(new_rc_params)
     cbar_ax = fig.axes[-1]
     cbar_solids = cbar_ax.collections[0]
     cbar_solids.set_edgecolor("black")

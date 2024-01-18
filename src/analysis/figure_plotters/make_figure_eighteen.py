@@ -10,6 +10,10 @@ from mne_connectivity.viz import plot_connectivity_circle
 mpl.rcParams['font.family'] = 'Graphik'
 plt.rcParams["axes.labelweight"] = "light"
 plt.rcParams["font.weight"] = "light"
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 
 cmap = mpl.colors.LinearSegmentedColormap.from_list("",
                                                     ['white', '#41558c', '#E89818', '#CF202A']

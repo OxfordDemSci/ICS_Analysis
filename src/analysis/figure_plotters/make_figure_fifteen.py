@@ -10,6 +10,10 @@ import matplotlib.colors
 import matplotlib.ticker as mtick
 from helpers.figure_helpers import savefigures
 mpl.rcParams['font.family'] = 'Graphik'
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 plt.rcParams["axes.labelweight"] = "light"
 plt.rcParams["font.weight"] = "light"
 ba_rgb2 = ['#41558c', '#E89818', '#CF202A']
