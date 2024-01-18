@@ -286,8 +286,14 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
     if (typeof Institutions === 'undefined' || Institutions === null) {
         ch_Institutions = false;
     }else{
-        document.getElementById("btn_reset_Institutions").style.visibility = "visible";
+            if (Institutions === "All") {
+                document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
+            }else{
+                document.getElementById("btn_reset_Institutions").style.visibility = "visible";
+            } 
     }
+    
+
 
     let ch_Funder = true;
 
