@@ -57,22 +57,26 @@ def prep_data():
 
 if __name__ == "__main__":
     mpl.use('Agg')
-#    print('Making all Figures: Beginning!')
-#    make_figure_two()
-#    make_figure_three()
-#    df, paper_level = prep_data()
+    new_rc_params = {'text.usetex': False,
+                     "svg.fonttype": 'none'
+                     }
+    mpl.rcParams.update(new_rc_params)
+    print('Making all Figures: Beginning!')
+    make_figure_two()
+    make_figure_three()
+    df, paper_level = prep_data()
     make_table_one(os.path.join('..', '..', 'tables'))
     make_table_two(os.path.join('..', '..', 'tables'))
 
-#    for cluster in range(1, 11):
-#        make_cluster_figure(df, paper_level, int(cluster))
-#        make_descriptives(df, paper_level, int(cluster))
+    for cluster in range(1, 11):
+        make_cluster_figure(df, paper_level, int(cluster))
+        make_descriptives(df, paper_level, int(cluster))
     make_table_four(os.path.join('..', '..', 'tables'))
-#    make_figure_fourteen()
+    make_figure_fourteen()
     make_table_five(os.path.join('..', '..', 'tables'))
-#    make_figure_fifteen()
+    make_figure_fifteen()
     make_table_six(os.path.join('..', '..', 'tables'))
-#    make_figure_sixteen()
-#    make_figure_seventeen()
-#    make_figure_eighteen()
-#    make_figure_nineteen()
+    make_figure_sixteen()
+    make_figure_seventeen()
+    make_figure_eighteen()
+    make_figure_nineteen()
