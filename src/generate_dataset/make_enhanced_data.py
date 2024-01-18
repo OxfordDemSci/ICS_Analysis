@@ -1252,4 +1252,7 @@ if __name__ == "__main__":
     df = get_sentiment_scores(df, edit_path)
 
     if write:
-        df.to_csv(output_path, index=False, compression='zip')
+        df.to_csv(output_path,
+                  index=False,
+                  compression=dict(method='zip',
+                                   archive_name='enhanced_ref_data.csv'))
