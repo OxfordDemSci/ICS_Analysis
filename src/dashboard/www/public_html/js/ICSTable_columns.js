@@ -135,10 +135,16 @@ export function getICSTable_columns() {
         "mData": "countries"
     },
     {
-        "title": "Beneficiary Countries Extracted",
+        "title": "All Beneficiary Countries Extracted",
         "data": "countries_iso3",
         "sTitle": "countries_iso3",
         "mData": "countries_iso3"
+    },
+    {
+        "title": "Specified Beneficiary Countries Extracted",
+        "data": "countries_specific_extracted",
+        "sTitle": "countries_specific_extracted",
+        "mData": "countries_specific_extracted"
     },
     {
         "title": "Beneficiary Region Extracted",
@@ -147,10 +153,22 @@ export function getICSTable_columns() {
         "mData": "region_extracted"
     },
     {
+        "title": "Beneficiary Countries Extracted from Region",
+        "data": "countries_region_extracted",
+        "sTitle": "countries_region_extracted",
+        "mData": "countries_region_extracted"
+    },
+    {
         "title": "Beneficiary Union Extracted",
         "data": "union_extracted",
         "sTitle": "union_extracted",
         "mData": "union_extracted"
+    },
+    {
+        "title": "Beneficiary Countries Extracted from Union",
+        "data": "countries_union_extracted",
+        "sTitle": "countries_union_extracted",
+        "mData": "countries_union_extracted"
     },
     {
         "title": "Formal Partners",
