@@ -1066,24 +1066,25 @@ def load_scientometric_data(df, dim_path):
             mydict[paper] = {}
             for key, value in {'dimensions_id': 'id',
                                'title_preferred': 'preferred',
-                               'doi':'doi',
-                               'issn': 'issn',
-                               'eissn': 'eissn',
-                               'Field of Research': 'category_for',
-                               'Unit of Assessment': 'category_uoa',
+                               #'doi':'doi',
+                               #'issn': 'issn',
+                               #'eissn': 'eissn',
+                               'field_of_research': 'category_for',
+                               'unit of assessment': 'category_uoa',
                                'type': 'type',
+                               'concepts': 'concepts',
                                'date': 'date_normal',
-                               'Times Cited': 'Times Cited',
-                               'Recent Citations':'Recent Citations',
-                               'Field Citation Ratio': 'Field Citation Ratio',
-                               'Relative Citation Ratio': 'Relative Citation Ratio',
-                               'Altmetric': 'Altmetric',
-                               'Abstract': 'abstract',
-                               'Authors': 'authors',
-                               'Funding': 'funder_orgs',
-                               'Open Access': 'open_access_categories_v2',
-                               'Researcher Cities': 'research_org_cities',
-                               'Researcher Countries': 'research_org_countries'
+                               'times_cited': 'Times Cited',
+                               'recent_citations':'Recent Citations',
+                               'field_citation_ratio': 'Field Citation Ratio',
+                               'relative_citation_ratio': 'Relative Citation Ratio',
+                               'altmetric': 'Altmetric',
+                               #'abstract': 'abstract',
+                               #'authors': 'authors',
+                               #'funding': 'funder_orgs',
+                               'open_access': 'open_access_categories_v2',
+                               'researcher_cities': 'research_org_cities',
+                               'researcher_countries': 'research_org_countries'
                                }.items():
                 try:
                     mydict[paper][key] = ics_df.at[index, value]
@@ -1154,8 +1155,8 @@ if __name__ == "__main__":
         print(f"Will write final dataset to provided path: {output_path}")
         write = True
     else:
-        output_path = final_path / 'enhanced_ref_data.csv'
-        if not (final_path / 'enhanced_ref_data.csv').exists():
+        output_path = final_path / 'enhanced_ref_data.zip'
+        if not (final_path / 'enhanced_ref_data.zip').exists():
             ## Standard output file does not exist yet
             print(f"Will write final dataset to default path: {output_path}")
             write = True
@@ -1251,4 +1252,4 @@ if __name__ == "__main__":
     df = get_sentiment_scores(df, edit_path)
 
     if write:
-        df.to_csv(output_path, index=False)
+        df.to_csv(output_path, index=False, compression='zip')
