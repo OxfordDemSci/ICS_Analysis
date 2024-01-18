@@ -2,8 +2,8 @@ var API_URL = "./api/";
 // var API_URL = "http://127.0.0.1:8000/api/";
 
 import * as _api from './api.js?version=2.91'
-import * as _init from './init.js?version=4.93'
-import * as _utils from './utils.js?version=6.93'
+import * as _init from './init.js?version=4.95'
+import * as _utils from './utils.js?version=6.95'
 import * as _UOAChart from './uoa_chart.js?version=6.45'
 import * as _funderChart from './funder_chart.js?version=3.5'
 import * as _GlobalImactMap from './global_impact_map.js?version=3.9'
@@ -175,7 +175,7 @@ mapGlobal.getPane('labels').style.pointerEvents = 'none';
 var cartocdn = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',{ 
     pane: 'labels'
 });
-
+mapGlobal.addLayer(cartocdn);
 
 var infoboxMapGlobal = L.control({ position: 'topleft' });
 
@@ -518,6 +518,8 @@ function resetSelectionUKmap() {
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
         total_rows_pagination_meta = result.table_pagination_meta.total_rows;
         _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+        // hide a reset botton
+        document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
     }).then(() => {
         _utils.progressMenuOff();
     }).catch(error => {
@@ -930,6 +932,11 @@ $("#Options_of_Impact_Beneficiariest").change(function (e) {
         mapGlobal.addLayer(layerGlobal);
         mapGlobal.addControl(legendMapGlobal);
         slc_beneficiary=null;
+        document.getElementById("btn_reset_Beneficiaries").style.visibility = "hidden";
+        if ($("#chCountryLabels").is(":checked") && !mapGlobal.hasLayer(cartocdn)) {
+            mapGlobal.addLayer(cartocdn);
+        }
+        
     }
 
     mapUK.setView(mapUK.options.center, mapUK.options.zoom);
@@ -979,6 +986,7 @@ UOAChart.on('click', function(params) {
 
     if (params.name === slc_uoa_name) {
         slc_uoa_name = null;
+        document.getElementById("btn_reset_UOA").style.visibility = "hidden";
     }else{
         slc_uoa_name = params.name;
     }
@@ -1029,6 +1037,8 @@ $("#Options_of_Country_Names").change(function (e) {
     slc_postcode_area = CountryToPC[selected_country_name];
     slc_postcode_area_name = selected_country_name;
     
+
+    
     _UKMap.reseAllFeatureUKMap(layerUK);
 
     _utils.progressMenuOn();
@@ -1057,6 +1067,10 @@ $("#Options_of_Country_Names").change(function (e) {
         } 
         total_rows_pagination_meta=result.table_pagination_meta.total_rows;
         _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+        
+        if (slc_postcode_area_name === "All") {
+           document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
+        }        
     }).then(() => {
         _utils.progressMenuOff();
     }).catch(error => {
