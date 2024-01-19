@@ -1,3 +1,4 @@
+import json
 import logging
 import socket
 from pathlib import Path
@@ -12,6 +13,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app.config import app_config
 
+BASE = Path(__file__).resolve().parent
 BASE_GEODATA = Path(__file__).resolve().parent.joinpath("data")
 postcode_gdf = gpd.read_file(
     BASE_GEODATA.joinpath("geodata.gpkg"), layer="postcode_areas"
@@ -42,6 +44,15 @@ limiter = Limiter(
     default_limits_exempt_when=is_exempt,
 )
 
+try:
+    assert BASE.joinpath("topic_map.json").exists()
+except AssertionError:
+    raise FileNotFoundError(
+        "No topic_map found. You need to run ../scripts/reformat_csvs_for_db.py"
+    )
+with open(BASE.joinpath("topic_map.json"), "r") as f:
+    TOPICS_BOOL_MAP = json.load(f)
+
 
 def create_app(config_name: str) -> Flask:
     connexion_app = connexion.FlaskApp(__name__, specification_dir="./")
@@ -53,9 +64,7 @@ def create_app(config_name: str) -> Flask:
     logging.basicConfig(level=logging.INFO)
     app.logger.addHandler(logging.StreamHandler())  # Log to the terminal
     app.logger.setLevel(logging.INFO)
-    if config_name == "local_development" or config_name == "testing":
-        limiter._storage_uri = "memcached://localhost:11211"
-    else:
+    if config_name not in ["local_development", "testing"]:
         limiter._storage_uri = "memcached://ics_memcached:11211"
-    limiter.init_app(app)
+        limiter.init_app(app)
     return app

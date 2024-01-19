@@ -27,7 +27,10 @@ export function get_ics_data(api_url,
                              postcode_area,
                              beneficiary,
                              uoa,
-                             funder) {
+                             uoa_name,
+                             funder,
+                             table_page,
+                             items_per_page) {
 
     if (api_url.substr(-1) !== '/')
         api_url += '/';
@@ -42,8 +45,12 @@ export function get_ics_data(api_url,
         postcode_area: postcode_area,
         beneficiary: beneficiary,
         uoa: (uoa === "All") ? null : uoa,
-        funder: funder
+        uoa_name: uoa_name,
+        funder: funder,
+        table_page: table_page,
+        items_per_page:items_per_page        
     };
+    
     $.each(data, function(key, value){
         if (value === "" || value === null){
             delete data[key];
@@ -56,6 +63,7 @@ export function get_ics_data(api_url,
             url: api_url + "get_ics_data",
             type: 'get',
             data: data,
+            traditional: true,
             beforeSend: function (jqXHR, settings) {
                 let url = settings.url + "?" + settings.data;
                 //console.log(url);
@@ -69,7 +77,6 @@ export function get_ics_data(api_url,
         });
     });
 }
-
 
 export function getInitData2(api_url) {
 

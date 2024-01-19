@@ -3,7 +3,7 @@ export function getICSTable_columns() {
 
  var columns=[
     {
-        "title": "title",
+        "title": "Title",
         "data": "title",
         "sTitle": "title",
         "mData": "title"
@@ -15,186 +15,210 @@ export function getICSTable_columns() {
         "mData": "ics_url"
     },    
     {
-        "title": "institution_name",
-        "data": "institution_name",
-        "sTitle": "institution_name",
-        "mData": "institution_name"
+        "title": "Cluster",
+        "data": "cluster_name_short",
+        "sTitle": "cluster_name_short",
+        "mData": "cluster_name_short"
     },
     {
-        "title": "inst_postcode",
-        "data": "inst_postcode",
-        "sTitle": "inst_postcode",
-        "mData": "inst_postcode"
+        "title": "Topic",
+        "data": "topic_name_short",
+        "sTitle": "topic_name_short",
+        "mData": "topic_name_short"
     },
     {
-        "title": "unit_of_assessment_name",
-        "data": "unit_of_assessment_name",
-        "sTitle": "unit_of_assessment_name",
-        "mData": "unit_of_assessment_name"
+        "title": "Cluster Full Name",
+        "data": "cluster_name",
+        "sTitle": "cluster_name",
+        "mData": "cluster_name"
     },
     {
-        "title": "summary_impact_type",
+        "title": "Topic Full Name",
+        "data": "topic_name",
+        "sTitle": "topic_name",
+        "mData": "topic_name"
+    },
+    {
+        "title": "Summary Impact Type",
         "data": "summary_impact_type",
         "sTitle": "summary_impact_type",
         "mData": "summary_impact_type"
     },
     {
-        "title": "countries_iso3",
-        "data": "countries_iso3",
-        "sTitle": "countries_iso3",
-        "mData": "countries_iso3"
-    },
-    {
-        "title": "main_panel",
+        "title": "Main Panel",
         "data": "main_panel",
         "sTitle": "main_panel",
         "mData": "main_panel"
     },
     {
-        "title": "unit_of_assessment_number",
-        "data": "unit_of_assessment_number",
-        "sTitle": "unit_of_assessment_number",
-        "mData": "unit_of_assessment_number"
-    },
-    {
-        "title": "multiple_submission_letter",
-        "data": "multiple_submission_letter",
-        "sTitle": "multiple_submission_letter",
-        "mData": "multiple_submission_letter"
-    },
-    {
-        "title": "multiple_submission_name",
-        "data": "multiple_submission_name",
-        "sTitle": "multiple_submission_name",
-        "mData": "multiple_submission_name"
-    },
-    {
-        "title": "id",
-        "data": "id",
-        "sTitle": "id",
-        "mData": "id"
-    },
-    {
-        "title": "ukprn",
-        "data": "ukprn",
-        "sTitle": "ukprn",
-        "mData": "ukprn"
-    },
-    {
-        "title": "joint_submission",
-        "data": "joint_submission",
-        "sTitle": "joint_submission",
-        "mData": "joint_submission"
-    },
-    {
-        "title": "ics_id",
-        "data": "ics_id",
-        "sTitle": "ics_id",
-        "mData": "ics_id"
-    },
-    {
-        "title": "is_continued_from_2014",
-        "data": "is_continued_from_2014",
-        "sTitle": "is_continued_from_2014",
-        "mData": "is_continued_from_2014"
-    },
-    {
-        "title": "countries",
-        "data": "countries",
-        "sTitle": "countries",
-        "mData": "countries"
-    },
-    {
-        "title": "formal_partners",
-        "data": "formal_partners",
-        "sTitle": "formal_partners",
-        "mData": "formal_partners"
-    },
-    {
-        "title": "funding_programmes",
-        "data": "funding_programmes",
-        "sTitle": "funding_programmes",
-        "mData": "funding_programmes"
-    },
-    {
-        "title": "global_research_identifiers",
-        "data": "global_research_identifiers",
-        "sTitle": "global_research_identifiers",
-        "mData": "global_research_identifiers"
-    },
-    {
-        "title": "name_of_funders",
-        "data": "name_of_funders",
-        "sTitle": "name_of_funders",
-        "mData": "name_of_funders"
-    },
-    {
-        "title": "researcher_orcids",
-        "data": "researcher_orcids",
-        "sTitle": "researcher_orcids",
-        "mData": "researcher_orcids"
-    },
-    {
-        "title": "grant_funding",
-        "data": "grant_funding",
-        "sTitle": "grant_funding",
-        "mData": "grant_funding"
-    },
-    {
-        "title": "summary_of_the_impact",
-        "data": "summary_of_the_impact",
-        "sTitle": "summary_of_the_impact",
-        "mData": "summary_of_the_impact"
-    },
-    {
-        "title": "underpinning_research",
-        "data": "underpinning_research",
-        "sTitle": "underpinning_research",
-        "mData": "underpinning_research"
-    },
-    {
-        "title": "references_to_the_research",
-        "data": "references_to_the_research",
-        "sTitle": "references_to_the_research",
-        "mData": "references_to_the_research"
-    },
-    {
-        "title": "details_of_the_impact",
-        "data": "details_of_the_impact",
-        "sTitle": "details_of_the_impact",
-        "mData": "details_of_the_impact"
-    },
-    {
-        "title": "sources_to_corroborate_the_impact",
-        "data": "sources_to_corroborate_the_impact",
-        "sTitle": "sources_to_corroborate_the_impact",
-        "mData": "sources_to_corroborate_the_impact"
-    },
-    {
-        "title": "covid_statement",
-        "data": "covid_statement",
-        "sTitle": "covid_statement",
-        "mData": "covid_statement"
-    },
-    {
-        "title": "uoa",
+        "title": "Unit of Assessment",
         "data": "uoa",
         "sTitle": "uoa",
         "mData": "uoa"
     },
     {
-        "title": "inst_postcode_district",
-        "data": "inst_postcode_district",
-        "sTitle": "inst_postcode_district",
-        "mData": "inst_postcode_district"
+        "title": "UoA Name",
+        "data": "unit_of_assessment_name",
+        "sTitle": "unit_of_assessment_name",
+        "mData": "unit_of_assessment_name"
     },
     {
-        "title": "postcode",
-        "data": "postcode",
-        "sTitle": "postcode",
-        "mData": "postcode"
+        "title": "Institution Name",
+        "data": "institution_name",
+        "sTitle": "institution_name",
+        "mData": "institution_name"
+    },
+    {
+        "title": "Institution Postcode",
+        "data": "post_code",
+        "sTitle": "post_code",
+        "mData": "post_code"
+    },
+    {
+        "title": "Inst-UoA Avg Score Impact Case Studies",
+        "data": "ics_gpa",
+            "sTitle": "ics_gpa",
+        "mData": "ics_gpa"
+    },
+    {
+        "title": "Inst-UoA Avg Score Environmental Impact",
+        "data": "environment_gpa",
+        "sTitle": "environment_gpa",
+        "mData": "environment_gpa"
+    },
+    {
+        "title": "Inst-UoA Avg Score Underpinning Research",
+        "data": "output_gpa",
+        "sTitle": "output_gpa",
+        "mData": "output_gpa"
+    },
+    {
+        "title": "Inst-UoA Avg Score Overall",
+        "data": "overall_gpa",
+        "sTitle": "overall_gpa",
+        "mData": "overall_gpa"
+    },
+    {
+        "title": "Inst-UoA Full Time Employees",
+        "data": "fte",
+        "sTitle": "fte",
+        "mData": "fte"
+    },
+    {
+        "title": "Inst-UoA PhDs Awarded",
+        "data": "num_doc_degrees_total",
+        "sTitle": "num_doc_degrees_total",
+        "mData": "num_doc_degrees_total"
+    },
+    {
+        "title": "Inst-UoA Avg Income",
+        "data": "av_income",
+        "sTitle": "av_income",
+        "mData": "av_income"
+    },
+    {
+        "title": "Inst-UoA Total In-kind Income",
+        "data": "tot_inc_kind",
+        "sTitle": "tot_inc_kind",
+        "mData": "tot_inc_kind"
+    },
+    {
+        "title": "Inst-UoA Total Income",
+        "data": "tot_income",
+        "sTitle": "tot_income",
+        "mData": "tot_income"
+    },
+    {
+        "title": "Beneficiary Countries",
+        "data": "countries",
+        "sTitle": "countries",
+        "mData": "countries"
+    },
+    {
+        "title": "All Beneficiary Countries Extracted",
+        "data": "countries_iso3",
+        "sTitle": "countries_iso3",
+        "mData": "countries_iso3"
+    },
+    {
+        "title": "Specified Beneficiary Countries Extracted",
+        "data": "countries_specific_extracted",
+        "sTitle": "countries_specific_extracted",
+        "mData": "countries_specific_extracted"
+    },
+    {
+        "title": "Beneficiary Region Extracted",
+        "data": "region_extracted",
+        "sTitle": "region_extracted",
+        "mData": "region_extracted"
+    },
+    {
+        "title": "Beneficiary Countries Extracted from Region",
+        "data": "countries_region_extracted",
+        "sTitle": "countries_region_extracted",
+        "mData": "countries_region_extracted"
+    },
+    {
+        "title": "Beneficiary Union Extracted",
+        "data": "union_extracted",
+        "sTitle": "union_extracted",
+        "mData": "union_extracted"
+    },
+    {
+        "title": "Beneficiary Countries Extracted from Union",
+        "data": "countries_union_extracted",
+        "sTitle": "countries_union_extracted",
+        "mData": "countries_union_extracted"
+    },
+    {
+        "title": "Formal Partners",
+        "data": "formal_partners",
+        "sTitle": "formal_partners",
+        "mData": "formal_partners"
+    },
+    {
+        "title": "Funding Programmes",
+        "data": "funding_programmes",
+        "sTitle": "funding_programmes",
+        "mData": "funding_programmes"
+    },
+    {
+        "title": "Name of Funders",
+        "data": "name_of_funders",
+        "sTitle": "name_of_funders",
+        "mData": "name_of_funders"
+    },
+    {
+        "title": "Funders Extracted",
+        "data": "funders_extracted",
+        "sTitle": "funders_extracted",
+        "mData": "funders_extracted"
+    },
+    {
+        "title": "Grant Funding",
+        "data": "grant_funding",
+        "sTitle": "grant_funding",
+        "mData": "grant_funding"
+    },
+    {
+        "title": "Global Research Identifiers",
+        "data": "global_research_identifiers",
+        "sTitle": "global_research_identifiers",
+        "mData": "global_research_identifiers"
+    },
+    {
+        "title": "Researcher ORCIDs",
+        "data": "researcher_orcids",
+        "sTitle": "researcher_orcids",
+        "mData": "researcher_orcids"
+    },
+    {
+        "title": "ICS ID",
+        "data": "ics_id",
+        "sTitle": "ics_id",
+        "mData": "ics_id"
     }
-];    
+];
 
     return columns;
 

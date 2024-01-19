@@ -13,6 +13,10 @@ warnings.filterwarnings('ignore')
 mpl.rcParams['font.family'] = 'Graphik-Light'
 plt.rcParams["axes.labelweight"] = "light"
 plt.rcParams["font.weight"] = "light"
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 
 
 def make_figure_sixteen():

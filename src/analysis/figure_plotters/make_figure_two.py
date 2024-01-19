@@ -9,7 +9,10 @@ from matplotlib.colors import LogNorm
 
 mpl.rcParams['font.family'] = 'Graphik'
 plt.rcParams["font.family"] = 'Graphik'
-
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 
 def draw_brace(ax, span, position, text, text_pos,
                brace_scale=1.0, beta_scale=300., rotate=False, rotate_text=False):
@@ -160,92 +163,94 @@ def make_figure_two():
     make_brace(xmin, xmax, ax1, 'Panel D', 20)
     min_top, max_top = 0, 9
 
+    x_indenter = 0.45
+    starter = 24.3
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.5, min_top + ((max_top - min_top) / 2)],
+               [starter, min_top + ((max_top - min_top) / 2)],
                '1. Arts',
-               [24.65, min_top + ((max_top - min_top) / 2) + .45],
+               [24.65, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 9, 21
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   2. Heritage',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '2. Heritage',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 21, 26
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   3. Education',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '3. Education',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 26, 30
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   4. Business',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '4. Business',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 30, 33
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   5. Employment',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '5. Employment',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 33, 37
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   6. Crime',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '6. Crime',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 37, 44
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   7. Family',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '7. Family',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 44, 59
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   8. Governance',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '8. Governance',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 59, 73
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   9. Health',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '9. Health',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
     min_top, max_top = 73, 84
     draw_brace(ax1,
                max_top - min_top - 1.35,
-               [24.65, min_top + ((max_top - min_top) / 2)],
-               '   10. Environment',
-               [24.5, min_top + ((max_top - min_top) / 2) + .45],
+               [starter, min_top + ((max_top - min_top) / 2)],
+               '10. Environment',
+               [24.5, min_top + ((max_top - min_top) / 2) + x_indenter],
                rotate=True,
                rotate_text=False)
 
@@ -258,6 +263,9 @@ def make_figure_two():
 
     filename = 'figure_2'
     plt.savefig(os.path.join(figure_path, filename + '.svg'), bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path, filename + '.pdf'), bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path, filename + '.png'), bbox_inches='tight',
+                dpi=800, transparent=True, facecolor='white')
     zero_counts = df.eq(0).sum(axis=1)
     print("UoAs which span the least amount of topics?")
     print(zero_counts.nlargest(5).index)

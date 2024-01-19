@@ -35,12 +35,15 @@ def test_download_csv(session, app):
 
 def test_ics_data(session, app):
     with app.test_client() as client:
-        response = client.get("/api/get_ics_data?threshold=0.5")
+        response = client.get("/api/get_ics_data?threshold=1")
         data = json.loads(response.data)
         assert response.status_code == 200
+        assert "uoa_counts" in data.keys()
         assert sorted(data.keys()) == sorted(
             [
+                "topics_available",
                 "countries_counts",
+                "uk_region_counts",
                 "funders_counts",
                 "uoa_counts",
                 "institution_counts",
@@ -59,7 +62,7 @@ def test_ics_data(session, app):
         ("/api/get_ics_data?threshold=2", 400),
         ("/api/get_ics_data?theshold=big", 400),
         ("/api/get_ics_data?threshold=0.5&topic=Not_a_topic", 400),
-        ("/api/get_ics_data?threshold=1&topic=Cultural%20Capital", 204),
+        ("/api/get_ics_data?threshold=1&topic=Cultural%20Capital", 200),
         ("/api/not_an_endpoint", 404),
     ],
 )

@@ -23,9 +23,31 @@
 }
 #label_Assessment_question:hover {
     color: black;
-    background-color: white;
 }
 
+#label_Funders_question{
+    cursor: pointer;
+    color: gray;
+}
+#label_Funders_question:hover {
+    color: black;
+}
+
+#label_Institutions_question{
+    cursor: pointer;
+    color: gray;
+}
+#label_Institutions_question:hover {
+    color: black;
+}
+
+#label_Beneficiaries_question{
+    cursor: pointer;
+    color: gray;
+}
+#label_Beneficiaries_question:hover {
+    color: black;
+}
 
 .text-overflow{
     overflow: hidden;
@@ -179,10 +201,17 @@
     border-color: #2c3e50;
 }
 
+.list-group-item.disabled {
+    z-index: 2;
+    color: #6c757d;
+    background-color: #002147;
+    border: 1px solid #0b2543;
+}
+
 .list-group-item {
     position: relative;
     display: block;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 1rem;
     color: #fff;
     text-decoration: none;
     background-color: #002147;

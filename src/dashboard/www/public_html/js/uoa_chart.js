@@ -176,7 +176,7 @@ export function updateUOAChart_all_Assessment(data, n = 20) {
         .map((item) => item.name)
         .filter((value, index, self) => self.indexOf(value) === index);
 
-    _utils.updateAssessmentSelection(category_assessment);
+    _utils.updateAssessmentSelection(data, n);
 
     var my_json = JSON.stringify(data);
 
@@ -376,6 +376,8 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
                     type: 'pie',
                     radius: ['40%', '70%'],
                     center: ['50%', '50%'],
+                    selectedMode: 'single',
+                    selectedOffset: 30,
                     itemStyle: {
                         borderRadius: 10,
                         borderColor: '#fff',
@@ -401,15 +403,16 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
     new ResizeObserver(() => echart_bottom_left.resize()).observe(chartDom_bottom_left);
 }
 
-
 export function updateUOAChart(data) {
 
     let ActiveAssessment = _utils.getActiveAssessment();
-
+ 
     if (ActiveAssessment !== "All") {
         updateUOAChart_selected_Assessment(data, slc_numberUoALimit);
     } else {
+        _utils.updateAssessmentSelection(data, slc_numberUoALimit);
         updateUOAChart_all_Assessment(data, slc_numberUoALimit);
+        document.querySelector('#Options_of_Assessment > option[value="All"]').selected=true;
     }
 
 }

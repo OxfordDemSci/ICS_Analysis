@@ -16,6 +16,18 @@ export function setTopicsMenu(d) {
         }       
         
         let t = d.topics;
+        
+        t.sort( function( a, b ) {
+            return a.topic_name < b.topic_name ? -1 : a.topic_name > b.topic_name ? 1 : 0;
+        });
+        
+        t.forEach(function(item,i){
+            if(item.topic_name === "All Topics"){
+                t.splice(i, 1);
+                t.unshift(item);
+            }
+        });
+  
         const list = document.getElementById('idTopics');
         list.innerHTML = "";
         for (var i = 0; i < t.length; i++) {
@@ -25,7 +37,7 @@ export function setTopicsMenu(d) {
                         '<li class="list-group-item active" data-alias="' + t[i]['topic_name'] + '" >' + t[i]['topic_name'] + '</li>';
             } else {
                 list.innerHTML = list.innerHTML +
-                        '<li class="list-group-item" data-alias="' + t[i]['topic_name'] + '">' + t[i]['topic_name'] + '</li>';
+                        '<li class="list-group-item"  data-alias="' + t[i]['topic_name'] + '">' + t[i]['topic_name'] + '</li>';
             }
         }
         resolve(true);
@@ -75,3 +87,27 @@ export function setTopicsMenu2(t) {
 }
 
 
+export function setUK_Country_names_menu(b) {
+
+    const ordered = Object.keys(b).sort().reduce(
+            (obj, key) => {
+        obj[key] = b[key];
+        return obj;
+        },
+            {}
+    );
+    
+    let d=ordered;
+    
+    const m = document.getElementById('Options_of_Country_Names');
+    m.innerHTML = "";
+    m.innerHTML = m.innerHTML +
+            '<option value="All">All</option>';
+    for (var key in d) {
+
+        m.innerHTML = m.innerHTML +
+                '<option value="' + key + '" >' + key + '</option>';
+
+    }
+
+}

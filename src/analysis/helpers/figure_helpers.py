@@ -21,10 +21,10 @@ d = gender.Detector()
 
 
 def savefigures(plt, filepath, filename):
-#    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
+    plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
     plt.savefig(os.path.join(filepath, filename + '.svg'), bbox_inches='tight')
-#    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
-#                dpi=1200, transparent=True, facecolor='white')
+    plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
+                dpi=800, transparent=True, facecolor='white')
 
 
 def plot_impact_type_combined(df, figure_path):

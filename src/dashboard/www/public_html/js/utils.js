@@ -1,5 +1,11 @@
 import * as _country_code_lookup from './country_code_lookup.js?version=1.0'
 
+export function updateTotalImpactCaseStudies(t) {
+
+ document.getElementById('label_total_impact_case_studies').innerHTML = t;
+ 
+}
+
 export function removeSelectedLayer(_map, fname) {
 
     if (_map) {
@@ -21,8 +27,20 @@ export function downloadURI(api_uri,
                             postcode_area,
                             beneficiary,
                             uoa,
+                            uoa_name,
                             funder) {
-    let uri = api_uri + "download_csv?threshold=" + threshold + "&topic=" + topic + "&postcode_area=" + postcode_area + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&funder=" + funder;
+                                
+    let uri = api_uri + "download_csv?threshold=" + threshold + "&topic=" + topic + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&uoa_name=" + uoa_name+ "&funder=" + funder;
+    if (postcode_area !== null) {
+        if (Array.isArray(postcode_area)){
+             for (var i = 0; i < postcode_area.length; i++) {
+                 uri = uri + "&postcode_area=" + postcode_area[i];
+             }
+        }else{
+            uri = uri + "&postcode_area=" + postcode_area;
+        }
+    }
+
     var link = document.createElement("a");
     link.setAttribute('download', name);
     link.href = uri;
@@ -38,8 +56,20 @@ export function GenerateReport(api_uri,
                                postcode_area,
                                beneficiary,
                                uoa,
+                               uoa_name,
                                funder) {
-    let uri = api_uri + "download_pdf?threshold=" + threshold + "&topic=" + topic + "&postcode_area=" + postcode_area + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&funder=" + funder;
+    let uri = api_uri + "download_pdf?threshold=" + threshold + "&topic=" + topic + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&uoa_name=" + uoa_name+ "&funder=" + funder;
+
+    if (postcode_area !== null) {
+        if (Array.isArray(postcode_area)){
+             for (var i = 0; i < postcode_area.length; i++) {
+                 uri = uri + "&postcode_area=" + postcode_area[i];
+             }
+        }else{
+            uri = uri + "&postcode_area=" + postcode_area;
+        }
+    }    
+    
     var link = document.createElement("a");
     link.setAttribute('download', name);
     link.href = uri;
@@ -172,10 +202,10 @@ export function LoadCurrentICSTable(oResults, _columns_ntitles, _max_txt_lenght)
                     }
 
                 },
+                "defaultContent": "",
                 targets: "_all"
             },
             {"width": "200px", targets: [0, 1, 2, 3, 26]}],
-
         "data": oResults,
         "columns": columns_ntitles
     });
@@ -239,41 +269,62 @@ export function setHightBoxs() {
 
 }
 
-export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Funder) {
+export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Funder, UAO_name) {
 
     let ActiveAssessment = getActiveAssessment();
 
     let ch_ActiveAssessment = true;
 
-    if (ActiveAssessment === "All") {
+    if (ActiveAssessment === "SHAPE") {
         ch_ActiveAssessment = false;
+    }else{
+        document.getElementById("btn_reset_UOA").style.visibility = "visible";
     }
 
     let ch_Institutions = true;
 
     if (typeof Institutions === 'undefined' || Institutions === null) {
         ch_Institutions = false;
+    }else{
+            if (Institutions === "All") {
+                document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
+            }else{
+                document.getElementById("btn_reset_Institutions").style.visibility = "visible";
+            } 
     }
+    
+
 
     let ch_Funder = true;
 
     if (typeof Funder === 'undefined' || Funder === null) {
         ch_Funder = false;
+    }else{
+        document.getElementById("btn_reset_Funders").style.visibility = "visible";
     }
 
     let ch_Beneficiaries = true;
 
     if (typeof Beneficiaries === 'undefined' || Beneficiaries === null) {
         ch_Beneficiaries = false;
+    }else{
+        document.getElementById("btn_reset_Beneficiaries").style.visibility = "visible";
     }
 
+    let ch_UAO_name = true;
+
+    if (typeof UAO_name === 'undefined' || UAO_name === null) {
+        ch_UAO_name = false;
+    }else{
+        document.getElementById("btn_reset_UOA").style.visibility = "visible";
+    }
 
     var eUOA = document.getElementById("Options_of_Assessment");
     var valueUOA = eUOA.options[eUOA.selectedIndex].value;
 
 
 // 
-    if (ch_Institutions || ch_Beneficiaries || ch_Funder || ch_ActiveAssessment) {
+    if (ch_Institutions || ch_Beneficiaries || ch_Funder || ch_ActiveAssessment || ch_UAO_name) {
         document.getElementById("reload_selected_options").style.visibility = "visible";
     }
 
@@ -289,9 +340,9 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
     }
 
     if (ch_Institutions) {
-        document.getElementById('label_selected_Institutions').innerHTML = Institutions;
+        document.getElementById('label_selected_Institutions').innerHTML = (Institutions != null && Institutions.length > 8) ? Institutions.substr(0, 8) + " ..." : Institutions == null ? "" : Institutions
         let link_popover_Institutions = document.getElementById('popover_Institutions');
-        document.getElementById('label_selected_Institutions').style.textDecoration = "underline";
+        document.getElementById('label_selected_Institutions').style.textDecoration = "none";
         document.getElementById('label_selected_Institutions').style.cursor = "pointer";
         const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Institutions);
         tooltipInstance.setContent({'.tooltip-inner': Institutions});
@@ -304,14 +355,40 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
         tooltipInstance.setContent({'.tooltip-inner': 'All'});
     }
 
-    if (ch_Beneficiaries) {
-        let Beneficiaries_name = _country_code_lookup.searchCountryNamebyISO3("iso3", Beneficiaries);
-        document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name.country.length > 7) ? Beneficiaries_name.country.substr(0, 10)+" ..." : Beneficiaries_name.country;
-        const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
-        tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name.country});
+    let Impact_Beneficiariest_selected = $('#Options_of_Impact_Beneficiariest').children("option:selected").val();
+        
+    if (Impact_Beneficiariest_selected === "UK") {
+            document.getElementById('label_selected_Beneficiaries').innerHTML = "UK";
+            const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
+            tooltipInstance.setContent({'.tooltip-inner': "UK"});
     } else {
-        document.getElementById('label_selected_Beneficiaries').innerHTML = 'Global';
+        
+        if (ch_Beneficiaries) {
+            let Beneficiaries_name = _country_code_lookup.searchCountryNamebyISO3("iso3", Beneficiaries);
+            let Beneficiaries_name_text = 'undefined';
+            if( typeof Beneficiaries_name === 'undefined' || Beneficiaries_name === null ){
+                Beneficiaries_name_text = 'undefined';
+            }else{
+                Beneficiaries_name_text = Beneficiaries_name.country;
+            }
+            
+            //document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name.country.length > 7) ? Beneficiaries_name.country.substr(0, 10)+" ..." : Beneficiaries_name.country;
+            //const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
+            //tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name.country});  
+            
+            document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name_text.length > 7) ? Beneficiaries_name_text.substr(0, 10)+" ..." : Beneficiaries_name_text;
+            const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
+            tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name_text});     
+            
+        } else {
+            document.getElementById('label_selected_Beneficiaries').innerHTML = 'Global';
+        }  
+        
     }
+
+
+
+
 
     document.getElementById('label_selected_Assessment').innerHTML = valueUOA;
 
@@ -319,6 +396,16 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
     document.getElementById('label_selected_Topics').innerHTML = (active_topic.length > 13) ? active_topic.substr(0, 16) + " ..." : active_topic;
     const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Topics);
     tooltipInstance.setContent({'.tooltip-inner': active_topic});
+    
+    
+    if (UAO_name === null) {
+        document.getElementById('label_selected_UOA').innerHTML = "All";
+    }else{
+        document.getElementById('label_selected_UOA').innerHTML = (UAO_name.length > 16) ? UAO_name.substr(0, 16) + " ..." : UAO_name;
+
+        const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_UOA);
+        tooltipInstance.setContent({'.tooltip-inner': UAO_name});
+    }
 
 }
 
@@ -440,7 +527,8 @@ export function updateInfoBox(d) {
 
         } else {
 
-            let description_final = "<h6>" + active_topic + "</h6><p>" + found.description + "</p><p>Keywords: " + found.keywords + "</p>"
+            // let description_final = "<h6>" + active_topic + "</h6><p>" + found.description + "</p><p>Keywords: " + found.keywords + "</p>"
+            let description_final = "<h6>" + active_topic + "</h6><p>" + found.description + "</p>"
             $("#info_box_topic_description").html(description_final);
             $("#info_box_topic_example").html(found.narrative);
             $("#info_box_topic_keywords").html(found.keywords);
@@ -537,16 +625,43 @@ export function progressMenuOff() {
 }
 
 
-export function updateAssessmentSelection(d) {
+export function updateAssessmentSelection(data, n = 20) {
+    
+    var values_category_assessment = [];
+    var nmax = data.length;
+    let nuse;
+
+    if (nmax < n) {
+        nuse = nmax;
+    } else {
+        nuse = n;
+    }    
+    
+    for (var i = 0; i < nuse; i++) {
+
+        values_category_assessment.push(
+            {
+                name: data[i]['name'],
+                assessment_panel: data[i]['assessment_panel'],
+                uoa_count: data[i]['uoa_count']
+            }
+        );
+
+    }    
+
+    const d = values_category_assessment
+        .map((item) => item.assessment_panel)
+        .filter((value, index, self) => self.indexOf(value) === index);
 
     const Assessment_labels_lookup = [
-        {name: "All", label: "SHAPE by Panel"},
+        {name: "SHAPE", label: "SHAPE by UoA"},
         {name: "A", label: "Panel A: Medicine, Health, and Life Sciences"},
         {name: "B", label: "Panel B: Physical Sciences, Engineering, and Mathematics"},
         {name: "C", label: "Panel C: Social Sciences"},
         {name: "D", label: "Panel D: Arts and Humanities"},
         {name: "STEM", label: "All STEM Disciplines"},
-        {name: "SHAPE", label: "SHAPE by UoA"}
+        {name: "All", label: "SHAPE by Panel"}
+        
     ];
 
     const list = document.getElementById('Options_of_Assessment');
@@ -554,12 +669,10 @@ export function updateAssessmentSelection(d) {
     list.innerHTML = "";
 
     d.sort();
-
+    
     list.innerHTML = list.innerHTML +
-        '<option value="All">' + Assessment_labels_lookup.find(({name}) => name === "All").label + '</option>';
+        '<option value="SHAPE">' + Assessment_labels_lookup.find(({name}) => name === "SHAPE").label + '</option>';    
 
-    list.innerHTML = list.innerHTML +
-        '<option value="SHAPE">' + Assessment_labels_lookup.find(({name}) => name === "SHAPE").label + '</option>';
 
     // if (d.includes("C") && d.includes("D")){
     //     list.innerHTML = list.innerHTML +
@@ -574,6 +687,10 @@ export function updateAssessmentSelection(d) {
             '<option value="' + d[i] + '">' + Assessment_labels_lookup.find(({name}) => name === d[i]).label + '</option>';
 
     }
+    
+        list.innerHTML = list.innerHTML +
+        '<option value="All">' + Assessment_labels_lookup.find(({name}) => name === "All").label + '</option>';
+
 
     // if (d.includes("A") && d.includes("B")){
     //     list.innerHTML = list.innerHTML +
@@ -634,4 +751,81 @@ export function updateTopicsMenu(d, t) {
 
         resolve(true);
     });
+}
+
+
+  
+export function updateTopicsMenuAvailable(d, b) {
+    
+        var active_topic = document.querySelector("#idTopics li.active").getAttribute("data-alias");
+        if (active_topic !== "All Topics") return(true);
+        
+        let topics_available=true;
+        let g = d.topic_groups;
+        const groups = document.getElementById('idGroups');
+
+        groups.innerHTML = "";
+        groups.innerHTML = groups.innerHTML +
+                '<option value="0">All Clusters</option>';
+        for (var i = 0; i < g.length; i++) {
+
+            groups.innerHTML = groups.innerHTML +
+                    '<option value="' + g[i]['group_id'] + '" >' + g[i]['topic_group'] + '</option>';
+
+        }
+
+        let t = d.topics;
+
+        t.sort(function (a, b) {
+            return a.topic_name < b.topic_name ? -1 : a.topic_name > b.topic_name ? 1 : 0;
+        });
+
+        t.forEach(function (item, i) {
+            if (item.topic_name === "All Topics") {
+                t.splice(i, 1);
+                t.unshift(item);
+            }
+        });
+
+        const list = document.getElementById('idTopics');
+        list.innerHTML = "";
+        for (var i = 0; i < t.length; i++) {
+
+            let topic_name = t[i]['topic_name'];
+            
+            // searching for the topic in array "b" to check if 
+            // topic available or not 
+            if (typeof b[topic_name] === 'undefined'){
+                topics_available=true;
+            }else{
+                topics_available=b[topic_name];
+            }
+
+            
+
+            if (i === 0) {
+                list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item active" data-alias="' + t[i]['topic_name'] + '" >' + t[i]['topic_name'] + '</li>';
+            } else {
+                
+                if (topics_available){
+                    list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item"  data-alias="' + t[i]['topic_name'] + '">' + t[i]['topic_name'] + '</li>';
+                }else{
+                    list.innerHTML = list.innerHTML +
+                        '<li class="list-group-item disabled"  data-alias="' + t[i]['topic_name'] + '">' + t[i]['topic_name'] + '</li>';
+                }
+                
+                
+            }
+        }
+
+}
+
+
+export function hide_all_individual_rest_filter_btn() {
+    document.getElementById("btn_reset_Funders").style.visibility = "hidden";
+    document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
+    document.getElementById("btn_reset_Beneficiaries").style.visibility = "hidden";
+    document.getElementById("btn_reset_UOA").style.visibility = "hidden";
 }
