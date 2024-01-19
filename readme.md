@@ -14,6 +14,8 @@ A repository to analyse the Impact Case Studies submitted to the Research Excell
 
 **Researchers/Research Assistants:** Simon Cooper, Ekaterina Degtiareva, Giordano Epifani, Yifan Liu, Brenda Mccollum, Alice Spiers and Reja Wyss.
 
+**Web Development:** [GISRede](https://www.gisrede.com/) (Makysm Bondarenko, David Kerr) 
+
 **Research Support:** Hamza Shams, Bradley Smith, Michelle Thorpe.
 
 **Funders:** British Academy and Academy of Social Sciences.
@@ -63,7 +65,7 @@ The majority of the analysis is split into three distinct types/parts.
 
 ### Dashboard
 
-An online interactive dashboard accompanies this work, found at [https://shape-impact.co.uk](https://shape-impact.co.uk). This dashboard is entirely reproducible, with code which creates it available at `./src/dashboard. We are especially grateful for the help of [GisRede](https://www.gisrede.com/) for their role in it's development.
+An online interactive dashboard accompanies this work, found at [https://shape-impact.co.uk](https://shape-impact.co.uk). This dashboard is entirely reproducible, with code which creates it available at `./src/dashboard. We are especially grateful for the help of [GISRede](https://www.gisrede.com/) for their role in it's development.
 
 ### Contact
 
