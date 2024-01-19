@@ -561,9 +561,8 @@ $( "#reload_selected_options" ).on( "click", function() {
         mapGlobal.addLayer(layerGlobal);
         mapGlobal.addControl(legendMapGlobal);   
         slc_Impact_Beneficiariest="Global";
-        mapGlobal.setView(mapGlobal.options.center, mapGlobal.options.zoom);
     }
-    
+    mapGlobal.setView(mapGlobal.options.center, mapGlobal.options.zoom);
     mapUK.setView(mapUK.options.center, mapUK.options.zoom);
  
     _api.get_ics_data(API_URL, 
@@ -588,6 +587,7 @@ $( "#reload_selected_options" ).on( "click", function() {
         document.getElementById("reload_selected_options").style.visibility = "hidden";
         total_rows_pagination_meta=result.table_pagination_meta.total_rows;
         _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+        _utils.hide_all_individual_rest_filter_btn();
      }).then(() => {
           _utils.progressMenuOff();
      }).catch(error => {
