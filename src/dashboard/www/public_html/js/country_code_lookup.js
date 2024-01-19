@@ -2759,7 +2759,84 @@ var countries = [
     iso3: 'XKS',
     isoNo: null,
     internet: 'XK'
-  }
+  },
+  {
+    continent: 'Europe',
+    region: 'South East Europe',
+    country: 'Republic of Kosovo',
+    capital: 'Pristina',
+    fips: 'KV1',
+    iso2: 'XXK',
+    iso3: 'XXK',
+    isoNo: null,
+    internet: 'XK1'
+  },
+  {
+    continent: 'ATC',
+    region: 'ATC',
+    country: 'ATC',
+    capital: 'ATC',
+    fips: 'ATC',
+    iso2: 'ATC',
+    iso3: 'ATC',
+    isoNo: null,
+    internet: 'ATC'
+  },
+  {
+    continent: 'CYN',
+    region: 'CYN',
+    country: 'Turkish Republic of Northern Cyprus',
+    capital: 'CYN',
+    fips: 'CYN',
+    iso2: 'CYN',
+    iso3: 'CYN',
+    isoNo: null,
+    internet: 'CYN'
+  },
+  {
+    continent: 'KAS',
+    region: 'KAS',
+    country: 'KAS',
+    capital: 'KAS',
+    fips: 'KAS',
+    iso2: 'KAS',
+    iso3: 'KAS',
+    isoNo: null,
+    internet: 'KAS'
+  },
+  {
+    continent: 'AU1',
+    region: 'AU1',
+    country: 'Cocos (Keeling) Islands',
+    capital: 'AU1',
+    fips: 'AU1',
+    iso2: 'AU1',
+    iso3: 'AU1',
+    isoNo: null,
+    internet: 'AU1'
+  },
+  {
+    continent: 'TWN',
+    region: 'TWN',
+    country: 'Taiwan, Province of China',
+    capital: 'TWN',
+    fips: 'TWN',
+    iso2: 'TWN',
+    iso3: 'TWN',
+    isoNo: null,
+    internet: 'TWN'
+  },
+  {
+    continent: 'SOL',
+    region: 'SOL',
+    country: 'Republic of Somaliland',
+    capital: 'SOL',
+    fips: 'SOL',
+    iso2: 'SOL',
+    iso3: 'SOL',
+    isoNo: null,
+    internet: 'SOL'
+  }  
 ];
 
 export function searchCountryNamebyISO3(field, code) {

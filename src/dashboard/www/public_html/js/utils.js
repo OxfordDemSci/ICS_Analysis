@@ -365,9 +365,21 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
         
         if (ch_Beneficiaries) {
             let Beneficiaries_name = _country_code_lookup.searchCountryNamebyISO3("iso3", Beneficiaries);
-            document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name.country.length > 7) ? Beneficiaries_name.country.substr(0, 10)+" ..." : Beneficiaries_name.country;
+            let Beneficiaries_name_text = 'undefined';
+            if( typeof Beneficiaries_name === 'undefined' || Beneficiaries_name === null ){
+                Beneficiaries_name_text = 'undefined';
+            }else{
+                Beneficiaries_name_text = Beneficiaries_name.country;
+            }
+            
+            //document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name.country.length > 7) ? Beneficiaries_name.country.substr(0, 10)+" ..." : Beneficiaries_name.country;
+            //const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
+            //tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name.country});  
+            
+            document.getElementById('label_selected_Beneficiaries').innerHTML = (Beneficiaries_name_text.length > 7) ? Beneficiaries_name_text.substr(0, 10)+" ..." : Beneficiaries_name_text;
             const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Beneficiaries);
-            tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name.country});     
+            tooltipInstance.setContent({'.tooltip-inner': Beneficiaries_name_text});     
+            
         } else {
             document.getElementById('label_selected_Beneficiaries').innerHTML = 'Global';
         }  
