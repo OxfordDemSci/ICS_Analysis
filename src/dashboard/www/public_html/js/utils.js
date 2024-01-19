@@ -821,3 +821,11 @@ export function updateTopicsMenuAvailable(d, b) {
         }
 
 }
+
+
+export function hide_all_individual_rest_filter_btn() {
+    document.getElementById("btn_reset_Funders").style.visibility = "hidden";
+    document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
+    document.getElementById("btn_reset_Beneficiaries").style.visibility = "hidden";
+    document.getElementById("btn_reset_UOA").style.visibility = "hidden";
+}
