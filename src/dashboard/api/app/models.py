@@ -1,4 +1,4 @@
-from sqlalchemy import ARRAY, Column, Float, Index, Integer, String
+from sqlalchemy import ARRAY, Boolean, Column, Float, Index, Integer, String
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -185,6 +185,9 @@ class Countries(Base):  # type: ignore
     id = Column(Integer, primary_key=True)
     ics_table_id = Column(Integer)
     country = Column(String(3))
+    countries_specific_extracted = Column(Boolean, nullable=False, default=False)
+    countries_union_extracted = Column(Boolean, nullable=False, default=False)
+    countries_region_extracted = Column(Boolean, nullable=False, default=False)
 
     __table_args__ = (Index("idx_countries_id", "id", unique=True),)
 
