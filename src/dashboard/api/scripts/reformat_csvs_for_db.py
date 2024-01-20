@@ -118,6 +118,39 @@ def fix_errors(row):
             return row.countries_iso3
     else:
         return row.countries_iso3
+    
+
+def insert_extracted_country_lookups(df_iso: pd.DataFrame, ics: pd.DataFrame) -> pd.DataFrame:
+    def get_subset(col):
+        df_spec = ics_sub[[col]].copy()
+        df_spec.loc[:, col] = df_spec[col].str.split(";")
+        df_spec = df_spec[col].explode().reset_index()
+        return df_spec
+
+    def set_true_or_false(row, countries):
+        if row.country in countries:
+            return True
+        return False
+
+    ics_sub = ics[[
+        "countries_iso3",
+        "countries_specific_extracted",
+        "countries_union_extracted",
+        "countries_region_extracted"
+        ]]
+
+    for col in ["countries_specific_extracted", "countries_union_extracted", "countries_region_extracted"]:
+        dataframes = []
+        df_spec = get_subset(col)
+        for index in df_iso.ics_table_id.unique().tolist():
+            df_left = df_iso.loc[df_iso["ics_table_id"] == index].copy()
+            df_right = df_spec.loc[df_spec["index"] == index].copy()
+            countries_extracted = [x.strip() for x in df_right[col].tolist() if not str(x) == 'nan']
+            df_left[col] = df_left.apply(set_true_or_false, countries=countries_extracted, axis=1)
+            dataframes.append(df_left)
+        final_merged = pd.concat(dataframes)
+        df_iso[col] = final_merged[col].copy()
+    return df_iso
 
 
 def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
@@ -134,6 +167,7 @@ def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
     df_iso = df_iso[["id", "ics_table_id", "country"]]
     df_iso.country = df_iso.country.str.strip()
     df_iso.country = df_iso.country.replace('', np.nan)
+    df_iso = insert_extracted_country_lookups(df_iso.copy(), df_ics)
     df_iso.to_csv(COUNTRIES_LOOKUP_OUT, index=False)
 
 
