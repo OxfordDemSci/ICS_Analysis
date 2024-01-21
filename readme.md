@@ -14,7 +14,7 @@ A repository to analyse the Impact Case Studies submitted to the Research Excell
 
 **Researchers/Research Assistants:** Simon Cooper, Ekaterina Degtiareva, Giordano Epifani, Yifan Liu, Brenda Mccollum, Alice Spiers and Reja Wyss.
 
-**Web Development:** [GISRede](https://www.gisrede.com/) (Makysm Bondarenko, David Kerr) 
+**Web Development:** [GISRede](https://www.gisrede.com/) (Maksym Bondarenko, David Kerr) 
 
 **Research Support:** Hamza Shams, Bradley Smith, Michelle Thorpe.
 
