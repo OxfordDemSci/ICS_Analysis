@@ -1,62 +1,63 @@
 id,ukprn,name,postcode
-0,10008640,University College Falmouth,TR11 4RH
 1,10007774,University of Oxford,OX1 2JD
 2,10007768,University of Lancaster,LA1 4YW
-4,10007814,Cardiff University,CF10 3AT
 5,10007158,University of Southampton,SO17 1BJ
 8,10000824,Bournemouth University,BH12 5BB
+10,10007804,University of Stirling,FK9 4LA
+11,10007823,Edge Hill University,L39 4QP
 12,10007160,University of Surrey,GU2 7XH
-15,10007802,University of Reading,RG6 6UR
-16,10007806,University of Sussex,BN1 9RH
+13,10007791,University of Essex,CO4 3SQ
 18,10007150,University of Kent,CT2 7NZ
 20,10007788,University of Cambridge,CB2 1TN
-21,10001883,De Montfort University,LE1 9BH
 22,10007790,University of Edinburgh,EH1 1HT
 23,10007795,University of Leeds,LS2 9JT
 25,10005343,The Queen's University of Belfast,BT7 1NN
-27,10007772,Edinburgh Napier University,EH11 4BN
-32,10000961,Brunel University,UB8 3PH
+28,10007854,Cardiff Metropolitan University,CF5 2SG
+30,10007164,"University of the West of England, Bristol",BS16 1QY
 37,10003678,Kingston University,KT1 1LQ
-39,10001478,The City University,EC1V 0HB
+38,10007166,University of Wolverhampton,WV1 1LY
+45,10007114,University of the Highlands and Islands,IV3 5SQ
+46,10007775,"Queen Mary and Westfield College, University of London",E1 4NS
+47,10007144,University of East London,E16 2RD
 51,10001282,University of Northumbria at Newcastle,NE1 8ST
-52,10006299,Staffordshire University,ST4 2DE
-57,10001726,Coventry University,CV1 5FB
+55,10007816,Central School of Speech and Drama(The),NW3 3HY
+56,10007794,University of Glasgow,G12 8QQ
 58,10007155,University of Portsmouth,PO1 2UP
-62,10007856,Prifysgol Aberystwyth,SY23 2AX
 64,10007801,University of Plymouth,PL4 8AA
-65,10007789,University of East Anglia,NR4 7TJ
 66,10007786,University of Bristol,BS8 1TH
-67,10007803,University of St Andrews,KY16 9AJ
-70,10007807,University of Ulster,BT52 1SA
 71,10007163,University of Warwick,CV4 7AL
+73,10007796,University of Leicester,LE1 7RH
 76,10007165,The University of Westminster,W1B 2HW
-82,10007156,University of Salford,M5 4WT
+77,10007148,University of Huddersfield,HD1 3DH
 84,10004063,London School of Economics & Political Science,WC2A 2AE
+86,10007773,Open University(The),MK7 6AA
 89,10007167,University of York,YO10 5DD
+90,10007151,University of Lincoln,LN6 7TS
 91,10007784,University College London,WC1E 6BT
+92,10000886,University of Brighton,BN2 4AT
 98,10007157,University of Sheffield,S10 2TN
 99,10007143,University of Durham,DH1 3LE
+100,10004797,Nottingham Trent University,NG1 4BU
 101,10007805,University of Strathclyde,G1 1XQ
-105,10006840,University of Birmingham,B15 2TT
+103,10007764,Heriot-Watt University,EH14 4AS
 107,10007792,University of Exeter,EX4 4PY
 108,10005790,Sheffield Hallam University,S1 1WB
-109,10007852,University of Dundee,DD1 4HN
-112,10007159,University of Sunderland,SR1 3SD
+111,10007776,Roehampton University,SW15 5PJ
 113,10000291,Anglia Ruskin University,CM1 1SQ
-118,10007822,Cranfield University,MK43 0AL
+115,10007855,Swansea University,SA2 8PP
 121,10003645,King's College London,WC2R 2LS
+124,10003854,Leeds College of Art,LS2 9AQ
+125,10007759,Aston University,B4 7ET
 127,10007783,University of Aberdeen,AB24 3FX
 128,10007798,The University of Manchester,M13 9PL
-130,10007154,University of Nottingham,NG7 2RD
 132,10007799,University of Newcastle Upon Tyne,NE1 7RU
+133,10007857,Bangor University,LL57 2DG
 137,10007793,University of Glamorgan / Prifysgol Morgannwg,CF37 1DL
 140,10007843,"St Mary's University College, Twickenham",TW1 4SX
-143,10007760,Birkbeck College,WC1E 7HX
 144,10006842,University of Liverpool,L69 3BX
-145,10003324,Institute of Cancer Research: Royal Cancer Hospital (The),SW7 3RP
-152,10004078,London South Bank University,SE1 0AA
+146,10007146,University of Greenwich,SE10 9LS
+148,10007858,University of Wales: Trinity Saint David,SA31 3EP
 156,10007850,University of Bath (The),BA2 7AY
 159,10004930,Oxford Brookes University,OX3 0BP
-160,10007780,School of Oriental and African Studies,WC1H 0XG
 162,10007141,University of Central Lancashire,PR1 2HE
 163,10003270,"Imperial College of Science, Technology and Medicine",SW7 2AZ
