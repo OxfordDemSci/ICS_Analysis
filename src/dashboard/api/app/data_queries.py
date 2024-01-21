@@ -193,7 +193,8 @@ def get_countries_counts(
         ics_ids: list,
         countries_specific_extracted: bool,
         countries_union_extracted: bool,
-        countries_region_extracted: bool
+        countries_region_extracted: bool,
+        countries_global_extracted: bool
         ) -> List[Dict[str, str]]:
     sql = text(
         """
@@ -205,6 +206,7 @@ def get_countries_counts(
             (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
             OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
             OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE)
         )
         GROUP BY c.country
         ORDER BY country_count DESC
@@ -214,7 +216,8 @@ def get_countries_counts(
         "ics_ids": ics_ids,
         "countries_specific_extracted": countries_specific_extracted,
         "countries_union_extracted": countries_union_extracted,
-        "countries_region_extracted": countries_region_extracted
+        "countries_region_extracted": countries_region_extracted,
+        "countries_global_extracted": countries_global_extracted
         })
     countries = [
         {"country": row.country, "country_count": row.country_count} for row in query
@@ -380,6 +383,7 @@ def query_dashboard_data(
     countries_specific_extracted: bool,
     countries_union_extracted: bool,
     countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
@@ -406,7 +410,8 @@ def query_dashboard_data(
         ics_ids=ics_ids,
         countries_specific_extracted=countries_specific_extracted,
         countries_union_extracted=countries_union_extracted,
-        countries_region_extracted=countries_region_extracted)
+        countries_region_extracted=countries_region_extracted,
+        countries_global_extracted=countries_global_extracted)
     data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
