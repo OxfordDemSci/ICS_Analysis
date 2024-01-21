@@ -694,7 +694,7 @@ def clean_country_strings(countries):
     if isinstance(countries, str):
         countries_list = list(sorted(set(countries.split('; '))))
         countries_list = [x for x in countries_list if 'nan' not in x]
-        result = '; '.join(countries_list)
+        result = '; '.join(countries_list).strip('; ')
     return(result)
 
 
@@ -770,7 +770,8 @@ def make_countries_file(manual_path):
                                          df['suggested_Countries[alpha-3]_change'])
 
     # combine all countries
-    cols_to_combine = ['countries_specific_extracted', 'countries_union_extracted', 'countries_region_extracted']
+    cols_to_combine = ['countries_specific_extracted', 'countries_union_extracted', 'countries_region_extracted',
+                       'countries_global_extracted']
     df['countries_extracted'] = df[cols_to_combine].apply(lambda row: '; '.join(row.values.astype('str')), axis=1)
 
     # clean country columns
@@ -778,6 +779,7 @@ def make_countries_file(manual_path):
     df['countries_specific_extracted'] = df['countries_specific_extracted'].apply(clean_country_strings)
     df['countries_union_extracted'] = df['countries_union_extracted'].apply(clean_country_strings)
     df['countries_region_extracted'] = df['countries_region_extracted'].apply(clean_country_strings)
+    df['countries_global_extracted'] = df['countries_global_extracted'].apply(clean_country_strings)
 
     # df = df[df['countries_extracted'].notnull()]
     df = df.dropna(subset=['countries_extracted', 'union_extracted', 'region_extracted'], how='all')
@@ -1219,6 +1221,7 @@ if __name__ == "__main__":
         get_all_results(raw_path)
     if not (raw_path / 'raw_ref_outputs_data.xlsx').exists():
         get_output_data(raw_path)
+
 
     clean_dep_level(raw_path, edit_path)
     df = clean_ics_level(raw_path, edit_path)
