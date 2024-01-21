@@ -1,6 +1,7 @@
 /scripts/data/enriched_ref_ics_data.csv
 /api/app/data/intermediate-tables/enriched_ref_ics_data.csv
 /api/app/data/db-data/ICS_DATABASE_TABLE.csv
+/api/app/api_logs.log
 
 # Ignore microsoft lock files
 /api/app/data/intermediate-tables/~$candidate_nn3nn7.xlsx
