@@ -26,6 +26,7 @@ def get_ics_data(
     countries_specific_extracted: bool,
     countries_union_extracted: bool,
     countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int = 1,
     items_per_page: int = 500,
     topic: str | None = None,
@@ -47,10 +48,11 @@ def get_ics_data(
             not isinstance(countries_specific_extracted, bool)
             or not isinstance(countries_union_extracted, bool)
             or not isinstance(countries_region_extracted, bool)
+            or not isinstance(countries_global_extracted, bool)
         ):
             raise ValueError(
-                "countries_specific_extracted, countries_union_extracted and countries_region_extracted need"
-                " to be booleans"
+                "countries_specific_extracted, countries_union_extracted, countries_region_extracted and"
+                "countries_global_extracted need to be booleans"
             )
         (
             threshold,
@@ -79,6 +81,7 @@ def get_ics_data(
         countries_specific_extracted,
         countries_union_extracted,
         countries_region_extracted,
+        countries_global_extracted,
         table_page,
         items_per_page,
         topic,

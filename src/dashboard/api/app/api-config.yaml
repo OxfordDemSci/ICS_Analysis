@@ -58,6 +58,13 @@ paths:
           schema:
             type: boolean
             default: false
+        - name: countries_global_extracted
+          in: query
+          description: Filter countries by global extent if applicable
+          required: true
+          schema:
+            type: boolean
+            default: false
         - name: table_page
           in: query
           description: Page number of table
