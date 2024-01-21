@@ -698,6 +698,15 @@ def clean_country_strings(countries):
     return(result)
 
 
+def drop_global(regions):
+    result = float('NaN')
+    if isinstance(regions, str):
+        region_list = regions.split('; ')
+        region_list = [x for x in region_list if x != 'global']
+        result = '; '.join(region_list)
+    return(result)
+
+
 def make_countries_file(manual_path):
     """
     Creates a DataFrame with countries data from an Excel file.
@@ -732,12 +741,21 @@ def make_countries_file(manual_path):
                 'suggested_Countries[region]_change']:
         df[var] = df[var].str.strip()
 
-    # regions
+    # regions and global
     df['region_extracted'] = np.where(df['suggested_region_change'].isnull(),
                                       df['region'],
                                       df['suggested_region_change'])
+
+    df['global_extracted'] = df['region_extracted'].apply(lambda x: True if 'global' in str(x) else False)
+
+    df['region_extracted'] = df['region_extracted'].apply(drop_global)
+
     df['countries_region_extracted'] = \
         [make_region_country_list(regions=x, country_groups=country_groups) for x in list(df['region_extracted'])]
+
+    df.loc[df['global_extracted'] == True, 'countries_global_extracted'] = \
+        country_groups.loc[country_groups['Union/region'] == 'global', 'ISO3 codes'][0]
+
 
     # unions
     df['union_extracted'] = np.where(df['suggested_union_change'].isnull(),
@@ -769,6 +787,8 @@ def make_countries_file(manual_path):
                'countries_region_extracted',
                'union_extracted',
                'countries_union_extracted',
+               'global_extracted',
+               'countries_global_extracted',
                'countries_extracted']]
 
 
