@@ -53,6 +53,8 @@ class ICS(Base):  # type: ignore
     countries_region_extracted = Column(String)
     union_extracted = Column(String)
     countries_union_extracted = Column(String)
+    global_extracted = Column(Boolean)
+    countries_global_extracted = Column(String)
     funders_extracted = Column(String)
     underpinning_research_subject_tag_values = Column(String)
     underpinning_research_subject_tag_group = Column(String)
@@ -188,6 +190,7 @@ class Countries(Base):  # type: ignore
     countries_specific_extracted = Column(Boolean, nullable=False, default=False)
     countries_union_extracted = Column(Boolean, nullable=False, default=False)
     countries_region_extracted = Column(Boolean, nullable=False, default=False)
+    countries_global_extracted = Column(Boolean, nullable=False, default=False)
 
     __table_args__ = (Index("idx_countries_id", "id", unique=True),)
 
