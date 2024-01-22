@@ -2,6 +2,7 @@ id,ics_table_id,uk_region_tag_values
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 127,84,Dover
 128,84,London
 129,85,London
@@ -542,3 +543,138 @@ id,ics_table_id,uk_region_tag_values
 8551,6227,
 8736,6346,Newcastle Upon Tyne
 >>>>>>> f41f6cd (update countries_extracted column; rebuild database)
+=======
+45,28,
+159,109,
+176,126,
+195,142,London
+196,142,Swansea
+534,408,
+567,438,
+627,484,
+763,586,
+822,625,
+877,669,London
+878,670,
+891,681,
+940,710,Edinburgh
+1010,753,
+1130,844,
+1167,873,Cheltenham
+1187,883,
+1286,946,London
+1287,946,Manchester
+1295,951,
+1357,1002,
+1464,1088,London
+1517,1111,London
+1518,1111,Woking
+1706,1231,London
+1748,1263,Harrogate
+1889,1358,
+1928,1392,
+1970,1433,Oxford
+2055,1496,London
+2056,1496,Nottingham
+2085,1522,
+2177,1593,
+2269,1663,
+2378,1755,
+2452,1817,Edinburgh
+2454,1819,
+2811,2086,
+2851,2109,
+3088,2264,
+3169,2326,Cardiff
+3170,2326,York
+3174,2330,Glastonbury
+3228,2366,
+3373,2465,
+3392,2480,
+3413,2499,
+3414,2500,Wigan
+3930,2900,London
+3969,2928,Derby
+3981,2940,Dundee
+4241,3146,
+4316,3189,
+4339,3209,Cardiff
+4340,3209,London
+4523,3349,Banff
+4720,3493,
+4873,3602,Birmingham
+4874,3602,Castleford
+4875,3602,Hexham
+4876,3602,London
+4903,3624,Oxford
+5019,3707,
+5080,3750,Belfast
+5081,3750,Liverpool
+5184,3827,
+5249,3878,
+5252,3881,Cambridge
+5253,3881,Welwyn Garden City
+5258,3885,
+5350,3952,London
+5377,3964,
+5533,4073,London
+5881,4324,
+5957,4395,
+6004,4430,Durham
+6005,4430,Leeds
+6006,4430,Manchester
+6073,4481,
+6144,4534,
+6220,4598,
+6335,4673,Brentwood
+6336,4673,Hexham
+6352,4685,
+6399,4720,
+6409,4730,
+6444,4757,Bangor
+6445,4757,Cardiff
+6446,4757,Carmarthen
+6447,4757,Merthyr Tydfil
+6459,4767,Glasgow
+6460,4767,London
+6461,4767,Newcastle Upon Tyne
+6497,4792,Belfast
+6498,4792,Bradford
+6499,4792,Derry
+6500,4792,London
+6506,4798,
+6619,4881,
+6762,4997,Belfast
+6959,5135,
+7051,5211,
+7157,5302,London
+7211,5342,London
+7331,5418,London
+7410,5468,Edinburgh
+7411,5468,Glasgow
+7412,5468,London
+7413,5468,Newcastle Upon Tyne
+7563,5573,Birmingham
+7564,5573,Crawley
+7565,5573,Durham
+7566,5573,Liverpool
+7567,5573,Salisbury
+7578,5579,Leeds
+7579,5579,Newton Aycliffe
+7580,5579,Shildon
+7583,5581,
+7603,5590,
+7785,5692,Birmingham
+7786,5692,London
+7787,5692,Stoke-On-Trent
+7788,5692,Walsall
+7790,5694,
+7939,5809,London
+8272,6021,
+8346,6071,London
+8436,6144,
+8485,6184,Stoke-On-Trent
+8540,6219,
+8707,6329,
+8718,6333,
+>>>>>>> 983b1e8 (Remake tables removing dulicates)

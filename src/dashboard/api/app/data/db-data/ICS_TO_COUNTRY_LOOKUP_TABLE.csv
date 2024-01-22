@@ -1354,7 +1354,6 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 1352,75,ZAF,False,False,True,True
 1353,75,ZMB,False,False,True,True
 1354,75,ZWE,False,False,True,True
-1355,75,ZWE,False,False,True,True
 1356,76,GBR,True,False,False,False
 1357,77,GBR,True,False,False,False
 1358,78,GBR,True,False,False,False
@@ -38553,7 +38552,6 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 38551,1232,ZAF,False,True,False,True
 38552,1232,ZMB,False,True,False,True
 38553,1232,ZWE,False,True,False,True
-38554,1232,ZWE,False,True,False,True
 38555,1233,GBR,True,False,False,False
 38556,1234,ALB,False,False,True,False
 38557,1234,AND,False,False,True,False
@@ -59237,7 +59235,6 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 59235,1977,ZAF,False,False,True,True
 59236,1977,ZMB,False,False,True,True
 59237,1977,ZWE,False,False,True,True
-59238,1977,ZWE,False,False,True,True
 59239,1978,GBR,True,False,False,False
 59240,1979,ABW,False,False,False,True
 59241,1979,AFG,False,False,False,True
@@ -61846,7 +61843,6 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 61844,2062,ZAF,False,False,True,True
 61845,2062,ZMB,False,False,True,True
 61846,2062,ZWE,False,False,True,True
-61847,2062,ZWE,False,False,True,True
 61848,2063,,False,False,False,False
 61849,2064,GBR,True,False,False,False
 61850,2064,IND,True,False,False,False
@@ -76241,7 +76237,6 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 76239,2447,ZAF,True,False,True,True
 76240,2447,ZMB,False,False,True,True
 76241,2447,ZWE,False,False,True,True
-76242,2447,ZWE,False,False,True,True
 76243,2448,,False,False,False,False
 76244,2449,GBR,True,False,False,False
 76245,2450,GBR,True,False,False,False
@@ -76561,25 +76556,21 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 76559,2463,HRV,False,True,False,False
 76560,2463,HUN,False,True,False,False
 76561,2463,IDN,False,False,True,False
-76562,2463,IDN,False,False,True,False
 76563,2463,LAO,False,False,True,False
 76564,2463,IRL,False,True,False,False
 76565,2463,ITA,False,True,False,False
 76566,2463,JPN,False,False,True,False
 76567,2463,KHM,False,False,True,False
 76568,2463,KOR,False,False,True,False
-76569,2463,LAO,False,False,True,False
 76570,2463,LTU,False,True,False,False
 76571,2463,LUX,False,True,False,False
 76572,2463,LVA,False,True,False,False
 76573,2463,MLT,False,True,False,False
 76574,2463,MMR,False,False,True,False
-76575,2463,MMR,False,False,True,False
 76576,2463,PHL,False,False,True,False
 76577,2463,MNG,False,False,True,False
 76578,2463,MYS,False,False,True,False
 76579,2463,NLD,False,True,False,False
-76580,2463,PHL,False,False,True,False
 76581,2463,POL,False,True,False,False
 76582,2463,PRK,False,False,True,False
 76583,2463,PRT,False,True,False,False
@@ -101895,7 +101886,6 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 101893,3467,NIU,False,False,False,True
 101894,3467,NLD,False,True,False,True
 101895,3467,NOR,False,False,False,True
-101896,3467,NOR,False,False,False,True
 101897,3467,SWE,False,True,False,True
 101898,3467,NPL,False,False,False,True
 101899,3467,NRU,False,False,False,True
@@ -101940,7 +101930,6 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 101938,3467,SUR,False,False,False,True
 101939,3467,SVK,False,True,False,True
 101940,3467,SVN,False,True,False,True
-101941,3467,SWE,False,True,False,True
 101942,3467,SWZ,False,False,False,True
 101943,3467,SXM,False,False,False,True
 101944,3467,SYC,False,False,False,True
@@ -119989,11 +119978,9 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 119987,4030,COG,False,False,False,True
 119988,4030,COK,False,False,False,True
 119989,4030,COL,False,False,False,True
-119990,4030,COL,False,False,False,True
 119991,4030,CRI,False,False,False,True
 119992,4030,COM,False,False,False,True
 119993,4030,CPV,False,False,False,True
-119994,4030,CRI,False,False,False,True
 119995,4030,CUB,False,False,True,True
 119996,4030,CUW,False,False,False,True
 119997,4030,CXR,False,False,False,True
@@ -147161,9 +147148,7 @@ id,ics_table_id,country,countries_specific_extracted,countries_union_extracted,c
 147159,4969,CHE,False,True,False,False
 147160,4969,CHL,True,True,True,False
 147161,4969,COL,True,True,False,False
-147162,4969,COL,True,True,False,False
 147163,4969,CRI,False,True,False,False
-147164,4969,CRI,False,True,False,False
 147165,4969,CUB,False,False,True,False
 147166,4969,CYM,False,False,True,False
 147167,4969,CZE,False,True,False,False
