@@ -156,6 +156,7 @@ def insert_extracted_country_lookups(df_iso: pd.DataFrame, ics: pd.DataFrame) ->
             dataframes.append(df_left)
         final_merged = pd.concat(dataframes)
         df_iso[col] = final_merged[col].copy()
+    df_iso.drop_duplicates(subset=["ics_table_id", "country"], keep="first", inplace=True)
     return df_iso
 
 
