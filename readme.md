@@ -2,17 +2,19 @@
 
 # The SHAPE of Impact
 
+[![Generic badge](https://img.shields.io/badge/License-GNU_GPLv3-purple.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![Generic badge](https://img.shields.io/badge/Python-3.7-red.svg)](https://www.python.org/downloads/release/python-370/)
 ![coverage](https://img.shields.io/badge/Purpose-Research-yellow)
-[![Generic badge](https://img.shields.io/badge/Python-3.7-red.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/License-CCBY4.0-purple.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/Maintained-Yes-brightgreen.svg)](https://shields.io/)
-[![Generic badge](https://img.shields.io/badge/BuildPassing-Yes-orange.svg)](https://shields.io/)
+![Generic badge](https://img.shields.io/badge/Maintained-Yes-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/BuildPassing-Yes-orange.svg)
 
 A repository to analyse the Impact Case Studies submitted to the Research Excellence Framework, 2021. A link to the final, published version of the report will be available in due course.
 
 **Investigators:** Sander Wagner (Co-I), Charles Rahal (Co-I), Douglas Leasure (Co-I), Mark Verhagen (Co-I), Bo Zhao (Co-I) and Melinda C. Mills (PI).
 
 **Researchers/Research Assistants:** Simon Cooper, Ekaterina Degtiareva, Giordano Epifani, Yifan Liu, Brenda Mccollum, Alice Spiers and Reja Wyss.
+
+**Web Development:** [GISRede](https://www.gisrede.com/) (Maksym Bondarenko, David Kerr) 
 
 **Research Support:** Hamza Shams, Bradley Smith, Michelle Thorpe.
 
@@ -63,7 +65,7 @@ The majority of the analysis is split into three distinct types/parts.
 
 ### Dashboard
 
-An online interactive dashboard accompanies this work, found at [https://shape-impact.co.uk](https://shape-impact.co.uk). This dashboard is entirely reproducible, with code which creates it available at `./src/dashboard. We are especially grateful for the help of [GisRede](https://www.gisrede.com/) for their role in it's development.
+An online interactive dashboard accompanies this work, found at [https://shape-impact.co.uk](https://shape-impact.co.uk). This dashboard is entirely reproducible, with code which creates it available at `./src/dashboard. We are especially grateful for the help of [GISRede](https://www.gisrede.com/) for their role in it's development.
 
 ### Contact
 
@@ -71,4 +73,25 @@ For any general queries related to this work, please contact `lcds.office@demogr
 
 ### License
 
-This work is made available under CC BY 4.0. See `LICENSE` for details.
+    SHAPE of Research Impact Dashboard
+    Copyright (C) 2023 University of Oxford
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+This license protects everyone's freedom to:  
+- use the software for any purpose,
+- change the software to suit any needs,
+- share the software with friends and neighbors, and
+- share any changes made to the software.
+
+For further information, you can access a full-text copy of the GNU General Public License from the `LICENSE` file in this repository 
+or by visiting <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">https://www.gnu.org/licenses/gpl-3.0.html </a>.  
+
