@@ -85,7 +85,7 @@ def plot_gender(uoa_fem, paper_panels, figure_path):
             ax.get_children()[uoa].set_edgecolor('k')
             ax.get_children()[3].set_color(ba_rgb2[1])
             ax.get_children()[3].set_edgecolor('k')
-        for uoa in range(13, 34):
+        for uoa in range(12, 34):
             ax.get_children()[uoa].set_color(ba_rgb2[1])
             ax.get_children()[uoa].set_edgecolor('k')
     legend_elements = [Patch(facecolor=ba_rgb2[0], edgecolor='k',
