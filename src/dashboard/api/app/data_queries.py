@@ -110,16 +110,14 @@ def get_pdf_data(
     return pdf_data
 
 
-def get_ics_table(
+def get_ics_table_ids(
         ics_ids: list,
         countries_specific_extracted: bool,
         countries_union_extracted: bool,
         countries_region_extracted: bool,
         countries_global_extracted: bool,
-        page: int,
-        limit: int,
         country: str | None = None
-        ) -> tuple:
+        ) -> str:
     sql_text = """
         SELECT c.ics_table_id from countries c
         JOIN ics i ON c.ics_table_id = i.id
@@ -143,6 +141,27 @@ def get_ics_table(
         "country": country
         })
     ics_table_ids = [row.ics_table_id for row in query]
+    return ics_table_ids
+
+
+def get_ics_table(
+        ics_ids: list,
+        countries_specific_extracted: bool,
+        countries_union_extracted: bool,
+        countries_region_extracted: bool,
+        countries_global_extracted: bool,
+        page: int,
+        limit: int,
+        country: str | None = None
+        ) -> tuple:
+    ics_table_ids = get_ics_table_ids(
+        ics_ids,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
+        country
+    )
     rows = (
         db.session.query(ICS)  # type: ignore
         .filter(ICS.id.in_(ics_table_ids))
@@ -168,6 +187,10 @@ def get_ics_table(
 
 def download_ics_table(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     topic: str | None = None,
     postcode: list | None = None,
     country: str | None = None,
@@ -180,7 +203,15 @@ def download_ics_table(
     ics_ids = get_ics_ids(
         threshold, topic, postcode, country, uk_region, uoa, uoa_name, funder
     )
-    rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
+    ics_table_ids = get_ics_table_ids(
+        ics_ids,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
+        country
+    )
+    rows = db.session.query(ICS).filter(ICS.id.in_(ics_table_ids)).all()
     csv_data = StringIO()
     writer = csv.writer(csv_data)
     header = [column.name for column in ICS.__table__.columns]
