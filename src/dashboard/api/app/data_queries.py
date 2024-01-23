@@ -154,20 +154,28 @@ def get_ics_table(
         limit: int,
         country: str | None = None
         ) -> tuple:
-    ics_table_ids = get_ics_table_ids(
-        ics_ids,
-        countries_specific_extracted,
-        countries_union_extracted,
-        countries_region_extracted,
-        countries_global_extracted,
-        country
-    )
-    rows = (
-        db.session.query(ICS)  # type: ignore
-        .filter(ICS.id.in_(ics_table_ids))
-        .order_by(ICS.id)
-        .paginate(page=page, per_page=limit)
-    )
+    if country:
+        ics_table_ids = get_ics_table_ids(
+            ics_ids,
+            countries_specific_extracted,
+            countries_union_extracted,
+            countries_region_extracted,
+            countries_global_extracted,
+            country
+        )
+        rows = (
+            db.session.query(ICS)  # type: ignore
+            .filter(ICS.id.in_(ics_table_ids))
+            .order_by(ICS.id)
+            .paginate(page=page, per_page=limit)
+        )
+    else:
+        rows = (
+            db.session.query(ICS)  # type: ignore
+            .filter(ICS.ics_id.in_(ics_ids))
+            .order_by(ICS.ics_id)
+            .paginate(page=page, per_page=limit)
+        )
     ics_table = []
     for row in rows:
         ics_table.append(
@@ -203,15 +211,18 @@ def download_ics_table(
     ics_ids = get_ics_ids(
         threshold, topic, postcode, country, uk_region, uoa, uoa_name, funder
     )
-    ics_table_ids = get_ics_table_ids(
-        ics_ids,
-        countries_specific_extracted,
-        countries_union_extracted,
-        countries_region_extracted,
-        countries_global_extracted,
-        country
-    )
-    rows = db.session.query(ICS).filter(ICS.id.in_(ics_table_ids)).all()
+    if country:
+        ics_table_ids = get_ics_table_ids(
+            ics_ids,
+            countries_specific_extracted,
+            countries_union_extracted,
+            countries_region_extracted,
+            countries_global_extracted,
+            country
+        )
+        rows = db.session.query(ICS).filter(ICS.id.in_(ics_table_ids)).all()
+    else:
+        rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
     csv_data = StringIO()
     writer = csv.writer(csv_data)
     header = [column.name for column in ICS.__table__.columns]
