@@ -110,10 +110,42 @@ def get_pdf_data(
     return pdf_data
 
 
-def get_ics_table(ics_ids: list, page: int, limit: int) -> tuple:
+def get_ics_table(
+        ics_ids: list,
+        countries_specific_extracted: bool,
+        countries_union_extracted: bool,
+        countries_region_extracted: bool,
+        countries_global_extracted: bool,
+        page: int,
+        limit: int,
+        country: str | None = None
+        ) -> tuple:
+    sql_text = """
+        SELECT c.ics_table_id from countries c
+        JOIN ics i ON c.ics_table_id = i.id
+        WHERE i.ics_id = ANY(:ics_ids)
+        AND (
+            (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+            OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+            OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE)
+        )
+        """
+    if country is not None:
+        sql_text += " AND c.country = :country"
+    sql_ics_table_ids = text(sql_text)
+    query = db.session.execute(sql_ics_table_ids, {
+        "ics_ids": ics_ids,
+        "countries_specific_extracted": countries_specific_extracted,
+        "countries_union_extracted": countries_union_extracted,
+        "countries_region_extracted": countries_region_extracted,
+        "countries_global_extracted": countries_global_extracted,
+        "country": country
+        })
+    ics_table_ids = [row.ics_table_id for row in query]
     rows = (
         db.session.query(ICS)  # type: ignore
-        .filter(ICS.ics_id.in_(ics_ids))
+        .filter(ICS.id.in_(ics_table_ids))
         .order_by(ICS.id)
         .paginate(page=page, per_page=limit)
     )
@@ -417,13 +449,24 @@ def query_dashboard_data(
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
     data["ics_table"], data["table_pagination_meta"] = get_ics_table(
-        ics_ids=ics_ids, page=table_page, limit=items_per_page
+        ics_ids=ics_ids,
+        countries_specific_extracted=countries_specific_extracted,
+        countries_union_extracted=countries_union_extracted,
+        countries_region_extracted=countries_region_extracted,
+        countries_global_extracted=countries_global_extracted,
+        page=table_page,
+        limit=items_per_page,
+        country=beneficiary
     )
     return data
 
 
 def get_paginated_table(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
@@ -439,7 +482,14 @@ def get_paginated_table(
         threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder
     )
     data["ics_table"], data["table_pagination_meta"] = get_ics_table(
-        ics_ids=ics_ids, page=table_page, limit=items_per_page
+        ics_ids=ics_ids,
+        countries_specific_extracted=countries_specific_extracted,
+        countries_union_extracted=countries_union_extracted,
+        countries_region_extracted=countries_region_extracted,
+        countries_global_extracted=countries_global_extracted,
+        page=table_page,
+        limit=items_per_page,
+        country=beneficiary
     )
     return data
 
