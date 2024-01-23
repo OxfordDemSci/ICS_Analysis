@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
-    <link href="css/styles_custom.css?version=1.4" rel="stylesheet"/>
+    <link href="css/styles_custom.css?version=1.5" rel="stylesheet"/>
     
     <link href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
     <link href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
@@ -595,12 +595,12 @@
 
                     <div class="row">
 
-                        <div class="col-sm-6">
-                            <label class="form-check-label" for="chCountryLabels">Show country name labels:</label>
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountryLabels">Show country name labels</label>
                         </div>
 
-                        <div class="col-sm-6">
-                            <div class="">
+                        <div class="col-sm-2">
+                            <div class="text-center">
                                 <input class="form-check-input" type="checkbox" id="chCountryLabels" checked>
                             </div>
                         </div>
@@ -615,12 +615,12 @@
 
                     <div class="row mt-2">
 
-                        <div class="col-sm-6">
-                            <label class="form-check-label" for="chCountryLabels">Number of funders to show on chart
-                                plot:</label>
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="numberFundersLimit">Number of funders to show on chart
+                                plot</label>
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-2">
                             <select id="numberFundersLimit" class="form-select form-select-sm"
                                     style="padding-top: 0rem;padding-bottom: 0rem;">
                                 <option value="10" selected>10</option>
@@ -642,19 +642,97 @@
 
                     <div class="row">
 
-                        <div class="col-sm-6">
-                            <label class="form-check-label" for="chKeepPOSTarea">Show other postcodes when one is
-                                selected:</label>
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chKeepPOSTarea">Show other postcodes when one is
+                                selected</label>
                         </div>
 
-                        <div class="col-sm-6">
-                            <div class="">
+                        <div class="col-sm-2">
+                            <div class="text-center">
                                 <input class="form-check-input" type="checkbox" id="chKeepPOSTarea" checked>
                             </div>
                         </div>
 
                     </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-1 border-bottom fw-bold">
+                                Definition of a "beneficiary country"
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
 
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_specific_extracted">
+                                Country-specific
+                            </label>
+                            <small>(country a beneficiary only if Impact Case Study explicitly listed it)</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_specific_extracted" checked>
+                            </div>
+                        </div>
+
+                    </div>   
+
+                    
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_union_extracted">
+                                Union tags 
+                            </label>
+                            <small>(country a beneficiary if Impact Case Study listed the union it belongs to; e.g. European Union)</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_union_extracted" checked>
+                            </div>
+                        </div>
+
+                    </div>                    
+
+                    
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_region_extracted">
+                                Region tag
+                            </label>
+                            <small>(country a beneficiary if Impact Case Study listed the region it belongs to; e.g. Global, Africa, etc.)</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_region_extracted" checked>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_global_extracted">
+                                Global tag
+                            </label>
+                            <small></small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_global_extracted" checked>
+                            </div>
+                        </div>
+
+                    </div>                    
 <!--  Threshold option  -->
 <!--                <div class="row">
                         <div class="col-sm-12">
@@ -1113,7 +1191,7 @@
 </body>
 </html>
 
-<script src="./js/main.js?version=8.1" type="module"></script>
+<script src="./js/main.js?version=8.4" type="module"></script>
 
 <script type="text/javascript">
 
