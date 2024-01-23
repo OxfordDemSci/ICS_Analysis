@@ -1,4 +1,8 @@
 
+.label_settings{
+ font-weight: 500;
+}
+
 #btnViewDetailsInfoBox{
     cursor: pointer;
     color: black;
