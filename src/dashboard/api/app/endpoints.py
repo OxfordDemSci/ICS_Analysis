@@ -175,6 +175,10 @@ def get_ics_table_paginated(
 
 def download_ics_as_csv(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     topic: str | None = None,
     postcode_area: list | None = None,
     beneficiary: str | None = None,
@@ -183,6 +187,16 @@ def download_ics_as_csv(
     uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Response:
+    if (
+            not isinstance(countries_specific_extracted, bool)
+            or not isinstance(countries_union_extracted, bool)
+            or not isinstance(countries_region_extracted, bool)
+            or not isinstance(countries_global_extracted, bool)
+    ):
+        raise ValueError(
+            "countries_specific_extracted, countries_union_extracted, countries_region_extracted and"
+            "countries_global_extracted need to be booleans"
+        )
     try:
         (
             threshold,
@@ -206,9 +220,20 @@ def download_ics_as_csv(
 
     except ValueError as e:
         abort(400, str(e))
-    data = download_ics_table(
-        threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
-    )
+    data = download_ics_table(  
+        threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
+        topic,
+        postcode_area,
+        beneficiary,
+        uk_region,
+        uoa,
+        uoa_name,
+        funder
+        )
     return data
 
 
