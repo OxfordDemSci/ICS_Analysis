@@ -144,6 +144,34 @@ paths:
           schema:
             type: number
             format: float
+        - name: countries_specific_extracted
+          in: query
+          description: Filter countries by countries specified
+          required: true
+          schema:
+            type: boolean
+            default: true
+        - name: countries_union_extracted
+          in: query
+          description: Filter countries by union specified
+          required: true
+          schema:
+            type: boolean
+            default: true
+        - name: countries_region_extracted
+          in: query
+          description: Filter countries by region specified
+          required: true
+          schema:
+            type: boolean
+            default: false
+        - name: countries_global_extracted
+          in: query
+          description: Filter countries by global extent if applicable
+          required: true
+          schema:
+            type: boolean
+            default: false
         - name: table_page
           in: query
           description: Page number of table
