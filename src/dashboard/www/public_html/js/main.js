@@ -1,7 +1,7 @@
 var API_URL = "./api/";
 // var API_URL = "http://127.0.0.1:8000/api/";
 
-import * as _api from './api.js?version=2.91'
+import * as _api from './api.js?version=2.95'
 import * as _init from './init.js?version=4.95'
 import * as _utils from './utils.js?version=6.95'
 import * as _UOAChart from './uoa_chart.js?version=6.45'
@@ -697,40 +697,40 @@ FundersChart.on('click', function(params) {
 
 
 
-$("#numberFundersLimit").change(function(){
-    
-     slc_numberFundersLimit=$('#numberFundersLimit').children("option:selected").val();
-        
-    _utils.progressMenuOn();
-    
-    _api.get_ics_data(API_URL, 
-                      slc_threshold,
-                      slc_topic,
-                      slc_postcode_area,
-                      slc_beneficiary,
-                      slc_uoa,
-                      slc_uoa_name,
-                      slc_funder).then(result => {
-        _utils.updateTopicsMenuAvailable(initialData, result.topics_available);                               
-        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);    
-        if (slc_uoa_name === null){
-           _UOAChart.updateUOAChart(result.uoa_counts);
-        }
-        _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
-        if (slc_Impact_Beneficiariest === "Global") {
-            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
-        } else {
-            _UKRegionCountsMap.updateUKregion_counts_map(mapGlobal, clusters_UK_region, result.uk_region_counts);
-        }
-        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
-        total_rows_pagination_meta=result.table_pagination_meta.total_rows;
-        _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
-     }).then(() => {
-          _utils.progressMenuOff();
-     }).catch(error => {
-        console.log('In the catch', error);
-     });        
-});
+//$("#numberFundersLimit").change(function(){
+//    
+//     slc_numberFundersLimit=$('#numberFundersLimit').children("option:selected").val();
+//        
+//    _utils.progressMenuOn();
+//    
+//    _api.get_ics_data(API_URL, 
+//                      slc_threshold,
+//                      slc_topic,
+//                      slc_postcode_area,
+//                      slc_beneficiary,
+//                      slc_uoa,
+//                      slc_uoa_name,
+//                      slc_funder).then(result => {
+//        _utils.updateTopicsMenuAvailable(initialData, result.topics_available);                               
+//        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);    
+//        if (slc_uoa_name === null){
+//           _UOAChart.updateUOAChart(result.uoa_counts);
+//        }
+//        _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);    
+//        if (slc_Impact_Beneficiariest === "Global") {
+//            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+//        } else {
+//            _UKRegionCountsMap.updateUKregion_counts_map(mapGlobal, clusters_UK_region, result.uk_region_counts);
+//        }
+//        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+//        total_rows_pagination_meta=result.table_pagination_meta.total_rows;
+//        _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+//     }).then(() => {
+//          _utils.progressMenuOff();
+//     }).catch(error => {
+//        console.log('In the catch', error);
+//     });        
+//});
 
 
 //  Threshold option  ****
@@ -769,13 +769,13 @@ $("#numberFundersLimit").change(function(){
 //});
 
 
-$('#chCountryLabels').change(function () {
-        if ($(this).is(":checked")) {
-            mapGlobal.addLayer(cartocdn);
-        } else {
-            mapGlobal.removeLayer(cartocdn);
-        }
-});
+//$('#chCountryLabels').change(function () {
+//        if ($(this).is(":checked")) {
+//            mapGlobal.addLayer(cartocdn);
+//        } else {
+//            mapGlobal.removeLayer(cartocdn);
+//        }
+//});
 
 $( "#btnSettings" ).on( "click", function() {
     $('#idMdSettings').modal('show');
@@ -1164,3 +1164,55 @@ $( "#btn_reset_UOA" ).on( "click", function() {
 $( "#btn_reset_Beneficiaries" ).on( "click", function() {
       reset_Individual_Filter("Beneficiaries");
 });
+
+
+$('#idMdSettings').on('hidden.bs.modal', function (e) {
+
+    e.preventDefault();
+
+    if ($("#chCountryLabels").is(":checked")) {
+        mapGlobal.addLayer(cartocdn);
+    } else {
+        mapGlobal.removeLayer(cartocdn);
+    }
+    
+     slc_numberFundersLimit=$('#numberFundersLimit').children("option:selected").val();
+
+
+    _utils.progressMenuOn();
+    slc_topic = _utils.getActiveTopic();
+    _api.get_ics_data(API_URL,
+            slc_threshold,
+            slc_topic,
+            slc_postcode_area,
+            slc_beneficiary,
+            slc_uoa,
+            slc_uoa_name,
+            slc_funder).then(result => {
+        infoboxSelectedUKmap.remove(mapUK);
+        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
+        _utils.updateTopicsMenuAvailable(initialData, result.topics_available);
+
+        if (slc_Impact_Beneficiariest === "Global") {
+            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+        } else {
+            _UKRegionCountsMap.updateUKregion_counts_map(mapGlobal, clusters_UK_region, result.uk_region_counts);
+        }
+        _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
+        if (slc_uoa_name === null) {
+            _UOAChart.updateUOAChart(result.uoa_counts);
+        }
+        total_rows_pagination_meta = result.table_pagination_meta.total_rows;
+        _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+
+        if (slc_postcode_area_name === "All") {
+            document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
+        }
+    }).then(() => {
+        _utils.progressMenuOff();
+    }).catch(error => {
+        console.log('In the catch', error);
+    });
+
+})
