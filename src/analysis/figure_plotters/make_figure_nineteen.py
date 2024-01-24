@@ -10,8 +10,10 @@ import gender_guesser.detector as gender
 from matplotlib.patches import Patch
 from helpers.figure_helpers import savefigures
 mpl.rcParams['font.family'] = 'Graphik'
-plt.rcParams["axes.labelweight"] = "light"
-plt.rcParams["font.weight"] = "light"
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 d = gender.Detector()
 
 
@@ -75,6 +77,10 @@ def plot_gender(uoa_fem, paper_panels, figure_path):
     fig, (ax1) = plt.subplots(1, 1, figsize=(14, 7))
     uoa_fem.plot(kind='bar', ax=ax1, ec='k', alpha=1)
     mpl.rcParams['font.family'] = 'Graphik'
+    new_rc_params = {'text.usetex': False,
+                     "svg.fonttype": 'none'
+                     }
+    mpl.rcParams.update(new_rc_params)
     ba_rgb2 = ['#41558c', '#E89818', '#CF202A']
     plt.tight_layout()
     ax1.set_xticklabels(ax1.get_xticklabels(), rotation=0, fontsize=14)
@@ -153,7 +159,10 @@ def make_figure_nineteen():
     paper_panels = paper_panels * 100
     uoa_fem = uoa_fem * 100
     mpl.rcParams['font.family'] = 'Graphik'
-
+    new_rc_params = {'text.usetex': False,
+                     "svg.fonttype": 'none'
+                     }
+    mpl.rcParams.update(new_rc_params)
     author_level_SHAPE = author_level[(author_level['Panel'] == 'C') |
                                       (author_level['Panel'] == 'D') |
                                       (author_level['UoA'] == 4)]

@@ -43,6 +43,10 @@ def make_figure_three():
     holder['Prob'].plot(kind='bar', edgecolor='k', ax=ax2,
                         color=ba_rgb2[1], legend=False, width=1)
     mpl.rcParams['font.family'] = 'Graphik'
+    new_rc_params = {'text.usetex': False,
+                     "svg.fonttype": 'none'
+                     }
+    mpl.rcParams.update(new_rc_params)
     ax2.yaxis.tick_right()
     ax2.yaxis.set_ticks_position('right')
     ax2.yaxis.set_label_position("right")
@@ -60,4 +64,11 @@ def make_figure_three():
     filename = 'figure_3'
     plt.savefig(os.path.join(figure_path,
                              filename + '.svg'),
+                bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path,
+                             filename + '.pdf'),
+                bbox_inches='tight')
+    plt.savefig(os.path.join(figure_path,
+                             filename + '.png'),
+                dpi=600,
                 bbox_inches='tight')

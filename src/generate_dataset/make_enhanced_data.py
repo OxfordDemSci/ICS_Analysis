@@ -659,6 +659,46 @@ def get_paths(data_path):
             final_path, topic_path, dim_path)
 
 
+def make_region_country_list(regions, country_groups):
+    """
+    Returns countries from region(s) provided
+
+    Args:
+        regions (str): Semicolon separated string of region names
+        country_groups(pandas dataframe): Lookup table mapping region names to lists of country ISO-3 codes
+
+    Returns:
+        str: Semicolon-separated string of country ISO-3 codes
+    """
+
+    result = float('NaN')
+    if isinstance(regions, str):
+        region_list = regions.split('; ')
+        i_country_groups = country_groups['Union/region'].isin(region_list)
+        country_list = list(set(country_groups[i_country_groups]['ISO3 codes']))
+        result = '; '.join(sorted(country_list))
+    return(result)
+
+
+def clean_country_strings(countries):
+    """
+    Clean semicolon-separated string of country iso-3 codes by sorting, removing duplicates, and dopping nan
+
+    Args:
+         countries (str): semicolon-separated string of country iso-3 codes
+
+    Returns:
+        str: cleaned semicolon-separted string of country iso-3 codes
+    """
+
+    result = float('NaN')
+    if isinstance(countries, str):
+        countries_list = list(sorted(set(countries.split('; '))))
+        countries_list = [x for x in countries_list if 'nan' not in x]
+        result = '; '.join(countries_list)
+    return(result)
+
+
 def make_countries_file(manual_path):
     """
     Creates a DataFrame with countries data from an Excel file.
@@ -680,25 +720,57 @@ def make_countries_file(manual_path):
                        sheet_name='funders_countries_lookup',
                        engine='openpyxl'
                        )
+    country_groups = pd.read_excel(os.path.join(manual_path,
+                                    'funder_countries',
+                                    'funders_countries_lookup.xlsx'),
+                       sheet_name='country_groups',
+                       engine='openpyxl'
+                       )
     for var in ['suggested_Countries[alpha-3]_change',
+                'suggested_union_change',
                 'suggested_Countries[union]_change',
+                'suggested_region_change',
                 'suggested_Countries[region]_change']:
         df[var] = df[var].str.strip()
 
-    df['countries_extracted'] = np.where(df['suggested_Countries[alpha-3]_change'].isnull(),
+    # regions
+    df['region_extracted'] = np.where(df['suggested_region_change'].isnull(),
+                                      df['region'],
+                                      df['suggested_region_change'])
+    df['countries_region_extracted'] = \
+        [make_region_country_list(regions=x, country_groups=country_groups) for x in list(df['region_extracted'])]
+
+    # unions
+    df['union_extracted'] = np.where(df['suggested_union_change'].isnull(),
+                                     df['union'],
+                                     df['suggested_union_change'])
+    df['countries_union_extracted'] = \
+        [make_region_country_list(regions=x, country_groups=country_groups) for x in list(df['union_extracted'])]
+
+    # named countries
+    df['countries_specific_extracted'] = np.where(df['suggested_Countries[alpha-3]_change'].isnull(),
                                          df['Countries[alpha-3]'],
                                          df['suggested_Countries[alpha-3]_change'])
-    df['union_extracted'] = np.where(df['suggested_Countries[union]_change'].isnull(),
-                                     df['Countries[union]'],
-                                     df['suggested_Countries[union]_change'])
-    df['region_extracted'] = np.where(df['suggested_Countries[region]_change'].isnull(),
-                                      df['Countries[region]'],
-                                      df['suggested_Countries[region]_change'])
-    df = df[df['countries_extracted'].notnull()]
+
+    # combine all countries
+    cols_to_combine = ['countries_specific_extracted', 'countries_union_extracted', 'countries_region_extracted']
+    df['countries_extracted'] = df[cols_to_combine].apply(lambda row: '; '.join(row.values.astype('str')), axis=1)
+
+    # clean country columns
+    df['countries_extracted'] = df['countries_extracted'].apply(clean_country_strings)
+    df['countries_specific_extracted'] = df['countries_specific_extracted'].apply(clean_country_strings)
+    df['countries_union_extracted'] = df['countries_union_extracted'].apply(clean_country_strings)
+    df['countries_region_extracted'] = df['countries_region_extracted'].apply(clean_country_strings)
+
+    # df = df[df['countries_extracted'].notnull()]
+    df = df.dropna(subset=['countries_extracted', 'union_extracted', 'region_extracted'], how='all')
     return df[['REF impact case study identifier',
-               'countries_extracted',
+               'countries_specific_extracted',
                'region_extracted',
-               'union_extracted']]
+               'countries_region_extracted',
+               'union_extracted',
+               'countries_union_extracted',
+               'countries_extracted']]
 
 
 @log_row_count
@@ -994,24 +1066,25 @@ def load_scientometric_data(df, dim_path):
             mydict[paper] = {}
             for key, value in {'dimensions_id': 'id',
                                'title_preferred': 'preferred',
-                               'doi':'doi',
-                               'issn': 'issn',
-                               'eissn': 'eissn',
-                               'Field of Research': 'category_for',
-                               'Unit of Assessment': 'category_uoa',
+                               #'doi':'doi',
+                               #'issn': 'issn',
+                               #'eissn': 'eissn',
+                               'field_of_research': 'category_for',
+                               'unit of assessment': 'category_uoa',
                                'type': 'type',
+                               'concepts': 'concepts',
                                'date': 'date_normal',
-                               'Times Cited': 'Times Cited',
-                               'Recent Citations':'Recent Citations',
-                               'Field Citation Ratio': 'Field Citation Ratio',
-                               'Relative Citation Ratio': 'Relative Citation Ratio',
-                               'Altmetric': 'Altmetric',
-                               'Abstract': 'abstract',
-                               'Authors': 'authors',
-                               'Funding': 'funder_orgs',
-                               'Open Access': 'open_access_categories_v2',
-                               'Researcher Cities': 'research_org_cities',
-                               'Researcher Countries': 'research_org_countries'
+                               'times_cited': 'Times Cited',
+                               'recent_citations':'Recent Citations',
+                               'field_citation_ratio': 'Field Citation Ratio',
+                               'relative_citation_ratio': 'Relative Citation Ratio',
+                               'altmetric': 'Altmetric',
+                               #'abstract': 'abstract',
+                               #'authors': 'authors',
+                               #'funding': 'funder_orgs',
+                               'open_access': 'open_access_categories_v2',
+                               'researcher_cities': 'research_org_cities',
+                               'researcher_countries': 'research_org_countries'
                                }.items():
                 try:
                     mydict[paper][key] = ics_df.at[index, value]
@@ -1082,8 +1155,8 @@ if __name__ == "__main__":
         print(f"Will write final dataset to provided path: {output_path}")
         write = True
     else:
-        output_path = final_path / 'enhanced_ref_data.csv'
-        if not (final_path / 'enhanced_ref_data.csv').exists():
+        output_path = final_path / 'enhanced_ref_data.zip'
+        if not (final_path / 'enhanced_ref_data.zip').exists():
             ## Standard output file does not exist yet
             print(f"Will write final dataset to default path: {output_path}")
             write = True
@@ -1097,6 +1170,9 @@ if __name__ == "__main__":
                         "Use -f to force overwrite or provide a custom path.\n" +
                         "Only intermittent files will be generated and saved.")
                 write = False
+
+    if not os.path.exists(raw_path):
+        os.makedirs(raw_path, exist_ok=True)
     if not (raw_path / 'raw_ref_environment_data.xlsx').exists():
         get_environmental_data(raw_path)
     if not ((raw_path / 'raw_ref_ics_tags_data.xlsx').exists() and\
@@ -1176,4 +1252,7 @@ if __name__ == "__main__":
     df = get_sentiment_scores(df, edit_path)
 
     if write:
-        df.to_csv(output_path, index=False)
+        df.to_csv(output_path,
+                  index=False,
+                  compression=dict(method='zip',
+                                   archive_name='enhanced_ref_data.csv'))

@@ -10,6 +10,10 @@ import matplotlib.colors
 import matplotlib.ticker as mtick
 from helpers.figure_helpers import savefigures
 mpl.rcParams['font.family'] = 'Graphik'
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 plt.rcParams["axes.labelweight"] = "light"
 plt.rcParams["font.weight"] = "light"
 ba_rgb2 = ['#41558c', '#E89818', '#CF202A']
@@ -239,48 +243,3 @@ def make_figure_fifteen():
           len(df_global[df_global['Main panel'] == 'D']) /
           len(df[df['Main panel'] == 'D'])*100)
 
-    # make the 'percebt if times a conuntry is included' table.
-    df = pd.read_csv(os.path.join(os.getcwd(),
-                                  '..',
-                                  '..',
-                                  'data',
-                                  'final',
-                                  'enhanced_ref_data.csv'),
-                     index_col=0)
-
-    country_list=[]
-    for index, row in df.iterrows():
-        countries = row['countries_extracted']
-        if countries is not np.nan:
-            countries = countries.split(';')
-            for country in countries:
-                if ((country != 'TWN')
-                        and (country != 'ESH')
-                        and (country != 'GRL')
-                        and (country != 'FLK')):
-                    country_list.append(country.strip())
-    df1 = pd.DataFrame(country_list)[0].value_counts()
-    df1 = df1.sort_values(ascending=False)
-    iso_list = df1[0:10].index.to_list()
-    df['countries_extracted'] = df['countries_extracted'].fillna('')
-    df2 = pd.DataFrame(index=iso_list,
-                       columns = ['Panel A', 'UoA 4', 'Panel B', 'Panel C', 'Panel D'])
-    for iso in iso_list:
-        df2.at[iso, 'Panel A'] = (len(df[(df['Main panel'] == 'A') &
-                                          (df['countries_extracted'].str.contains(iso))])/
-                                  len(df[(df['Main panel'] == 'A')]))
-        df2.at[iso, 'Panel B'] = (len(df[(df['Main panel'] == 'B') &
-                                          (df['countries_extracted'].str.contains(iso))])/
-                                  len(df[(df['Main panel'] == 'B')]))
-        df2.at[iso, 'Panel C'] = (len(df[(df['Main panel'] == 'C') &
-                                          (df['countries_extracted'].str.contains(iso))])/
-                                  len(df[(df['Main panel'] == 'C')]))
-        df2.at[iso, 'Panel D'] = (len(df[(df['Main panel'] == 'D') &
-                                          (df['countries_extracted'].str.contains(iso))])/
-                                  len(df[(df['Main panel'] == 'D')]))
-        df2.at[iso, 'UoA 4'] = (len(df[(df['Unit of assessment number'] == 4.0) &
-                                          (df['countries_extracted'].str.contains(iso))])/
-                                len(df[(df['Unit of assessment number'] == 4.0)]))
-    df2 = df2.astype(float).round(4)*100
-    df2.to_csv(os.path.join(os.getcwd(), '..', '..', 'tables', 'country_beneficiaries_table.csv'))
-    print(df2)

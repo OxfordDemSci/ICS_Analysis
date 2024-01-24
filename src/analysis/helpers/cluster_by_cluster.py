@@ -20,7 +20,10 @@ mpl.rcParams['font.family'] = 'Graphik'
 plt.rcParams["font.family"] = 'Graphik'
 plt.rcParams["axes.labelweight"] = "light"
 plt.rcParams["font.weight"] = "light"
-#matplotlib.use('Agg')
+new_rc_params = {'text.usetex': False,
+"svg.fonttype": 'none'
+}
+mpl.rcParams.update(new_rc_params)
 
 # @TODO this is not a good colour 3.
 ba_rgb2 = ['#41558c', '#E89818', '#CF202A']

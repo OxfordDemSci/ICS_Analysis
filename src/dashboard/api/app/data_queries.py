@@ -1,15 +1,19 @@
+import copy
 import csv
+import json
+import math
 from collections import defaultdict
 from io import StringIO
-import json
-from typing import Any, DefaultDict, Dict, List
+from typing import Any, DefaultDict, Dict, List, Sequence
 
 from flask import make_response
 from flask.wrappers import Response
+from shapely import to_geojson  # type: ignore
+from shapely.wkt import loads  # type: ignore
 from sqlalchemy import text
 from sqlalchemy.sql.elements import TextClause
 
-from app import db
+from app import TOPICS_BOOL_MAP, db
 from app.models import ICS, TopicGroups, WebsiteText
 
 
@@ -53,7 +57,7 @@ def get_topics(topic: str | None = None):
     return topics
 
 
-def get_topic_groups():
+def get_topic_groups():  # type: ignore
     topic_groups = db.session.query(TopicGroups).all()
 
     # Unpack the response into a dictionary
@@ -80,7 +84,7 @@ def get_website_text():
         "uk_map_colourramp": row.uk_map_colourramp,
         "global_colourramp": row.global_colourramp,
         "funders_bar_colour": row.funders_bar_colour,
-        "uoa_bar_colours": json.loads(row.uoa_bar_colours)
+        "uoa_bar_colours": json.loads(row.uoa_bar_colours),
     }
     return website_text
 
@@ -88,51 +92,62 @@ def get_website_text():
 def get_pdf_data(
     threshold: float,
     topic: str | None = None,
-    postcode_area: str | None = None,
+    postcode_area: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, dict]:
+    # FIXME This functionality is deprecated as an endpoint - Will need to be updated
+    # when/if it is used.
     pdf_data = {}
     pdf_data["topic"] = get_topics(topic)
     pdf_data["background_text"] = get_website_text()
     pdf_data["ics_data"] = query_dashboard_data(
-        threshold, topic, postcode_area, beneficiary, uoa, funder
+        threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder  # type: ignore
     )
     return pdf_data
 
 
-def get_ics_table(ics_ids: list | None = None, limit: int | None = None) -> list:
-    if ics_ids is None:
-        if limit is None:
-            rows = db.session.query(ICS).all()
-        else:
-            rows = db.session.query(ICS).limit(limit).all()
-    else:
-        if limit is None:
-            rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
-        else:
-            rows = (
-                db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).limit(limit).all()
-            )
+def get_ics_table(ics_ids: list, page: int, limit: int) -> tuple:
+    rows = (
+        db.session.query(ICS)  # type: ignore
+        .filter(ICS.ics_id.in_(ics_ids))
+        .order_by(ICS.id)
+        .paginate(page=page, per_page=limit)
+    )
     ics_table = []
     for row in rows:
         ics_table.append(
             {column.name: getattr(row, column.name) for column in ICS.__table__.columns}
         )
-    return ics_table
+    meta = {
+        "page": rows.page,
+        "pages": rows.pages,
+        "total_rows": rows.total,
+        "prev_page": rows.prev_num,
+        "next_page": rows.next_num,
+        "has_next": rows.has_next,
+        "has_prev": rows.has_prev,
+    }
+    return ics_table, meta
 
 
 def download_ics_table(
     threshold: float,
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     country: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
     limit: int | None = None,
 ) -> Response:
-    ics_ids = get_ics_ids(threshold, topic, postcode, country, uoa, funder)
+    ics_ids = get_ics_ids(
+        threshold, topic, postcode, country, uk_region, uoa, uoa_name, funder
+    )
     rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
     csv_data = StringIO()
     writer = csv.writer(csv_data)
@@ -201,13 +216,65 @@ def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     return countries
 
 
+def get_regions_counts(
+    ics_ids: list | None = None, return_buffers: bool = False
+) -> Dict[str, Sequence[str]]:
+    scale_factor = 0.03
+    if ics_ids is None:
+        sql = text(
+            """
+            SELECT u.uk_region_tag_values as region, count(*) as region_count, g.regions_wkt as geom from uk_regions u
+            JOIN regions_geometry g
+            ON u.uk_region_tag_values = g.placename
+            where u.uk_region_tag_values
+            is not NULL GROUP BY u.uk_region_tag_values, g.regions_wkt order by region_count desc
+        """
+        )
+        query = db.session.execute(sql)
+    else:
+        sql = text(
+            """
+            SELECT u.uk_region_tag_values as region, count(*) as region_count, g.regions_wkt as geom
+            FROM uk_regions u
+            JOIN regions_geometry g ON u.uk_region_tag_values = g.placename
+            JOIN ics i ON u.ics_table_id = i.id
+            WHERE i.ics_id = ANY(:ics_ids)
+            AND u.uk_region_tag_values is not NULL
+            GROUP BY u.uk_region_tag_values, g.regions_wkt ORDER BY region_count DESC
+        """
+        )
+        query = db.session.execute(sql, {"ics_ids": ics_ids})
+    regions = [
+        {
+            "name": row.region,
+            "count": row.region_count,
+            "geometry": loads(row.geom).buffer(
+                math.log(row.region_count) * scale_factor
+            )
+            if return_buffers
+            else loads(row.geom),
+        }
+        for row in query
+    ]
+    collection = {"type": "FeatureCollection", "features": []}
+    for region in regions:
+        collection["features"].append(  # type: ignore
+            {
+                "type": "Feature",
+                "geometry": json.loads(to_geojson(region["geometry"])),
+                "properties": {"name": region["name"], "count": region["count"]},
+            }
+        )
+    return collection
+
+
 def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     if ics_ids is None:
         sql = text(
             """
             SELECT ics.uoa as uoa, uoa.name as name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as
-                assessment_group, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON ics.uoa = uoa.uoa_id GROUP BY ics.uoa,
-                uoa.name, uoa.assessment_panel, uoa.assessment_group ORDER BY uoa_count desc;
+                assessment_group, COUNT(*) AS uoa_count FROM ics ics JOIN uoa ON CAST(ics.uoa) = uoa.uoa_id GROUP BY
+                ics.uoa, uoa.name, uoa.assessment_panel, uoa.assessment_group ORDER BY uoa_count desc;
         """
         )
         query = db.session.execute(sql)
@@ -226,7 +293,7 @@ def get_uoa_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
             SELECT ics.uoa AS uoa, uoa.name AS name, uoa.assessment_panel as assessment_panel, uoa.assessment_group as
             assessment_group, COUNT(*) AS uoa_count
             FROM ics ics
-            JOIN uoa uoa ON ics.uoa = uoa.uoa_id
+            JOIN uoa uoa ON CAST(ics.uoa as INTEGER) = uoa.uoa_id
             WHERE ics.ics_id = ANY(:ics_ids)
             GROUP BY ics.uoa, uoa.name, uoa.assessment_panel, uoa.assessment_group
             ORDER BY uoa_count DESC;
@@ -284,35 +351,105 @@ def get_institution_counts(ics_ids: List | None = None) -> Any:
     return institutions
 
 
+def get_available_topics(ics_ids: List[str]):
+    topics_available = copy.deepcopy(TOPICS_BOOL_MAP)
+    sql = text(
+        """
+        SELECT DISTINCT(t.topic_name) from topics t
+        JOIN topic_weights w ON
+        w.topic_id = t.topic_id
+        WHERE w.ics_id = ANY(:ics_ids)
+        AND w.probability > 0;
+        """
+    )
+    query = db.session.execute(sql, {"ics_ids": ics_ids})
+    topics = [row.topic_name for row in query]
+    for topic in topics:
+        topics_available[topic] = True
+    return topics_available
+
+
 def query_dashboard_data(
     threshold: float,
+    table_page: int,
+    items_per_page: int,
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
-    ics_ids = get_ics_ids(threshold, topic, postcode, beneficiary, uoa, funder)
+    ics_ids = get_ics_ids(
+        threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder
+    )
+    data["topics_available"] = get_available_topics(ics_ids=ics_ids)
     data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
+    data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
-    data["ics_table"] = get_ics_table(ics_ids=ics_ids, limit=500)
+    data["ics_table"], data["table_pagination_meta"] = get_ics_table(
+        ics_ids=ics_ids, page=table_page, limit=items_per_page
+    )
+    return data
+
+
+def get_paginated_table(
+    threshold: float,
+    table_page: int,
+    items_per_page: int,
+    topic: str | None = None,
+    postcode: list | None = None,
+    beneficiary: str | None = None,
+    uk_region: str | None = None,
+    uoa: str | None = None,
+    uoa_name: str | None = None,
+    funder: str | None = None,
+) -> Dict[str, List[Dict[str, str]]]:
+    data = {}
+    ics_ids = get_ics_ids(
+        threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder
+    )
+    data["ics_table"], data["table_pagination_meta"] = get_ics_table(
+        ics_ids=ics_ids, page=table_page, limit=items_per_page
+    )
     return data
 
 
 def get_ics_ids(
     threshold: float,
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> List[str]:
-    sql = get_ics_sql(topic, postcode, beneficiary, uoa, funder)
-    argument_names = ["threshold", "topic", "postcode", "beneficiary", "uoa", "funder"]
-    arguments = [threshold, topic, postcode, beneficiary, uoa, funder]
+    sql = get_ics_sql(topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
+    argument_names = [
+        "threshold",
+        "topic",
+        "postcode",
+        "beneficiary",
+        "uk_region",
+        "uoa",
+        "uoa_name",
+        "funder",
+    ]
+    arguments = [
+        threshold,
+        topic,
+        tuple(postcode) if postcode is not None else None,
+        beneficiary,
+        uk_region,
+        uoa,
+        uoa_name,
+        funder,
+    ]
     params = {
         arg_name: arg_val
         for arg_name, arg_val in zip(argument_names, arguments)
@@ -325,31 +462,38 @@ def get_ics_ids(
 
 def get_ics_sql(
     topic: str | None = None,
-    postcode: str | None = None,
+    postcode: list | None = None,
     beneficiary: str | None = None,
+    uk_region: str | None = None,
     uoa: str | None = None,
+    uoa_name: str | None = None,
     funder: str | None = None,
 ) -> TextClause:
     sql_str = """
         SELECT DISTINCT(tw.ics_id) FROM topic_weights tw
         JOIN topics t ON tw.topic_id = t.topic_id
         JOIN ics i ON tw.ics_id = i.ics_id
-        JOIN uoa u ON u.uoa_id = i.uoa
+        JOIN uoa u ON u.uoa_id = CAST(i.uoa AS INTEGER)
         JOIN funder f ON f.ics_table_id = i.id
         JOIN countries c ON c.ics_table_id = i.id
+        JOIN uk_regions r ON r.ics_table_id = i.id
         WHERE tw.probability >= :threshold
     """
     if topic is not None:
         sql_str += " AND t.topic_name = :topic"
     if postcode is not None:
-        sql_str += " AND i.postcode = :postcode"
+        sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:
         sql_str += " AND c.country = :beneficiary"
+    if uk_region is not None:
+        sql_str += " AND r.uk_region_tag_values = :uk_region"
     if uoa is not None:
         if uoa in ["A", "B", "C", "D"]:
             sql_str += " AND u.assessment_panel = :uoa"
         elif uoa in ["STEM", "SHAPE"]:
             sql_str += " AND u.assessment_group = :uoa"
+    if uoa_name is not None:
+        sql_str += " AND u.name = :uoa_name"
     if funder is not None:
         sql_str += " AND f.funder = :funder"
     sql = text(sql_str)

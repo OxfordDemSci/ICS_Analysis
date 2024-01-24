@@ -11,13 +11,13 @@ After the app has started and the tables inserted into the database, the fronten
 **Before running the app for the first time, tables will need to be generated for the database. See Part 2 below in *Running the API app locally***
 
 ## API and Database
-The API follows [OpenAPI specification](https://www.openapis.org/). The apps routes/endpoints are defined in the `api/app/api-config.yaml`, with an element for each endpoint. The `operationId` in the `yaml` file points to the python functions that process the queries, all defined in `api/app/endpoints.py`. Before querying the data, all of the parameters are validated through `api.app.data_access.validate_params`, with each of the parameters' validation and datatype defined in `api/app/data_types.py`. Once the requests have passed validation, the queries are passed to their corresponding functions in `api/app/data_queries.py` (sometimes via `api/app/data_access.py`) to be queried by the database.\
+The API follows [OpenAPI specification](https://www.openapis.org/). The app's routes/endpoints are defined in the `api/app/api-config.yaml`, with an element for each endpoint. The `operationId` in the `yaml` file points to the python functions that process the queries, all defined in `api/app/endpoints.py`. Before querying the data, all of the parameters are validated through `api.app.data_access.validate_params`, with each of the parameters' validation and datatype defined in `api/app/data_types.py`. Once the requests have passed validation, the queries are passed to their corresponding functions in `api/app/data_queries.py` (sometimes via `api/app/data_access.py`) to be queried by the database.\
 PDF reports are generated in `api/app/generage_pdf_report.py`.
 
 ### Running the API app locally
 The API/database can be run independently from the front-end for testing/debugging purposes. Changes made to the app when running it in this way will be reflected in the running app without having to restart it. As data is not persisted in the database container, the following steps will need to be followed to start the app and populate the database.
 1. Start the database container:\
-`cd` to `./api/scripts/postgres_local_dev` and run `docker-compose up -d –build`
+`cd` to `./api/scripts/postgres_local_dev` and run `docker-compose up -d –-build`
 2. Prepare the tables for the database (this only needs to be done once per table version. If tables change, this will need to be re-run):\
 `cd` back to the api root `./api/` and run `python scripts/reformat_csvs_for_db.py`. This will also create the tables used in the unit tests. For this to work, you will need to have your `enriched_ref_ics_data.csv` table saved to `/ICS_Analysis/data/enriched/` (this ignored by `Git`). This script will make all the tables required for the database, but because of its size, the `ICS_DATABASE_TABLE.csv` will also be ignored by `Git`, but it can be left in its location. 
 3. Insert the tables to the database:\
