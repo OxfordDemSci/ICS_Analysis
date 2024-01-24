@@ -9,16 +9,14 @@ import subprocess
 import unicodedata
 import numpy as np
 import pandas as pd
-
-from pathlib import Path
 from textblob import TextBlob
 from textstat import textstat
 from markdown import markdown
 from bs4 import BeautifulSoup
+from get_openalex_data import get_openalex_data
 from get_dimensions_data import get_dimensions_data, make_paper_level
 
 from pathlib import Path
-import requests
 
 def log_row_count(func):
     """
@@ -655,8 +653,9 @@ def get_paths(data_path):
     final_path = data_path / 'final'
     topic_path = data_path / 'topic_model'
     dim_path = data_path / 'dimensions_returns'
+    openalex_path = data_path / 'openalex_returns'
     return (raw_path, edit_path, sup_path, manual_path,
-            final_path, topic_path, dim_path)
+            final_path, topic_path, dim_path, openalex_path)
 
 
 def make_region_country_list(regions, country_groups):
@@ -1031,7 +1030,7 @@ def make_and_load_tags(df, raw_path, edit_path):
 
 
 @log_row_count
-def load_scientometric_data(df, dim_path):
+def load_scientometric_data(df, dim_path, openalex_path):
     """
     Loads, processes, and merges scientometric data with a given DataFrame.
 
@@ -1046,17 +1045,28 @@ def load_scientometric_data(df, dim_path):
         DataFrame: The original DataFrame merged with processed dimensions data.
     """
     print("Loading scientometric data")
-    file_path = dim_path / 'merged_dimensions.xlsx'
-    if not file_path.exists():
+    file_path = os.path.join(dim_path, 'merged_dimensions.xlsx')
+    if not os.path.exists(file_path):
         print(f"File not found: {file_path}")
-        print("WARNING: Not including scientometric data columns.")
+        print("WARNING: Not including Dimensions scientometric data columns.")
         print("Returning original file")
         return df
-
     dim_df = pd.read_excel(file_path)
+
+    file_path = os.path.join(openalex_path, 'merged_openalex.csv')
+    if not os.path.exists(file_path):
+        print(f"File not found: {file_path}")
+        print("WARNING: Not including OpenAlex scientometric data columns.")
+        print("Returning original file")
+        return df
+    openalex_df = pd.read_csv(file_path)
+
     merger = pd.DataFrame(columns=['REF impact case study identifier',
                                    'scientometric_data'])
     index = 0
+    outer_dict = {}
+    outer_dict['Dimensions'] = {}
+    outer_dict['OpenAlex'] = {}
     for ics in dim_df['Key'].unique():
         counter = 0
         mydict = {}
@@ -1066,22 +1076,16 @@ def load_scientometric_data(df, dim_path):
             mydict[paper] = {}
             for key, value in {'dimensions_id': 'id',
                                'title_preferred': 'preferred',
-                               #'doi':'doi',
-                               #'issn': 'issn',
-                               #'eissn': 'eissn',
                                'field_of_research': 'category_for',
                                'unit of assessment': 'category_uoa',
                                'type': 'type',
                                'concepts': 'concepts',
                                'date': 'date_normal',
                                'times_cited': 'Times Cited',
-                               'recent_citations':'Recent Citations',
+                               'recent_citations': 'Recent Citations',
                                'field_citation_ratio': 'Field Citation Ratio',
                                'relative_citation_ratio': 'Relative Citation Ratio',
                                'altmetric': 'Altmetric',
-                               #'abstract': 'abstract',
-                               #'authors': 'authors',
-                               #'funding': 'funder_orgs',
                                'open_access': 'open_access_categories_v2',
                                'researcher_cities': 'research_org_cities',
                                'researcher_countries': 'research_org_countries'
@@ -1114,10 +1118,23 @@ def load_scientometric_data(df, dim_path):
             except ValueError:
                 pass
             counter += 1
+        outer_dict['Dimensions'] = mydict
+
+        counter = 0
+        mydict = {}
+        ics_df = openalex_df[openalex_df['Key'] == ics]
+        for index in ics_df.index:
+            paper = 'Research_' + str(counter)
+            mydict[paper] = ast.literal_eval(openalex_df.at[index,
+            'OpenAlex_Response'])
+            counter += 1
+        outer_dict['OpenAlex'] = mydict
+
         merger.at[index, 'REF impact case study identifier'] = ics
-        merger.at[index, 'scientometric_data'] = mydict
+        merger.at[index, 'scientometric_data'] = outer_dict
         index += 1
-    return pd.merge(df, merger, how='left', on='REF impact case study identifier')
+    merged = pd.merge(df, merger, how='left', on='REF impact case study identifier')
+    return merged
 
 
 def return_dim_id(path, filename):
@@ -1146,7 +1163,7 @@ if __name__ == "__main__":
 
     (raw_path, edit_path, sup_path,
      manual_path, final_path, topic_path,
-     dim_path) = get_paths(data_path)
+     dim_path, openalex_path) = get_paths(data_path)
 
     csv_out = [arg for arg in sys.argv if '.csv' in arg]
 
@@ -1210,7 +1227,18 @@ if __name__ == "__main__":
                       " Just generating paper level data from the dimensions data.")
         make_paper_level(dim_path)
 
-    df = load_scientometric_data(df, dim_path)
+    if '-openalex' in sys.argv:
+        if not (dim_path / 'merged_openalex.csv').exists():
+            get_openalex(manual_path, openalex_path)
+        else:
+            if '-openalexf' in sys.argv:
+                print('Getting new OpenAlex data')
+                get_openalex_data(manual_path, openalex_path)
+            else:
+                print("OpenAlex data already found, skipping collection " +
+                      "(use -openalexf to force new collection).")
+
+    df = load_scientometric_data(df, dim_path, openalex_path)
 
     if '-top' in sys.argv:
         ## Generate new topic model

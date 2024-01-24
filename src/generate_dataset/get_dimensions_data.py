@@ -62,7 +62,7 @@ def make_paper_level(dim_out: str) -> None:
     merged_df = pd.concat([doi_df, isbn_df, title_df])
     merged_df = merged_df.drop_duplicates(subset=['Key', 'id'])
     merged_df = merged_df[merged_df['id'].notna()]
-    merged_df = merged_df.sort_values(by='Key')
+    merged_df = merged_df.sort_values(by=['Key', 'doi'])
     for index in merged_df.index:
         met = merged_df['metrics'][index]
         if isinstance(met, str):
