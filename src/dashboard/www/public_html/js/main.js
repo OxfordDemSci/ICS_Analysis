@@ -26,6 +26,14 @@ var slc_group_ID=0;
 var slc_group_Name="All Clusters";
 var slc_Impact_Beneficiariest="Global";
 
+// settings param
+var slc_Institutions_Map_Settings=null;
+var slc_Beneficiaries_Map_Settings=null;
+var slc_Country_Settings=null;
+var slc_Union_Settings=null;
+var slc_Region_Settings=null;
+var slc_Global_Settings=null;
+
 let total_rows_pagination_meta=0;
 
 let initialData = _api.getInitData(API_URL);
@@ -778,7 +786,20 @@ FundersChart.on('click', function(params) {
 //});
 
 $( "#btnSettings" ).on( "click", function() {
+    
     $('#idMdSettings').modal('show');
+});
+
+$('#idMdSettings').on('shown.bs.modal', function() { 
+    
+    slc_Institutions_Map_Settings=$("#chKeepPOSTarea").is(":checked");
+    slc_Beneficiaries_Map_Settings=$("#chCountryLabels").is(":checked");
+    slc_Country_Settings=$("#chCountries_specific_extracted").is(":checked");
+    slc_Union_Settings=$("#chCountries_union_extracted").is(":checked");
+    slc_Region_Settings=$("#chCountries_region_extracted").is(":checked");
+    slc_Global_Settings=$("#chCountries_global_extracted").is(":checked");
+    slc_numberFundersLimit = $('#numberFundersLimit').children("option:selected").val();
+    
 });
 
 $( "#btnContact" ).on( "click", function() {
@@ -1166,53 +1187,92 @@ $( "#btn_reset_Beneficiaries" ).on( "click", function() {
 });
 
 
+$('#idMdSettings').on('hide.bs.modal', function (e) {
+    
+    var elementCountries_specific = document.getElementById('chCountries_specific_extracted');
+    var elementCountries_union = document.getElementById('chCountries_union_extracted');
+    var elementCountries_region = document.getElementById('chCountries_region_extracted');
+    var elementCountries_global = document.getElementById('chCountries_global_extracted');
+
+  
+  if (!elementCountries_specific.checked && !elementCountries_union.checked && !elementCountries_region.checked && !elementCountries_global.checked) {
+      $('#idAlertBeneficiaryOptions').show();
+      e.preventDefault();
+  }
+  
+  
+});
+
+
 $('#idMdSettings').on('hidden.bs.modal', function (e) {
 
     e.preventDefault();
+    $('#idAlertBeneficiaryOptions').hide();
 
-    if ($("#chCountryLabels").is(":checked")) {
-        mapGlobal.addLayer(cartocdn);
-    } else {
-        mapGlobal.removeLayer(cartocdn);
-    }
-    
-     slc_numberFundersLimit=$('#numberFundersLimit').children("option:selected").val();
+    if ((slc_Institutions_Map_Settings !== $("#chKeepPOSTarea").is(":checked")) ||
+            (slc_Beneficiaries_Map_Settings !== $("#chCountryLabels").is(":checked")) ||
+            (slc_Country_Settings !== $("#chCountries_specific_extracted").is(":checked")) ||
+            (slc_Union_Settings !== $("#chCountries_union_extracted").is(":checked")) ||
+            (slc_Region_Settings !== $("#chCountries_region_extracted").is(":checked")) ||
+            (slc_Global_Settings !== $("#chCountries_global_extracted").is(":checked")) ||
+            (slc_numberFundersLimit !== $('#numberFundersLimit').children("option:selected").val())) {
 
 
-    _utils.progressMenuOn();
-    slc_topic = _utils.getActiveTopic();
-    _api.get_ics_data(API_URL,
-            slc_threshold,
-            slc_topic,
-            slc_postcode_area,
-            slc_beneficiary,
-            slc_uoa,
-            slc_uoa_name,
-            slc_funder).then(result => {
-        infoboxSelectedUKmap.remove(mapUK);
-        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
-        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
-        _utils.updateTopicsMenuAvailable(initialData, result.topics_available);
-
-        if (slc_Impact_Beneficiariest === "Global") {
-            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+        if ($("#chCountryLabels").is(":checked")) {
+            mapGlobal.addLayer(cartocdn);
         } else {
-            _UKRegionCountsMap.updateUKregion_counts_map(mapGlobal, clusters_UK_region, result.uk_region_counts);
+            mapGlobal.removeLayer(cartocdn);
         }
-        _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
-        if (slc_uoa_name === null) {
-            _UOAChart.updateUOAChart(result.uoa_counts);
-        }
-        total_rows_pagination_meta = result.table_pagination_meta.total_rows;
-        _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
 
-        if (slc_postcode_area_name === "All") {
-            document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
-        }
-    }).then(() => {
-        _utils.progressMenuOff();
-    }).catch(error => {
-        console.log('In the catch', error);
-    });
+        slc_numberFundersLimit = $('#numberFundersLimit').children("option:selected").val();
 
-})
+
+        _utils.progressMenuOn();
+        slc_topic = _utils.getActiveTopic();
+        _api.get_ics_data(API_URL,
+                slc_threshold,
+                slc_topic,
+                slc_postcode_area,
+                slc_beneficiary,
+                slc_uoa,
+                slc_uoa_name,
+                slc_funder).then(result => {
+            infoboxSelectedUKmap.remove(mapUK);
+            _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+            _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
+            _utils.updateTopicsMenuAvailable(initialData, result.topics_available);
+
+            if (slc_Impact_Beneficiariest === "Global") {
+                _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+            } else {
+                _UKRegionCountsMap.updateUKregion_counts_map(mapGlobal, clusters_UK_region, result.uk_region_counts);
+            }
+            _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
+            if (slc_uoa_name === null) {
+                _UOAChart.updateUOAChart(result.uoa_counts);
+            }
+            total_rows_pagination_meta = result.table_pagination_meta.total_rows;
+            _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+
+            if (slc_postcode_area_name === "All") {
+                document.getElementById("btn_reset_Institutions").style.visibility = "hidden";
+            }
+        }).then(() => {
+            _utils.progressMenuOff();
+        }).catch(error => {
+            console.log('In the catch', error);
+        });
+        
+        slc_Institutions_Map_Settings=$("#chKeepPOSTarea").is(":checked");
+        slc_Beneficiaries_Map_Settings=$("#chCountryLabels").is(":checked");
+        slc_Country_Settings=$("#chCountries_specific_extracted").is(":checked");
+        slc_Union_Settings=$("#chCountries_union_extracted").is(":checked");
+        slc_Region_Settings=$("#chCountries_region_extracted").is(":checked");
+        slc_Global_Settings=$("#chCountries_global_extracted").is(":checked");
+
+    }
+
+
+});
+
+
