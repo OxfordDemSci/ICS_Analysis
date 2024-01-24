@@ -65,7 +65,7 @@ The majority of the analysis is split into three distinct types/parts.
     * iv. The Inter- and Multidisciplinary Nature of Impact	83
     * v. The Gendered Nature of Underpinning Research
 
-* The interactive dashboard. This is found in `./src/dashboard`, and is a standalone repository which is linked to this one as a submodule. 
+* The interactive dashboard. This is found in `./src/dashboard`, and is a standalone repository which is linked to this one as a submodule.
 
 ### Dashboard
 
