@@ -8,14 +8,45 @@ from google.cloud import bigquery
 
 
 def how_much_dim_matched(df, object_type):
+    """
+        Calculates the percentage of direct matches for a specific object type in a DataFrame.
+
+        Parameters:
+        - df (pandas.DataFrame): The DataFrame containing data to analyze.
+        - object_type (str): The type of object for which the matching percentage is calculated.
+
+        Returns:
+        None
+
+        Prints:
+        - Percentage of direct matches for the specified object type in the DataFrame.
+        - Number of direct matches for the specified object type in the DataFrame.
+    """
     print(f'We can directly {object_type} match: ',
           round(len(df[df['id'].notnull()]) / len(df), 3))
     print(object_type + ' returns: ',
           len(df[df['id'].notnull()]))
 
 
-def make_paper_level(dim_out):
-    print('Merging Dimensions Data into paper level!')
+def make_paper_level(dim_out: str) -> None:
+    """
+    Merge Dimensions Data into paper level and calculate citation metrics.
+
+    Parameters:
+    - dim_out (str): The path to the directory where Dimensions data is stored.
+
+    Returns:
+    None
+
+    The function reads Dimensions data files for DOI, ISBN, and Title, performs
+    merging and deduplication, calculates citation metrics, and saves the merged
+    data with metrics to an Excel file.
+
+    Example:
+    >>> make_paper_level('/path/to/dimensions_data')
+    Merging Dimensions Data into paper level!
+    Saving merged data to '/path/to/dimensions_data/merged_dimensions.xlsx'.
+    """
     doi_df = pd.read_excel(os.path.join(dim_out, 'doi_returns_dimensions.xlsx'),
                            engine='openpyxl'
                            )
@@ -99,11 +130,40 @@ def make_paper_level(dim_out):
 
 
 def load_dict(path, filename, fields):
-    df = pd.read_csv(os.path.join(path, filename), index_col=0, usecols = fields)
-    return df
+    """
+    Load a DataFrame with specific fields from a CSV file.
+
+    Parameters:
+    - path (str): The directory path where the CSV file is located.
+    - filename (str): The name of the CSV file to be loaded.
+    - fields (List[str]): A list of column names to be loaded from the CSV file.
+
+    Returns:
+    pd.DataFrame: A DataFrame containing the specified fields from the CSV file.
+
+    Example:
+    >>> fields_to_load = ['column1', 'column2', 'column3']
+    >>> loaded_data = load_dict('/path/to/data', 'example_data.csv', fields_to_load)
+    """
+    return pd.read_csv(os.path.join(path, filename),
+                       index_col = 0,
+                       usecols = fields)
 
 
-def make_long(input_df, df_col_name, delim='\n'):
+def make_long(input_df: pd.DataFrame,
+              df_col_name: str,
+              delim: str = '\n') -> pd.DataFrame:
+    """
+    Transform a DataFrame with multiline values into a long-format DataFrame.
+
+    Parameters:
+    - input_df (pd.DataFrame): The input df containing the data to be transformed.
+    - df_col_name (str): Name of column in input df containing multiline values.
+    - delim (str, optional): The delimiter used to split multiline values into rows.
+
+    Returns:
+    pd.DataFrame: A long-format df with columns 'Key' and the specified 'df_col_name'.
+    """
     df = pd.DataFrame(columns=['Key', df_col_name])
     counter = 0
     for index, row in input_df.iterrows():
@@ -258,14 +318,40 @@ def get_data_from_lists(query_list, client, query_type):
 
 def get_all_data(client, query_list, query_type):
     """ Helper function to get all data from iterative queries"""
-
     results = get_data_from_lists(query_list,
                                   client,
                                   query_type).to_dataframe()
     return results
 
 
-def get_dimensions_data(paper_ident_path, dim_out, my_project_id):
+def get_dimensions_data(paper_ident_path: str,
+                        dim_out: str,
+                        my_project_id: str) -> None:
+    """
+    Retrieve Dimensions Data based on paper identifiers and save the results.
+
+    Parameters:
+    - paper_ident_path (str): The path to the directory containing paper identifiers.
+    - dim_out (str): The path to the directory where Dimensions data will be stored.
+    - my_project_id (str): The Google Cloud project ID for the BigQuery client.
+
+    Returns:
+    None
+
+    The function loads paper identifiers, extracts DOIs, ISBNs, and Titles,
+    queries Dimensions data using the extracted identifiers, and saves the results
+    to Excel files.
+
+    Example:
+    >>> get_dimensions_data('/path/to/paper_identifiers',
+                            '/path/to/dimensions_data',
+                            'my_project_id')
+    Getting Dimensions Data!
+    ...
+    Data saved to '/path/to/dimensions_data/doi_returns_dimensions.xlsx'.
+    Data saved to '/path/to/dimensions_data/isbns_returns_dimensions.xlsx'.
+    Data saved to '/path/to/dimensions_data/title_returns_dimensions.xlsx'.
+    """
     print('Getting Dimensions Data!')
     fields = ['REF impact case study identifier',
               'DOIs_suggested', 'ISBNs_suggested', 'Titles_suggested']

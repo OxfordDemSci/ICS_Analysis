@@ -4,7 +4,21 @@ import json
 import numpy as np
 import pandas as pd
 
-def build_paper_panels(paper_level):
+def build_paper_panels(paper_level: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series, pd.Series, pd.Series]:
+    """
+    Build summary statistics for paper-level metrics grouped by Unit of Assessment (UoA) and Main Panel.
+
+    Parameters:
+    - paper_level (pd.DataFrame): The input DataFrame containing paper-level metrics.
+
+    Returns:
+    tuple[pd.DataFrame, pd.Series, pd.Series, pd.Series]: A tuple containing:
+    - A DataFrame (`paper_panels`) with average metrics grouped by Main Panel.
+    - A Series (`cited_by_uoa`) with average Times Cited grouped by UoA.
+    - A Series (`altm_by_uoa`) with average Altmetric scores grouped by UoA.
+    - A Series (`ratio_by_uoa`) with average Relative Ratio values grouped by UoA.
+    """
+    # Group by UoA and Main Panel to calculate mean metrics
     altm_by_uoa = paper_level.groupby(['Unit of assessment number'])['Average Altmetric'].mean()
     altm_by_panel = paper_level.groupby(['Main panel'])['Average Altmetric'].mean()
     altm_by_uoa.index = altm_by_uoa.index.astype(int)
@@ -31,6 +45,19 @@ def build_paper_panels(paper_level):
 
 
 def make_inf_var(paper_level, score_inf_path):
+    """
+    Calculate and save average metrics grouped by 'Key' in paper-level data.
+
+    Parameters:
+    - paper_level (pd.DataFrame): The input DataFrame containing paper-level metrics.
+    - score_inf_path (str): The directory path where the calculated metrics will be saved.
+
+    Returns:
+    None
+
+    This function calculates the mean values of 'Average Altmetric', 'Average Times Cited', and 'Relative Ratio'
+    grouped by 'Key' in the input paper-level DataFrame. The results are saved as CSV files in the specified directory.
+    """
     altm = pd.DataFrame(paper_level.groupby(['Key'])['Average Altmetric'].mean())
     cited = pd.DataFrame(paper_level.groupby(['Key'])['Average Times Cited'].mean())
     rel_cite = pd.DataFrame(paper_level.groupby(['Key'])['Relative Ratio'].mean())
@@ -71,7 +98,6 @@ def make_heat_topics():
 
 def make_keywords(four_star):
     merged_path = os.path.join(os.getcwd(), '..', '..', 'data', 'merged')
-    keyword_out = os.path.join(os.getcwd(), '..', '..', 'data', 'keywords')
     asset_path = os.path.join(os.getcwd(), '..', '..', 'assets')
     df = pd.read_csv(os.path.join(merged_path, 'merged_ref_data_exc_output.csv'), index_col=0)
     with open(os.path.join(asset_path, 'keyword_dictionary.json')) as json_file:
@@ -99,10 +125,24 @@ def make_keywords(four_star):
                               axis=1)]
         newkey = key.replace("\n", "")
         print(f'Number ICS found for {newkey}: ', len(temp_df))
-#        temp_df.to_csv(os.path.join(keyword_out, f'{key}' + str(file_suffix) + '.csv'))
+
 
 
 def how_much_dim_matched(df, object_type):
+    """
+    Calculate and print the proportion of direct matches for a specific object type.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing data for matching.
+    - object_type (str): The type of object for which matching is performed.
+
+    Returns:
+    None
+
+    This function calculates the proportion of direct matches for a specified object type
+    by dividing the count of non-null 'id' values by the total number of rows in the DataFrame.
+    The result is printed as a rounded percentage along with the count of non-null 'id' values.
+    """
     print(f'We can directly {object_type} match: ',
           round(len(df[df['id'].notnull()]) / len(df), 3))
     print(object_type + ' returns: ',
@@ -110,6 +150,20 @@ def how_much_dim_matched(df, object_type):
 
 
 def return_paper_level(dim_out):
+    """
+    Return a DataFrame representing paper-level data by merging Dimensions and raw data.
+
+    Parameters:
+    - dim_out (str): The directory path containing Dimensions returns CSV files.
+
+    Returns:
+    pd.DataFrame: A merged DataFrame containing paper-level data with additional metrics.
+
+    This function reads Dimensions returns for DOIs and ISBNs, checks the direct match proportions,
+    and merges them with raw data using the 'Key' and 'REF impact case study identifier' columns.
+    Additional metrics like 'Average Times Cited', 'Relative Ratio', and 'Average Altmetric' are extracted
+    from the 'metrics' and 'altmetrics' columns and added to the resulting DataFrame.
+    """
     doi_df = pd.read_csv(os.path.join(dim_out,
                                       'doi_returns_dimensions.csv'))
     isbn_df = pd.read_csv(os.path.join(dim_out,

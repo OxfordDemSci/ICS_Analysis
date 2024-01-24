@@ -17,10 +17,20 @@ from helpers.general_helpers import return_paper_level
 from nltk.stem.snowball import SnowballStemmer
 import gender_guesser.detector as gender
 d = gender.Detector()
-#from helpers.text_helpers import freq_dist, co_occurrence, set_diag, truncate_colormap
 
 
 def savefigures(plt, filepath, filename):
+    """
+    Save a Matplotlib figure in multiple formats (PDF, SVG, PNG) with specified settings.
+
+    Parameters:
+    - plt (matplotlib.pyplot): The Matplotlib figure to be saved.
+    - filepath (str): The directory path where the figures will be saved.
+    - filename (str): The base name of the saved files (without extensions).
+
+    Returns:
+    None
+    """
     plt.savefig(os.path.join(filepath, filename + '.pdf'), bbox_inches='tight')
     plt.savefig(os.path.join(filepath, filename + '.svg'), bbox_inches='tight')
     plt.savefig(os.path.join(filepath, filename + '.png'), bbox_inches='tight',
@@ -31,7 +41,6 @@ def plot_impact_type_combined(df, figure_path):
 
     fig = plt.figure(figsize=(18, 12))
     gs = gridspec.GridSpec(16, 17, hspace=5, wspace=2)
-
     ax1 = fig.add_subplot(gs[0:2, 0:12])
     ax2 = fig.add_subplot(gs[2:4, 0:12])
     ax3 = fig.add_subplot(gs[4:6, 0:12])
@@ -40,13 +49,8 @@ def plot_impact_type_combined(df, figure_path):
     ax6 = fig.add_subplot(gs[10:12, 0:12])
     ax7 = fig.add_subplot(gs[12:14, 0:12])
     ax8 = fig.add_subplot(gs[14:16, 0:12])
-
     ax9 = fig.add_subplot(gs[0:16, 12:16])
     ax10 = fig.add_subplot(gs[0:16, 16:17])
-
-
-    # uoa thing here
-
     groupby_counter = df.groupby(['Unit of assessment number']).size().reset_index().rename({0: 'Count'}, axis=1)
     temp = df.groupby(['Unit of assessment number',
                        'Summary impact type']).size().reset_index().rename({0: 'Count'}, axis=1)
@@ -99,14 +103,6 @@ def plot_impact_type_combined(df, figure_path):
     ax6.set_title('F.', loc='left', fontsize=18, x=-0.015)
     ax7.set_title('G.', loc='left', fontsize=18, x=-0.015)
     ax8.set_title('H.', loc='left', fontsize=18, x=-0.015)
-    #ax1.set_ylabel('Environment', rotation=0, fontsize=15)
-    #ax2.set_ylabel('Health', rotation=0, fontsize=15)
-    #ax3.set_ylabel('Political', rotation=0, fontsize=15)
-    #ax4.set_ylabel('Societal', rotation=0, fontsize=15)
-    #ax5.set_ylabel('Technological', rotation=0, fontsize=15)
-    #ax6.set_ylabel('Legal', rotation=0, fontsize=15)
-    #ax7.set_ylabel('Economic', rotation=0, fontsize=15)
-    #ax8.set_ylabel('Cultural', rotation=0, fontsize=15)
     colors2 = ['#001c54', '#E89818']
     plt.tight_layout()
     for ax in [ax1, ax2, ax3, ax4, ax5, ax6, ax7]:
@@ -140,8 +136,6 @@ def plot_impact_type_combined(df, figure_path):
         ylabels = ['{:,.0f}'.format(x) + '%' for x in ax.get_yticks()]
         ax.set_yticklabels(ylabels)
         sns.despine(ax=ax)
-
-    # heatmap thing here
 
     dfA = df[df['Main panel']=='A'].groupby('Summary impact type')['Summary impact type'].count()
     dfB = df[df['Main panel']=='B'].groupby('Summary impact type')['Summary impact type'].count()
@@ -208,9 +202,6 @@ def plot_impact_type_combined(df, figure_path):
         else:
             y_names = [t for t in sorted(set([v for v in y]))]
         y_to_num = {p[1]:p[0] for p in enumerate(y_names)}
-    #    plot_grid = plt.GridSpec(1, 15, hspace=0.2, wspace=0.1)
-    #    print(figsize)
-    #    ax9 = plt.subplot(plot_grid[:,:-1])
         marker = kwargs.get('marker', 's')
         kwargs_pass_on = {k:v for k,v in kwargs.items() if k not in [
              'color', 'palette', 'color_range', 'size',
@@ -229,7 +220,6 @@ def plot_impact_type_combined(df, figure_path):
         ax9.set_xticklabels([k for k in x_to_num], rotation=90, horizontalalignment='right', fontsize=14)
         ax9.set_yticks([v for k,v in y_to_num.items()])
         ax9.set_yticklabels([k for k in y_to_num], fontsize=14)
-    #    ax9.set_yticklabels([])
         ax9.grid(False, 'major')
         ax9.grid(True, 'minor')
         ax9.set_xticks([t + 0.5 for t in ax9.get_xticks()], minor=True)
@@ -239,7 +229,6 @@ def plot_impact_type_combined(df, figure_path):
         ax9.set_facecolor('white')
         ax9.set_title('I.', loc ='left', fontsize=18)
         if color_min < color_max:
-    #        ax = plt.subplot(plot_grid[:,-1])
             col_x = [0]*len(palette)
             bar_y=np.linspace(color_min, color_max, n_colors)
             bar_height = bar_y[1] - bar_y[0]
@@ -260,8 +249,6 @@ def plot_impact_type_combined(df, figure_path):
             ax_cbar.yaxis.tick_right()
             ax_cbar.tick_params(axis='y', which='major', labelsize=13)
         ax_cbar.set_ylim(0, 1356)
-
-
     heatmap(
         x=a['variable'],
         y=a['Summary impact type'],
@@ -290,9 +277,7 @@ def plot_funders():
     paper_level = return_paper_level(dim_out)
     figure_path = os.path.join(os.getcwd(), '..', '..', 'figures')
     grid_lookup = pd.read_csv(os.path.join(os.getcwd(), '..', '..', 'data', 'intermediate', 'grid_lookup.csv'))
-
     counter = 0
-
     for index, row in paper_level.iterrows():
         funder_raw = row['funder_orgs']
         funder_list = re.findall("'(.*?)'", funder_raw)#.split(' ')
@@ -314,21 +299,14 @@ def plot_funders():
 
     funder_level_C = funder_level[funder_level['Panel']=='C']
     funder_counts_C = funder_level_C['name'].value_counts()
-
     funder_level_D = funder_level[funder_level['Panel']=='D']
     funder_counts_D = funder_level_D['name'].value_counts()
-
     funder_level_4 = funder_level[funder_level['UoA']==4.0]
     funder_counts_4 = funder_level_4['name'].value_counts()
-
-
     counter = 0
     df = pd.read_excel(os.path.join(os.getcwd(), '..', '..',
                                     'data', 'raw', 'raw_ics_data.xlsx'))
-
     df = df[df['Global research identifiers'].notnull()]
-    import numpy as np
-
     ICS_funder_level = pd.DataFrame(columns=['Panel', 'UoA', 'ICS_uid', 'funder'])
     for index, row in paper_level.iterrows():
         if row['Global research identifiers'] is not np.nan:
@@ -338,30 +316,22 @@ def plot_funders():
                 ICS_funder_level.at[counter, 'UoA'] = int(row['Unit of assessment number'])
                 ICS_funder_level.at[counter, 'ICS_uid'] = row['REF impact case study identifier']
                 ICS_funder_level.at[counter, 'funder'] = funder[1:-1]
-                counter+=1
-
-
+                counter += 1
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="270680.b", "grid.270680.b", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="434257.3", "grid.434257.3", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="2) grid.421126.2", "grid.421126.2", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="1) grid.435802.8", "grid.435802.8", ICS_funder_level['funder'])
-
-
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="426413.6", "grid.426413.6", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="452966.a", "grid.452966.a", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="2) grid.426413.6", "grid.426413.6", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="1) grid.434257.3", "grid.434257.3", ICS_funder_level['funder'])
-
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="2) grid.426413 .6", "grid.426413.6", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="3) grid.434257.3", "grid.434257.3", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="5) grid.434257.3", "grid.434257.3", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="4) grid.502745.1", "grid.502745.1 ", ICS_funder_level['funder'])
-
-
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="450921.b", "grid.450921.b", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="2) grid.426413.6", "grid.426413.6", ICS_funder_level['funder'])
     ICS_funder_level['funder'] = np.where(ICS_funder_level['funder']=="4) grid.502745.1", "grid.502745.1", ICS_funder_level['funder'])
-
     ICS_funder_level['funder'] = ICS_funder_level['funder'].replace("1) ", "", regex=False)
     ICS_funder_level['funder'] = ICS_funder_level['funder'].replace("2) ", "", regex=False)
     ICS_funder_level['funder'] = ICS_funder_level['funder'].replace("3) ", "", regex=False)
@@ -371,34 +341,22 @@ def plot_funders():
     ICS_funder_level['funder'] = ICS_funder_level['funder'].replace("7) ", "", regex=False)
     ICS_funder_level['funder'] = ICS_funder_level['funder'].replace("8) ", "", regex=False)
     ICS_funder_level['funder'] = ICS_funder_level['funder'].replace("9) ", "", regex=False)
-
-
     ICS_funder_level = pd.merge(ICS_funder_level, grid_lookup, how='left', left_on = 'funder', right_on = 'grid')
-
-
     ICS_funder_level_C = ICS_funder_level[ICS_funder_level['Panel']=='C']
     ICS_funder_level_D = ICS_funder_level[ICS_funder_level['Panel']=='D']
     ICS_funder_level_4 = ICS_funder_level[ICS_funder_level['UoA']==4.0]
-
     ICS_funder_level_C  = ICS_funder_level_C['name'].value_counts()
-    ICS_funder_level_D  = ICS_funder_level_D['name'].value_counts()
-    ICS_funder_level_4  = ICS_funder_level_4['name'].value_counts()
-
-
-
     colors3 = ['#850101', '#001c54', '#E89818']
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(16, 9))
-
     bar1 = ax1.barh(funder_counts_4[0:5].sort_values().index,
                     funder_counts_4[0:5].sort_values(), edgecolor='k', color = colors3[0],
                     height=0.5, alpha=0.8)
     bar2 = ax2.barh(funder_counts_C[0:5].sort_values().index,
                     funder_counts_C[0:5].sort_values(), edgecolor='k', color = colors3[1],
-                    height = 0.5, alpha = 0.8)
+                    height = 0.5, alpha=0.8)
     bar3 = ax3.barh(funder_counts_D[0:5].sort_values().index,
                     funder_counts_D[0:5].sort_values(), edgecolor='k', color = colors3[2],
                     height=0.5, alpha=0.8)
-
     bar4 = ax4.barh(ICS_funder_level_C[0:5].sort_values().index,
                     ICS_funder_level_C[0:5].sort_values(), edgecolor='k', color=colors3[0],
                     height=0.5, alpha=0.8)
@@ -408,7 +366,6 @@ def plot_funders():
     bar6 = ax6.barh(ICS_funder_level_C[0:5].sort_values().index,
                     ICS_funder_level_C[0:5].sort_values(), edgecolor='k', color=colors3[2],
                     height=0.5, alpha=0.8)
-
     ax1.bar_label(bar1, fontsize=16, padding=5)
     ax2.bar_label(bar2, fontsize=16, padding=5)
     ax3.bar_label(bar3, fontsize=16, padding=5)
@@ -419,7 +376,6 @@ def plot_funders():
         ax.tick_params(axis='both', which='minor', labelsize=14)
         ax.tick_params(axis='both', which='major', labelsize=14)
         ax.grid(which="both", linestyle='--', alpha=0.3)
-
     ax1.set_title('A.', loc='left', fontsize=20)
     ax2.set_title('B.', loc='left', fontsize=20)
     ax3.set_title('C.', loc='left', fontsize=20)
@@ -431,55 +387,30 @@ def plot_funders():
     ax6.set_xlabel('Instances of Funding', fontsize=18)
     ax1.set_ylabel('Paper Funders', fontsize=20)
     ax4.set_ylabel('ICS Funders', fontsize=20)
-
-
     legend_elements = [Patch(facecolor=colors3[0], edgecolor='k',
                              label=r'UoA 4', alpha=0.7)]
-#    ax1.legend(handles=legend_elements,
-#               frameon=True,
-#               fontsize=18, framealpha=1, facecolor='w',
-#               edgecolor=(0, 0, 0, 1), ncol=1,
-#               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
-#               )
     ax4.legend(handles=legend_elements,
                frameon=True,
                fontsize=18, framealpha=1, facecolor='w',
                edgecolor=(0, 0, 0, 1), ncol=1,
                loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
                )
-
     legend_elements = [Patch(facecolor=colors3[1], edgecolor='k',
                              label=r'Panel C', alpha=0.7)]
-#    ax2.legend(handles=legend_elements,
-#               frameon=True,
-#               fontsize=18, framealpha=1, facecolor='w',
-#               edgecolor=(0, 0, 0, 1), ncol=1,
-#               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
-#               )
     ax5.legend(handles=legend_elements,
                frameon=True,
                fontsize=18, framealpha=1, facecolor='w',
                edgecolor=(0, 0, 0, 1), ncol=1,
-               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
+               loc='lower right'
                )
-
     legend_elements = [Patch(facecolor=colors3[2], edgecolor='k',
                              label=r'Panel D', alpha=0.7)]
-#    ax3.legend(handles=legend_elements,
-#              frameon=True,
-#              fontsize=18, framealpha=1, facecolor='w',
-#              edgecolor=(0, 0, 0, 1), ncol=1,
-#              loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
-#              )
     ax6.legend(handles=legend_elements,
               frameon=True,
               fontsize=18, framealpha=1, facecolor='w',
               edgecolor=(0, 0, 0, 1), ncol=1,
               loc='lower right'#, bbox_to_anchor=(1.125, 0.5)
               )
-
-
-
     sns.despine()
     plt.tight_layout()
     fig_path = os.path.join(os.getcwd(), '..', '..', 'figures')
@@ -640,13 +571,6 @@ def plot_heat_topics(heat_topics, count, figure_path):
                 linecolor='k',
                 ax=ax1,
                 cbar=False
-                #                cbar_ax = cbar_ax,
-                #                cbar_kws={'ticks': [0.05, 0.10, 0.15, 0.20, 0.25],
-                #                          "shrink": 1,
-                #                          'use_gridspec': True,
-                #                          'pad': 0.0125,
-                ##                          'edgecolor': 'k',
-                #                          "format": formatter}
                 )
     fig.colorbar(ax1.collections[0], ax=ax1, location="right", use_gridspec=False, pad=0.0125)
     sns.heatmap(heat_topics.div(count, axis=0),
@@ -660,7 +584,6 @@ def plot_heat_topics(heat_topics, count, figure_path):
     ax1.set_xlabel('Topics', fontsize=16)
     ax1.set_ylabel('Units of Assessment', fontsize=14)
     ax1.set_title('A.', fontsize=16, loc='left')
-
     cbar_ax = fig.axes[-1]
     cbar_solids = cbar_ax.collections[0]
     cbar_solids.set_edgecolor("k")
@@ -772,7 +695,6 @@ def plot_impacttype_vs_uoa(figure_path, df):
     savefigures(plt, figure_path, figure_name)
 
 
-
 def score_read_vs_gpa(merge_path, figure_path):
     df_wtext = pd.read_pickle(os.path.join(merge_path, 'merged_with_text_features.pkl'))
     subset = ['Institution name', 'Unit of assessment number']
@@ -788,6 +710,7 @@ def score_read_vs_gpa(merge_path, figure_path):
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(12, 9),
                                                            sharey='row', sharex='col')
     colors2 = ['#001c54', '#E89818']
+
 
     def make_merge_score_nlp(df, variable):
         sentiment = df_wtext[subset].groupby(subset).mean([variable])
@@ -880,10 +803,6 @@ def score_read_vs_gpa(merge_path, figure_path):
 
 
 def make_word_vis(df1, df2, fieldname, figure_path, support_path):
-    #stop_list = pd.read_csv(os.path.join(support_path,
-    #                                     'custom_stopwords.txt'))
-    #custom_stop = stop_list['words'].to_list() # @TODO: these don't actually get used?
-
     df1_dist, df1_words = freq_dist(df1, 'english', 'lemmatized_' + fieldname)
     df2_dist, df2_words = freq_dist(df2, 'english', 'lemmatized_' + fieldname)
     en_stemmer = SnowballStemmer('english')
@@ -914,7 +833,6 @@ def make_word_vis(df1, df2, fieldname, figure_path, support_path):
     pd.DataFrame.set_diag = set_diag
     df1_words_mat.astype(float).set_diag(np.nan)
     df2_words_mat.astype(float).set_diag(np.nan)
-
     sns.set_style('ticks')
     fig = plt.figure(figsize=(16, 13))
     ax1 = plt.subplot2grid((49, 48), (0, 0), rowspan=21, colspan=24)
@@ -929,7 +847,6 @@ def make_word_vis(df1, df2, fieldname, figure_path, support_path):
     formatter.set_scientific(False)
     cmap = plt.get_cmap('RdBu_r')
     cmap = truncate_colormap(cmap, 0.0, 1)
-
     ax_df1 = sns.heatmap(df1_words_mat.astype(float),
                          norm=LogNorm(1 + df1_words_mat.astype(float).min().min(),
                                       df1_words_mat.astype(float).max().max()),
@@ -945,7 +862,6 @@ def make_word_vis(df1, df2, fieldname, figure_path, support_path):
     ax_df1.collections[0].colorbar.outline.set_edgecolor('k')
     ax_df1.collections[0].colorbar.outline.set_linewidth(1)
     ax_df1.collections[0].colorbar.ax.yaxis.set_ticks_position('left')
-
     iN = len(df1_dist[0:matsize]['count'])
     labs = df1_dist[0:matsize].index
     arrCnts = np.array(df1_dist[0:matsize]['count']) + .5
@@ -1045,7 +961,6 @@ def groupby_plotter(grp, figure_path, filename):
     """ Plot the groupedby aggregate data"""
     mpl.rcParams['font.family'] = 'helvetica'
     csfont = {'fontname': 'helvetica'}
-
     colors = [(0 / 255, 28 / 255, 84 / 255, 0.5), (232 / 255, 152 / 255, 24 / 255, 0.5)]
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(12, 7), sharey=True)
     ax1.scatter(y=grp[(grp['Main panel'] == 'A') | (grp['Main panel'] == 'B')]['Number ICS'],

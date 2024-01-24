@@ -11,7 +11,7 @@ Ensure the following are installed before running the script:
 
 ## Installation
 
-Install required packages:
+Install required packages (from project root):
 
 ```bash
 pip install -r ./src/requirements.txt
@@ -33,7 +33,6 @@ python make_enhanced_data.py [options]
 
 ### Input Files
 
-
 The script expects certain files to be present. Unless specified by the flags `-tom`, `-tm`, and `-bq`, these files are not auto-generated:
 
 - `./data/manual/funders_countries/funders_countries_lookup.xlsx` - Funders' geographic locations.
@@ -42,15 +41,16 @@ The script expects certain files to be present. Unless specified by the flags `-
 - `./data/edit/ics_readability.csv` - Readability score per ICS. (unless `-tm` flag is used)
 - `./data/edit/ics_sentiment_scores.csv` - Sentiment score per ICS. (unless `-tm` flag is used)
 - `./data/dimensions_returns/merged_dimensions.xlsx` - Dimensions data. (unless `-bq` flag is used)
+- `./data/dimensions_returns/merged_openalex.xlsx` - OpenAlex data. (unless `-bq` flag is used)
 
-Use `-bqf` if you want to force re-collection of the data as well, this likely requires a Big Query API token.
+Use `-bqf` if you want to force re-collection of the data as well. However, this requires you to be authenticated with the Dimensions GBQ service and have a project set up and stored in your gcloud project credentials file.
 
 Assuming the above requirements are satisfied, basic usage is as follows:
 
 Write final file to default path at `./data/final/enhanced_ref_data.csv` if it does *not* yet exist:
 
 ```bash
-python make_enhanced_data.py
+python ./make_enhanced_data.py
 ```
 
 Force write final file to default path at `./data/final/enhanced_ref_data.csv` even if it already exists:
@@ -78,6 +78,12 @@ python make_enhanced_data.py -tom
 ```
 
 Write final file to default path and re-analyze dimensions data:
+
+```bash
+python make_enhanced_data.py -bq
+```
+
+Write final file to default path and _re-collect_ dimensions data:
 
 ```bash
 python make_enhanced_data.py -bq

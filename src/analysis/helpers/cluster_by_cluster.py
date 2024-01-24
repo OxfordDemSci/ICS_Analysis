@@ -1,19 +1,19 @@
 import os
 import re
-import matplotlib.colors
+from PIL import Image
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import geopandas as gpd
+import seaborn as sns
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
-import gender_guesser.detector as gender
 import matplotlib.gridspec as gridspec
-from PIL import Image
-from .figure_helpers import savefigures
-from mne_connectivity.viz import plot_connectivity_circle
+import matplotlib.colors
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import gender_guesser.detector as gender
+from mne_connectivity.viz import plot_connectivity_circle
+from .figure_helpers import savefigures
 
 d = gender.Detector()
 mpl.rcParams['font.family'] = 'Graphik'
@@ -25,22 +25,14 @@ new_rc_params = {'text.usetex': False,
 }
 mpl.rcParams.update(new_rc_params)
 
-# @TODO this is not a good colour 3.
 ba_rgb2 = ['#41558c', '#E89818', '#CF202A']
-
-#ba_rgb2 = [(0 / 255, 160 / 255, 223 / 255, 0.65),
-#           (255 / 255, 182 / 255, 0 / 255, 0.65),
-#           (254 / 255, 59 / 255, 31 / 255, 0.65)]
-
-#ba_rgb1 = [(0 / 255, 160 / 255, 223 / 255, 0.45),
-#           (255 / 255, 182 / 255, 0 / 255, 0.45),
-#           (254 / 255, 59 / 255, 31 / 255, 0.45)]
 
 
 def make_descriptives(df, paper_level, cluster):
-    print('\n*****************************************************')
-    print('******* Descriptives for Grand Impact Theme {} *****************'.format(str(cluster)))
-    print('*****************************************************\n')
+    """ Make descriptive summary statistics for a given cluster """
+    print('\n**********************************************')
+    print('**** Descriptives for Grand Impact Theme {} ****'.format(str(cluster)))
+    print('************************************************\n')
     paper_level = filter_cluster(paper_level, cluster)
     df = filter_cluster(df, cluster)
     df_counts = df['Unit of assessment number'].value_counts()
@@ -97,16 +89,7 @@ def make_descriptives(df, paper_level, cluster):
     country_count = pd.DataFrame(country_list)[0].value_counts()
     country_count = country_count.sort_values(ascending=False)
     country_count = country_count.reset_index()
-#   country_count = pd.DataFrame(country_count).rename({0: 'Count',
-#                                                       'index': 'Region'},
-#                                                       axis=1)
-#
-#    print('The most frequent regional beneficiary is : ' + str(country_count['region_clean'][0]) +
-#          ' ('+str(country_count['Count'][0]) + '). The second most is: ' +
-#           str(country_count['region_clean'][1]) + ' ('+str(country_count['Count'][1]) + ').')
-
     df_for, for_list = make_and_clean_for(paper_level)
-
     print('The five most common interdisciplinarities are: ' +
           str(for_list.index[0][0]) + ' (' + str(for_list[0]) + '), ' +
           str(for_list.index[1][0]) + ' (' + str(for_list[1]) + '), ' +
@@ -117,7 +100,6 @@ def make_descriptives(df, paper_level, cluster):
     type_count = type_count.round(2)
 
     if len(type_count.index)>5:
-
         print('The most common types of underpinning research are: ' +
               str(type_count.index[0]) + ' (' + str(type_count[0]) + '%), ' +
               str(type_count.index[1]) + ' (' + str(type_count[1]) + '%), ' +
@@ -125,18 +107,14 @@ def make_descriptives(df, paper_level, cluster):
               str(type_count.index[3]) + ' (' + str(type_count[3]) + '%), ' +
               str(type_count.index[4]) + ' (' + str(type_count[4]) + '%), ' +
               str(type_count.index[5]) + ' (' + str(type_count[5]) + '%).')
-
     elif len(type_count.index)>4:
-
         print('The most common types of underpinning research are: ' +
               str(type_count.index[0]) + ' (' + str(type_count[0]) + '%), ' +
               str(type_count.index[1]) + ' (' + str(type_count[1]) + '%), ' +
               str(type_count.index[2]) + ' (' + str(type_count[2]) + '%), ' +
               str(type_count.index[3]) + ' (' + str(type_count[3]) + '%), ' +
               str(type_count.index[4]) + ' (' + str(type_count[4]) + '%).')
-
     else:
-
         print('The most common types of underpinning research are: ' +
               str(type_count.index[0]) + ' (' + str(type_count[0]) + '%), ' +
               str(type_count.index[1]) + ' (' + str(type_count[1]) + '%), ' +
@@ -164,7 +142,8 @@ def make_descriptives(df, paper_level, cluster):
         for concept, score in zip(temp_concept, temp_score):
             if concept not in stopwords:
                 if concept in concept_holder.index:
-                    concept_holder.at[concept, 'score'] = concept_holder.loc[concept, 'score'] + float(score)
+                    concept_holder.at[concept, 'score'] = concept_holder.loc[concept, 'score'] +\
+                                                          float(score)
                 else:
                     concept_holder.at[concept, 'score'] = float(score)
     concept_holder = concept_holder.sort_values(by='score', ascending=False)
@@ -184,24 +163,40 @@ def make_descriptives(df, paper_level, cluster):
     print('Title: {}'.format(paper_level.loc[paper_level['Altmetric'].idxmax()]['preferred']))
     print('DOI: {}'.format(paper_level.loc[paper_level['Altmetric'].idxmax()]['doi']))
     print('Altmetric: {}'.format(paper_level.loc[paper_level['Altmetric'].idxmax()]['Altmetric']))
-
     print('The underpinning research with the highest number of citations:')
     print('Title: {}'.format(paper_level.loc[paper_level['Times Cited'].idxmax()]['preferred']))
     print('DOI: {}'.format(paper_level.loc[paper_level['Times Cited'].idxmax()]['doi']))
     print('Times Cited: {}'.format(paper_level.loc[paper_level['Times Cited'].idxmax()]['Times Cited']))
-
     print('The underpinning research with the highest relative ratio of citations:')
     print('Title: {}'.format(paper_level.loc[paper_level['Relative Citation Ratio'].idxmax()]['preferred']))
     print('DOI: {}'.format(paper_level.loc[paper_level['Relative Citation Ratio'].idxmax()]['doi']))
     print('Relative Citation Ratio: {}'.format(paper_level.loc[paper_level['Relative Citation Ratio'].idxmax()]['Relative Citation Ratio']))
-
-
     print('The average Altmetric score is: ', paper_level['Altmetric'].mean())
     print('The average citation count is: ', paper_level['Times Cited'].mean())
     print('The average relative citation ratio is: ', paper_level['Relative Citation Ratio'].mean())
 
 
 def make_author_level(paper_level):
+    """
+    Create an author-level DataFrame from a paper-level DataFrame.
+
+    Parameters:
+    - paper_level (pd.DataFrame): The input paper-level DataFrame containing author information.
+
+    Returns:
+    pd.DataFrame: An author-level DataFrame with columns 'Panel', 'UoA', 'ICS_uid',
+    'pub_uid', 'first_name', 'gender', and 'female'.
+
+    Example:
+    >>> paper_data = pd.DataFrame({'Main panel': ['Panel A', 'Panel B'],
+    ...                            'Unit of assessment number': [1, 2],
+    ...                            'Key': ['ICS123', 'ICS456'],
+    ...                            'id': [101, 102],
+    ...                            'authors': [{'first_name': 'John', 'last_name': 'Doe'},
+    ...                                        {'first_name': 'Jane', 'last_name': 'Smith'}]})
+    >>> author_data = make_author_level(paper_data)
+    """
+
     author_level=pd.DataFrame(columns=['Panel', 'UoA', 'ICS_uid',
                                        'pub_uid', 'first_name',
                                        'gender'])
