@@ -143,3 +143,5 @@ dmypy.json
 /assets/dimensions_project_id.txt
 /data/final/enhanced_ref_data.csv
 /desktop.ini
+/data/openalex_returns/merged_openalex.csv
+/data/openalex_returns/openalex_dois.csv
