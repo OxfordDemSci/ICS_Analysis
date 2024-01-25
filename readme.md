@@ -20,7 +20,7 @@ A repository to analyse the Impact Case Studies submitted to the Research Excell
 
 **Funders:** British Academy and Academy of Social Sciences.
 
-**Please cite this work as:** Wagner, D., Rahal, C., Spiers, A., Leasure, D., Verhagen, M., Zhao, B., Li, L., Lu, Y., REF 2021 LCDS Project Team, and Mills, M. C. (2024). The SHAPE of Research Impact. British Academy and the Academy of Social Sciences, ISBN 978-0-85672-686-6.
+**Please cite this work as:** Wagner, S., Rahal, C., Spiers, A., Leasure, D., Verhagen, M., Zhao, B., Li, L., Lu, Y., REF 2021 LCDS Project Team, and Mills, M. C. (2024), 'The SHAPE of Research Impact', British Academy and the Academy of Social Sciences, ISBN 978-0-85672-686-6.
 
 
 
