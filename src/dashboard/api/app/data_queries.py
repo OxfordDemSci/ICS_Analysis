@@ -547,6 +547,10 @@ def get_ics_ids(
         funder)
     argument_names = [
         "threshold",
+        "countries_specific_extracted",
+        "countries_union_extracted",
+        "countries_region_extracted",
+        "countries_global_extracted",
         "topic",
         "postcode",
         "beneficiary",
@@ -557,6 +561,10 @@ def get_ics_ids(
     ]
     arguments = [
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         topic,
         tuple(postcode) if postcode is not None else None,
         beneficiary,
@@ -572,15 +580,15 @@ def get_ics_ids(
     }
     query: Any = db.session.execute(sql, params)
     ics_ids = [row.ics_id for row in query]
-    if beneficiary:
-        ics_ids = get_ics_ids_filtered_by_flags(
-            ics_ids,
-            countries_specific_extracted,
-            countries_union_extracted,
-            countries_region_extracted,
-            countries_global_extracted,
-            beneficiary,
-        )
+    # if beneficiary:
+    #     ics_ids = get_ics_ids_filtered_by_flags(
+    #         ics_ids,
+    #         countries_specific_extracted,
+    #         countries_union_extracted,
+    #         countries_region_extracted,
+    #         countries_global_extracted,
+    #         beneficiary,
+    #     )
     return ics_ids
 
 
@@ -602,6 +610,11 @@ def get_ics_sql(
         JOIN countries c ON c.ics_table_id = i.id
         JOIN uk_regions r ON r.ics_table_id = i.id
         WHERE tw.probability >= :threshold
+        AND (
+            (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+            OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+            OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE))
     """
     if topic is not None:
         sql_str += " AND t.topic_name = :topic"
