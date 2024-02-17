@@ -154,10 +154,6 @@ def get_ics_table_paginated(
         abort(400, str(e))
     data = get_paginated_table(
         threshold,
-        countries_specific_extracted,
-        countries_union_extracted,
-        countries_region_extracted,
-        countries_global_extracted,
         table_page,
         items_per_page,
         topic,
