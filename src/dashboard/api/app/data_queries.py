@@ -156,6 +156,10 @@ def download_ics_table(
 ) -> Response:
     ics_ids = get_ics_ids(
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         topic,
         postcode,
         country,
@@ -412,6 +416,10 @@ def query_dashboard_data(
     data = {}
     ics_ids = get_ics_ids(
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         topic,
         postcode,
         beneficiary,
@@ -442,6 +450,10 @@ def query_dashboard_data(
 
 def get_paginated_table(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
@@ -455,6 +467,10 @@ def get_paginated_table(
     data = {}
     ics_ids = get_ics_ids(
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         topic,
         postcode,
         beneficiary,
@@ -474,6 +490,10 @@ def get_paginated_table(
 
 def get_ics_ids(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
@@ -492,6 +512,10 @@ def get_ics_ids(
         funder)
     argument_names = [
         "threshold",
+        "countries_specific_extracted",
+        "countries_union_extracted",
+        "countries_region_extracted",
+        "countries_global_extracted",
         "topic",
         "postcode",
         "beneficiary",
@@ -502,6 +526,10 @@ def get_ics_ids(
     ]
     arguments = [
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         topic,
         tuple(postcode) if postcode is not None else None,
         beneficiary,
@@ -544,7 +572,14 @@ def get_ics_sql(
     if postcode is not None:
         sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:
-        sql_str += " AND c.country = :beneficiary"
+        sql_str += """
+             AND (
+            (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+            OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+            OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE))
+             AND c.country = :beneficiary
+            """
     if uk_region is not None:
         sql_str += " AND r.uk_region_tag_values = :uk_region"
     if uoa is not None:
