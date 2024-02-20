@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link href="https://cdn.datatables.net/v/dt/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
-    <link href="css/styles_custom.css?version=1.4" rel="stylesheet"/>
+    <link href="css/styles_custom.css?version=1.5" rel="stylesheet"/>
     
     <link href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" rel="stylesheet"/>
     <link href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" rel="stylesheet"/>
@@ -586,41 +586,23 @@
     <div class="modal-dialog" role="document" id="idModalSettings-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalSettingsLabel"></h5>
+                <h5 class="modal-title" id="ModalSettingsLabel">Settings</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
                 <div class="container">
 
-                    <div class="row">
-
-                        <div class="col-sm-6">
-                            <label class="form-check-label" for="chCountryLabels">Show country name labels:</label>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="">
-                                <input class="form-check-input" type="checkbox" id="chCountryLabels" checked>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
-                        </div>
-                    </div>
-
                     <div class="row mt-2">
 
-                        <div class="col-sm-6">
-                            <label class="form-check-label" for="chCountryLabels">Number of funders to show on chart
-                                plot:</label>
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="numberFundersLimit">
+                                <strong>Funder plot</strong>
+                            </label>
+                            <br><small>Number of funders to show on chart plot</small>
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-2">
                             <select id="numberFundersLimit" class="form-select form-select-sm"
                                     style="padding-top: 0rem;padding-bottom: 0rem;">
                                 <option value="10" selected>10</option>
@@ -642,19 +624,125 @@
 
                     <div class="row">
 
-                        <div class="col-sm-6">
-                            <label class="form-check-label" for="chKeepPOSTarea">Show other postcodes when one is
-                                selected:</label>
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chKeepPOSTarea">
+                                <strong>Institutions Map</strong>
+                            </label>
+                            <br><small>Show other postcodes when one is selected</small>
                         </div>
 
-                        <div class="col-sm-6">
-                            <div class="">
+                        <div class="col-sm-2">
+                            <div class="text-center">
                                 <input class="form-check-input" type="checkbox" id="chKeepPOSTarea" checked>
                             </div>
                         </div>
 
                     </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom"></div>
+                        </div>
+                    </div>
 
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountryLabels">
+                                <strong>Beneficiaries Map</strong>
+                            </label>
+                            <br><small>Show country name labels</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountryLabels" checked>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-1 border-bottom fw-bold">
+                                How to define "beneficiary countries" based on lists of beneficiaries provided by Impact Case Studies:
+                            </div>
+                            <div class="alert alert-danger" id="idAlertBeneficiaryOptions" role="alert" style="display:none;">
+                                One of the options of "beneficiary countries" should be selected.
+                            </div>                            
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_specific_extracted">
+                                <strong>Country</strong>
+                            </label>
+                            <br><small>Include only countries explicitly named</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_specific_extracted" checked>
+                            </div>
+                        </div>
+
+                    </div>   
+
+                    
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_union_extracted">
+                                <strong>Union</strong>
+                            </label>
+                            <br><small>Include countries from named unions, e.g. European Union</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_union_extracted" checked>
+                            </div>
+                        </div>
+
+                    </div>                    
+
+                    
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_region_extracted">
+                                <strong>Region</strong>
+                            </label>
+                            <br><small>Include countries from named regions, e.g. West Africa</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_region_extracted" checked>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    
+                    <div class="row">
+
+                        <div class="col-sm-10">
+                            <label class="form-check-label label_settings" for="chCountries_global_extracted">
+                                <strong>Global</strong>
+                            </label>
+                            <br><small>Include all countries if claimed "global" impact</small>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="text-center">
+                                <input class="form-check-input" type="checkbox" id="chCountries_global_extracted">
+                            </div>
+                        </div>
+
+                    </div>                    
 <!--  Threshold option  -->
 <!--                <div class="row">
                         <div class="col-sm-12">
@@ -864,10 +952,12 @@
                                 The drop-down menu can be used to filter results to include only impact case studies
                                 submitted to Main Panels C or D. Doughnut charts can be clicked to filter by individual
                                 Units of Assessment. Selections can be reset by clicking Units of Assessment in the
-                                doughnut chart or by clicking the "refresh" button that appears at the top of the "Units of Assessment" panel.
+                                doughnut chart or by clicking the "refresh" button that appears at the top of the
+                                "Units of Assessment" panel.
                                 <hr>
-                                Submissions to the Research Excellence Framework (REF) were made into <a
-                                    href="https://archive.ref.ac.uk/panels/units-of-assessment/" target="_blank">34 units of assessment</a>
+                                Submissions to the Research Excellence Framework (REF) were made into
+                                <a href="https://archive.ref.ac.uk/panels/units-of-assessment/" target="_blank">
+                                    34 units of assessment</a>
                                 divided into four Main Panels:
                                 <br><br>Main Panel A: Medicine, Health, and Life Sciences
                                 <br>Main Panel B: Physical Sciences, Engineering, and Mathematics
@@ -933,11 +1023,11 @@
                                     This panel shows the geography of academic institutions that submitted impact case
                                 studies matching the criteria that you have selected in the dashboard. Clicking a
                                 postcode area on the map will filter the results to include only impact case studies
-                                submitted by institutions in that location. The drop-down menu can be used to select
-                                impact case studies submitted from institutions of England, Scotland, Wales, or Northern
-                                Ireland. Once a geographic area has been selected, it can later be deselected by
-                                clicking the "refresh" icon that appears at the top of the "UK Instituions" panel or by
-                                closing the information box that appears on the map.
+                                submitted by institutions in that location. Once a geographic area has been selected, it
+                                can later be deselected by clicking the "refresh" icon that appears at the top of the
+                                "UK Instituions" panel or by closing the information box that appears on the map.<br>
+                                <br>The drop-down menu can be used to select impact case studies submitted from
+                                institutions of England, Scotland, Wales, or Northern Ireland.
                             </p>
                         </div>
                     </div>
@@ -965,13 +1055,15 @@
                                 impact case studies that match the criteria you have selected in the dashboard. Clicking
                                 a country on the global map will filter the results to include only impact case studies
                                 that listed beneficiaries in that country. Once a country has been selected, it can be
-                                deselected by clicking the "refresh" button <br>
+                                deselected by clicking the "refresh" button.<br>
+                                <br>Note: We do not map all countries as beneficiaries by default when impact case studies
+                                claimed "global" impact. You can modify this behaviour in the Settings menu (top-right).<br>
                                 <br>The drop-down menu can be used to zoom in on
                                 the United Kingdom to see the geographic distribution of cities and towns listed as
                                 research beneficiaries. Town names could not be disambiguated for some impact case studies
                                 (e.g. where there was more than one UK town with the same name). We selected the most
                                 populous town which may be incorrect in some cases. Results in the dashboard cannot be
-                                filtered by individual beneficiary towns in the UK.
+                                filtered by individual beneficiary towns in the UK.<br>
                             </p>
                         </div>
                     </div>
@@ -1113,7 +1205,7 @@
 </body>
 </html>
 
-<script src="./js/main.js?version=8.1" type="module"></script>
+<script src="./js/main.js?version=8.4" type="module"></script>
 
 <script type="text/javascript">
 

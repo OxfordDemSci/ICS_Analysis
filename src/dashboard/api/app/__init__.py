@@ -10,6 +10,8 @@ from flask_cors import CORS  # type: ignore
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
+import logging
+from datetime import datetime, timezone
 
 from app.config import app_config
 
@@ -61,10 +63,23 @@ def create_app(config_name: str) -> Flask:
     connexion_app.add_api("api-config.yaml")
     db.init_app(app)
     CORS(app, resources={r"/*": {"origins": "*"}})
-    logging.basicConfig(level=logging.INFO)
-    app.logger.addHandler(logging.StreamHandler())  # Log to the terminal
-    app.logger.setLevel(logging.INFO)
+    if not logging.getLogger().handlers:
+        logging.basicConfig(level=logging.INFO)
+        app.logger.addHandler(logging.StreamHandler())  # Log to the terminal
+        log_path = BASE.parent.joinpath('api_logs.log')
+        file_handler = logging.FileHandler(log_path)
+        app.logger.addHandler(file_handler)
+        app.logger.setLevel(logging.INFO)
     if config_name not in ["local_development", "testing"]:
         limiter._storage_uri = "memcached://ics_memcached:11211"
         limiter.init_app(app)
+
+    @app.before_request
+    def before_request_function():
+        args = request.args
+        app.logger.info(f"time={datetime.now(timezone.utc)}, url={request.url}, endpoint={request.path} params={dict(args.items())}")
+
+    @app.after_request
+    def after_request_func(response):
+        return response
     return app

@@ -30,7 +30,37 @@ export function downloadURI(api_uri,
                             uoa_name,
                             funder) {
                                 
-    let uri = api_uri + "download_csv?threshold=" + threshold + "&topic=" + topic + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&uoa_name=" + uoa_name+ "&funder=" + funder;
+    var blCountries_specific = true;
+    var elementCountries_specific = document.getElementById('chCountries_specific_extracted');
+    if (typeof (elementCountries_specific) !== 'undefined' && elementCountries_specific !== null)
+    {
+        blCountries_specific = $("#chCountries_specific_extracted").is(":checked");
+    }
+
+    var blCountries_union = true;
+    var elementCountries_union = document.getElementById('chCountries_union_extracted');
+    if (typeof (elementCountries_union) !== 'undefined' && elementCountries_union !== null)
+    {
+        blCountries_union = $("#chCountries_union_extracted").is(":checked");
+    }
+
+    var blCountries_region = true;
+    var elementCountries_region = document.getElementById('chCountries_region_extracted');
+    if (typeof (elementCountries_region) !== 'undefined' && elementCountries_region !== null)
+    {
+        blCountries_region = $("#chCountries_region_extracted").is(":checked");
+    }
+
+    var blCountries_global = true;
+    var elementCountries_global = document.getElementById('chCountries_global_extracted');
+    if (typeof (elementCountries_global) !== 'undefined' && elementCountries_global !== null)
+    {
+        blCountries_global = $("#chCountries_global_extracted").is(":checked");
+    }                                    
+                                
+    let countries_extracted = "&countries_specific_extracted="+blCountries_specific+"&countries_union_extracted="+blCountries_union+"&countries_region_extracted="+blCountries_region+"&countries_global_extracted="+blCountries_global;
+    
+    let uri = api_uri + "download_csv?threshold=" + threshold + countries_extracted + "&topic=" + topic + "&beneficiary=" + beneficiary + "&uoa=" + uoa + "&uoa_name=" + uoa_name+ "&funder=" + funder;
     if (postcode_area !== null) {
         if (Array.isArray(postcode_area)){
              for (var i = 0; i < postcode_area.length; i++) {
@@ -40,7 +70,7 @@ export function downloadURI(api_uri,
             uri = uri + "&postcode_area=" + postcode_area;
         }
     }
-
+    //console.log(uri);
     var link = document.createElement("a");
     link.setAttribute('download', name);
     link.href = uri;
