@@ -4,7 +4,7 @@ local/*
 figures/*
 tables/*
 venv*
-
+data/ics_pdfs/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
