@@ -18,7 +18,7 @@ export function updateUKregion_counts_map(_map, _layer, dataUK_counts) {
     var addresses = L.geoJson(dataUK_counts, {
         pointToLayer: function (feature, latlng) {
             var marker = L.marker(latlng, {icon: clustersIconUKinstitution});
-            marker.bindPopup('<div><span><strong>' + feature.properties.name + '</strong></span><br/><span>Beneficiaries: ' + feature.properties.count + '</span></div>');
+            marker.bindPopup('<div><span><strong>' + feature.properties.name + '</strong></span><br/><span>Impact Case Studies: ' + feature.properties.count + '</span></div>');
             return marker;
         }
     });
