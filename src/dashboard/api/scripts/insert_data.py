@@ -11,7 +11,14 @@ from sqlalchemy import create_engine, inspect
 from alembic import command
 from alembic.config import Config
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+try:
+    # In script context
+    BASE_DIR = Path(__file__).resolve().parents[1]
+except NameError:
+    # In interactive shell (no __file__)
+    BASE_DIR = Path.cwd() / "src" / "dashboard" / "api"
+print("BASE_DIR: " + str(BASE_DIR))
+
 ENV_FILE = BASE_DIR.parent.joinpath(".env")
 load_dotenv(ENV_FILE)
 

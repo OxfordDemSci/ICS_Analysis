@@ -1,3 +1,4 @@
+import sys
 import ast
 import os
 from pathlib import Path
@@ -9,10 +10,20 @@ import pandas as pd
 import geopandas as gpd
 from dotenv import load_dotenv
 
-from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, GLOBAL_ISOS, EU_COUNTRIES
+try:
+    # In script context
+    dotenv_path = Path(__file__).resolve().parents[4] / ".env"
+except NameError:
+    # In interactive shell (no __file__)
+    dotenv_path = Path.cwd() / ".env"
 
-# define "basedir" environment variable in ./.env file
-load_dotenv()
+print("Loading .env from:", dotenv_path)
+load_dotenv(dotenv_path=dotenv_path, override=True)
+print("basedir:", os.getenv("basedir"))
+
+
+sys.path.insert(0, str(Path(os.getenv("basedir")) / "src" / "dashboard" / "api" / "scripts"))
+from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, GLOBAL_ISOS, EU_COUNTRIES
 
 
 BASE_APP = Path(os.getenv("basedir")).joinpath("src", "dashboard", "api", "app", "data")
@@ -51,7 +62,7 @@ def strip_uoa(row):
         if uoa_string[-1].isalpha():
             uoa_string = uoa_string[:-1]
 
-    # Convert the remaining string to an integer
+        # Convert the remaining string to an integer
         uoa_int = int(uoa_string)
     else:
         uoa_int = int(row.uoa)
