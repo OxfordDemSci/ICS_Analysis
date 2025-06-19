@@ -78,6 +78,10 @@ def get_ics_database_topics(topic: str | None = None) -> Dict[str, dict]:
 
 def get_data(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
@@ -90,6 +94,10 @@ def get_data(
 ) -> Dict[str, List[Dict[str, str]]]:
     data = query_dashboard_data(
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         table_page,
         items_per_page,
         topic,

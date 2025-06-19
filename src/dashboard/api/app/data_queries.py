@@ -110,11 +110,16 @@ def get_pdf_data(
     return pdf_data
 
 
-def get_ics_table(ics_ids: list, page: int, limit: int) -> tuple:
+def get_ics_table(
+        ics_ids: list,
+        page: int,
+        limit: int,
+        country: str | None = None
+        ) -> tuple:
     rows = (
         db.session.query(ICS)  # type: ignore
         .filter(ICS.ics_id.in_(ics_ids))
-        .order_by(ICS.id)
+        .order_by(ICS.ics_id)
         .paginate(page=page, per_page=limit)
     )
     ics_table = []
@@ -136,6 +141,10 @@ def get_ics_table(ics_ids: list, page: int, limit: int) -> tuple:
 
 def download_ics_table(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     topic: str | None = None,
     postcode: list | None = None,
     country: str | None = None,
@@ -146,7 +155,18 @@ def download_ics_table(
     limit: int | None = None,
 ) -> Response:
     ics_ids = get_ics_ids(
-        threshold, topic, postcode, country, uk_region, uoa, uoa_name, funder
+        threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
+        topic,
+        postcode,
+        country,
+        uk_region,
+        uoa,
+        uoa_name,
+        funder
     )
     rows = db.session.query(ICS).filter(ICS.ics_id.in_(ics_ids)).all()
     csv_data = StringIO()
@@ -189,27 +209,35 @@ def get_funders_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
     return funders
 
 
-def get_countries_counts(ics_ids: list | None = None) -> List[Dict[str, str]]:
-    if ics_ids is None:
-        sql = text(
-            """
-            SELECT countries.country as country, count(*) as country_count from countries countries where not country
-            is NULL GROUP BY countries.country order by country_count desc
+def get_countries_counts(
+        ics_ids: list,
+        countries_specific_extracted: bool,
+        countries_union_extracted: bool,
+        countries_region_extracted: bool,
+        countries_global_extracted: bool
+        ) -> List[Dict[str, str]]:
+    sql = text(
         """
-        )
-        query = db.session.execute(sql)
-    else:
-        sql = text(
-            """
-           SELECT c.country AS country, COUNT(*) AS country_count
-            FROM countries c
-            JOIN ics i ON c.ics_table_id = i.id
-            WHERE i.ics_id = ANY(:ics_ids)
-            GROUP BY c.country
-            ORDER BY country_count DESC
-        """
-        )
-        query = db.session.execute(sql, {"ics_ids": ics_ids})
+        SELECT c.country AS country, COUNT(*) AS country_count
+        FROM countries c
+        JOIN ics i ON c.ics_table_id = i.id
+        WHERE i.ics_id = ANY(:ics_ids)
+        AND (
+            (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+            OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+            OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE))
+        GROUP BY c.country
+        ORDER BY country_count DESC
+    """
+    )
+    query = db.session.execute(sql, {
+        "ics_ids": ics_ids,
+        "countries_specific_extracted": countries_specific_extracted,
+        "countries_union_extracted": countries_union_extracted,
+        "countries_region_extracted": countries_region_extracted,
+        "countries_global_extracted": countries_global_extracted,
+        })
     countries = [
         {"country": row.country, "country_count": row.country_count} for row in query
     ]
@@ -371,6 +399,10 @@ def get_available_topics(ics_ids: List[str]):
 
 def query_dashboard_data(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
@@ -383,22 +415,45 @@ def query_dashboard_data(
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
     ics_ids = get_ics_ids(
-        threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder
+        threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
+        topic,
+        postcode,
+        beneficiary,
+        uk_region,
+        uoa,
+        uoa_name,
+        funder,
     )
     data["topics_available"] = get_available_topics(ics_ids=ics_ids)
-    data["countries_counts"] = get_countries_counts(ics_ids=ics_ids)
+    data["countries_counts"] = get_countries_counts(
+        ics_ids=ics_ids,
+        countries_specific_extracted=countries_specific_extracted,
+        countries_union_extracted=countries_union_extracted,
+        countries_region_extracted=countries_region_extracted,
+        countries_global_extracted=countries_global_extracted)
     data["uk_region_counts"] = get_regions_counts(ics_ids=ics_ids)
     data["funders_counts"] = get_funders_counts(ics_ids=ics_ids)
     data["uoa_counts"] = get_uoa_counts(ics_ids=ics_ids)
     data["institution_counts"] = get_institution_counts(ics_ids=ics_ids)
     data["ics_table"], data["table_pagination_meta"] = get_ics_table(
-        ics_ids=ics_ids, page=table_page, limit=items_per_page
+        ics_ids=ics_ids,
+        page=table_page,
+        limit=items_per_page,
+        country=beneficiary
     )
     return data
 
 
 def get_paginated_table(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
@@ -411,16 +466,34 @@ def get_paginated_table(
 ) -> Dict[str, List[Dict[str, str]]]:
     data = {}
     ics_ids = get_ics_ids(
-        threshold, topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder
+        threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
+        topic,
+        postcode,
+        beneficiary,
+        uk_region,
+        uoa,
+        uoa_name,
+        funder
     )
     data["ics_table"], data["table_pagination_meta"] = get_ics_table(
-        ics_ids=ics_ids, page=table_page, limit=items_per_page
+        ics_ids=ics_ids,
+        page=table_page,
+        limit=items_per_page,
+        country=beneficiary
     )
     return data
 
 
 def get_ics_ids(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     topic: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
@@ -429,9 +502,20 @@ def get_ics_ids(
     uoa_name: str | None = None,
     funder: str | None = None,
 ) -> List[str]:
-    sql = get_ics_sql(topic, postcode, beneficiary, uk_region, uoa, uoa_name, funder)
+    sql = get_ics_sql(
+        topic,
+        postcode,
+        beneficiary,
+        uk_region,
+        uoa,
+        uoa_name,
+        funder)
     argument_names = [
         "threshold",
+        "countries_specific_extracted",
+        "countries_union_extracted",
+        "countries_region_extracted",
+        "countries_global_extracted",
         "topic",
         "postcode",
         "beneficiary",
@@ -442,6 +526,10 @@ def get_ics_ids(
     ]
     arguments = [
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         topic,
         tuple(postcode) if postcode is not None else None,
         beneficiary,
@@ -484,7 +572,14 @@ def get_ics_sql(
     if postcode is not None:
         sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:
-        sql_str += " AND c.country = :beneficiary"
+        sql_str += """
+             AND (
+            (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+            OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+            OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE))
+             AND c.country = :beneficiary
+            """
     if uk_region is not None:
         sql_str += " AND r.uk_region_tag_values = :uk_region"
     if uoa is not None:

@@ -694,7 +694,16 @@ def clean_country_strings(countries):
     if isinstance(countries, str):
         countries_list = list(sorted(set(countries.split('; '))))
         countries_list = [x for x in countries_list if 'nan' not in x]
-        result = '; '.join(countries_list)
+        result = '; '.join(countries_list).strip('; ')
+    return(result)
+
+
+def drop_global(regions):
+    result = float('NaN')
+    if isinstance(regions, str):
+        region_list = regions.split('; ')
+        region_list = [x for x in region_list if x != 'global']
+        result = '; '.join(region_list)
     return(result)
 
 
@@ -732,12 +741,21 @@ def make_countries_file(manual_path):
                 'suggested_Countries[region]_change']:
         df[var] = df[var].str.strip()
 
-    # regions
+    # regions and global
     df['region_extracted'] = np.where(df['suggested_region_change'].isnull(),
                                       df['region'],
                                       df['suggested_region_change'])
+
+    df['global_extracted'] = df['region_extracted'].apply(lambda x: True if 'global' in str(x) else False)
+
+    df['region_extracted'] = df['region_extracted'].apply(drop_global)
+
     df['countries_region_extracted'] = \
         [make_region_country_list(regions=x, country_groups=country_groups) for x in list(df['region_extracted'])]
+
+    df.loc[df['global_extracted'] == True, 'countries_global_extracted'] = \
+        country_groups.loc[country_groups['Union/region'] == 'global', 'ISO3 codes'][0]
+
 
     # unions
     df['union_extracted'] = np.where(df['suggested_union_change'].isnull(),
@@ -752,7 +770,8 @@ def make_countries_file(manual_path):
                                          df['suggested_Countries[alpha-3]_change'])
 
     # combine all countries
-    cols_to_combine = ['countries_specific_extracted', 'countries_union_extracted', 'countries_region_extracted']
+    cols_to_combine = ['countries_specific_extracted', 'countries_union_extracted', 'countries_region_extracted',
+                       'countries_global_extracted']
     df['countries_extracted'] = df[cols_to_combine].apply(lambda row: '; '.join(row.values.astype('str')), axis=1)
 
     # clean country columns
@@ -760,6 +779,7 @@ def make_countries_file(manual_path):
     df['countries_specific_extracted'] = df['countries_specific_extracted'].apply(clean_country_strings)
     df['countries_union_extracted'] = df['countries_union_extracted'].apply(clean_country_strings)
     df['countries_region_extracted'] = df['countries_region_extracted'].apply(clean_country_strings)
+    df['countries_global_extracted'] = df['countries_global_extracted'].apply(clean_country_strings)
 
     # df = df[df['countries_extracted'].notnull()]
     df = df.dropna(subset=['countries_extracted', 'union_extracted', 'region_extracted'], how='all')
@@ -769,6 +789,8 @@ def make_countries_file(manual_path):
                'countries_region_extracted',
                'union_extracted',
                'countries_union_extracted',
+               'global_extracted',
+               'countries_global_extracted',
                'countries_extracted']]
 
 
@@ -1199,6 +1221,7 @@ if __name__ == "__main__":
         get_all_results(raw_path)
     if not (raw_path / 'raw_ref_outputs_data.xlsx').exists():
         get_output_data(raw_path)
+
 
     clean_dep_level(raw_path, edit_path)
     df = clean_ics_level(raw_path, edit_path)
