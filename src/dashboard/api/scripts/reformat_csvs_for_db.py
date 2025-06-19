@@ -1,3 +1,4 @@
+import sys
 import ast
 import os
 from pathlib import Path
@@ -9,10 +10,20 @@ import pandas as pd
 import geopandas as gpd
 from dotenv import load_dotenv
 
-from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, GLOBAL_ISOS, EU_COUNTRIES
+try:
+    # In script context
+    dotenv_path = Path(__file__).resolve().parents[4] / ".env"
+except NameError:
+    # In interactive shell (no __file__)
+    dotenv_path = Path.cwd() / ".env"
 
-# define "basedir" environment variable in ./.env file
-load_dotenv()
+print("Loading .env from:", dotenv_path)
+load_dotenv(dotenv_path=dotenv_path, override=True)
+print("basedir:", os.getenv("basedir"))
+
+
+sys.path.insert(0, str(Path(os.getenv("basedir")) / "src" / "dashboard" / "api" / "scripts"))
+from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, GLOBAL_ISOS, EU_COUNTRIES
 
 
 BASE_APP = Path(os.getenv("basedir")).joinpath("src", "dashboard", "api", "app", "data")
@@ -51,7 +62,7 @@ def strip_uoa(row):
         if uoa_string[-1].isalpha():
             uoa_string = uoa_string[:-1]
 
-    # Convert the remaining string to an integer
+        # Convert the remaining string to an integer
         uoa_int = int(uoa_string)
     else:
         uoa_int = int(row.uoa)
@@ -118,6 +129,46 @@ def fix_errors(row):
             return row.countries_iso3
     else:
         return row.countries_iso3
+    
+
+def insert_extracted_country_lookups(df_iso: pd.DataFrame, ics: pd.DataFrame) -> pd.DataFrame:
+    def get_subset(col):
+        df_spec = ics_sub[[col]].copy()
+        df_spec.loc[:, col] = df_spec[col].str.split(";")
+        df_spec = df_spec[col].explode().reset_index()
+        return df_spec
+
+    def set_true_or_false(row, countries):
+        if row.country in countries:
+            return True
+        return False
+
+    ics_sub = ics[[
+        "countries_iso3",
+        "countries_specific_extracted",
+        "countries_union_extracted",
+        "countries_region_extracted",
+        "countries_global_extracted"
+        ]]
+
+    for col in [
+        "countries_specific_extracted",
+        "countries_union_extracted",
+        "countries_region_extracted",
+        "countries_global_extracted"
+        ]:
+        dataframes = []
+        df_spec = get_subset(col)
+        for index in df_iso.ics_table_id.unique().tolist():
+            df_left = df_iso.loc[df_iso["ics_table_id"] == index].copy()
+            df_right = df_spec.loc[df_spec["index"] == index].copy()
+            countries_extracted = [x.strip() for x in df_right[col].tolist() if not str(x) == 'nan']
+            df_left[col] = df_left.apply(set_true_or_false, countries=countries_extracted, axis=1)
+            dataframes.append(df_left)
+        final_merged = pd.concat(dataframes)
+        df_iso[col] = final_merged[col].copy()
+    df_iso.drop_duplicates(subset=["ics_table_id", "country"], keep="first", inplace=True)
+    return df_iso
 
 
 def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
@@ -134,6 +185,7 @@ def make_countries_lookup_table(df_ics: pd.DataFrame) -> None:
     df_iso = df_iso[["id", "ics_table_id", "country"]]
     df_iso.country = df_iso.country.str.strip()
     df_iso.country = df_iso.country.replace('', np.nan)
+    df_iso = insert_extracted_country_lookups(df_iso.copy(), df_ics)
     df_iso.to_csv(COUNTRIES_LOOKUP_OUT, index=False)
 
 

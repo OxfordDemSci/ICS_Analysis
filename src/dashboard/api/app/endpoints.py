@@ -23,6 +23,10 @@ def get_ics_topics() -> Dict[str, dict]:
 
 def get_ics_data(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int = 1,
     items_per_page: int = 500,
     topic: str | None = None,
@@ -39,6 +43,16 @@ def get_ics_data(
         ):
             raise ValueError(
                 "table_page and items_per_page should be null or type integer"
+            )
+        if (
+            not isinstance(countries_specific_extracted, bool)
+            or not isinstance(countries_union_extracted, bool)
+            or not isinstance(countries_region_extracted, bool)
+            or not isinstance(countries_global_extracted, bool)
+        ):
+            raise ValueError(
+                "countries_specific_extracted, countries_union_extracted, countries_region_extracted and"
+                "countries_global_extracted need to be booleans"
             )
         (
             threshold,
@@ -64,6 +78,10 @@ def get_ics_data(
         abort(400, str(e))
     data = get_data(
         threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
         table_page,
         items_per_page,
         topic,
@@ -81,6 +99,10 @@ def get_ics_data(
 
 def get_ics_table_paginated(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     table_page: int = 1,
     items_per_page: int = 500,
     topic: str | None = None,
@@ -97,6 +119,16 @@ def get_ics_table_paginated(
         ):
             raise ValueError(
                 "table_page and items_per_page should be null or type integer"
+            )
+        if (
+            not isinstance(countries_specific_extracted, bool)
+            or not isinstance(countries_union_extracted, bool)
+            or not isinstance(countries_region_extracted, bool)
+            or not isinstance(countries_global_extracted, bool)
+        ):
+            raise ValueError(
+                "countries_specific_extracted, countries_union_extracted, countries_region_extracted and"
+                "countries_global_extracted need to be booleans"
             )
         (
             threshold,
@@ -139,6 +171,10 @@ def get_ics_table_paginated(
 
 def download_ics_as_csv(
     threshold: float,
+    countries_specific_extracted: bool,
+    countries_union_extracted: bool,
+    countries_region_extracted: bool,
+    countries_global_extracted: bool,
     topic: str | None = None,
     postcode_area: list | None = None,
     beneficiary: str | None = None,
@@ -147,6 +183,16 @@ def download_ics_as_csv(
     uoa_name: str | None = None,
     funder: str | None = None,
 ) -> Response:
+    if (
+            not isinstance(countries_specific_extracted, bool)
+            or not isinstance(countries_union_extracted, bool)
+            or not isinstance(countries_region_extracted, bool)
+            or not isinstance(countries_global_extracted, bool)
+    ):
+        raise ValueError(
+            "countries_specific_extracted, countries_union_extracted, countries_region_extracted and"
+            "countries_global_extracted need to be booleans"
+        )
     try:
         (
             threshold,
@@ -170,9 +216,20 @@ def download_ics_as_csv(
 
     except ValueError as e:
         abort(400, str(e))
-    data = download_ics_table(
-        threshold, topic, postcode_area, beneficiary, uk_region, uoa, uoa_name, funder
-    )
+    data = download_ics_table(  
+        threshold,
+        countries_specific_extracted,
+        countries_union_extracted,
+        countries_region_extracted,
+        countries_global_extracted,
+        topic,
+        postcode_area,
+        beneficiary,
+        uk_region,
+        uoa,
+        uoa_name,
+        funder
+        )
     return data
 
 
