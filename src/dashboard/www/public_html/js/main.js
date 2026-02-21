@@ -3,8 +3,8 @@ var API_URL = "./api/";
 
 import * as _api from './api.js?version=2.95'
 import * as _init from './init.js?version=4.95'
-import * as _utils from './utils.js?version=6.95'
-import * as _UOAChart from './uoa_chart.js?version=6.45'
+import * as _utils from './utils.js?version=6.96'
+import * as _UOAChart from './uoa_chart.js?version=6.46'
 import * as _funderChart from './funder_chart.js?version=3.5'
 import * as _GlobalImactMap from './global_impact_map.js?version=3.9'
 import * as _UKMap from './UK_map.js?version=6.0'
@@ -16,7 +16,7 @@ import * as _CountryToPC from './country_to_pc.js?version=0.8'
 var slc_postcode_area=null;
 var slc_postcode_area_name=null;
 var slc_beneficiary=null;
-var slc_uoa="SHAPE";
+var slc_uoa=null;
 var slc_uoa_name=null;
 var slc_topic=null;
 var slc_threshold=1;
@@ -558,7 +558,7 @@ $( "#reload_selected_options" ).on( "click", function() {
      slc_postcode_area=null;
      slc_postcode_area_name="All";
      slc_beneficiary=null;
-     slc_uoa="SHAPE";
+     slc_uoa=null;
      slc_uoa_name=null;
      slc_funder=null;
      

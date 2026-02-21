@@ -406,13 +406,18 @@ export function updateUOAChart_selected_Assessment(data, n = 20) {
 export function updateUOAChart(data) {
 
     let ActiveAssessment = _utils.getActiveAssessment();
- 
-    if (ActiveAssessment !== "All") {
-        updateUOAChart_selected_Assessment(data, slc_numberUoALimit);
-    } else {
-        _utils.updateAssessmentSelection(data, slc_numberUoALimit);
+    let ActiveAssessmentLabel = _utils.getActiveAssessmentLabel();
+    
+    console.log(ActiveAssessmentLabel);
+    
+    const panelOptions = ['All', 'STEM by Panel', 'SHAPE by Panel'];
+
+    const isValid = panelOptions.includes(ActiveAssessmentLabel);
+    
+    if (isValid) {
         updateUOAChart_all_Assessment(data, slc_numberUoALimit);
-        document.querySelector('#Options_of_Assessment > option[value="All"]').selected=true;
+    } else {
+        updateUOAChart_selected_Assessment(data, slc_numberUoALimit);
     }
 
 }

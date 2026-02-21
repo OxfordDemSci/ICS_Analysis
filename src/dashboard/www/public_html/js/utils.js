@@ -628,6 +628,12 @@ export function getActiveAssessment() {
     return valueUOA;
 }
 
+export function getActiveAssessmentLabel() {
+    var eUOA = document.getElementById("Options_of_Assessment");
+    var labelUOA = eUOA.options[eUOA.selectedIndex].text;
+    return labelUOA;
+}
+
 export function getActiveTopic() {
 
     var active_topic = document.querySelector("#idTopics li.active").getAttribute("data-alias");
@@ -656,76 +662,30 @@ export function progressMenuOff() {
 
 
 export function updateAssessmentSelection(data, n = 20) {
+
     
-    var values_category_assessment = [];
-    var nmax = data.length;
-    let nuse;
-
-    if (nmax < n) {
-        nuse = nmax;
-    } else {
-        nuse = n;
-    }    
-    
-    for (var i = 0; i < nuse; i++) {
-
-        values_category_assessment.push(
-            {
-                name: data[i]['name'],
-                assessment_panel: data[i]['assessment_panel'],
-                uoa_count: data[i]['uoa_count']
-            }
-        );
-
-    }    
-
-    const d = values_category_assessment
-        .map((item) => item.assessment_panel)
-        .filter((value, index, self) => self.indexOf(value) === index);
-
     const Assessment_labels_lookup = [
-        {name: "SHAPE", label: "SHAPE by UoA"},
+        {name: "All", label: "All Disciplines"},
+        {name: "SHAPE", label: "SHAPE by UoA"}, // SHAPE C and D
+        {name: "STEM", label: "STEM by UoA"}, // SHAPE A and B
+        {name: "STEM", label: "STEM by Panel"}, // SHAPE A and B
+        {name: "SHAPE", label: "SHAPE by Panel"}, // SHAPE C and D
         {name: "A", label: "Panel A: Medicine, Health, and Life Sciences"},
         {name: "B", label: "Panel B: Physical Sciences, Engineering, and Mathematics"},
         {name: "C", label: "Panel C: Social Sciences"},
-        {name: "D", label: "Panel D: Arts and Humanities"},
-        {name: "STEM", label: "All STEM Disciplines"},
-        {name: "All", label: "SHAPE by Panel"}
-        
-    ];
+        {name: "D", label: "Panel D: Arts and Humanities"}
+    ];    
 
     const list = document.getElementById('Options_of_Assessment');
 
     list.innerHTML = "";
-
-    d.sort();
     
-    list.innerHTML = list.innerHTML +
-        '<option value="SHAPE">' + Assessment_labels_lookup.find(({name}) => name === "SHAPE").label + '</option>';    
+    const optionsHTML = Assessment_labels_lookup.map(item => 
+    `<option value="${item.name}">${item.label}</option>`
+    ).join('');
 
-
-    // if (d.includes("C") && d.includes("D")){
-    //     list.innerHTML = list.innerHTML +
-    //                 '<option value="SHAPE">' + Assessment_labels_lookup.find(({ name }) => name === "SHAPE").label + '</option>';
-    // }
-
-    for (var i = 0; i < d.length; i++) {
-
-        if (d[i] === 'B' | d[i] === 'A') continue;
-
-        list.innerHTML = list.innerHTML +
-            '<option value="' + d[i] + '">' + Assessment_labels_lookup.find(({name}) => name === d[i]).label + '</option>';
-
-    }
-    
-        list.innerHTML = list.innerHTML +
-        '<option value="All">' + Assessment_labels_lookup.find(({name}) => name === "All").label + '</option>';
-
-
-    // if (d.includes("A") && d.includes("B")){
-    //     list.innerHTML = list.innerHTML +
-    //                 '<option value="STEM">' + Assessment_labels_lookup.find(({ name }) => name === "STEM").label + '</option>';
-    // }
+    list.innerHTML = optionsHTML;
+   
 
 }
 
