@@ -41,6 +41,7 @@ TOPICS_DIR = BASE.joinpath("data/dashboard")
 TOPICS_TABLE = TOPICS_DIR.joinpath("topics.csv")
 TOPIC_NARRATIVES = TOPICS_DIR.joinpath('topic_narrative.csv')
 TOPICS_GROUPS_TABLE = TOPICS_DIR.joinpath("topics_groups.csv")
+ICS_TOPIC_CSV = TOPICS_DIR.joinpath("ics_topic.csv")
 REGIONS_GPKG = TOPICS_DIR.joinpath("UK_REGIONS.gpkg")
 TOPICS_OUT = BASE_APP.joinpath("db-data/TOPICS_TABLE.csv")
 TOPICS_WEIGHTS_OUT = BASE_APP.joinpath("db-data/TOPIC_WEIGHTS_TABLE.csv")
@@ -147,15 +148,23 @@ def insert_extracted_country_lookups(df_iso: pd.DataFrame, ics: pd.DataFrame) ->
         "countries_iso3",
         "countries_specific_extracted",
         "countries_union_extracted",
+<<<<<<< HEAD
+        "countries_region_extracted"
+=======
         "countries_region_extracted",
         "countries_global_extracted"
+>>>>>>> a9a201838c46f64dbdddeba66ccbe7e77ed3e816
         ]]
 
     for col in [
         "countries_specific_extracted",
         "countries_union_extracted",
+<<<<<<< HEAD
+        "countries_region_extracted"
+=======
         "countries_region_extracted",
         "countries_global_extracted"
+>>>>>>> a9a201838c46f64dbdddeba66ccbe7e77ed3e816
         ]:
         dataframes = []
         df_spec = get_subset(col)
@@ -237,24 +246,62 @@ def make_topics_and_weights(ics_df: pd.DataFrame, scale_weights: str | None = No
     topics_df = pd.read_csv(TOPICS_TABLE)
     topic_narratives_df = pd.read_csv(TOPIC_NARRATIVES).set_index('topic_id')
     topic_ids = topics_df[['topic_id']].copy().set_index('topic_id')
+
+    # Load ics_topic.csv to get topic assignments for ICS missing topic_id (e.g., STEM panels)
+    ics_topic_df = None
+    if ICS_TOPIC_CSV.exists():
+        ics_topic_df = pd.read_csv(ICS_TOPIC_CSV)
+        # Handle the malformed column name if present
+        if "Assign Final T£" in ics_topic_df.columns:
+            ics_topic_df = ics_topic_df.rename(columns={"Assign Final T£": "Topic 3"})
+        # Get the best topic (highest fit) for each ICS
+        def get_final_topic(row):
+            topics = []
+            for i in [1, 2, 3]:
+                topic_col = f"Topic {i}"
+                fit_col = f"Topic {i} FIT"
+                if topic_col in row.index and pd.notna(row.get(topic_col)):
+                    try:
+                        fit = float(row.get(fit_col, 0)) if pd.notna(row.get(fit_col)) else 0
+                        topics.append((int(row[topic_col]), fit))
+                    except (ValueError, TypeError):
+                        pass
+            if topics:
+                topics.sort(key=lambda x: x[1], reverse=True)
+                return topics[0][0]
+            return None
+        ics_topic_df['final_topic'] = ics_topic_df.apply(get_final_topic, axis=1)
+        ics_topic_lookup = ics_topic_df.set_index('ID')['final_topic'].to_dict()
+        print(f"  Loaded {len(ics_topic_lookup)} topic assignments from ics_topic.csv")
+
     # TODO
     cols = None  # To be implemented later
-    # weights_df = weights_df.rename(
-    #     columns={"REF impact case study identifier": "ics_id"}
-    # # )
-
-    # cols = [x for x in weights_df.columns if isinstance(x, int)]
-    # cols.insert(0, "ics_id")
 
     if scale_weights == "binary":
-        # weights_df[cols[1:]] = 0
-        # for i in range(weights_df.shape[0]):
-        #     weights_df.at[i, weights_df.at[i, "BERT_topic"]] = 1
         topic_weights_dfs_to_join = []
+        ics_with_topic = 0
+        ics_from_ics_topic = 0
+
         for _, row in ics_df.iterrows():
-            if pd.notna(row.topic_id):
-                df_subset = make_weights_df_binary_per_ics(topic_ids, row)
+            topic_id = row.topic_id
+
+            # If no topic_id in enhanced_ref_data, try to get it from ics_topic.csv
+            if pd.isna(topic_id) and ics_topic_df is not None:
+                topic_id = ics_topic_lookup.get(row.ics_id)
+                if pd.notna(topic_id):
+                    ics_from_ics_topic += 1
+
+            if pd.notna(topic_id):
+                # Create a row-like object with ics_id and topic_id
+                row_data = pd.Series({'ics_id': row.ics_id, 'topic_id': topic_id})
+                df_subset = make_weights_df_binary_per_ics(topic_ids, row_data)
                 topic_weights_dfs_to_join.append(df_subset.reset_index())
+                ics_with_topic += 1
+
+        print(f"  ICS with topics from enhanced_ref_data: {ics_with_topic - ics_from_ics_topic}")
+        print(f"  ICS with topics from ics_topic.csv (STEM): {ics_from_ics_topic}")
+        print(f"  Total ICS with topic assignments: {ics_with_topic}")
+
         df_topic_weights_final = pd.concat(topic_weights_dfs_to_join).reset_index()
         df_topic_weights_final["id"] = df_topic_weights_final.index.copy().astype("int")
         cols = [x for x in df_topic_weights_final.columns if x not in ['id', 'index']]
