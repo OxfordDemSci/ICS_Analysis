@@ -109,7 +109,11 @@ class ICS(Base):  # type: ignore
     s5_sentiment_score = Column(String)
     sentiment_score = Column(String)
 
-    __table_args__ = (Index("idx_ics_id", "id", "ics_id"),)
+    __table_args__ = (
+        Index("idx_ics_id", "id", "ics_id"),
+        Index("idx_ics_ics_id", "ics_id"),
+        Index("idx_ics_ukprn", "ukprn"),
+    )
 
 
 class Topics(Base):  # type: ignore
@@ -135,7 +139,12 @@ class TopicWeights(Base):  # type: ignore
     topic_id = Column(Integer)
     probability = Column(Float)
 
-    __table_args__ = (Index("idx_topic_weights_id", "id", unique=True),)
+    __table_args__ = (
+        Index("idx_topic_weights_id", "id", unique=True),
+        Index("idx_topic_weights_ics_id", "ics_id"),
+        Index("idx_topic_weights_topic_id", "topic_id"),
+        Index("idx_topic_weights_probability", "probability"),
+    )
 
 
 class TopicGroups(Base):  # type: ignore
@@ -147,7 +156,7 @@ class TopicGroups(Base):  # type: ignore
     description = Column(String)
     narrative = Column(String)
 
-    __table__args = (Index("idx_topic_groups", "group_id", unique=True),)
+    __table_args__ = (Index("idx_topic_groups", "group_id", unique=True),)
 
 
 class Funder(Base):  # type: ignore
@@ -157,7 +166,11 @@ class Funder(Base):  # type: ignore
     ics_table_id = Column(Integer)
     funder = Column(String)
 
-    __table_args__ = (Index("idx_funder_id", "id", unique=True),)
+    __table_args__ = (
+        Index("idx_funder_id", "id", unique=True),
+        Index("idx_funder_ics_table_id", "ics_table_id"),
+        Index("idx_funder_funder", "funder"),
+    )
 
 
 class UOA(Base):  # type: ignore
@@ -169,7 +182,10 @@ class UOA(Base):  # type: ignore
     assessment_panel = Column(String(1), nullable=False)
     assessment_group = Column(String(5), nullable=False)
 
-    __table_args__ = (Index("idx_uoa_id", "id", unique=True),)
+    __table_args__ = (
+        Index("idx_uoa_id", "id", unique=True),
+        Index("idx_uoa_uoa_id", "uoa_id"),
+    )
 
 
 class Institution(Base):  # type: ignore
@@ -179,6 +195,8 @@ class Institution(Base):  # type: ignore
     ukprn = Column(Integer)
     name = Column(String)
     postcode = Column(String(8))
+
+    __table_args__ = (Index("idx_institution_ukprn", "ukprn"),)
 
 
 class Countries(Base):  # type: ignore
@@ -192,7 +210,11 @@ class Countries(Base):  # type: ignore
     countries_region_extracted = Column(Boolean, nullable=False, default=False)
     countries_global_extracted = Column(Boolean, nullable=False, default=False)
 
-    __table_args__ = (Index("idx_countries_id", "id", unique=True),)
+    __table_args__ = (
+        Index("idx_countries_id", "id", unique=True),
+        Index("idx_countries_ics_table_id", "ics_table_id"),
+        Index("idx_countries_country", "country"),
+    )
 
 
 class UKRegions(Base):  # type: ignore
@@ -202,7 +224,11 @@ class UKRegions(Base):  # type: ignore
     ics_table_id = Column(Integer)
     uk_region_tag_values = Column(String)
 
-    __table_args__ = (Index("idx_uk_regions_id", "id", unique=True),)
+    __table_args__ = (
+        Index("idx_uk_regions_id", "id", unique=True),
+        Index("idx_uk_regions_ics_table_id", "ics_table_id"),
+        Index("idx_uk_regions_tag_values", "uk_region_tag_values"),
+    )
 
 
 class RegionsGeometry(Base):  # type: ignore

@@ -562,9 +562,6 @@ def get_ics_sql(
         JOIN topics t ON tw.topic_id = t.topic_id
         JOIN ics i ON tw.ics_id = i.ics_id
         JOIN uoa u ON u.uoa_id = CAST(i.uoa AS INTEGER)
-        JOIN funder f ON f.ics_table_id = i.id
-        JOIN countries c ON c.ics_table_id = i.id
-        JOIN uk_regions r ON r.ics_table_id = i.id
         WHERE tw.probability >= :threshold
     """
     if topic is not None:
@@ -573,15 +570,26 @@ def get_ics_sql(
         sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:
         sql_str += """
-             AND (
-            (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
-            OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
-            OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
-            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE))
-             AND c.country = :beneficiary
-            """
+            AND EXISTS (
+                SELECT 1 FROM countries c
+                WHERE c.ics_table_id = i.id
+                AND c.country = :beneficiary
+                AND (
+                    (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+                    OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+                    OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+                    OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE)
+                )
+            )
+        """
     if uk_region is not None:
-        sql_str += " AND r.uk_region_tag_values = :uk_region"
+        sql_str += """
+            AND EXISTS (
+                SELECT 1 FROM uk_regions r
+                WHERE r.ics_table_id = i.id
+                AND r.uk_region_tag_values = :uk_region
+            )
+        """
     if uoa is not None:
         if uoa in ["A", "B", "C", "D"]:
             sql_str += " AND u.assessment_panel = :uoa"
@@ -590,6 +598,12 @@ def get_ics_sql(
     if uoa_name is not None:
         sql_str += " AND u.name = :uoa_name"
     if funder is not None:
-        sql_str += " AND f.funder = :funder"
+        sql_str += """
+            AND EXISTS (
+                SELECT 1 FROM funder f
+                WHERE f.ics_table_id = i.id
+                AND f.funder = :funder
+            )
+        """
     sql = text(sql_str)
     return sql
