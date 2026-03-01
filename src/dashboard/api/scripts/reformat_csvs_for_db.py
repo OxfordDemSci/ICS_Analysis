@@ -72,10 +72,13 @@ def strip_uoa(row):
 
 
 def make_ics_table():
-    ics_df = pd.read_csv(ENRICHED_ICS_TABLE)
+    ics_df = pd.read_csv(ENRICHED_ICS_TABLE, low_memory=False)
     ics_df = ics_df.rename(columns=COLUMN_CONVERSION_MAP_FROM_CSV)
     ics_df["id"] = ics_df.index.copy().astype(int)
     ics_df["uoa"] = ics_df.apply(strip_uoa, axis=1)
+    # Drop extra columns not in the DB schema (new enhanced_ref_data may have more columns)
+    target_cols = list(COLUMN_CONVERSION_MAP_FROM_CSV.values()) + ["id"]
+    ics_df = ics_df[[c for c in target_cols if c in ics_df.columns]]
     ics_df.to_csv(OUTPUT_ICS_TABLE, index=False)
     return ics_df
 

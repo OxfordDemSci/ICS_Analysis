@@ -69,7 +69,7 @@ COLUMN_CONVERSION_MAP_FROM_CSV = {
     "reassignment": "reassignment",
     "final_topic": "final_topic",
     "reassignment_notes": "reassignment_notes",
-    "topic_id": "topic_id",
+    "topic1": "topic_id",
     "cluster_id": "cluster_id",
     "topic_name": "topic_name",
     "topic_name_short": "topic_name_short",

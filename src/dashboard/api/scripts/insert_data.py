@@ -4,9 +4,8 @@ import os
 from pathlib import Path
 
 import pandas as pd
-import psycopg2
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, text
 
 from alembic import command
 from alembic.config import Config
@@ -28,25 +27,13 @@ POSTGRES_DB = os.environ.get("POSTGRES_DB")
 TABLES_DIR = os.environ.get("DATABASE_TABLES_DIR")
 
 try:
-    conn = psycopg2.connect(
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-        host="ics_postgres",
-        port="5432",
-    )
     engine = create_engine(
         f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@ics_postgres:5432/{POSTGRES_DB}"
     )
+    with engine.connect() as _test_conn:
+        pass
     pg_host = "ics_postgres"
-except psycopg2.OperationalError:
-    conn = psycopg2.connect(
-        database=POSTGRES_DB,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-        host="localhost",
-        port="5432",
-    )
+except Exception:
     engine = create_engine(
         f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@localhost:5432/{POSTGRES_DB}"
     )
@@ -99,18 +86,13 @@ def upgrade_alembic():
 
 
 def upload_to_db(df, table_name):
-    table_exists = inspect(engine).has_table(table_name)
-    if table_exists:
-        cursor = conn.cursor()
-        delete_query = f"DELETE FROM {table_name}"
-        cursor.execute(delete_query)
-        conn.commit()
-        cursor.close()
     if table_name == "websitetext":
         df["uk_map_colourramp"] = df["uk_map_colourramp"].apply(ast.literal_eval)
         df["global_colourramp"] = df["global_colourramp"].apply(ast.literal_eval)
         df["uoa_bar_colours"] = df["uoa_bar_colours"].apply(json.dumps)
-    df.to_sql(table_name, engine, if_exists="append", index=False)
+    with engine.begin() as connection:
+        connection.execute(text(f"DELETE FROM {table_name}"))
+        df.to_sql(table_name, connection, if_exists="append", index=False)
 
 
 def convert_col_to_int(df, col_name):
@@ -154,4 +136,3 @@ def alembic_and_insert_tables():
 
 if __name__ == "__main__":
     alembic_and_insert_tables()
-    conn.close()
