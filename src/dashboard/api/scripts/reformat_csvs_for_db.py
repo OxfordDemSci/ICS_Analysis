@@ -148,23 +148,15 @@ def insert_extracted_country_lookups(df_iso: pd.DataFrame, ics: pd.DataFrame) ->
         "countries_iso3",
         "countries_specific_extracted",
         "countries_union_extracted",
-<<<<<<< HEAD
-        "countries_region_extracted"
-=======
         "countries_region_extracted",
         "countries_global_extracted"
->>>>>>> a9a201838c46f64dbdddeba66ccbe7e77ed3e816
         ]]
 
     for col in [
         "countries_specific_extracted",
         "countries_union_extracted",
-<<<<<<< HEAD
-        "countries_region_extracted"
-=======
         "countries_region_extracted",
         "countries_global_extracted"
->>>>>>> a9a201838c46f64dbdddeba66ccbe7e77ed3e816
         ]:
         dataframes = []
         df_spec = get_subset(col)
