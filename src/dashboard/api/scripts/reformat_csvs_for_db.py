@@ -148,15 +148,13 @@ def insert_extracted_country_lookups(df_iso: pd.DataFrame, ics: pd.DataFrame) ->
         "countries_iso3",
         "countries_specific_extracted",
         "countries_union_extracted",
-        "countries_region_extracted",
-        "countries_global_extracted"
+        "countries_region_extracted"
         ]]
 
     for col in [
         "countries_specific_extracted",
         "countries_union_extracted",
-        "countries_region_extracted",
-        "countries_global_extracted"
+        "countries_region_extracted"
         ]:
         dataframes = []
         df_spec = get_subset(col)
@@ -275,7 +273,7 @@ def make_topics_and_weights(ics_df: pd.DataFrame, scale_weights: str | None = No
         ics_from_ics_topic = 0
 
         for _, row in ics_df.iterrows():
-            topic_id = row.topic_id
+            topic_id = row.get('topic_id')
 
             # If no topic_id in enhanced_ref_data, try to get it from ics_topic.csv
             if pd.isna(topic_id) and ics_topic_df is not None:
