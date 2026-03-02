@@ -218,16 +218,26 @@ def get_countries_counts(
         ) -> List[Dict[str, str]]:
     sql = text(
         """
-        SELECT c.country AS country, COUNT(*) AS country_count
-        FROM countries c
-        JOIN ics i ON c.ics_table_id = i.id
-        WHERE i.ics_id = ANY(:ics_ids)
-        AND (
-            (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
-            OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
-            OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
-            OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE))
-        GROUP BY c.country
+        SELECT country, COUNT(*) AS country_count
+        FROM (
+            SELECT i.ics_id, c.country
+            FROM countries c
+            JOIN ics i ON c.ics_table_id = i.id
+            WHERE i.ics_id = ANY(:ics_ids)
+            AND (
+                (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+                OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+                OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+            )
+            UNION
+            SELECT i.ics_id, gc.iso3 AS country
+            FROM global_countries gc
+            CROSS JOIN ics i
+            WHERE i.ics_id = ANY(:ics_ids)
+            AND i.global_extracted IS TRUE
+            AND :countries_global_extracted IS TRUE
+        ) sub
+        GROUP BY country
         ORDER BY country_count DESC
     """
     )
@@ -570,15 +580,21 @@ def get_ics_sql(
         sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:
         sql_str += """
-            AND EXISTS (
-                SELECT 1 FROM countries c
-                WHERE c.ics_table_id = i.id
-                AND c.country = :beneficiary
-                AND (
-                    (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
-                    OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
-                    OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
-                    OR (:countries_global_extracted IS TRUE AND c.countries_global_extracted IS TRUE)
+            AND (
+                EXISTS (
+                    SELECT 1 FROM countries c
+                    WHERE c.ics_table_id = i.id
+                    AND c.country = :beneficiary
+                    AND (
+                        (:countries_specific_extracted IS TRUE AND c.countries_specific_extracted IS TRUE)
+                        OR (:countries_union_extracted IS TRUE AND c.countries_union_extracted IS TRUE)
+                        OR (:countries_region_extracted IS TRUE AND c.countries_region_extracted IS TRUE)
+                    )
+                )
+                OR (
+                    :countries_global_extracted IS TRUE
+                    AND i.global_extracted IS TRUE
+                    AND EXISTS (SELECT 1 FROM global_countries gc WHERE gc.iso3 = :beneficiary)
                 )
             )
         """

@@ -231,6 +231,14 @@ class UKRegions(Base):  # type: ignore
     )
 
 
+class GlobalCountries(Base):  # type: ignore
+    __tablename__ = "global_countries"
+
+    iso3 = Column(String(3), primary_key=True)
+
+    __table_args__ = (Index("idx_global_countries_iso3", "iso3", unique=True),)
+
+
 class RegionsGeometry(Base):  # type: ignore
     __tablename__ = "regions_geometry"
 

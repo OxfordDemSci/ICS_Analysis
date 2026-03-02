@@ -72,7 +72,11 @@ TABLE_MAP = {
     "REGIONS_GEOMETRY_TABLE.csv": {
         "cols_to_convert": ["id"],
         "table_name": "regions_geometry"
-    }
+    },
+    "GLOBAL_COUNTRIES_TABLE.csv": {
+        "cols_to_convert": [],
+        "table_name": "global_countries",
+    },
 }
 
 

@@ -1,3 +1,4 @@
+import re
 import sys
 import ast
 import os
@@ -23,7 +24,42 @@ print("basedir:", os.getenv("basedir"))
 
 
 sys.path.insert(0, str(Path(os.getenv("basedir")) / "src" / "dashboard" / "api" / "scripts"))
-from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, GLOBAL_ISOS, EU_COUNTRIES
+from csv_to_db_field_name_lookups import COLUMN_CONVERSION_MAP_FROM_CSV, EU_COUNTRIES
+
+# ISO3 codes for all countries shown on the dashboard global map.
+# Sourced from the 'global' row of funders_countries_lookup.xlsx (country_groups tab).
+# Update this list there and re-run this script if the global country set changes.
+GLOBAL_ISOS = [
+    'ABW', 'AFG', 'AGO', 'AIA', 'ALA', 'ALB', 'AND', 'ARE', 'ARG', 'ARM', 'ASM', 'ATC',
+    'ATF', 'ATG', 'AU1', 'AUS', 'AUT', 'AZE', 'BDI', 'BEL', 'BEN', 'BES', 'BFA', 'BGD',
+    'BGR', 'BHR', 'BHS', 'BIH', 'BLM', 'BLR', 'BLZ', 'BMU', 'BOL', 'BRA', 'BRB', 'BRN',
+    'BTN', 'BVT', 'BWA', 'CAF', 'CAN', 'CCK', 'CHE', 'CHL', 'CHN', 'CIV', 'CMR', 'COD',
+    'COG', 'COK', 'COL', 'COM', 'CPV', 'CRI', 'CUB', 'CUW', 'CXR', 'CYM', 'CYN', 'CYP',
+    'CZE', 'DEU', 'DJI', 'DMA', 'DNK', 'DOM', 'DZA', 'ECU', 'EGY', 'ERI', 'ESH', 'ESP',
+    'EST', 'ETH', 'FIN', 'FJI', 'FLK', 'FRA', 'FRO', 'FSM', 'GAB', 'GBR', 'GEO', 'GGY',
+    'GHA', 'GIB', 'GIN', 'GLP', 'GMB', 'GNB', 'GNQ', 'GRC', 'GRD', 'GRL', 'GTM', 'GUF',
+    'GUM', 'GUY', 'HKG', 'HMD', 'HND', 'HRV', 'HTI', 'HUN', 'IDN', 'IMN', 'IND', 'IOT',
+    'IRL', 'IRN', 'IRQ', 'ISL', 'ISR', 'ITA', 'JAM', 'JEY', 'JOR', 'JPN', 'KAS', 'KAZ',
+    'KEN', 'KGZ', 'KHM', 'KIR', 'KNA', 'KOR', 'KWT', 'LAO', 'LBN', 'LBR', 'LBY', 'LCA',
+    'LIE', 'LKA', 'LSO', 'LTU', 'LUX', 'LVA', 'MAC', 'MAF', 'MAR', 'MCO', 'MDA', 'MDG',
+    'MDV', 'MEX', 'MHL', 'MKD', 'MLI', 'MLT', 'MMR', 'MNE', 'MNG', 'MNP', 'MOZ', 'MRT',
+    'MSR', 'MTQ', 'MUS', 'MWI', 'MYS', 'MYT', 'NAM', 'NCL', 'NER', 'NFK', 'NGA', 'NIC',
+    'NIU', 'NLD', 'NOR', 'NPL', 'NRU', 'NZL', 'OMN', 'PAK', 'PAN', 'PCN', 'PER', 'PHL',
+    'PLW', 'PNG', 'POL', 'PRI', 'PRK', 'PRT', 'PRY', 'PSE', 'PYF', 'QAT', 'REU', 'ROU',
+    'RUS', 'RWA', 'SAU', 'SDN', 'SEN', 'SGP', 'SGS', 'SHN', 'SJM', 'SLB', 'SLE', 'SLV',
+    'SMR', 'SOL', 'SOM', 'SPM', 'SRB', 'SSD', 'STP', 'SUR', 'SVK', 'SVN', 'SWE', 'SWZ',
+    'SXM', 'SYC', 'SYR', 'TCA', 'TCD', 'TGO', 'THA', 'TJK', 'TKL', 'TKM', 'TLS', 'TON',
+    'TTO', 'TUN', 'TUR', 'TUV', 'TWN', 'TZA', 'UGA', 'UKR', 'UMI', 'URY', 'USA', 'UZB',
+    'VAT', 'VCT', 'VEN', 'VGB', 'VIR', 'VNM', 'VUT', 'WLF', 'WSM', 'XXK', 'YEM', 'ZAF',
+    'ZMB', 'ZWE',
+]
+
+# Terms in the ICS 'Countries' field that indicate global impact.
+# "Global South" is excluded as it refers to a specific region, not worldwide impact.
+GLOBAL_IMPACT_TERMS = re.compile(
+    r'\b(global(?!\s+south)|globally|worldwide|internationally?)\b',
+    re.IGNORECASE
+)
 
 
 BASE_APP = Path(os.getenv("basedir")).joinpath("src", "dashboard", "api", "app", "data")
@@ -52,6 +88,7 @@ FUNDERS_LOOKUP_OUT = BASE_APP.joinpath("db-data/ICS_TO_FUNDERS_LOOKUP_TABLE.csv"
 COUNTRIES_LOOKUP_OUT = BASE_APP.joinpath("db-data/ICS_TO_COUNTRY_LOOKUP_TABLE.csv")
 UK_REGIONS_LOOKUP_OUT = BASE_APP.joinpath("db-data/ICS_TO_UK_REGIONS_TAG_LOOKUP_TABLE.csv")
 UK_REGIONS_GEOM_TABLE = BASE_APP.joinpath("db-data/REGIONS_GEOMETRY_TABLE.csv")
+GLOBAL_COUNTRIES_OUT = BASE_APP.joinpath("db-data/GLOBAL_COUNTRIES_TABLE.csv")
 
 BASE_CSVS = BASE_APP.joinpath("db-data")
 BASE_TEST = BASE_APP.parent.parent.joinpath("tests/test_data")
@@ -76,11 +113,21 @@ def make_ics_table():
     ics_df = ics_df.rename(columns=COLUMN_CONVERSION_MAP_FROM_CSV)
     ics_df["id"] = ics_df.index.copy().astype(int)
     ics_df["uoa"] = ics_df.apply(strip_uoa, axis=1)
+    # Derive global_extracted from the Countries field
+    ics_df["global_extracted"] = (
+        ics_df["countries"].fillna("").str.contains(GLOBAL_IMPACT_TERMS)
+    )
     # Drop extra columns not in the DB schema (new enhanced_ref_data may have more columns)
-    target_cols = list(COLUMN_CONVERSION_MAP_FROM_CSV.values()) + ["id"]
+    target_cols = list(COLUMN_CONVERSION_MAP_FROM_CSV.values()) + ["id", "global_extracted"]
     ics_df = ics_df[[c for c in target_cols if c in ics_df.columns]]
     ics_df.to_csv(OUTPUT_ICS_TABLE, index=False)
     return ics_df
+
+
+def make_global_countries_table() -> None:
+    df = pd.DataFrame({"iso3": GLOBAL_ISOS})
+    df.to_csv(GLOBAL_COUNTRIES_OUT, index=False)
+    print(f"  Written {len(df)} global country ISOs")
 
 
 def make_funders_lookup_table(df_ics: pd.DataFrame) -> None:
@@ -423,6 +470,8 @@ if __name__ == "__main__":
     make_topics_and_weights(ics_df, scale_weights="binary")
     print("Making topic groups table")
     make_topics_groups_table()
+    print("Making global countries table")
+    make_global_countries_table()
     print("Making countries lookup table")
     make_countries_lookup_table(ics_df)
     print("Making UK regions lookup table")
