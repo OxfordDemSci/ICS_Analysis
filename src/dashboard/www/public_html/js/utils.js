@@ -663,13 +663,20 @@ export function progressMenuOff() {
 
 export function updateAssessmentSelection(data, n = 20) {
 
+//    const Assessment_labels_lookup = [
+//        {name: "All", label: "All Disciplines"},
+//        {name: "SHAPE", label: "SHAPE by UoA"}, // SHAPE C and D
+//        {name: "STEM", label: "STEM by UoA"}, // SHAPE A and B
+//        {name: "STEM", label: "STEM by Panel"}, // SHAPE A and B
+//        {name: "SHAPE", label: "SHAPE by Panel"}, // SHAPE C and D
+//        {name: "A", label: "Panel A: Medicine, Health, and Life Sciences"},
+//        {name: "B", label: "Panel B: Physical Sciences, Engineering, and Mathematics"},
+//        {name: "C", label: "Panel C: Social Sciences"},
+//        {name: "D", label: "Panel D: Arts and Humanities"}
+//    ];   
     
     const Assessment_labels_lookup = [
         {name: "All", label: "All Disciplines"},
-        {name: "SHAPE", label: "SHAPE by UoA"}, // SHAPE C and D
-        {name: "STEM", label: "STEM by UoA"}, // SHAPE A and B
-        {name: "STEM", label: "STEM by Panel"}, // SHAPE A and B
-        {name: "SHAPE", label: "SHAPE by Panel"}, // SHAPE C and D
         {name: "A", label: "Panel A: Medicine, Health, and Life Sciences"},
         {name: "B", label: "Panel B: Physical Sciences, Engineering, and Mathematics"},
         {name: "C", label: "Panel C: Social Sciences"},

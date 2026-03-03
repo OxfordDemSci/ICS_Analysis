@@ -408,8 +408,6 @@ export function updateUOAChart(data) {
     let ActiveAssessment = _utils.getActiveAssessment();
     let ActiveAssessmentLabel = _utils.getActiveAssessmentLabel();
     
-    console.log(ActiveAssessmentLabel);
-    
     const panelOptions = ['All', 'STEM by Panel', 'SHAPE by Panel'];
 
     const isValid = panelOptions.includes(ActiveAssessmentLabel);

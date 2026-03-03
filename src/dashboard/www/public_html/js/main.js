@@ -459,8 +459,11 @@ $("#idTopics").on('click','li',function(e){
 
 });
 
-$("#Options_of_Assessment").change(function () {
+$("#Options_of_Assessment").change(function (e) {
     var selectedAssessment = $('#Options_of_Assessment').children("option:selected").val();
+    
+    e.preventDefault();
+    
     slc_uoa = selectedAssessment;
 
     _utils.progressMenuOn();
