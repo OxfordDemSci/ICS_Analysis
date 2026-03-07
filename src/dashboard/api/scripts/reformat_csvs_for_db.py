@@ -1,4 +1,3 @@
-import re
 import sys
 import ast
 import os
@@ -54,13 +53,6 @@ GLOBAL_ISOS = [
     'ZMB', 'ZWE',
 ]
 
-# Terms in the ICS 'Countries' field that indicate global impact.
-# "Global South" is excluded as it refers to a specific region, not worldwide impact.
-GLOBAL_IMPACT_TERMS = re.compile(
-    r'\b(global(?!\s+south)|globally|worldwide|internationally?)\b',
-    re.IGNORECASE
-)
-
 
 BASE_APP = Path(os.getenv("basedir")).joinpath("src", "dashboard", "api", "app", "data")
 BASE = Path(os.getenv("basedir")).resolve()
@@ -113,9 +105,10 @@ def make_ics_table():
     ics_df = ics_df.rename(columns=COLUMN_CONVERSION_MAP_FROM_CSV)
     ics_df["id"] = ics_df.index.copy().astype(int)
     ics_df["uoa"] = ics_df.apply(strip_uoa, axis=1)
-    # Derive global_extracted from the Countries field
+    # Derive global_extracted from region_extracted (e.g. "global" or "arctic; global")
     ics_df["global_extracted"] = (
-        ics_df["countries"].fillna("").str.contains(GLOBAL_IMPACT_TERMS)
+        ics_df["region_extracted"].fillna("").str.lower().str.split(";")
+        .apply(lambda vals: any(v.strip() == "global" for v in vals))
     )
     # Drop extra columns not in the DB schema (new enhanced_ref_data may have more columns)
     target_cols = list(COLUMN_CONVERSION_MAP_FROM_CSV.values()) + ["id", "global_extracted"]
