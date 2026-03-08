@@ -1,210 +1,179 @@
 id,ics_table_id,funder
-93,35,Arts and Humanities Research Council [GBR]
-118,49,Arts and Humanities Research Council [GBR]
-119,49,Wellcome Trust
-163,76,The Executive Office [GBR]
-200,94,European Commission [EU]
-371,174,Engineering and Physical Sciences Research Council [GBR]
-479,225,National Grid
-480,225,Innovate UK [GBR]
-481,225,European Regional Development Fund [EU]
-625,282,European Commission [EU]
-698,318,Action Medical Research
-699,318,Great Ormond Street Children's Charity
-700,318,Jonah's Just Begun Foundation to cure Sanfilippo Inc
-701,318,Society for Mucopolysaccharide Diseases
-702,318,National MPS Society
-703,318,Newlife Foundation
-704,318,Orchard Therapeutics
-730,329,European Commission [EU]
-731,329,Natural Environment Research Council [GBR]
-732,329,British Skin Foundation
-733,329,"Department for Environment, Food and Rural Affairs [GBR]"
-734,329,"Department for Business, Energy and Industrial Strategy [GBR]"
-797,357,Arts and Humanities Research Council [GBR]
-1057,483,Engineering and Physical Sciences Research Council [GBR]
-1058,483,Leverhulme Trust
-1108,507,
-1336,610,
-1363,624,Lancashire County Council
-1364,624,"Department for Levelling Up, Housing and Communities [GBR]"
-1365,624,Economic and Social Research Council [GBR]
-1366,624,European Regional Development Fund [EU]
-1397,641,
-1468,674,
-1577,735,Arts and Humanities Research Council [GBR]
-1629,768,Department of Foreign Affairs and Trade [AUS]
-1630,768,Department for International Development [GBR]
-1747,826,Arts and Humanities Research Council [GBR]
-1830,875,Engineering and Physical Sciences Research Council [GBR]
-1831,875,Large-Scale Complex IT Systems Initiative
-1832,875,Daphne Jackson Trust
-1986,953,
-2143,1026,Wellcome Trust
-2144,1026,Australian Research Council
-2152,1030,
-2224,1070,Arts and Humanities Research Council [GBR]
-2258,1085,Department of Health and Social Care [GBR]
-2259,1085,Wellcome Trust
-2260,1085,Diabetes UK
-2261,1085,National Institute for Health and Care Research [GBR]
-2262,1085,Juvenile Diabetes Research Fund
-2263,1085,Northcott Medical Foundation
-2264,1085,Medical Research Council [GBR]
-2360,1144,Economic and Social Research Council [GBR]
-2440,1190,Medical Research Council [GBR]
-2979,1447,Arts and Humanities Research Council [GBR]
-2980,1447,The National Trust
-2996,1456,Arts and Humanities Research Council [GBR]
-3080,1497,
-3437,1659,
-3587,1717,Economic and Social Research Council [GBR]
-3645,1746,European Commission [EU]
-3646,1746,Engineering and Physical Sciences Research Council [GBR]
-3647,1746,Royal Society [GBR]
-3838,1845,Biotechnology and Biological Sciences Research Council [GBR]
-3839,1845,Engineering and Physical Sciences Research Council [GBR]
-3840,1845,Medical Research Council [GBR]
-4224,2051,Engineering and Physical Sciences Research Council [GBR]
-4518,2189,Engineering and Physical Sciences Research Council [GBR]
-4623,2243,Chief Scientist Office [GBR]
-4624,2243,BUPA Foundation
-4625,2243,World Health Organization
-4744,2302,Engineering and Physical Sciences Research Council [GBR]
-4745,2302,UK Home Office
-4746,2302,Innovate UK [GBR]
-4747,2302,Science and Technology Facilities Council [GBR]
-4748,2302,Royal Society [GBR]
-4749,2302,Ministry of Defence [GBR]
-5110,2457,
-5169,2477,Fifth Framework Programme [EU]
-5170,2477,CEC Leonardo da Vinci
-5171,2477,Alzheimer’s Association
-5172,2477,Horizon 2020 [EU]
-5486,2610,
-5547,2630,American Bus Benchmarking Group
-5548,2630,Economic and Social Research Council [GBR]
-5549,2630,Transport for London
-5550,2630,International Bus Benchmarking Group
-5551,2630,Nova Group of Metros
-5552,2630,Community of Metros
-5631,2663,British Tinnitus Association
-5810,2748,Scottish University Insight Initiative
-5811,2748,European Union [EU]
-6026,2846,Engineering and Physical Sciences Research Council [GBR]
-6027,2846,NATS
-6038,2855,National Institute for Health and Care Research [GBR]
-6517,3047,"National Roads Policing Operations, Intelligence and Investigation"
-6518,3047,National Police Chiefs’ Council
-6519,3047,Highways England
-6520,3047,Road Safety Trust
-6521,3047,Economic and Social Research Council [GBR]
-6522,3047,Office of the Police and Crime Commissioner for Staffordshire
-6523,3047,Australian Automobile Association
-6524,3047,Transport Research Laboratory
-6560,3061,Prostate Cancer UK
-6561,3061,Movember
-6562,3061,Pancreatic Cancer UK
-6563,3061,Macmillan Cancer Support
-6652,3105,European Research Council [EU]
-6666,3112,Scottish Government
-6749,3149,Welsh Government
-6750,3149,Arts and Humanities Research Council [GBR]
-6833,3189,
-7002,3290,Henry Luce Foundation
-7003,3290,British Council [GBR]
-7352,3445,European Commission [EU]
-7411,3481,
-7414,3484,Research England
-7529,3551,National Institute for Health and Care Research [GBR]
-7530,3551,Paul Hamlyn Foundation
-7531,3551,Royal College of Psychiatrists
-7600,3580,Science and Technology Facilities Council [GBR]
-7683,3620,UK Government
-7684,3620,National Science Foundation [USA]
-7685,3620,English Heritage
-7686,3620,European Commission [EU]
-7728,3639,
-7729,3640,
-7817,3682,Engineering and Physical Sciences Research Council [GBR]
-7818,3682,Ministry of Defence [GBR]
-7819,3682,UK Research and Innovation [GBR]
-7924,3738,
-7968,3764,Economic and Social Research Council [GBR]
-8217,3892,Royal Society [GBR]
-8218,3892,Human Frontier Science Research Project
-8219,3892,Bill and Melinda Gates Foundation
-8220,3892,European Commission [EU]
-8221,3892,Department of Health and Human Services [USA]
-8222,3892,National Institutes of Health [USA]
-8223,3892,European Union [EU]
-8407,3969,Innovate UK [GBR]
-8433,3981,Natural Environment Research Council [GBR]
-8708,4088,
-8889,4162,Engineering and Physical Sciences Research Council [GBR]
-8952,4193,
-9322,4373,European Union [EU]
-9323,4373,Water JPI
-9446,4433,Natural Environment Research Council [GBR]
-9447,4433,Radioactive Waste Management
-9448,4433,Environmental Agency [GBR]
-9975,4673,Catholic Bishops Conference of England and Wales Board of Religious Studies
-9990,4683,Leverhulme Trust
-9991,4683,Darwin Initiative
-9992,4683,Esmée Fairbairn Foundation
-9993,4683,John Ellerman Foundation
-9994,4683,"Department for Environment, Food and Rural Affairs [GBR]"
-10153,4768,
-10169,4776,Cancer Research UK [GBR]
-10170,4776,European Research Council [EU]
-10258,4820,Leverhulme Trust
-10282,4827,Northumbria Safer Roads Initiative
-10283,4827,Gateshead Council
-10284,4827,Engineering and Physical Sciences Research Council [GBR]
-10357,4864,
-10392,4882,
-10497,4946,Economic and Social Research Council [GBR]
-10654,5025,
-10763,5071,British Academy [GBR]
-10764,5071,Leverhulme Trust
-11009,5194,Arts and Humanities Research Council [GBR]
-11010,5194,Engineering and Physical Sciences Research Council [GBR]
-11011,5194,Office for Students [GBR]
-11012,5194,Lancashire County Council
-11013,5194,Global Challenges Research Fund [GBR]
-11014,5194,Simon Fraser University
-11015,5194,Lancaster University
-11304,5338,European Commission [EU]
-11543,5463,Horizon 2020 [EU]
-11586,5491,
-11604,5501,British Academy [GBR]
-11605,5501,Arts and Humanities Research Council [GBR]
-11606,5501,British School of Archaeology in Iraq
-11607,5501,Norwegian Institute for Palaeography and Historical Philology
-11608,5501,Princeton University
-11639,5521,
-11703,5559,
-11720,5567,Economic and Social Research Council [GBR]
-11867,5636,Leverhulme Trust
-11868,5636,Major Fellowship
-11869,5636,British Academy [GBR]
-11870,5636,Research Fellowship
-12026,5709,Economic and Social Research Council [GBR]
-12201,5780,European Commission [EU]
-12202,5780,Arts and Humanities Research Council [GBR]
-12749,6017,European Commission [EU]
-12750,6017,Engineering and Physical Sciences Research Council [GBR]
-12751,6017,Ministry of Defence [GBR]
-12752,6017,National Protective Security Authority [GBR]
-12753,6017,Department of Homeland Security [USA]
-12754,6017,UK Home Office
-12755,6017,Metropolitan Police
-12756,6017,Wellcome Trust
-12757,6017,Daphne Jackson Trust
-12851,6060,European Commission [EU]
-12916,6092,British Academy [GBR]
-12917,6092,Economic and Social Research Council [GBR]
-12918,6092,Road Safety Trust
-13061,6161,Arts and Humanities Research Council [GBR]
-13062,6161,Economic and Social Research Council [GBR]
-13276,6255,Arts and Humanities Research Council [GBR]
+153,68,Economic and Social Research Council [GBR]
+154,68,Arts and Humanities Research Council [GBR]
+170,79,Engineering and Physical Sciences Research Council [GBR]
+171,79,Microsoft
+207,100,UK Government
+208,100,Welsh Language Commissioner
+220,107,Cerebra
+221,107,National Institute for Health and Care Research [GBR]
+222,107,Remedi
+223,107,Children’s Foundation
+256,121,
+299,142,European Union [EU]
+312,150,Innovate UK [GBR]
+313,150,NHS [GBR]
+375,177,Royal Academy of Engineering [GBR]
+454,212,European Commission [EU]
+455,212,Medical Research Council [GBR]
+667,303,"Department for Environment, Food and Rural Affairs [GBR]"
+1032,471,
+1066,487,Arts and Humanities Research Council [GBR]
+1067,487,"United Nations Educational, Scientific and Cultural Organization [UN]"
+1122,515,Medical Research Council [GBR]
+1123,515,Wellcome Trust
+1124,515,National Institute for Health and Care Research [GBR]
+1125,515,Economic and Social Research Council [GBR]
+1210,544,Innovate UK [GBR]
+1255,561,
+1296,591,
+1504,692,Engineering and Physical Sciences Research Council [GBR]
+1541,712,Arts and Humanities Research Council [GBR]
+1542,712,Economic and Social Research Council [GBR]
+2099,1005,Engineering and Physical Sciences Research Council [GBR]
+2100,1005,Rolls-Royce
+2232,1076,Public Safety Canada
+2233,1076,Google
+2684,1316,European Commission [EU]
+2816,1377,Natural Environment Research Council [GBR]
+3211,1558,Biotechnology and Biological Sciences Research Council [GBR]
+3212,1558,Natural Environment Research Council [GBR]
+3213,1558,European Regional Development Fund [EU]
+3476,1679,European Commission [EU]
+3660,1753,ARC Medical
+3661,1754,Innovate UK [GBR]
+3896,1873,
+3963,1906,Royal College of Speech and Language Therapists
+3964,1906,Nuffield Foundation
+3965,1906,Department for International Development [GBR]
+3966,1906,Comic Relief
+3967,1906,Enhancing Learning and Research for Humanitarian Assistance
+3968,1906,Welsh Government
+4091,1975,Biotechnology and Biological Sciences Research Council [GBR]
+4092,1975,"Danish Agency for Science, Technology and Innovation"
+4560,2210,Economic and Social Research Council [GBR]
+4561,2210,Leverhulme Trust
+4740,2300,National Health Service [GBR]
+4741,2300,National Institute for Health and Care Research [GBR]
+4822,2332,Wellcome Trust
+4906,2375,
+5051,2437,Engineering and Physical Sciences Research Council [GBR]
+5237,2495,
+5283,2518,Royal Society [GBR]
+5284,2518,"National Research, Development and Innovation Office of Hungary"
+5285,2518,Natural Environment Research Council [GBR]
+5286,2518,Biotechnology and Biological Sciences Research Council [GBR]
+5287,2518,Leverhulme Trust
+5288,2518,Hungarian Scientific Research Fund
+5289,2518,National Geographic Society
+5297,2524,Medical Research Council [GBR]
+5340,2548,National Council of Science and Technology [MEX]
+5341,2548,British Academy [GBR]
+5342,2548,British Council [GBR]
+5388,2566,British Heart Foundation
+5389,2566,Johnson & Johnson
+5461,2598,
+5487,2611,Marks and Spencer
+5488,2611,Medical Research Council [GBR]
+5489,2611,National Institute for Health and Care Research [GBR]
+5490,2611,Cancer Research UK [GBR]
+5649,2670,
+6212,2920,
+6273,2953,Armassuisse
+6365,2987,
+6884,3214,European Commission [EU]
+6888,3217,Public Health England
+6912,3232,
+6974,3274,National Institute for Health and Care Research [GBR]
+7199,3384,Welsh Government
+7251,3405,Medical Research Council [GBR]
+7252,3405,National Institute for Health and Care Research [GBR]
+7253,3405,Department of Health and Social Care [GBR]
+7293,3423,British Heart Foundation
+7294,3423,Medical Research Council [GBR]
+7376,3459,
+7381,3463,
+7425,3492,Engineering and Physical Sciences Research Council [GBR]
+7782,3664,National Lottery Heritage Fund
+7807,3677,English Heritage
+7808,3677,University of York
+8174,3869,Engineering and Physical Sciences Research Council [GBR]
+8175,3869,Economic and Social Research Council [GBR]
+8176,3869,Bill and Melinda Gates Foundation
+8183,3874,
+8285,3914,Horizon 2020 [EU]
+8286,3914,Brian Holden Vision Institute
+8287,3914,THEA Foundation
+8288,3914,The Fred Hollows Foundation
+8289,3914,Sight Savers International
+8290,3914,Lions Club International
+8295,3916,
+8452,3991,Waltham Centre of Pet Nutrition
+8453,3991,Royal Canin
+8454,3991,Vetoquinol SA
+8455,3991,Boehringer Ingelheim
+8456,3991,Pfizer
+8683,4082,British Academy [GBR]
+8743,4107,Wellcome Trust
+8805,4139,Leverhulme Trust
+8806,4139,European Research Council [EU]
+8807,4139,Royal Society [GBR]
+8808,4139,Seventh Framework Programme [EU]
+8809,4139,Engineering and Physical Sciences Research Council [GBR]
+8810,4139,European Union [EU]
+8811,4139,Horizon 2020 [EU]
+8992,4214,
+9134,4279,Sutton Trust
+9135,4279,National Health Service [GBR]
+9378,4400,Engineering and Physical Sciences Research Council [GBR]
+9379,4400,Leverhulme Trust
+9839,4596,
+9978,4675,Arts and Humanities Research Council [GBR]
+10036,4704,Big Lottery Fund
+10037,4704,Alcohol Research UK
+10132,4759,
+10195,4787,
+10197,4789,
+10542,4973,Economic and Social Research Council [GBR]
+10543,4973,Department of Health and Social Care [GBR]
+10902,5136,Engineering and Physical Sciences Research Council [GBR]
+10908,5141,University of Nottingham
+10918,5147,
+10942,5159,Siemens
+11049,5213,Natural Environment Research Council [GBR]
+11050,5213,European Commission [EU]
+11051,5213,British Academy [GBR]
+11067,5223,European Commission [EU]
+11429,5400,Chartered Institute of Library and Information Professionals
+11434,5405,Gilead Sciences
+11435,5405,Brighton and Hove Commissioners
+11436,5405,Dunhill Medical Trust
+11437,5405,"Kent, Surrey and Sussex Deanery"
+11478,5423,Engineering and Physical Sciences Research Council [GBR]
+11519,5452,European Commission [EU]
+11528,5456,
+11566,5481,GlaxoSmithKline
+11567,5481,Biotechnology and Biological Sciences Research Council [GBR]
+11568,5481,Promega
+11569,5481,Medical Research Council [GBR]
+11570,5481,Australian Research Council
+11571,5481,European Commission [EU]
+11903,5654,Arts and Humanities Research Council [GBR]
+11904,5654,Natural Environment Research Council [GBR]
+11905,5654,National Lottery Heritage Fund
+12229,5792,
+12292,5817,Cancer Research UK [GBR]
+12411,5867,East Cheshire Hospice
+12412,5867,Liverpool Clinical Commissioning Group
+12413,5867,Oakhaven Hospice Trust
+12540,5928,Economic and Social Research Council [GBR]
+12888,6081,Engineering and Physical Sciences Research Council [GBR]
+12889,6081,Innovate UK [GBR]
+12976,6117,
+13051,6154,Office for National Statistics [GBR]
+13052,6154,Engineering and Physical Sciences Research Council [GBR]
+13267,6249,
+13308,6266,Arts and Humanities Research Council [GBR]
+13309,6266,Royal Society [GBR]
+13321,6272,
+13381,6305,English Institute of Sport
