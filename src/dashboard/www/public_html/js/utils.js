@@ -422,10 +422,13 @@ export function updateLabelsSelectedOptionsBoxs(Institutions, Beneficiaries, Fun
 
     document.getElementById('label_selected_Assessment').innerHTML = valueUOA;
 
-    var active_topic = document.querySelector("#idTopics li.active").getAttribute("data-alias");
-    document.getElementById('label_selected_Topics').innerHTML = (active_topic.length > 13) ? active_topic.substr(0, 16) + " ..." : active_topic;
+    var activeTopicEl = document.querySelector("#idTopics li.active");
+    var active_topic = activeTopicEl.getAttribute("data-alias");
+    var activeGroup = activeTopicEl.getAttribute("data-group");
+    var topic_display = activeGroup ? "All " + activeGroup + " Topics" : active_topic;
+    document.getElementById('label_selected_Topics').innerHTML = (topic_display.length > 13) ? topic_display.substr(0, 16) + " ..." : topic_display;
     const tooltipInstance = bootstrap.Tooltip.getInstance(label_selected_Topics);
-    tooltipInstance.setContent({'.tooltip-inner': active_topic});
+    tooltipInstance.setContent({'.tooltip-inner': topic_display});
     
     
     if (UAO_name === null) {
