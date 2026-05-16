@@ -11,6 +11,7 @@ from .data_types import (
     FunderType,
     PostCodeAreaType,
     ThresholdType,
+    TopicGroupType,
     TopicType,
     UKRegionType,
     UOANameType,
@@ -21,6 +22,7 @@ from .data_types import (
 def validate_params(
     threshold: float,
     topic: str | None = None,
+    topic_group: str | None = None,
     postcode_area: list | None = None,
     beneficiary: str | None = None,
     uk_region: str | None = None,
@@ -30,6 +32,7 @@ def validate_params(
 ) -> Tuple[
     float,
     Union[str, None],
+    Union[str, None],
     Union[list, None],
     Union[str, None],
     Union[str, None],
@@ -38,7 +41,10 @@ def validate_params(
     Union[str, None],
 ]:
     threshold = ThresholdType(threshold).value
+    topic_group = None if topic_group == "null" else TopicGroupType(topic_group).value
     topic = None if topic == "null" else TopicType(topic).value
+    if topic is not None and topic_group is not None:
+        topic = None
     postcode_area = (
         None if postcode_area == "null" else PostCodeAreaType(postcode_area).value
     )
@@ -54,6 +60,7 @@ def validate_params(
     return (
         threshold,
         topic,
+        topic_group,
         postcode_area,
         beneficiary,
         uk_region,
@@ -85,6 +92,7 @@ def get_data(
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
+    topic_group: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
     uk_region: str | None = None,
@@ -101,6 +109,7 @@ def get_data(
         table_page,
         items_per_page,
         topic,
+        topic_group,
         postcode,
         beneficiary,
         uk_region,

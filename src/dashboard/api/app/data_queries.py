@@ -416,6 +416,7 @@ def query_dashboard_data(
     table_page: int,
     items_per_page: int,
     topic: str | None = None,
+    topic_group: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
     uk_region: str | None = None,
@@ -431,6 +432,7 @@ def query_dashboard_data(
         countries_region_extracted,
         countries_global_extracted,
         topic,
+        topic_group,
         postcode,
         beneficiary,
         uk_region,
@@ -505,6 +507,7 @@ def get_ics_ids(
     countries_region_extracted: bool,
     countries_global_extracted: bool,
     topic: str | None = None,
+    topic_group: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
     uk_region: str | None = None,
@@ -514,6 +517,7 @@ def get_ics_ids(
 ) -> List[str]:
     sql = get_ics_sql(
         topic,
+        topic_group,
         postcode,
         beneficiary,
         uk_region,
@@ -527,6 +531,7 @@ def get_ics_ids(
         "countries_region_extracted",
         "countries_global_extracted",
         "topic",
+        "topic_group",
         "postcode",
         "beneficiary",
         "uk_region",
@@ -541,6 +546,7 @@ def get_ics_ids(
         countries_region_extracted,
         countries_global_extracted,
         topic,
+        topic_group,
         tuple(postcode) if postcode is not None else None,
         beneficiary,
         uk_region,
@@ -560,6 +566,7 @@ def get_ics_ids(
 
 def get_ics_sql(
     topic: str | None = None,
+    topic_group: str | None = None,
     postcode: list | None = None,
     beneficiary: str | None = None,
     uk_region: str | None = None,
@@ -576,6 +583,8 @@ def get_ics_sql(
     """
     if topic is not None:
         sql_str += " AND t.topic_name = :topic"
+    if topic_group is not None:
+        sql_str += " AND t.topic_group = :topic_group"
     if postcode is not None:
         sql_str += " AND i.postcode in :postcode"
     if beneficiary is not None:

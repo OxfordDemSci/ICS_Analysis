@@ -85,6 +85,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: topic_group
+          in: query
+          description: Topic group to use as filter (Defaults to All if null). If both topic and topic_group are set, topic is ignored.
+          required: false
+          schema:
+            type: string
         - name: postcode_area
           in: query
           description: List of postcode area(s) to query (Defaults to All if null)

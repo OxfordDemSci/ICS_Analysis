@@ -30,7 +30,8 @@ export function get_ics_data(api_url,
         uoa_name,
         funder,
         table_page,
-        items_per_page) {
+        items_per_page,
+        topic_group = null) {
 
     if (api_url.substr(-1) !== '/')
         api_url += '/';
@@ -75,6 +76,7 @@ export function get_ics_data(api_url,
         countries_region_extracted: blCountries_region,
         countries_global_extracted: blCountries_global,
         topic: topic,
+        topic_group: topic_group,
         postcode_area: postcode_area,
         beneficiary: beneficiary,
         uoa: (uoa === "All") ? null : uoa,

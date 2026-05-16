@@ -708,14 +708,19 @@ export function updateTopicsMenu_single(d, t) {
 
     const list = document.getElementById('idTopics');
     list.innerHTML = "";
-    for (var i = 0; i < topics_filted_by_group.length; i++) {
 
-        if (i === 0) {
-            list.innerHTML = list.innerHTML +
-                '<li class="list-group-item active" data-alias="' + topics_filted_by_group[i]['topic_name'] + '" >' + topics_filted_by_group[i]['topic_name'] + '</li>';
-        } else {
-            list.innerHTML = list.innerHTML +
-                '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+    if (t !== "All Clusters") {
+        list.innerHTML = '<li class="list-group-item active" data-alias="All Topics" data-group="' + t + '">All ' + t + ' Topics</li>';
+        for (var i = 0; i < topics_filted_by_group.length; i++) {
+            list.innerHTML += '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+        }
+    } else {
+        for (var i = 0; i < topics_filted_by_group.length; i++) {
+            if (i === 0) {
+                list.innerHTML += '<li class="list-group-item active" data-alias="' + topics_filted_by_group[i]['topic_name'] + '" >' + topics_filted_by_group[i]['topic_name'] + '</li>';
+            } else {
+                list.innerHTML += '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+            }
         }
     }
 
@@ -735,14 +740,19 @@ export function updateTopicsMenu(d, t) {
         $("#idTopics .list-group-item").removeClass("active");
         const list = document.getElementById('idTopics');
         list.innerHTML = "";
-        for (var i = 0; i < topics_filted_by_group.length; i++) {
 
-            if (i === 0) {
-                list.innerHTML = list.innerHTML +
-                    '<li class="list-group-item active" data-alias="' + topics_filted_by_group[i]['topic_name'] + '" >' + topics_filted_by_group[i]['topic_name'] + '</li>';
-            } else {
-                list.innerHTML = list.innerHTML +
-                    '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+        if (t !== "All Clusters") {
+            list.innerHTML = '<li class="list-group-item active" data-alias="All Topics" data-group="' + t + '">All ' + t + ' Topics</li>';
+            for (var i = 0; i < topics_filted_by_group.length; i++) {
+                list.innerHTML += '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+            }
+        } else {
+            for (var i = 0; i < topics_filted_by_group.length; i++) {
+                if (i === 0) {
+                    list.innerHTML += '<li class="list-group-item active" data-alias="' + topics_filted_by_group[i]['topic_name'] + '" >' + topics_filted_by_group[i]['topic_name'] + '</li>';
+                } else {
+                    list.innerHTML += '<li class="list-group-item" data-alias="' + topics_filted_by_group[i]['topic_name'] + '">' + topics_filted_by_group[i]['topic_name'] + '</li>';
+                }
             }
         }
 

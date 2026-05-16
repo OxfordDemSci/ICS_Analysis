@@ -41,6 +41,23 @@ class TopicType:
 
 
 @dataclass
+class TopicGroupType:
+    value: str | None = None  # type: ignore
+
+    @property  # type: ignore
+    def value(self) -> Union[str, None]:
+        return self._value
+
+    @value.setter
+    def value(self, new_value: str | None) -> None:
+        values = db.session.query(Topics.topic_group).distinct().all()
+        if new_value is None or new_value in [x[0] for x in values]:
+            self._value = new_value
+        else:
+            raise ValueError(f"Topic group invalid - {new_value}")
+
+
+@dataclass
 class PostCodeAreaType:
     value: list | None = None  # type: ignore
 

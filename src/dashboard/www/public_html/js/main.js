@@ -19,6 +19,7 @@ var slc_beneficiary=null;
 var slc_uoa=null;
 var slc_uoa_name=null;
 var slc_topic=null;
+var slc_topic_group=null;
 var slc_threshold=1;
 var slc_funder=null;
 var slc_numberFundersLimit=10;
@@ -134,14 +135,17 @@ var layerGlobal = L.geoJson(null, {
                         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
                         _utils.progressMenuOn();
                          slc_topic = _utils.getActiveTopic();
-                        _api.get_ics_data(API_URL, 
+                        _api.get_ics_data(API_URL,
                                         slc_threshold,
                                         slc_topic,
                                         slc_postcode_area,
                                         slc_beneficiary,
                                         slc_uoa,
                                         slc_uoa_name,
-                                        slc_funder).then(result => {
+                                        slc_funder,
+                                        null,
+                                        null,
+                                        slc_topic_group).then(result => {
                             infoboxSelectedUKmap.remove(mapUK);                               
                             _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);   
                             if (slc_uoa_name === null){
@@ -265,14 +269,17 @@ var layerUK = L.geoJson(null, {
                          _UKMap.selectFeatureUKMap(e, infoboxSelectedUKmap, mapUK );
                         _utils.progressMenuOn();
                          slc_topic = _utils.getActiveTopic();
-                        _api.get_ics_data(API_URL, 
+                        _api.get_ics_data(API_URL,
                                         slc_threshold,
                                         slc_topic,
                                         slc_postcode_area,
                                         slc_beneficiary,
                                         slc_uoa,
                                         slc_uoa_name,
-                                        slc_funder).then(result => {
+                                        slc_funder,
+                                        null,
+                                        null,
+                                        slc_topic_group).then(result => {
                             if ( document.getElementById('chKeepPOSTarea').checked === false ){    
                                 _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);                    
                             }                            
@@ -374,7 +381,10 @@ _init.setTopicsMenu(initialData).then(() => {
             slc_beneficiary,
             slc_uoa,
             slc_uoa_name,
-            slc_funder)
+            slc_funder,
+            null,
+            null,
+            slc_topic_group)
 ).then(result => {
     _init.setUK_Country_names_menu(CountryToPC);
     _init.setContactInfo(initialData.website_text.contact);
@@ -408,23 +418,30 @@ $(window).on("resize", function () {
 
 
 //$("#idTopics .list-group-item").click(function (e) {
-$("#idTopics").on('click','li',function(e){    
-    
+$("#idTopics").on('click','li',function(e){
+
     $("#idTopics .list-group-item").removeClass("active");
     $(e.target).addClass("active");
 
-    slc_topic = _utils.getActiveTopic();
+    var itemGroup = $(e.target).attr("data-group");
+    if (itemGroup) {
+        slc_topic = null;
+        slc_topic_group = itemGroup;
+    } else {
+        slc_topic = _utils.getActiveTopic();
+        slc_topic_group = null;
+    }
 
     //slc_postcode_area=null;
     //slc_beneficiary=null;
     //slc_funder=null;
     //slc_uoa=null;
-    
+
     //mapUK.setView(mapUK.options.center, mapUK.options.zoom);
     //mapGlobal.setView(mapGlobal.options.center, mapGlobal.options.zoom);
-    
+
     _utils.progressMenuOn();
-    
+
     _api.get_ics_data(API_URL,
             slc_threshold,
             slc_topic,
@@ -432,7 +449,10 @@ $("#idTopics").on('click','li',function(e){
             slc_beneficiary,
             slc_uoa,
             slc_uoa_name,
-            slc_funder).then(result => {
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
         infoboxSelectedUKmap.remove(mapUK);
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
         _utils.updateInfoBox(initialData);
@@ -475,8 +495,11 @@ $("#Options_of_Assessment").change(function (e) {
             slc_beneficiary,
             slc_uoa,
             slc_uoa_name,
-            slc_funder).then(result => {
-        infoboxSelectedUKmap.remove(mapUK);         
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
+        infoboxSelectedUKmap.remove(mapUK);
         _utils.updateTopicsMenuAvailable(initialData, result.topics_available);
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
         _UOAChart.updateUOAChart(result.uoa_counts);
@@ -513,7 +536,10 @@ function resetSelectionUKmap() {
             slc_beneficiary,
             slc_uoa,
             slc_uoa_name,
-            slc_funder).then(result => {
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
         infoboxSelectedUKmap.remove(mapUK);
         _utils.updateTopicsMenuAvailable(initialData, result.topics_available);
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
@@ -558,6 +584,7 @@ $( "#reload_selected_options" ).on( "click", function() {
      slc_group_Name="All Clusters";
 
      slc_topic=null;
+     slc_topic_group=null;
      slc_postcode_area=null;
      slc_postcode_area_name="All";
      slc_beneficiary=null;
@@ -576,15 +603,18 @@ $( "#reload_selected_options" ).on( "click", function() {
     mapGlobal.setView(mapGlobal.options.center, mapGlobal.options.zoom);
     mapUK.setView(mapUK.options.center, mapUK.options.zoom);
  
-    _api.get_ics_data(API_URL, 
+    _api.get_ics_data(API_URL,
                       slc_threshold,
                       slc_topic,
                       slc_postcode_area,
                       slc_beneficiary,
                       slc_uoa,
                       slc_uoa_name,
-                      slc_funder).then(result => {
-        infoboxSelectedUKmap.remove(mapUK);                  
+                      slc_funder,
+                      null,
+                      null,
+                      slc_topic_group).then(result => {
+        infoboxSelectedUKmap.remove(mapUK);
         //_init.setTopicsMenu(initialData);                                 
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);    
         _UOAChart.updateUOAChart(result.uoa_counts);
@@ -610,7 +640,7 @@ $( "#reload_selected_options" ).on( "click", function() {
  
 $( "#ics_table_all_btn" ).on( "click", function() {
     _utils.progressMenuOn();    
-    _api.get_ics_data(API_URL, 
+    _api.get_ics_data(API_URL,
                       slc_threshold,
                       slc_topic,
                       slc_postcode_area,
@@ -619,7 +649,8 @@ $( "#ics_table_all_btn" ).on( "click", function() {
                       slc_uoa_name,
                       slc_funder,
                       1,
-                      total_rows_pagination_meta).then(result => {
+                      total_rows_pagination_meta,
+                      slc_topic_group).then(result => {
         $('#ics_table_all_modal').modal('show');                  
         _utils.LoadCurrentICSTable(result.ics_table, ICSTable_columns, ICSTable_max_text_length);
      }).then(() => {
@@ -674,15 +705,18 @@ FundersChart.on('click', function(params) {
 
     slc_funder=params.name;
     _utils.progressMenuOn();
-    
-    _api.get_ics_data(API_URL, 
+
+    _api.get_ics_data(API_URL,
                       slc_threshold,
                       slc_topic,
                       slc_postcode_area,
                       slc_beneficiary,
                       slc_uoa,
                       slc_uoa_name,
-                      slc_funder).then(result => {
+                      slc_funder,
+                      null,
+                      null,
+                      slc_topic_group).then(result => {
         infoboxSelectedUKmap.remove(mapUK);                   
         _utils.updateTopicsMenuAvailable(initialData, result.topics_available);                                      
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);    
@@ -870,35 +904,38 @@ $( "#btnGenerateReport" ).on( "click", function() {
 
 $("#idGroups").change(function (e) {
     e.preventDefault();
-    
+
     var selectedGroupValue = $('#idGroups').children("option:selected").val();
     slc_group_ID = parseInt(selectedGroupValue);
     let topic_groups = initialData.topic_groups;
 
     if (slc_group_ID === 0) {
         slc_group_Name = "All Clusters";
+        slc_topic_group = null;
     } else {
         slc_group_Name = topic_groups.filter(element => (element.group_id === slc_group_ID))[0].topic_group;
+        slc_topic_group = slc_group_Name;
     }
+    slc_topic = null;
 
    // _utils.updateTopicsMenu(initialData.topics, slc_group_Name);
 
      $('#Options_of_Assessment').prop("selectedIndex", 0);
      $("#idTopics .list-group-item").removeClass("active");
      $("#idTopics .list-group-item").first().addClass("active");
-     
-     $('[data-bs-toggle="tooltip"]').tooltip('hide'); 
+
+     $('[data-bs-toggle="tooltip"]').tooltip('hide');
 
 
      slc_postcode_area=null;
      slc_beneficiary=null;
      slc_uoa=null;
      slc_funder=null;
-    
+
     _utils.progressMenuOn();
-    
+
     _utils.updateTopicsMenu(initialData.topics, slc_group_Name).then(() => {
-        slc_topic = _utils.getActiveTopic();
+        // slc_topic and slc_topic_group already set above
     }).then(() =>
         _api.get_ics_data(API_URL,
                 slc_threshold,
@@ -907,7 +944,10 @@ $("#idGroups").change(function (e) {
                 slc_beneficiary,
                 slc_uoa,
                 slc_uoa_name,
-                slc_funder)
+                slc_funder,
+                null,
+                null,
+                slc_topic_group)
     ).then(result => {
         infoboxSelectedUKmap.remove(mapUK); 
         _utils.updateInfoBox(initialData);
@@ -975,8 +1015,11 @@ $("#Options_of_Impact_Beneficiariest").change(function (e) {
             slc_beneficiary,
             slc_uoa,
             slc_uoa_name,
-            slc_funder).then(result => {
-         infoboxSelectedUKmap.remove(mapUK);                  
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
+         infoboxSelectedUKmap.remove(mapUK);
         _utils.updateTopicsMenuAvailable(initialData, result.topics_available);                                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);   
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit); 
@@ -1017,15 +1060,18 @@ UOAChart.on('click', function(params) {
     
         _utils.progressMenuOn();
         
-        _api.get_ics_data(API_URL, 
+        _api.get_ics_data(API_URL,
                       slc_threshold,
                       slc_topic,
                       slc_postcode_area,
                       slc_beneficiary,
                       slc_uoa,
                       slc_uoa_name,
-                      slc_funder).then(result => {
-         infoboxSelectedUKmap.remove(mapUK);                  
+                      slc_funder,
+                      null,
+                      null,
+                      slc_topic_group).then(result => {
+         infoboxSelectedUKmap.remove(mapUK);
         _utils.updateTopicsMenuAvailable(initialData, result.topics_available);                                    
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);   
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit); 
@@ -1074,8 +1120,11 @@ $("#Options_of_Country_Names").change(function (e) {
             slc_beneficiary,
             slc_uoa,
             slc_uoa_name,
-            slc_funder).then(result => {
-        infoboxSelectedUKmap.remove(mapUK);        
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
+        infoboxSelectedUKmap.remove(mapUK);
         _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
         _utils.updateTopicsMenuAvailable(initialData, result.topics_available); 
@@ -1150,13 +1199,16 @@ function reset_Individual_Filter(d) {
             slc_beneficiary,
             slc_uoa,
             slc_uoa_name,
-            slc_funder).then(result => {
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
         infoboxSelectedUKmap.remove(mapUK);
-        _utils.updateTopicsMenuAvailable(initialData, result.topics_available); 
+        _utils.updateTopicsMenuAvailable(initialData, result.topics_available);
         _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
         if (slc_uoa_name === null){
            _UOAChart.updateUOAChart(result.uoa_counts);
-        } 
+        }
         _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
         if (slc_Impact_Beneficiariest === "Global") {
             _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
@@ -1239,7 +1291,10 @@ $('#idMdSettings').on('hidden.bs.modal', function (e) {
                 slc_beneficiary,
                 slc_uoa,
                 slc_uoa_name,
-                slc_funder).then(result => {
+                slc_funder,
+                null,
+                null,
+                slc_topic_group).then(result => {
             infoboxSelectedUKmap.remove(mapUK);
             _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
             _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);

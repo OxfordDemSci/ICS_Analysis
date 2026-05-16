@@ -30,6 +30,7 @@ def get_ics_data(
     table_page: int = 1,
     items_per_page: int = 500,
     topic: str | None = None,
+    topic_group: str | None = None,
     postcode_area: list | None = None,
     beneficiary: str | None = None,
     uk_region: str | None = None,
@@ -57,6 +58,7 @@ def get_ics_data(
         (
             threshold,
             topic,
+            topic_group,
             postcode_area,
             beneficiary,
             uk_region,
@@ -66,6 +68,7 @@ def get_ics_data(
         ) = validate_params(
             threshold,
             topic,
+            topic_group,
             postcode_area,
             beneficiary,
             uk_region,
@@ -85,6 +88,7 @@ def get_ics_data(
         table_page,
         items_per_page,
         topic,
+        topic_group,
         postcode_area,
         beneficiary,
         uk_region,
