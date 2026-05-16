@@ -50,7 +50,7 @@
                 <li><a class="dropdown-item" id="btnHelp" href="#">Help</a></li>
                 <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
                 <li><a class="dropdown-item" id="btnTeam" href="#">Team</a></li>
-                <li><a class="dropdown-item" id="btnSettings" href="#">Settings</a></li>
+
                 <li><a class="dropdown-item" id="btnPrivacy" href="#">Privacy</a></li>
                 <!--                <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>-->
                 <li>
@@ -91,6 +91,15 @@
                             </ul>
                         </div>
                     </div>
+
+                    <!-- VIEW AND DOWNLOAD DATA BUTTOM -->
+                    <div class="sb-sidenav-menu-heading" style="padding-top:0.2rem; padding-bottom:0rem"><label
+                            id="label_Addons"></label></div>
+                    <a class="nav-link" id="ics_table_all_btn" href="#" style="color:white; padding-top:0.4rem;padding-bottom: 0.4rem;">
+                        <div class="sb-nav-link-icon" style="color: white"><i class="fas fa-table"></i></div>
+                        <label id="label_sub_addons_Impact_Case_Studies"
+                               style="cursor:pointer; font-size:0.75rem"></label>
+                    </a>
 
                     <!-- SELECTED FILTERS INFO -->
                     <div class="sb-sidenav-menu-heading pb-0" style="padding-top: 0.3rem; margin-top: 10px">SELECTED FILTERS
@@ -149,7 +158,7 @@
                                 <label class="text-muted pr-4" id="label_selectedBox_UOA">UOA:</label>&nbsp;<label
                                     id="label_selected_UOA" data-bs-toggle="tooltip" data-bs-placement="right"
                                     data-bs-title="All"> All</label>
-                            </li>                            
+                            </li>
                             <li class="list-group-item pb-0 pt-0">
                                 <label class="text-muted pr-4"
                                        id="label_selectedBox_Funder">Funder:</label>&nbsp;<label
@@ -159,15 +168,6 @@
                         </ul>
                     </div>
 
-                    <!-- VIEW AND DOWNLOAD DATA BUTTOM -->
-                    <div class="sb-sidenav-menu-heading" style="padding-top:0.2rem; padding-bottom:0rem"><label
-                            id="label_Addons"></label></div>
-                    <a class="nav-link" id="ics_table_all_btn" href="#" style="color:white; padding-top:0.4rem;padding-bottom: 0.4rem">
-                        <div class="sb-nav-link-icon" style="color: white"><i class="fas fa-table"></i></div>
-                        <label id="label_sub_addons_Impact_Case_Studies"
-                               style="cursor:pointer; font-size:0.9rem"></label>
-                    </a>
-                    
                     <div class="sb-sidenav-menu-heading" style="padding-top:0.2rem; padding-bottom:0rem">
                         <label id="label_Addonsaa">total impact case studies </label>
                     </div>
@@ -286,7 +286,7 @@
                                             <div id="card_Impact_Case_Studies_overflow"
                                                  style="overflow-y: auto;width: 100%;">
                                                 <p class="text-700 fst-italic mt-2 p-2" style="font-size: 0.8rem">
-                                                    Click "Enhanced REF Database" (bottom-left) to browse a complete
+                                                    Click "View Selected Case Studies" (bottom-left) to browse a complete
                                                     listing of all Impact Case Studies in this topic. Scroll down to
                                                     read about a few examples...
                                                 </p>
@@ -467,9 +467,9 @@
                                                             <i class="fas fa-question-circle" style="padding-left: 0.3rem;  font-size: 0.8rem"></i>
                                                     </label>                                                    
                                                 </div>
-                                                <div class="col-md-6 d-flex justify-content-end">
+                                                <div class="col-md-6 d-flex justify-content-end align-items-center">
 
-                                                    <div class="d-inline-flex  col-form-label text-right"
+                                                    <div class="d-inline-flex col-form-label text-right"
                                                          style="padding-top: 0rem;padding-bottom: 0rem;">
 
                                                          <!-- NOTE: This selector has been disabled (opacity:0;pointer-events:none) until issue #68 can be resolved -->
@@ -480,6 +480,13 @@
                                                             <option value="UK">UK</option>
                                                         </select>
                                                     </div>
+                                                    <span id="btnSettings"
+                                                          style="cursor: pointer; font-size: 0.95rem; color: #555; margin-left: 6px;"
+                                                          data-bs-toggle="tooltip"
+                                                          data-bs-placement="top"
+                                                          data-bs-title="Settings">
+                                                        <i class="fa-solid fa-gear"></i>
+                                                    </span>
 
                                                 </div>
                                             </div>
@@ -697,7 +704,7 @@
 
                         <div class="col-sm-2">
                             <div class="text-center">
-                                <input class="form-check-input" type="checkbox" id="chCountries_union_extracted" checked>
+                                <input class="form-check-input" type="checkbox" id="chCountries_union_extracted">
                             </div>
                         </div>
 
@@ -715,7 +722,7 @@
 
                         <div class="col-sm-2">
                             <div class="text-center">
-                                <input class="form-check-input" type="checkbox" id="chCountries_region_extracted" checked>
+                                <input class="form-check-input" type="checkbox" id="chCountries_region_extracted">
                             </div>
                         </div>
 
@@ -1213,7 +1220,7 @@
         $('[data-bs-toggle="tooltip"]').tooltip();
 
         document.getElementById('label_Addons').innerHTML = "View and Download Data";
-        document.getElementById('label_sub_addons_Impact_Case_Studies').innerHTML = "Enhanced REF Database";
+        document.getElementById('label_sub_addons_Impact_Case_Studies').innerHTML = "View Selected Case Studies";
         //document.getElementById('label_View_Details').innerHTML = "Expand Text";
         document.getElementById('label_Assessment').innerHTML = "Main Panel(s)";
 
