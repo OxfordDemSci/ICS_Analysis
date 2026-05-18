@@ -18,8 +18,8 @@ class ThresholdType:
 
     @value.setter
     def value(self, new_value: float) -> None:
-        if not 0 <= new_value <= 1:
-            raise ValueError("Threshold must be float between 0 and 1")
+        if not 1 <= new_value <= 4:
+            raise ValueError("Threshold must be an integer between 1 and 4")
         self._value = new_value
 
 

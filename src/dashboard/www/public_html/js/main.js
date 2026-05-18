@@ -20,7 +20,7 @@ var slc_uoa=null;
 var slc_uoa_name=null;
 var slc_topic=null;
 var slc_topic_group=null;
-var slc_threshold=1;
+var slc_threshold=4;
 var slc_funder=null;
 var slc_numberFundersLimit=10;
 var slc_group_ID=0;
@@ -823,8 +823,82 @@ FundersChart.on('click', function(params) {
 //});
 
 $( "#btnSettings" ).on( "click", function() {
-    
+
     $('#idMdSettings').modal('show');
+});
+
+$( "#btnProbabilitySelector" ).on( "click", function(e) {
+    e.preventDefault();
+    $('#idMdProbSelector').modal('show');
+});
+
+const PROB_LABELS = {
+    1: "Level 1 — Any match",
+    2: "Level 2 — Moderate match",
+    3: "Level 3 — Strong match",
+    4: "Level 4 — Best match only"
+};
+
+function applyProbLevel(level) {
+    // Update button states
+    document.querySelectorAll('.btn-prob-level').forEach(btn => {
+        const btnLevel = parseInt(btn.getAttribute('data-level'));
+        btn.classList.toggle('btn-primary', btnLevel === level);
+        btn.classList.toggle('btn-outline-secondary', btnLevel !== level);
+    });
+    document.getElementById('probSelectorCurrentLabel').textContent = PROB_LABELS[level];
+}
+
+let slc_threshold_at_modal_open = slc_threshold;
+
+$('#idMdProbSelector').on('shown.bs.modal', function() {
+    slc_threshold_at_modal_open = slc_threshold;
+    applyProbLevel(slc_threshold);
+});
+
+$('.btn-prob-level').on('click', function() {
+    const newLevel = parseInt($(this).attr('data-level'));
+    slc_threshold = newLevel;
+    applyProbLevel(newLevel);
+});
+
+$('#idMdProbSelector').on('hidden.bs.modal', function() {
+    if (slc_threshold === slc_threshold_at_modal_open) return;
+    _utils.progressMenuOn();
+    slc_topic = _utils.getActiveTopic();
+    _api.get_ics_data(API_URL,
+            slc_threshold,
+            slc_topic,
+            slc_postcode_area,
+            slc_beneficiary,
+            slc_uoa,
+            slc_uoa_name,
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
+        infoboxSelectedUKmap.remove(mapUK);
+        _UKMap.updateUKMap(mapUK, layerUK, UKPostCodeAreasBoundary, result.institution_counts, palette_colors_UKMap);
+        _utils.updateLabelsSelectedOptionsBoxs(slc_postcode_area_name, slc_beneficiary, slc_funder, slc_uoa_name);
+        _utils.updateTopicsMenuAvailable(initialData, result.topics_available);
+
+        if (slc_Impact_Beneficiariest === "Global") {
+            _GlobalImactMap.updateGlobalImactMap(mapGlobal, layerGlobal, GlobalBoundary, result.countries_counts, palette_colors_GlobalMap);
+        } else {
+            _UKRegionCountsMap.updateUKregion_counts_map(mapGlobal, clusters_UK_region, result.uk_region_counts);
+        }
+
+        _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
+        if (slc_uoa_name === null) {
+            _UOAChart.updateUOAChart(result.uoa_counts);
+        }
+        total_rows_pagination_meta = result.table_pagination_meta.total_rows;
+        _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+    }).then(() => {
+        _utils.progressMenuOff();
+    }).catch(error => {
+        console.log('Probability selector update error', error);
+    });
 });
 
 $('#idMdSettings').on('shown.bs.modal', function() { 

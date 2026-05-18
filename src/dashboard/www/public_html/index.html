@@ -50,6 +50,7 @@
                 <li><a class="dropdown-item" id="btnHelp" href="#">Help</a></li>
                 <li><a class="dropdown-item" id="btnAbout" href="#">About</a></li>
                 <li><a class="dropdown-item" id="btnTeam" href="#">Team</a></li>
+                <li><a class="dropdown-item" id="btnProbabilitySelector" href="#"><i class="fa-solid fa-sliders me-1"></i>Probability Selector</a></li>
 
                 <li><a class="dropdown-item" id="btnPrivacy" href="#">Privacy</a></li>
                 <!--                <li><a class="dropdown-item" id="btnGenerateReport" href="#">Generate Report</a></li>-->
@@ -791,6 +792,45 @@
     </div>
 </div>
 <!-- end  modals Settings -->
+
+<!-- modal Probability Selector -->
+<div class="modal fade" data-backdrop="false" id="idMdProbSelector" tabindex="-1"
+     aria-labelledby="ModalProbSelectorLabel" style="opacity: 0.95; z-index: 2200">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalProbSelectorLabel">Probability Selector</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.85rem; color:#555; margin-bottom:0.75rem;">
+                    Show impact case studies where the topic match quality is <strong>at least</strong>:
+                </p>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-sm btn-prob-level btn-outline-secondary" data-level="1">
+                        <span class="fw-bold">Level 1</span> &mdash; Any match
+                    </button>
+                    <button type="button" class="btn btn-sm btn-prob-level btn-outline-secondary" data-level="2">
+                        <span class="fw-bold">Level 2</span> &mdash; Moderate match
+                    </button>
+                    <button type="button" class="btn btn-sm btn-prob-level btn-outline-secondary" data-level="3">
+                        <span class="fw-bold">Level 3</span> &mdash; Strong match
+                    </button>
+                    <button type="button" id="btnProbLevel4" class="btn btn-sm btn-prob-level btn-primary" data-level="4">
+                        <span class="fw-bold">Level 4</span> &mdash; Best match only
+                    </button>
+                </div>
+                <p id="probSelectorNote" style="font-size:0.78rem; color:#888; margin-top:0.75rem; margin-bottom:0;">
+                    Currently: <strong id="probSelectorCurrentLabel">Level 4 — Best match only</strong>
+                </p>
+            </div>
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end modal Probability Selector -->
 
 <!--  modals Settings -->
 <div class="modal fade " data-backdrop="false" id="idMdContact" tabindex="-1" aria-labelledby="ModalContact"

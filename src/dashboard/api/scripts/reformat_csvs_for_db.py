@@ -86,6 +86,31 @@ BASE_CSVS = BASE_APP.joinpath("db-data")
 BASE_TEST = BASE_APP.parent.parent.joinpath("tests/test_data")
 
 
+VALID_FIT_SCORES = {1, 2, 3, 4}
+
+# ics_topic.csv uses 'Assign Final T£' for Topic 3; after rename it becomes 'Topic 3'
+TOPIC_COLS = [
+    ("Topic 1", "Topic 1 FIT"),
+    ("Topic 2", "Topic 2 FIT"),
+    ("Topic 3", "Topic 3 FIT"),
+]
+
+
+def parse_fit(value) -> int | None:
+    """Return int if value is a valid FIT score (1–4), else None.
+
+    Uses float() intermediary because pandas reads mixed int/NaN columns as
+    float64, so values arrive as 4.0 rather than '4' — int('4.0') would fail.
+    """
+    if pd.isna(value):
+        return None
+    try:
+        v = int(float(str(value).strip()))
+        return v if v in VALID_FIT_SCORES else None
+    except (ValueError, TypeError):
+        return None
+
+
 def get_final_topic(row):
     topics = []
     for i in [1, 2, 3]:
@@ -101,6 +126,52 @@ def get_final_topic(row):
         topics.sort(key=lambda x: x[1], reverse=True)
         return topics[0][0]
     return None
+
+
+def make_weights_fit_score(ics_topic_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Build long-format topic weights using actual FIT scores (1–4).
+
+    Returns (weights_df, garbled_df) where garbled_df contains rows that had
+    invalid FIT values or topic IDs for manual review.
+    """
+    weight_rows = []
+    garbled_rows = []
+
+    for _, row in ics_topic_df.iterrows():
+        ics_id = row.get("ID", "")
+        has_garbled = False
+
+        for topic_col, fit_col in TOPIC_COLS:
+            topic_raw = row.get(topic_col, "")
+            fit_raw = row.get(fit_col, "")
+
+            if pd.isna(topic_raw) or str(topic_raw).strip() == "":
+                continue
+
+            fit_score = parse_fit(fit_raw)
+
+            try:
+                topic_id = int(float(str(topic_raw).strip()))
+            except (ValueError, TypeError):
+                has_garbled = True
+                continue
+
+            if fit_score is None:
+                # Only flag as garbled when a FIT value was actually entered but is invalid.
+                # Missing FIT (NaN / empty) on an assigned topic is silently skipped.
+                fit_is_present = not pd.isna(fit_raw) and str(fit_raw).strip() != ""
+                if fit_is_present:
+                    has_garbled = True
+                continue
+
+            weight_rows.append({"ics_id": ics_id, "topic_id": topic_id, "probability": fit_score})
+
+        if has_garbled:
+            garbled_rows.append(row.to_dict())
+
+    weights_df = pd.DataFrame(weight_rows)
+    garbled_df = pd.DataFrame(garbled_rows)
+    return weights_df, garbled_df
 
 
 def strip_uoa(row):
@@ -290,83 +361,39 @@ def make_uk_region_geom_table(region_list) -> None:
     df.to_csv(UK_REGIONS_GEOM_TABLE, index=False)
 
 
-def make_weights_df_binary_per_ics(topic_ids: pd.DataFrame, row: pd.Series) -> pd.DataFrame:
-    ics_id = row.ics_id
-    topic_id = row.topic_id
-    df_ = pd.DataFrame(data={'ics_id': [ics_id], 'topic_id': [topic_id], 'probability': [1]}).set_index('topic_id')
-    df_subset = topic_ids.join(df_, how='outer')
-    df_subset.ics_id = df_subset.ics_id.fillna(ics_id)
-    df_subset.probability = df_subset.probability.fillna(0)
-    return df_subset
-
-
-def make_topics_and_weights(ics_df: pd.DataFrame, scale_weights: str | None = None) -> None:
+def make_topics_and_weights(ics_df: pd.DataFrame) -> None:
     topics_df = pd.read_csv(TOPICS_TABLE)
     topic_narratives_df = pd.read_csv(TOPIC_NARRATIVES).set_index('topic_id')
-    topic_ids = topics_df[['topic_id']].copy().set_index('topic_id')
 
-    # Load ics_topic.csv to get topic assignments for ICS missing topic_id (e.g., STEM panels)
-    ics_topic_df = None
-    if ICS_TOPIC_CSV.exists():
-        ics_topic_df = pd.read_csv(ICS_TOPIC_CSV)
-        # Handle the malformed column name if present
-        if "Assign Final T£" in ics_topic_df.columns:
-            ics_topic_df = ics_topic_df.rename(columns={"Assign Final T£": "Topic 3"})
-        ics_topic_df['final_topic'] = ics_topic_df.apply(get_final_topic, axis=1)
-        ics_topic_lookup = ics_topic_df.set_index('ID')['final_topic'].to_dict()
-        print(f"  Loaded {len(ics_topic_lookup)} topic assignments from ics_topic.csv")
+    if not ICS_TOPIC_CSV.exists():
+        raise FileNotFoundError(f"Required file not found: {ICS_TOPIC_CSV}")
 
-    # TODO
-    cols = None  # To be implemented later
+    ics_topic_df = pd.read_csv(ICS_TOPIC_CSV)
+    if "Assign Final T£" in ics_topic_df.columns:
+        ics_topic_df = ics_topic_df.rename(columns={"Assign Final T£": "Topic 3"})
 
-    if scale_weights == "binary":
-        topic_weights_dfs_to_join = []
-        ics_with_topic = 0
+    # Also update topic_id on the ICS table using the same source
+    ics_topic_df['final_topic'] = ics_topic_df.apply(get_final_topic, axis=1)
+    ics_topic_lookup = ics_topic_df.set_index('ID')['final_topic'].to_dict()
+    print(f"  Loaded {len(ics_topic_lookup)} topic assignments from ics_topic.csv")
 
-        for _, row in ics_df.iterrows():
-            # Always use ics_topic.csv — enhanced_ref_data uses a different topic numbering
-            topic_id = ics_topic_lookup.get(row.ics_id) if ics_topic_df is not None else row.get('topic_id')
+    # Build weights table with actual FIT scores (1–4) instead of binary 0/1
+    weights_df, garbled_df = make_weights_fit_score(ics_topic_df)
 
-            if pd.notna(topic_id) and topic_id != 0:
-                row_data = pd.Series({'ics_id': row.ics_id, 'topic_id': topic_id})
-                df_subset = make_weights_df_binary_per_ics(topic_ids, row_data)
-                topic_weights_dfs_to_join.append(df_subset.reset_index())
-                ics_with_topic += 1
+    if not garbled_df.empty:
+        garbled_out = Path(__file__).parent / "garbled_fit_values.csv"
+        garbled_df.to_csv(garbled_out, index=False)
+        print(f"  WARNING: {len(garbled_df)} ICS had garbled FIT values — saved to {garbled_out.name}")
 
-        print(f"  Total ICS with topic assignments: {ics_with_topic}")
+    weights_df = weights_df.drop_duplicates(subset=["ics_id", "topic_id"])
+    weights_df = weights_df.reset_index(drop=True)
+    weights_df.insert(0, "id", weights_df.index.astype(int))
+    weights_df.to_csv(TOPICS_WEIGHTS_OUT, index=False)
+    print(
+        f"  Topic weights: {len(weights_df)} rows "
+        f"(FIT scores 1–4, {weights_df['ics_id'].nunique()} unique ICS)"
+    )
 
-        df_topic_weights_final = pd.concat(topic_weights_dfs_to_join).reset_index()
-        df_topic_weights_final["id"] = df_topic_weights_final.index.copy().astype("int")
-        cols = [x for x in df_topic_weights_final.columns if x not in ['id', 'index']]
-        cols.insert(0, 'id')
-        df_topic_weights_final = df_topic_weights_final[cols]
-        df_topic_weights_final.to_csv(TOPICS_WEIGHTS_OUT, index=False)
-
-    else:
-        raise NotImplementedError("Only 'binary' option is currently implemented")
-
-    # FIXME this will need to be decided/implemented later - Only binary option now
-    # weights_df = weights_df[cols]
-    # weights_df = weights_df.fillna(0)
-
-    # if scale_weights == "maxTo1":
-    #     weights_df[cols[1:]] = weights_df[cols[1:]].apply(
-    #         lambda x: x.replace(x.max(), 1), axis=1
-    #     )
-
-    # if scale_weights == "scaleTo1":
-    #     weights_df[cols[1:]] = weights_df[cols[1:]].divide(
-    #         weights_df[cols[1:]].max(axis=1), axis=0
-    #     )
-
-    # df_long = pd.melt(
-    #     weights_df, id_vars=["ics_id"], var_name="topic_id", value_name="probability"
-    # )
-    # df_long["id"] = df_long.index.copy().astype("int")
-    # df_long = df_long[["id", "ics_id", "topic_id", "probability"]]
-    # df_long.to_csv(TOPICS_WEIGHTS_OUT, index=False)
-    # topics_df = topics_df.rename(columns={"Topic Name": "topic_name_long"})
-    # topics_df.columns = topics_df.columns.str.lower().str.replace(" ", "_")
     topics_df = topics_df[
         [
             "topic_id",
@@ -460,7 +487,7 @@ if __name__ == "__main__":
     print("Making funders lookup")
     make_funders_lookup_table(ics_df)
     print("Reformatting topics and weights")
-    make_topics_and_weights(ics_df, scale_weights="binary")
+    make_topics_and_weights(ics_df)
     print("Making topic groups table")
     make_topics_groups_table()
     print("Making global countries table")
