@@ -184,8 +184,14 @@ legendMapGlobal.addTo(mapGlobal);
 mapGlobal.createPane('labels');
 mapGlobal.getPane('labels').style.zIndex = 650;
 mapGlobal.getPane('labels').style.pointerEvents = 'none';
-var cartocdn = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',{ 
-    pane: 'labels'
+//var cartocdn = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',{ 
+//    pane: 'labels'
+//});
+var cartocdn = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',{ 
+    pane: 'labels',
+    opacity: 0.9,
+    maxZoom: 20,
+    minZoom: 3
 });
 mapGlobal.addLayer(cartocdn);
 
