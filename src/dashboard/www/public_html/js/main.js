@@ -827,16 +827,55 @@ $( "#btnSettings" ).on( "click", function() {
     $('#idMdSettings').modal('show');
 });
 
-$( "#btnProbabilitySelector" ).on( "click", function(e) {
-    e.preventDefault();
+$('#btnFunderSettings').on('click', function() {
+    $('#idMdFunderSettings').modal('show');
+});
+
+let slc_numberFundersLimit_at_modal_open = slc_numberFundersLimit;
+
+$('#idMdFunderSettings').on('shown.bs.modal', function() {
+    slc_numberFundersLimit_at_modal_open = slc_numberFundersLimit;
+    const currentVal = String(slc_numberFundersLimit);
+    $('#numberFundersLimit option').each(function() {
+        $(this).prop('selected', $(this).val() === currentVal);
+    });
+});
+
+$('#idMdFunderSettings').on('hidden.bs.modal', function() {
+    const newVal = $('#numberFundersLimit').children("option:selected").val();
+    if (newVal === String(slc_numberFundersLimit_at_modal_open)) return;
+    slc_numberFundersLimit = newVal;
+    _utils.progressMenuOn();
+    slc_topic = _utils.getActiveTopic();
+    _api.get_ics_data(API_URL,
+            slc_threshold,
+            slc_topic,
+            slc_postcode_area,
+            slc_beneficiary,
+            slc_uoa,
+            slc_uoa_name,
+            slc_funder,
+            null,
+            null,
+            slc_topic_group).then(result => {
+        _funderChart.updateFunderChart(result.funders_counts, color_bar_Funder, slc_numberFundersLimit);
+        total_rows_pagination_meta = result.table_pagination_meta.total_rows;
+        _utils.updateTotalImpactCaseStudies(total_rows_pagination_meta);
+    }).then(() => {
+        _utils.progressMenuOff();
+    }).catch(error => {
+        console.log('Funder settings update error', error);
+    });
+});
+
+$('#btnTopicRelevance').on('click', function() {
     $('#idMdProbSelector').modal('show');
 });
 
 const PROB_LABELS = {
-    1: "Level 1 — Any match",
-    2: "Level 2 — Moderate match",
-    3: "Level 3 — Strong match",
-    4: "Level 4 — Best match only"
+    1: "Moderate",
+    3: "Strong",
+    4: "Perfect"
 };
 
 function applyProbLevel(level) {
@@ -901,16 +940,15 @@ $('#idMdProbSelector').on('hidden.bs.modal', function() {
     });
 });
 
-$('#idMdSettings').on('shown.bs.modal', function() { 
-    
+$('#idMdSettings').on('shown.bs.modal', function() {
+
     slc_Institutions_Map_Settings=$("#chKeepPOSTarea").is(":checked");
     slc_Beneficiaries_Map_Settings=$("#chCountryLabels").is(":checked");
     slc_Country_Settings=$("#chCountries_specific_extracted").is(":checked");
     slc_Union_Settings=$("#chCountries_union_extracted").is(":checked");
     slc_Region_Settings=$("#chCountries_region_extracted").is(":checked");
     slc_Global_Settings=$("#chCountries_global_extracted").is(":checked");
-    slc_numberFundersLimit = $('#numberFundersLimit').children("option:selected").val();
-    
+
 });
 
 $( "#btnContact" ).on( "click", function() {
@@ -1343,8 +1381,7 @@ $('#idMdSettings').on('hidden.bs.modal', function (e) {
             (slc_Country_Settings !== $("#chCountries_specific_extracted").is(":checked")) ||
             (slc_Union_Settings !== $("#chCountries_union_extracted").is(":checked")) ||
             (slc_Region_Settings !== $("#chCountries_region_extracted").is(":checked")) ||
-            (slc_Global_Settings !== $("#chCountries_global_extracted").is(":checked")) ||
-            (slc_numberFundersLimit !== $('#numberFundersLimit').children("option:selected").val())) {
+            (slc_Global_Settings !== $("#chCountries_global_extracted").is(":checked"))) {
 
 
         if ($("#chCountryLabels").is(":checked")) {
@@ -1352,8 +1389,6 @@ $('#idMdSettings').on('hidden.bs.modal', function (e) {
         } else {
             mapGlobal.removeLayer(cartocdn);
         }
-
-        slc_numberFundersLimit = $('#numberFundersLimit').children("option:selected").val();
 
 
         _utils.progressMenuOn();
